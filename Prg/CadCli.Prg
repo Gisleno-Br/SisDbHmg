@@ -580,8 +580,10 @@ Function GrvClien(lNovo)
 		SysWait(.3)
 
 		Return .f.
+		
 
 	End If
+
 
 	If (lNovo)
 		Aadd(aValores , Quotedstr(  AllTrim( StrZero( nId + 1 , 6 ) ) )  )
@@ -760,6 +762,8 @@ FUNCTION AtuNewLine( cTb, Condicao, cJan, cSql1 )
 
 RETURN
 
+
+
 FUNCTION RetRecord( cSql1, cTabela )
 
 	LOCAL oServer := GetConexao()
@@ -822,9 +826,6 @@ RETURN aM1
 
 
 
-
-
-
 FUNCTION InpCadCli()
 
 	STATIC lTracking45 := .F.
@@ -837,16 +838,11 @@ FUNCTION InpCadCli()
 	Local cForm
 
 
-
-
 	IF ( nMsg == WM_MOUSEMOVE ) .and. (!lTracking45)
 
 		lTracking45 := TrackMouseEvent( nHWnd ) // TME_LEAVE is default flag
 		GetControlNameByHandle(nHWnd, @cControl, @cForm)
 		//msginfo(cControl)
-
-
-
 
 		If (cControl = 'ImgLupa') .Or. (cControl = 'ImgEnd')			
 
