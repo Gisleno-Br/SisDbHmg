@@ -1,0 +1,1 @@
+insert into filtros values(98,"teste 1","Clientes","( cpf =  '03555402' )","S","Codigo                                                                                              "," ")

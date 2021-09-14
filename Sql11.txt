@@ -1,0 +1,1 @@
+ Select * from dicionario where tabela = 'clientes' order by Ordem Select * from dicionario where tabela = 'clientes' order by Ordem Select * from dicionario where tabela = 'clientes' order by Ordem

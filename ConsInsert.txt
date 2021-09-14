@@ -1,0 +1,1 @@
+Insert into Dicionario Values(228,'e1','tipo','C   ','Tipo Pessoa                                                                                         ','S',0,'                                                                                ','tipo',4,'                                                                                ',25)

@@ -1,0 +1,7 @@
+incpaths=include
+libpaths=
+libs=libsddmy
+gt=
+mt=no
+instpaths=
+inc=YES
