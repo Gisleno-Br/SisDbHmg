@@ -20,6 +20,11 @@ DECLARE WINDOW fSplit6
 
 
 
+
+
+
+
+
 DECLARE WINDOW fDialogo
 //DECLARE WINDOW fCadCli
 
