@@ -16,6 +16,10 @@ DECLARE WINDOW fSplit6
 
 
 
+
+
+
+
 DECLARE WINDOW fDialogo
 //DECLARE WINDOW fCadCli
 
@@ -683,7 +687,7 @@ FUNCTION xIniProgress( nTp )
 		Else
 
 			OBTN_Create( cJanx, 6653, "Sim", 185, 375,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-			OBTN_Create( cJanx, 6654, hb_ANSIToOEM( "Não" ), 185, 435,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+			OBTN_Create( cJanx, 6654, hb_ANSIToOEM( "Nï¿½o" ), 185, 435,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 
 			OBTN_Font( cJanx, 6653,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 			OBTN_Font( cJanx, 6654,  { cFontName, nFontSize, .F., .F., .F., .F. } )
