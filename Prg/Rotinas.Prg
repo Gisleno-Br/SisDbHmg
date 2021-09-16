@@ -17,7 +17,11 @@ Function AltTamCampo(cTabx,cCampo , cForm)
 
 
 
+
 	
+
+
+
 	Private lOkz := .f.
 	Private aButx1
 
