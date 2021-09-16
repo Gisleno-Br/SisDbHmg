@@ -16,6 +16,8 @@ DECLARE WINDOW fNewCadcli
 
 
 
+
+
 REQUEST HB_LANG_PT
 REQUEST HB_CODEPAGE_PT850
 
@@ -24,7 +26,8 @@ Function xInitFrm()
 
 	//Load Window fNewCadCli
 
-	Load Window fCadCli
+	Load Window fCadCli	
+
 
 
 	//SetWindowCursor (GetControlHandle( 'br_grid' , cActiveJan) , IDC_WAIT) 
@@ -34,6 +37,7 @@ Function xInitFrm()
 	//msginfo('E2nd')	
 
 	HMG_ChangeWindowStyle(  fCadCli.Handle , WS_EX_DLGMODALFRAME, NIL, .T., .T. )
+
 
 
 	ON KEY F5 OF fCadCli ACTION xPesqCep() 

@@ -117,6 +117,8 @@ FUNCTION CadCli()
 
 
 
+		
+
 
 	LOCAL aTam    := GetCamposInf( wCad, 'TAM' )
 	LOCAL aCabec  := GetCamposInf( wCad, 'CABEC' )
