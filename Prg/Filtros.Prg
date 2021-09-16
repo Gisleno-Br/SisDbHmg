@@ -9,8 +9,6 @@ REQUEST HB_CODEPAGE_PT850
 
 
 
-
-
 Function LoadFitros(cTabela1)
 
 
@@ -22,7 +20,7 @@ Function LoadFitros(cTabela1)
    Local nIndexFiltro := 0
    Local oQuery
    Local oRow
-   local cCab1 := hb_ansiTooem('Expressï¿½o')
+   local cCab1 := hb_ansiTooem('Expressão')
    
    Private aHed1 := { 'Id' , 'Filtro',cCab1}
    
