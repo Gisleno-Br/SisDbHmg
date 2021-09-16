@@ -2,6 +2,7 @@
 
 //DECLARE WINDOW fCliCad
 
+
 STATIC lTracking55 := .F.
 
 DECLARE WINDOW fCadcli
@@ -579,7 +580,7 @@ Function GrvClien(lNovo)
 		'dtbloqueio','maiorcompra','codmun','fone3'}
 
 	If !lNovo
-		cMsg := 'Confirma Alteração no Cadastro deste Cliente?'
+		cMsg := 'Confirma Alteraï¿½ï¿½o no Cadastro deste Cliente?'
 	End If
 
 
@@ -673,7 +674,7 @@ Function GrvClien(lNovo)
 
 	IF oQuery:NetErr()
 		//CursorArrow()
-		yAviso( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  , .f. )
+		yAviso( 'Erro ao Executar Atualizaï¿½ï¿½o -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  , .f. )
 		Return .f.
 	END IF
 
@@ -864,7 +865,7 @@ FUNCTION InpCadCli()
 		If (cControl = 'ImgLupa') .Or. (cControl = 'ImgEnd')			
 
 			SetHandCursor(GetControlHandle( cControl , 'fCadCli' )   , "Finger.cur" )
-			_SetToolTip(cControl,'fCadCli',hb_AnsiToOem("Resgata Endereço Baseado no CEP Informado.") )
+			_SetToolTip(cControl,'fCadCli',hb_AnsiToOem("Resgata Endereï¿½o Baseado no CEP Informado.") )
 
 
 		End If
@@ -1059,7 +1060,7 @@ Function xPesqCep()
 	Else
 
 		SetProperty( 'fCadCli','Endereco','Value' , '' )
-		yAviso('Cep Não Localizado.' , .f. )
+		yAviso('Cep Nï¿½o Localizado.' , .f. )
 		SysWait(.2)
 		fCadCli.nome.SetFocus()
 
@@ -1274,7 +1275,7 @@ Function xPesqEnt()
 
 		SetProperty( 'fCadCli','EndEnt','Value' , '' )
 
-		yAviso('Cep não Localizado.' ,, 'fCadCli' )
+		yAviso('Cep nï¿½o Localizado.' ,, 'fCadCli' )
 
 	End If
 
@@ -1318,7 +1319,7 @@ Function xBloquear(  cCodCli , cStatus )
 
 	LOCAL cSql  := "update " + Alltrim(cTabela) + " set status = '" + cStatus + "' , dtbloqueio = " + Quotedstr(ConvDt( dDataBase ) )  + " where codigo = '" + cCodCli + "'"
 
-	IF !Confirmaviso( 'Confirma Mudança de Status(' + cStatus + ') Para Este Registro?' , cActiveJan , .t. ) 
+	IF !Confirmaviso( 'Confirma Mudanï¿½a de Status(' + cStatus + ') Para Este Registro?' , cActiveJan , .t. ) 
 		Return .f.
 	End If 	
 		
@@ -1334,7 +1335,7 @@ Function xBloquear(  cCodCli , cStatus )
 
 
 	IF oQuery:NetErr()
-		MsgStop( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  , .f. )
+		MsgStop( 'Erro ao Executar Atualizaï¿½ï¿½o -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  , .f. )
 		RETURN .f.
 	END IF
 
