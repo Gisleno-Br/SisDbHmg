@@ -164,15 +164,15 @@ oServer:Destroy()
 //MsgInfo('lp')
 
 
-cTit1 := 'Edição de Consultas - Id : ' + alltrim(str(nIdConsu))
+cTit1 := 'Ediï¿½ï¿½o de Consultas - Id : ' + alltrim(str(nIdConsu))
 // Aviso(Hb_ansiToOem( cTit1 ))
 
 // fCriaConsulta .BtnOk. Enabled := .F.
 
 SetProperty( 'fCriaConsulta', 'Title', hb_ANSIToOEM( cTit1 ) )
-SetProperty( 'fCriaConsulta', 'Label_4', "Value", hb_ANSIToOEM( "Observação" ) )
+SetProperty( 'fCriaConsulta', 'Label_4', "Value", hb_ANSIToOEM( "Observaï¿½ï¿½o" ) )
 
-SetProperty( 'fCriaConsulta', 'Tab_1', "Captions", { "Campos", "Filtros/Parametros", hb_ANSIToOEM( "Ordenação" ), "Sql"  } )
+SetProperty( 'fCriaConsulta', 'Tab_1', "Captions", { "Campos", "Filtros/Parametros", hb_ANSIToOEM( "Ordenaï¿½ï¿½o" ), "Sql"  } )
 
 cSql := "select * from consultas where tabela = " + Quotedstr(cTabela) + " and id = " + alltrim(str(nidconsu))
 
@@ -279,8 +279,8 @@ For n1 := 1 To oQuery:LastRec()
 	cValor := GetCampo(oRow,'Valor')
 	coplogico := alltrim(GetCampo(oRow,'OpLogico'))
 
-	cEditavel  := Iif(GetCampo(oRow,'Editavel') == 'S','Sim','Não')
-	cRequerido := Iif(GetCampo(oRow,'Requerido')  == 'S','Sim','Não' )
+	cEditavel  := Iif(GetCampo(oRow,'Editavel') == 'S','Sim','Nï¿½o')
+	cRequerido := Iif(GetCampo(oRow,'Requerido')  == 'S','Sim','Nï¿½o' )
 	cPar1      := GetCampo(oRow,'Parentese')
 	cPar2      := GetCampo(oRow,'Parentese2')
 
@@ -360,15 +360,15 @@ FUNCTION NovaConsulta( cTabela, lMovTable )
 
 	ENDDO
 
-	cTit1 := 'Criação de Consultas'
+	cTit1 := 'Criaï¿½ï¿½o de Consultas'
 	// Aviso(Hb_ansiToOem( cTit1 ))
 
 	// fCriaConsulta .BtnOk. Enabled := .F.
 
 	SetProperty( 'fCriaConsulta', 'Title', hb_ANSIToOEM( cTit1 ) )
-	SetProperty( 'fCriaConsulta', 'Label_4', "Value", hb_ANSIToOEM( "Observação" ) )
+	SetProperty( 'fCriaConsulta', 'Label_4', "Value", hb_ANSIToOEM( "Observaï¿½ï¿½o" ) )
 
-	SetProperty( 'fCriaConsulta', 'Tab_1', "Captions", { "Campos", "Filtros/Parametros", hb_ANSIToOEM( "Ordenação" ), "Sql"  } )
+	SetProperty( 'fCriaConsulta', 'Tab_1', "Captions", { "Campos", "Filtros/Parametros", hb_ANSIToOEM( "Ordenaï¿½ï¿½o" ), "Sql"  } )
 
 	PRIVATE cJanx := 'fCriaConsulta'
 
@@ -1154,14 +1154,14 @@ STATIC FUNCTION RetFiltro()
 	LOCAL aM1 := { ( fFiltro .cmbCampo. DisplayValue ), fFiltro .cmbOperador. DisplayValue, ;
 		iif( !fFiltro .Getdata1. Visible, iif( Val(nValor ) >= 0, nValor, AllTrim( fFiltro .Valor. Value ) ),  DToC( fFiltro .Getdata1. Value )   ),  ;
 		cOpLogic , ;
-		iif( fFiltro .ChkOrdem. Value, hb_ANSIToOEM( 'Sim' ), hb_ANSIToOEM( 'Não' )  ), ;
-		iif( fFiltro .ChkRequerido. Value, hb_ANSIToOEM( 'Sim' ), hb_ANSIToOEM( 'Não' ) ),  Replicate('(',nX1) ,  Replicate(')',nX2)     }
+		iif( fFiltro .ChkOrdem. Value, hb_ANSIToOEM( 'Sim' ), hb_ANSIToOEM( 'Nï¿½o' )  ), ;
+		iif( fFiltro .ChkRequerido. Value, hb_ANSIToOEM( 'Sim' ), hb_ANSIToOEM( 'Nï¿½o' ) ),  Replicate('(',nX1) ,  Replicate(')',nX2)     }
 
 
    /*
 	IF ( ( (fFiltro .ChkPar1. Value ) .OR. (fFiltro .ChkPar2. Value ) ) .AND. ( fFiltro .cmbLogico. DisplayValue = 'Nenhum' ) )
 		IF nCount == 0
-         yaviso( "A " + hb_ansiTooem('Expressão') + " deve conter um operador logico,se estiver marcado adicionar Parenteses '(' ou ')'" , .f. )
+         yaviso( "A " + hb_ansiTooem('Expressï¿½o') + " deve conter um operador logico,se estiver marcado adicionar Parenteses '(' ou ')'" , .f. )
          RETURN .F.
 		END IF
 	END IF
@@ -1370,7 +1370,7 @@ FUNCTION GetInfoDic( cCampo1, cTabela, cInfo )
 
 
 	IF oQuery:Eof()
-		yAviso(  'Houve um Erro ao tenta recuperar Informações do Campo : ' + cCampo1  + "." + QUEBRA + ;
+		yAviso(  'Houve um Erro ao tenta recuperar Informaï¿½ï¿½es do Campo : ' + cCampo1  + "." + QUEBRA + ;
 			"Tabela : " + cTabela + "/" + cInfo + QUEBRA + ;
 			'Contactar Suporte!' , .f. )
 
@@ -1416,7 +1416,7 @@ FUNCTION InitCons()
 
 	HMG_ChangeWindowStyle( fCriaConsulta .LblTabela1. Handle, WS_EX_STATICEDGE, NIL, .T., .T. )
 
-	fCriaConsulta .LblTabela1. Value := Chr( 13 ) + Chr( 10 ) + hb_ANSIToOEM( "Criação de Consultas" )
+	fCriaConsulta .LblTabela1. Value := Chr( 13 ) + Chr( 10 ) + hb_ANSIToOEM( "Criaï¿½ï¿½o de Consultas" )
 	// {'Campo','Operador','Valor','Operador Logico' ,'Editavel','Requerido' , 'P1' , 'Titulo Filtro'}
 
 	FOR n1 := 1 TO 7
@@ -1480,7 +1480,7 @@ FUNCTION TabChg()
 
 	IF ( fCriaConsulta .Tab_1. Value = 3 ) .AND. ( fCriaConsulta .LstOrdem. ItemCount == 1 )
 
-		SetProperty( "fCriaConsulta", "LblOrdem", "Value", hb_ANSIToOEM( 'Selecione a Ordenação da Consulta' ) )
+		SetProperty( "fCriaConsulta", "LblOrdem", "Value", hb_ANSIToOEM( 'Selecione a Ordenaï¿½ï¿½o da Consulta' ) )
 
 		fCriaConsulta .LstOrdem. DeleteAllitems()
 		fCriaConsulta .LstOrdem. AddItem( 'Nenhum' )
@@ -1529,7 +1529,7 @@ FUNCTION FiltroAdd()
 		If Empty(alltrim(fFiltro.EdtFiltro.value)) .And. ;
 				(Alltrim(fFiltro.EdtFiltro.value) != "And") .And. ;
 				(Alltrim(fFiltro.EdtFiltro.value) != "Or")
-			yaviso("Quando existe mais de um Parametro para a Consulta,a Segunda em diante Deve começar com um op.Logico(And ou Or)." , .f.)
+			yaviso("Quando existe mais de um Parametro para a Consulta,a Segunda em diante Deve comeï¿½ar com um op.Logico(And ou Or)." , .f.)
 			BT_ClientAreaInvalidateAll ('fFiltro')
 			Return
 		Else
@@ -1713,7 +1713,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 	IF Len( fCriaConsulta .LstOrdem. Value ) > 1
 		FOR nx := 1 TO  Len( fCriaConsulta .LstOrdem. Value )
 			IF AllTrim( fCriaConsulta .LstOrdem. Item(  fCriaConsulta .LstOrdem. Value[ nx ] ) )  = 'Nenhum'
-				yaviso(  "Em Ordenação dos Campos não pode estar Marcado 'Nenhum',Caso haja Campos Selecionados para ordenação."  , .f. )
+				yaviso(  "Em Ordenaï¿½ï¿½o dos Campos nï¿½o pode estar Marcado 'Nenhum',Caso haja Campos Selecionados para ordenaï¿½ï¿½o."  , .f. )
 				RETURN
 			ELSE
 				cCampoORd += ( AllTrim( fCriaConsulta .LstOrdem. Item(  fCriaConsulta .LstOrdem. Value[ nx ] ) ) + "." )
@@ -1771,7 +1771,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 	hb_MemoWrit( 'Cons1.txt', cSql )
 
 	IF oQuery == Nil
-		yaviso( "Execução da Rotina sera Interrompida(Cons  Cab). " + QUEBRA + "Contacte Suporte." , .f. )
+		yaviso( "Execuï¿½ï¿½o da Rotina sera Interrompida(Cons  Cab). " + QUEBRA + "Contacte Suporte." , .f. )
 		RETURN .F.
 	END IF
 
@@ -1785,11 +1785,11 @@ FUNCTION GrvConsul( cTab  , nId1)
 
 	//msginfo( cTabelaX )
 
-	//yAviso( "Houve Falha no processo de Gravação no Dicionario de Dados."  )
+	//yAviso( "Houve Falha no processo de Gravaï¿½ï¿½o no Dicionario de Dados."  )
 
 
 	If !GravaDic( nId  , cTabelax )
-		yAviso( "Houve Falha no processo de Gravação no Dicionario de Dados." ,, .f.  )
+		yAviso( "Houve Falha no processo de Gravaï¿½ï¿½o no Dicionario de Dados." ,, .f.  )
 		Return
 	End If
 
@@ -1831,7 +1831,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 		oQuery := ExecSql( @oServer, cSqlx1 )
 
 		IF oQuery == Nil
-			yAviso( hb_UTF8TOSTR("Execução da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." , .f. )
+			yAviso( hb_UTF8TOSTR("Execuï¿½ï¿½o da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." , .f. )
 			RETURN
 		END IF
 
@@ -1861,7 +1861,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 		hb_MemoWrit( 'ConsParam.txt', cSqlx1 )
 
 		IF oQuery == Nil
-			yAviso( hb_UTF8TOSTR("Execução da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." ,  .f. )
+			yAviso( hb_UTF8TOSTR("Execuï¿½ï¿½o da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." ,  .f. )
 			RETURN .F.
 		END IF
 
@@ -1901,7 +1901,7 @@ Function GravaDic( nIdConsul  ,cTabOri)
 	Local oServer
 
 
-	//yAviso( "Execução da Rotina sera Interrompida(Cons  item)." + QUEBRA + "Contacte Suporte." , .f. )
+	//yAviso( "Execuï¿½ï¿½o da Rotina sera Interrompida(Cons  item)." + QUEBRA + "Contacte Suporte." , .f. )
 
 	oSErver := GetConexao()
 
@@ -1933,7 +1933,7 @@ Function GravaDic( nIdConsul  ,cTabOri)
 		hb_MemoWrit( 'ConsInsert.txt', cSql )
 
 		If oQuery == Nil
-			yAviso( "Execução da Rotina sera Interrompida(Cons  item)." + QUEBRA + "Contacte Suporte." , .f. )
+			yAviso( "Execuï¿½ï¿½o da Rotina sera Interrompida(Cons  item)." + QUEBRA + "Contacte Suporte." , .f. )
 
 			oServer:Destroy()
 			oServer := Nil
@@ -2075,7 +2075,7 @@ FUNCTION Proc_Paint( cTexto, cBitmap  , z1Bitmap , cJanela)
 
 
 	If cActiveJan != 'fDialog'
-		BT_DrawText ( hDC, 07  , 35,  hb_ANSIToOEM( cTexto ), "Arial", 9, WHITE,  BLACK, nTypeText, nAlingText, nOrientation )
+		BT_DrawText ( hDC, 07  , 195 ,  hb_ANSIToOEM( Alltrim(cTexto) ), "Arial", 9, WHITE,  BLACK, nTypeText, nAlingText, nOrientation )
 	End If
 
 
@@ -2102,14 +2102,12 @@ FUNCTION Proc_Paint( cTexto, cBitmap  , z1Bitmap , cJanela)
 
 
 	IF (!Empty( cBitMap )) .And. (cActiveJan != 'fDialog')
-		BT_DrawBitmap ( hDC2, 3, 2, 24, 24, BT_STRETCH, hBitmap5 )
+		//BT_DrawBitmap ( hDC2, 3, 2, 24, 24, BT_STRETCH, hBitmap5 )
 	Else
 
 
 		If (cActiveJan = 'fDialog')
 			BT_DrawGradientFillVertical ( hDC2 ,  175 ,  0 , 571 ,  100 ,   { 238,238,238}, {  244,244,244 } )
-
-
 		End If
 
 	End iF
@@ -2282,10 +2280,19 @@ FUNCTION xInitMov(  nIdc1, nTpVnd9, cTabelax, lMvTable, cJanName )
 
 
 	// IF aRes1[ 1 ] == Nil
-	IF ( aRes1[ 1 ] == Nil )
-		yaviso( 'Sera Necessario Preencher os Parametros para Prosseguir.')
-		Return .f.
-	END IF
+
+	If Len(aRes1) > 0 
+		IF ( aRes1[ 1 ] == Nil )
+			yaviso2( 'Sera Necessario Preencher os Parametros para Prosseguir.')
+			Return .f.
+		END IF
+	Else
+
+
+		yAviso2( 'Parametros Não Localizados, Recrie a Consulta.')
+		Return .f.        
+
+	End If 		
 
 	FOR nx1 := 1 TO Len( aFiltro )
 
@@ -2583,7 +2590,7 @@ FUNCTION BrowConsulta( cSqlp, aCabecario, aTamanhos, aCampos, cJanx1  , aTps , c
 
 	If ( RecCount() == 0 )
 
-		Yaviso( "Consulta Não Retornou Registros." , .t. )
+		Yaviso( "Consulta Nï¿½o Retornou Registros." , .t. )
 		lOk1 := .f.
 		//Return .f.
 

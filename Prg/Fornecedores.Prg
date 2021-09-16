@@ -97,7 +97,7 @@ FUNCTION MntFornec()
 		{ "&Modificar", {||  fx2("edit")   } , .T., "Modifica um Fornecedor Existente." , 0 }, ;
 		{ "&Bloquear", {||  fx1( "bloquear" ) }, .T., "Bloqueia/Inativa um Cadastro Ativo.", 0 } ,;
 		{ "&Filtrar", {|| ProcFiltro( 'fornecedor' )    }, .T., "Filtra Registros", 0 } ,;
-		{ Hb_AnsiToOem("Opções") , {|| xSetOpcao()  }, .T., Hb_AnsiToOem("Opções Diversas") , 0 } }
+		{ Hb_AnsiToOem("Opï¿½ï¿½es") , {|| xSetOpcao()  }, .T., Hb_AnsiToOem("Opï¿½ï¿½es Diversas") , 0 } }
 
 
 	//Local cform
@@ -269,10 +269,10 @@ Function xCadFor( lNovox , cCodigo )
 
 
 
-	SetProperty("fCadForne" , "Label_2","Value", Hb_AnsiToOem("Nome\Razão Social") )
-	SetProperty("fCadForne" , "Label_3","Value", Hb_AnsiToOem("Endereço") )
+	SetProperty("fCadForne" , "Label_2","Value", Hb_AnsiToOem("Nome\Razï¿½o Social") )
+	SetProperty("fCadForne" , "Label_3","Value", Hb_AnsiToOem("Endereï¿½o") )
 
-	SetProperty("fCadForne" , "Label_15","Value", Hb_AnsiToOem("Observação") )
+	SetProperty("fCadForne" , "Label_15","Value", Hb_AnsiToOem("Observaï¿½ï¿½o") )
 
 
 	Center Window fCadForne
@@ -292,7 +292,7 @@ Function xCadFor( lNovox , cCodigo )
 
 	If !lNovox
 		If !xLoadfor( cCodigo )
-			yAviso("Não foi Possivel recuperar informações deste Cadastro." , .t. )
+			yAviso("Nï¿½o foi Possivel recuperar informaï¿½ï¿½es deste Cadastro." , .t. )
 		End If 
 	End If 
 
@@ -550,7 +550,7 @@ Static Function xPesqCep()
 	Else
 
 		SetProperty( 'fCadForne','Endereco','Value' , '' )
-		yAviso('Cep não Localizado.' ,, 'fCadForne' )
+		yAviso('Cep nï¿½o Localizado.' ,, 'fCadForne' )
 
 	End If
 
@@ -579,7 +579,7 @@ Function GrvForne(lNovo1)
 
 
 	If !lNovo1
-		cMsg := 'Confirma Alteração no Cadastro deste Fornecedor?'
+		cMsg := 'Confirma Alteraï¿½ï¿½o no Cadastro deste Fornecedor?'
 	End If
 
 
@@ -711,7 +711,7 @@ Function GrvForne(lNovo1)
 
 	IF oQuery:NetErr()
 		//CursorArrow()
-		yAviso( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error() )
+		yAviso( 'Erro ao Executar AtualizaÃ§Ã£o -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error() , .f.)
 		Return .f.
 	END IF
 
@@ -728,7 +728,7 @@ Function GrvForne(lNovo1)
 
 	lOkCad := .t.
 
-	yAviso("Manutenção Realizada com Sucesso!" , .t. )
+	yAviso("Manutenï¿½ï¿½o Realizada com Sucesso!" , .t. )
 
 
 Return .t.

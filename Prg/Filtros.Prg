@@ -9,6 +9,7 @@ REQUEST HB_CODEPAGE_PT850
 
 
 
+
 Function LoadFitros(cTabela1)
 
 
@@ -20,7 +21,7 @@ Function LoadFitros(cTabela1)
    Local nIndexFiltro := 0
    Local oQuery
    Local oRow
-   local cCab1 := hb_ansiTooem('Express�o')
+   local cCab1 := hb_ansiTooem('Express�o')
    
    Private aHed1 := { 'Id' , 'Filtro',cCab1}
    
@@ -574,7 +575,7 @@ Static Function SaveFiltro( lNovo  , nIdFiltro1 )
 
 		    IF oQuery:NetErr()
 		      //CursorArrow()
-		       MsgStop( 'Erro ao Executar Atualiza��o -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error() )
+		       MsgStop( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  , .f. )
 		       RETURN .f.
 		    END IF
 		    

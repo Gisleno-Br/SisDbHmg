@@ -16,21 +16,41 @@ DECLARE WINDOW fSplit6
 
 
 
-
-
-
-
-
-
-
-
-
 DECLARE WINDOW fDialogo
 //DECLARE WINDOW fCadCli
 
 // REQUEST HB_LANG_PT
 // REQUEST HB_CODEPAGE_PT850
 
+
+Function yAviso2( cMensagem , lEfect  )
+
+	Local aMx
+
+	
+	Default lEfect := .t.
+
+
+	If lEfect	
+		aMx := yEfect(  cActiveJan  )	
+	End If 	
+
+	MsgAviso( cMensagem + '  ['  + cActiveJan)	
+
+
+	If lEfect	
+		EfectEnd(cActiveJan , aMx )
+    End If		
+
+Return 	
+
+FUNCTION yAviso( cMsgx1 , lEfect )
+  
+	yAviso2( cMsgx1 , lEfect  )
+
+Return 	
+
+/*
 FUNCTION yAviso( cMsgx1 , lEfect  ,  cJanExtra  )
 
 	LOCAL cControl := ''
@@ -112,8 +132,12 @@ End If
 
 RETURN
 
+*/
+
 
 FUNCTION ConfirmAviso( cMsgx1,  cJanPadrao ,  lEfect )
+
+	 /*
 
 	LOCAL cControl := ''
 	LOCAL cForm    := ''
@@ -153,29 +177,49 @@ FUNCTION ConfirmAviso( cMsgx1,  cJanPadrao ,  lEfect )
 
 		Grayness_effect_start(  cFormName )
 		ShowButTop( .f. )
-	DoMethod( 'fSplit5'  , 'Hide')
+		DoMethod( 'fSplit5'  , 'Hide')
 
-End If
-
-
-
-msgAviso( cMsgx1, 2 )
-
-If lEfect
-
-	Grayness_effect_End(  cFormName )
-	lAtivaBlack := .f.
-
-	Flag_AlphaBlend_Effect := .f.
-
-
-	If !ResButSel()
-		ShowButTop( .t. )
 	End If
 
-End If
+	*/
 
-cDiaName := cSalvaD
+	Local aMx := {}
+	PRIVATE lRetx := .F.
+
+
+	
+	Default lEfect := .t.	
+
+	If lEfect	
+		aMx := yEfect(  cActiveJan  )	
+	End If 	
+
+
+
+	msgAviso( cMsgx1, 2 )
+
+	If lEfect
+
+		/*
+		Grayness_effect_End(  cFormName )
+		lAtivaBlack := .f.
+
+		Flag_AlphaBlend_Effect := .f.
+
+
+		If !ResButSel()
+			ShowButTop( .t. )
+		End If
+		*/
+
+		
+		
+		EfectEnd(cActiveJan , aMx )		
+
+
+	End If
+
+	//cDiaName := cSalvaD
 
 RETURN lRetx
 
@@ -187,7 +231,7 @@ FUNCTION MsgAviso( cMsg1, nTipo )
 
 	PRIVATE cJanxDialog := 'fDialogo'
 
-	cActiveJan := 'fDialog'
+	//cActiveJan := 'fDialog'
 
 	DEFAULT cMsg1 := ''
 	DEFAULT nTipo := 1
@@ -199,6 +243,12 @@ FUNCTION MsgAviso( cMsg1, nTipo )
 	PRIVATE cMensagem := iif( nTipo == 1, "Aviso", "Confirme Para Prosseguir" )
 
 	PRIVATE lRet := .F.
+
+	Private cDiaName := 'fDialogo'
+
+	
+	Private n20 := 0
+	Private n21 := 0
 
 
 	REQUEST HB_LANG_PT
@@ -221,7 +271,7 @@ FUNCTION MsgAviso( cMsg1, nTipo )
 
 	SetProperty( "fDialogo", "lblMsg", "Value",  HB_AnsiToOem(    AllTrim( cMsg1 )  )     )
 
-	cActiveJan := 'fDialogo'
+	//cActiveJan := 'fDialogo'
 
 	If nTipo == 2
 		SetProperty( "fDialogo", "Image_1","Picture" , "img\Interrogacao.png" )
@@ -238,6 +288,7 @@ FUNCTION MsgAviso( cMsg1, nTipo )
 		EventRemove(nIndexDlg22)
 		//msginfo('removioo')
 	End If
+
 
 
 	If n20 > 0

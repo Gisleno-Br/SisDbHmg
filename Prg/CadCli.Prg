@@ -21,7 +21,10 @@ REQUEST HB_CODEPAGE_PT850
 
 Function xInitFrm()
 
-	Load Window fNewCadCli
+	//Load Window fNewCadCli
+
+	Load Window fCadCli
+
 
 	//SetWindowCursor (GetControlHandle( 'br_grid' , cActiveJan) , IDC_WAIT) 
 
@@ -29,10 +32,13 @@ Function xInitFrm()
 
 	//msginfo('E2nd')	
 
-	HMG_ChangeWindowStyle(  fNewCadcli.Handle , WS_EX_DLGMODALFRAME, NIL, .T., .T. )
+	HMG_ChangeWindowStyle(  fCadCli.Handle , WS_EX_DLGMODALFRAME, NIL, .T., .T. )
 
-	Center Window fNewCadCli
-		
+
+	ON KEY F5 OF fCadCli ACTION xPesqCep() 
+
+	Center Window fCadCli
+		/*
 	
 	fCadCli1.Col := GetProperty("fNewCadCli" , "Col" )
 	fCadCli1.Row := GetProperty("fNewCadCli" , "Row" ) + 55
@@ -45,6 +51,8 @@ Function xInitFrm()
 
 	fCadCli2.Col := GetProperty("fNewCadCli" , "Col" )
 	fCadCli2.Row := GetProperty("fNewCadCli" , "Row" ) + 55
+
+	*/
 
 	//xMudaTab()
 
@@ -65,12 +73,13 @@ Function xCadCli( lNew  , cCodigo1 )
 
 
 
-	Private cDiaName := 'fCadCli1'
+	Private cDiaName := 'fCadCli'
 
 	Private nIndexDlg := 0
 
 	Private nZa1 := 0
 	Private nZa2 := 0
+
 
 
 	Private aUf      := {}
@@ -84,6 +93,7 @@ Function xCadCli( lNew  , cCodigo1 )
 
 	
 
+
 	lOkCad := .f.
 
 
@@ -93,24 +103,30 @@ Function xCadCli( lNew  , cCodigo1 )
 	//SETWAITCURSOR(   GetFormHandle(cActiveJan)    )
 	
 
-	aMx := yEfect(  cActiveJan  )
+	//aMx := yEfect(  cActiveJan  )
+
+	//yAviso2('ok')
 	
 	
-	yRun("Aguarde Inicializando Tela..... " , { ||   xInitFrm()  } )
+	//yRun("Aguarde Inicializando Tela..... " , { ||   xInitFrm()  } )
 
 
-	EfectEnd(cActiveJan , aMx )
+	//EfectEnd(cActiveJan , aMx )
+
+	xInitFrm()
+
 
 	
-	
+	//ON KEY ESCAPE OF fNewCadCli ACTION _FechaJan('fNewCadCli' )
 
-
-	ON KEY ESCAPE OF fNewCadCli ACTION _FechaJan('fNewCadCli' )
+	ON KEY ESCAPE OF fCadCli ACTION _FechaJan('fCadCli' )
 	
 
 	InstallEventHandler('EventClih')
 	
-	Activate Window fNewCadCli
+	//Activate Window fNewCadCli
+
+	Activate Window fCadCli 
 
 
 	RemoveHandler('EventClih')
@@ -123,41 +139,39 @@ REturn
 
 Function xInitCad()
 
-	cJanx := cDiaName
+	cJanx := 'fCadCli'
 
 
 	aRotHnd := {}
 
 
+	EncheCmb( 'fCadcli' , 'CmbCidade' , "select municipio from ibge where uf = '" + cUfEmp + "' order by 1" )
+	EncheCmb( 'fCadcli' , 'CmbCidEnt' , "select municipio from ibge where uf = '"  + cUfEmp + "' order by 1" )
 
-	EncheCmb( 'fCadcli1' , 'CmbCidade' , "select municipio from ibge where uf = '" + cUfEmp + "' order by 1" )
-	EncheCmb( 'fCadcli2' , 'CmbCidEnt' , "select municipio from ibge where uf = '"  + cUfEmp + "' order by 1" )
-
-	EncheCmb( 'fCadcli2' , 'CmbClasse' , "select descricao from classes where status = 'Normal' order by 1" )
-
-
-	EncheCmb( 'fCadcli2' , 'CmbCategoria' , "select descricao from categorias where status = 'Normal' order by 1" )
+	EncheCmb( 'fCadcli' , 'CmbClasse' , "select descricao from classes where status = 'Normal' order by 1" )
 
 
-	EncheCmb( 'fCadcli1' , 'CmbUf' , "select distinct uf from ibge order by 1" )
-
-	SetProperty('fCadcli1' , 'CmbUf' , 'Value', 2 )
+	EncheCmb( 'fCadcli' , 'CmbCategoria' , "select descricao from categorias where status = 'Normal' order by 1" )
 
 
-	cJanx := 'fNewCadCli'
+	EncheCmb( 'fCadcli' , 'CmbUf' , "select distinct uf from ibge order by 1" )
+
+	SetProperty('fCadcli' , 'CmbUf' , 'Value', 2 )
+
+
+	cJanx := 'fCadCli'
 
 
 	OBTN_Create( cJanx, 353, "&Ok", 420 , 670,  62 ,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 	OBTN_Create( cJanx, 54, "&Cancelar" , 420 , 735 ,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 
-	OBTN_Create( 'fCadCli1', 98 , "&Consultar CEP" , 145 , 279 ,  82,  22 ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+	OBTN_Create( 'fCadCli', 98 , "&Consultar CEP" , 148 , 479 ,  82,  22 ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 
 
 	OBTN_Font( cJanx, 353,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 	OBTN_Font( cJanx, 54,  { cFontName, nFontSize, .F., .F., .F., .F. } )	
 
-	OBTN_Font( 'fCadCli1', 98,  { cFontName, nFontSize, .F., .F., .F., .F. } )	
-
+	OBTN_Font( 'fCadCli', 98,  { cFontName, nFontSize, .F., .F., .F., .F. } )	
 
 	OBTN_Enable( cJanx , 353 , .f.)
 
@@ -165,7 +179,7 @@ Function xInitCad()
 	AAdd( aButCli, {  353,  OBTN_Handle( cJanx, 353 ),   { || ( PushButton( cJanx , 353)  , GrvClien(lNovo) )    } ,  cJanx   } )
 	AAdd( aButCli, {  54 ,  OBTN_Handle( cJanx, 54 ),   { ||  _FechaJan(cJanx)  } ,  cJanx   } )
 
-	AAdd( aButCli, {  98 ,  OBTN_Handle(  'fCadCli1' , 98 ),   { || ( PushButton( 'fCadCli1' , 98) , xPesqCep() )  } ,  'fCadCli1'   } )
+	//AAdd( aButCli, {  98 ,  OBTN_Handle(  'fCadCli' , 98 ),   { || ( PushButton( 'fCadCli' , 98) , xPesqCep() )  } ,  'fCadCli'   } )
 
 	//msginfo('ok')
 
@@ -176,10 +190,10 @@ Function xInitCad()
 	EventProcessAllHookMessage( nZa2 := EventCreate( {|| InputEvButton( aButx1, cJanx ) },    OBTN_Handle( cJanx, 54 )   ), .T. )
 
 
-	EventProcessAllHookMessage( nZa3 := EventCreate( {|| InputEvButton( aButx1, 'fCadCli1' ) },    OBTN_Handle( 'fCadCli1', 98 )   ), .T. )
+	EventProcessAllHookMessage( nZa3 := EventCreate( {|| InputEvButton( aButx1, 'fCadCli' ) },    OBTN_Handle( 'fCadCli', 98 )   ), .T. )
 		
 
-	ON KEY ESCAPE OF fCadCli1 Action DoMethod( cDiaName , "Release") 
+	ON KEY ESCAPE OF fCadCli Action DoMethod( cDiaName , "Release") 
 
 	If !lNovo
 		LoadCliente(  cCodClien )
@@ -190,10 +204,12 @@ Function xInitCad()
 
 	HabilGrv()
 
-	xMudaTab()
+	//xMudaTab()
 
 
-	fCadCli1 .nome.SetFocus()
+	//fCadCli1 .nome.SetFocus()
+
+	fCadCli .nome.SetFocus()
 
 	//Syswait(.1)
 
@@ -276,6 +292,7 @@ Function gColor1( cJan , cObj )
 	//HabilGrv()
 
 Return
+
 
 
 Function gColor2( cJan , cObj )
@@ -426,106 +443,105 @@ Function LoadCliente(  cCod )
 
 		oRow := oQuery:GetRow(1)
 
-		fCadCli1.lblCodigo.Value := cCod
+		fCadCli.lblCodigo.Value := cCod
 
-		fCadCli1 .nome. value     := GetCampo(oRow , 'nome')
-		fCadCli1 .Cnpj. value     := GetCampo(oRow , 'cpf')
-		fCadCli1 .endereco. value := GetCampo(oRow , 'endereco')
-
-
-		fCadCli2.lblSaldo.Value     := Alltrim( Transform(    GetCampo(oRow , 'Saldo') , "@E 999,999,999.99"  ) )
-		fCadCli2.lblAcumulado.Value := Alltrim( Transform(    GetCampo(oRow , 'acumulado') , "@E 999,999,999.99"  ) )
-
-		fCadCli2.LblQtVendas.Value := Alltrim( Str( GetCampo(oRow , 'QtPeds')  ))
-
-		fCadCli2.lblMaior.Value := Alltrim( Transform(    GetCampo(oRow , 'MaiorCompra') , "@E 999,999,999.99"  ) )
-
-		fCadCli2.LblDtBloq.Value := GetCampo(oRow , 'dtbloqueio')
-
-		fCadCli2.LblUltCompra.Value := GetCampo(oRow , 'dtultcompra')
-
-		fCadcli2.LblUltAtuCad.Value := GetCampo(oRow , 'dtmodcad')
-
-		fCadcli2.LblDtCad.Value := GetCampo(oRow , 'dtcadastro')
+		fCadCli .nome. value     := GetCampo(oRow , 'nome')
+		fCadCli .Cnpj. value     := GetCampo(oRow , 'cpf')
+		fCadCli .endereco. value := GetCampo(oRow , 'endereco')
 
 
-		fCadCli1 .cmbbairros.Displayvalue := GetCampo(oRow , 'bairro')
+		fCadCli.lblSaldo.Value     := Alltrim( Transform(    GetCampo(oRow , 'Saldo') , "@E 999,999,999.99"  ) )
+		fCadCli.lblAcumulado.Value := Alltrim( Transform(    GetCampo(oRow , 'acumulado') , "@E 999,999,999.99"  ) )
 
-		fCadCli1 .fantasia. value := GetCampo(oRow , 'fantasia')
-		fCadCli1 .contato. value := GetCampo(oRow , 'contato')
+		fCadCli.LblQtVendas.Value := Alltrim( Str( GetCampo(oRow , 'QtPeds')  ))
 
-		fCadCli1 .CmbTipo. value := Iif( GetCampo(oRow , 'tipo') = 'F' , 1, 2 )
+		fCadCli.lblMaior.Value := Alltrim( Transform(    GetCampo(oRow , 'MaiorCompra') , "@E 999,999,999.99"  ) )
 
-		fCadCli1 .Telefone. value  :=  GetCampo(oRow , 'fone1')
-		fCadCli1 .foneCon.  value  :=  GetCampo(oRow , 'fone2')
+		fCadCli.LblDtBloq.Value := GetCampo(oRow , 'dtbloqueio')
 
-		fCadCli1 .LblStatus. value  :=  GetCampo(oRow , 'Status')
+		fCadCli.LblUltCompra.Value := GetCampo(oRow , 'dtultcompra')
 
-		fCadCli1 .Email. value    := GetCampo(oRow , 'email')
+		fCadcli.LblUltAtuCad.Value := GetCampo(oRow , 'dtmodcad')
 
-		fCadCli1 .cmbcidade. Displayvalue := GetCampo(oRow , 'cidade')
+		fCadcli.LblDtCad.Value := GetCampo(oRow , 'dtcadastro')
+
+
+		fCadCli .cmbbairros.Displayvalue := GetCampo(oRow , 'bairro')
+
+		fCadCli .fantasia. value := GetCampo(oRow , 'fantasia')
+		fCadCli .contato. value := GetCampo(oRow , 'contato')
+
+		fCadCli .CmbTipo. value := Iif( GetCampo(oRow , 'tipo') = 'F' , 1, 2 )
+
+		fCadCli .Telefone. value  :=  GetCampo(oRow , 'fone1')
+		fCadCli .foneCon.  value  :=  GetCampo(oRow , 'fone2')
+
+		fCadCli .LblStatus. value  :=  GetCampo(oRow , 'Status')
+
+		fCadCli .Email. value    := GetCampo(oRow , 'email')
+
+		fCadCli .cmbcidade. Displayvalue := GetCampo(oRow , 'cidade')
 
 		//fCadCli .CmbUf. value    := GetCampo(oRow , 'uf')
 
-		aUf := GetCmbItens( 'fCadCli1' , 'cmbUf'  )
+		aUf := GetCmbItens( 'fCadCli' , 'cmbUf'  )
 
 		nind2 := Ascan(aUf , GetCampo(oRow , 'Uf') )
 
 		If (nInd2 > 0)
-			fCadCli1 .CmbUf.Value := nind2
+			fCadCli .CmbUf.Value := nind2
 		End If
 
 
 		//msginfo( GetCampo(oRow , 'Cidade')  + ' ' + Str( Ascan( GetCmbItens( 'fCadCli' , 'cmbCidade'  )  , alltrim(GetCampo(oRow , 'Cidade')) ) ) )
 
 
-		fCadCli1 .CmbCidade.Value := Ascan( GetCmbItens( 'fCadCli1' , 'cmbCidade'  )  , Alltrim(GetCampo(oRow , 'Cidade')) )
+		fCadCli .CmbCidade.Value := Ascan( GetCmbItens( 'fCadCli' , 'cmbCidade'  )  , Alltrim(GetCampo(oRow , 'Cidade')) )
 
-		fCadCli1 .CmbBairros.Value := Ascan( GetCmbItens( 'fCadCli1' , 'cmbBairros'  )  , Alltrim(GetCampo(oRow , 'Bairro')) )
-
-
-		fCadCli2 .CmbCidEnt.Value := Ascan( GetCmbItens( 'fCadCli2' , 'cmbCidEnt'  )  , Alltrim(GetCampo(oRow , 'CidEnt')) )
+		fCadCli .CmbBairros.Value := Ascan( GetCmbItens( 'fCadCli' , 'cmbBairros'  )  , Alltrim(GetCampo(oRow , 'Bairro')) )
 
 
-		fCadCli2.CmbBaiEnt.Value := Ascan( GetCmbItens( 'fCadCli2' , 'cmbBaiEnt'  )  , Alltrim(GetCampo(oRow , 'BaiEnt')) )
+		fCadCli .CmbCidEnt.Value := Ascan( GetCmbItens( 'fCadCli' , 'cmbCidEnt'  )  , Alltrim(GetCampo(oRow , 'CidEnt')) )
+
+
+		fCadCli.CmbBaiEnt.Value := Ascan( GetCmbItens( 'fCadCli' , 'cmbBaiEnt'  )  , Alltrim(GetCampo(oRow , 'BaiEnt')) )
 
 
 		If !Empty(GetCampo(oRow , 'Categoria'))
 			cRet1 := AllTrim( RetSql( "select descricao from categorias where codigo = " + Quotedstr(GetCampo(oRow , 'Categoria')) + " And Status = 'Normal'"  ))
-			fCadCli2 .CmbCategoria.Value := Ascan( GetCmbItens( 'fCadCli2' , 'CmbCategoria'  )  , Alltrim(cRet1) )
+			fCadCli .CmbCategoria.Value := Ascan( GetCmbItens( 'fCadCli' , 'CmbCategoria'  )  , Alltrim(cRet1) )
 		End If
 
 
 		If !Empty(GetCampo(oRow , 'Classe'))
 			cRet2 := AllTrim( RetSql( "select descricao from classes where codigo = " + Quotedstr(GetCampo(oRow , 'classe')  )  + " And Status = 'Normal'" ))
-			fCadCli2 .CmbClasse.Value    := Ascan( GetCmbItens( 'fCadCli2' , 'CmbClasse'     )  , Alltrim(cRet2) )
+			fCadCli .CmbClasse.Value    := Ascan( GetCmbItens( 'fCadCli' , 'CmbClasse'     )  , Alltrim(cRet2) )
 		End If
 
 
-		fCadCli1 .Rg. value          := GetCampo(oRow , 'Rg')
-		fCadCli1 .DataNasc. value    := GetCampo(oRow , 'DataNasc')
+		fCadCli .Rg. value          := GetCampo(oRow , 'Rg')
+		fCadCli .DataNasc. value    := GetCampo(oRow , 'DataNasc')
 
-		fCadCli1 .cep. value := GetCampo(oRow , 'Cep')
-		fCadCli1 .Referencia. value := GetCampo(oRow , 'Referencia')
+		fCadCli .cep. value := GetCampo(oRow , 'Cep')
+		fCadCli .Referencia. value := GetCampo(oRow , 'Referencia')
 
-		fCadCli2 .EdtObs. value  := GetCampo(oRow , 'observacao')
+		fCadCli .EdtObs. value  := GetCampo(oRow , 'observacao')
 
-		fCadCli1 .InEst. value  := GetCampo(oRow , 'Ie')
-
-
-		fCadCli2 .EndEnt.value := GetCampo(oRow , 'Endent')
+		fCadCli .InEst. value  := GetCampo(oRow , 'Ie')
 
 
-		fCadCli2 .CepEnt.value := GetCampo(oRow , 'CepEnt')
-		fCadCli2 .RefEnt.value := GetCampo(oRow , 'RefEnt')
+		fCadCli .EndEnt.value := GetCampo(oRow , 'Endent')
 
-		fCadCli1 .WhatsAp. value := GetCampo(oRow , 'Whatzap')
+
+		fCadCli .CepEnt.value := GetCampo(oRow , 'CepEnt')
+		fCadCli .RefEnt.value := GetCampo(oRow , 'RefEnt')
+
+		fCadCli .WhatsAp. value := GetCampo(oRow , 'Whatzap')
 
 		If Alltrim(GetCampo(oRow , 'Status')) = 'Inativo'
-			yAviso("Cliente com Cadastro Bloqueado\Inativo.Apenas sera Visualizado(Somente Leitura).")
-			SetWindowControlsEnable('fCadCli1' , .f. )
-			SetWindowControlsEnable('fCadCli2' , .f. )
-
+			yAviso("Cliente com Cadastro Bloqueado\Inativo.Apenas sera Visualizado(Somente Leitura)." )
+			SetWindowControlsEnable('fCadCli' , .f. )
+			//SetWindowControlsEnable('fCadCli' , .f. )
 		End If 
 
 	Else
@@ -550,8 +566,8 @@ Function GrvClien(lNovo)
 
 
 	Local cSqlinsert
-	Local cCodClasse := GetTableId( 'Classes', fCadCli2.CmbClasse.DisplayValue )
-	Local cCodCateg  := GetTableId( 'Categorias', fCadCli2.CmbCategoria.DisplayValue )
+	Local cCodClasse := GetTableId( 'Classes', fCadCli.CmbClasse.DisplayValue )
+	Local cCodCateg  := GetTableId( 'Categorias', fCadCli.CmbCategoria.DisplayValue )
 	Local nId        := GetReg("Clientes")
 	Local cCodMun    := ''
 	Local cMsg       := 'Confirma Cadastro desse Cliente?'
@@ -580,66 +596,63 @@ Function GrvClien(lNovo)
 		SysWait(.3)
 
 		Return .f.
-		
 
 	End If
-
 
 	If (lNovo)
 		Aadd(aValores , Quotedstr(  AllTrim( StrZero( nId + 1 , 6 ) ) )  )
 	End If
 
 
-	Aadd(aValores , Quotedstr(Alltrim(fCadCli1 .nome. value))  )
-	Aadd(aValores , Quotedstr(Alltrim(fCadCli1 .cnpj. value))  )
-	Aadd(aValores , Quotedstr(Alltrim(fCadCli1 .endereco. value)) )
+	Aadd(aValores , Quotedstr(Alltrim(fCadCli .nome. value))  )
+	Aadd(aValores , Quotedstr(Alltrim(fCadCli .cnpj. value))  )
+	Aadd(aValores , Quotedstr(Alltrim(fCadCli .endereco. value)) )
 
-	Aadd(aValores , Quotedstr(Alltrim(fCadCli1 .cmbbairros.Displayvalue)) )
-	Aadd(aValores , Quotedstr(Alltrim(fCadCli1 .fantasia. value))   )
-	Aadd(aValores , Quotedstr(Alltrim(fCadCli1 .contato. value))    )
+	Aadd(aValores , Quotedstr(Alltrim(fCadCli .cmbbairros.Displayvalue)) )
+	Aadd(aValores , Quotedstr(Alltrim(fCadCli .fantasia. value))   )
+	Aadd(aValores , Quotedstr(Alltrim(fCadCli .contato. value))    )
 
-	Aadd(aValores, Quotedstr(Iif( fCadCli1 .CmbTipo. value = 1, 'F', 'J' )) )
+	Aadd(aValores, Quotedstr(Iif( fCadCli .CmbTipo. value = 1, 'F', 'J' )) )
 
-	Aadd(aValores , Quotedstr(AllTrim( fCadCli1 .Telefone. value )) )
-	Aadd(aValores , Quotedstr(AllTrim( fCadCli1 .FoneCon. value )) )
+	Aadd(aValores , Quotedstr(AllTrim( fCadCli .Telefone. value )) )
+	Aadd(aValores , Quotedstr(AllTrim( fCadCli .FoneCon. value )) )
 
 
 
-	Aadd(aValores , Quotedstr(AllTrim( fCadCli1 .Email. value )) )
-	Aadd(aValores , Quotedstr(AllTrim( fCadCli1 .cmbcidade. Displayvalue ))  )
+	Aadd(aValores , Quotedstr(AllTrim( fCadCli .Email. value )) )
+	Aadd(aValores , Quotedstr(AllTrim( fCadCli .cmbcidade. Displayvalue ))  )
 
-	Aadd(aValores , Quotedstr(AllTrim( fCadCli1 .cmbUf.DisplayValue)) )
+	Aadd(aValores , Quotedstr(AllTrim( fCadCli .cmbUf.DisplayValue)) )
 
-	Aadd(aValores , Quotedstr(AllTrim( fCadCli1 .rg. value )) )
+	Aadd(aValores , Quotedstr(AllTrim( fCadCli .rg. value )) )
 
-	Aadd(aValores , Quotedstr(ConvDt( fCadCli1 .DataNasc. value ) )  )
+	Aadd(aValores , Quotedstr(ConvDt( fCadCli .DataNasc. value ) )  )
 
-	Aadd(aValores , Quotedstr(AllTrim( fCadCli1 .cep. value )) )
-	Aadd(aValores , Quotedstr(AllTrim( fCadCli1 .Referencia. value )) )
+	Aadd(aValores , Quotedstr(AllTrim( fCadCli .cep. value )) )
+	Aadd(aValores , Quotedstr(AllTrim( fCadCli .Referencia. value )) )
 
 	If (lNovo)
 		Aadd(aValores , QuotedStr('Normal') )
 		Aadd(aValores , Quotedstr(ConvDt( dDataBase ) )  )
 	End If
 
-	Aadd(aValores , Quotedstr(AllTrim( fCadCli2 .EdtObs. value )) )
-	Aadd(aValores , Quotedstr(AllTrim( fCadCli1 .InEst. value )) )
-
+	Aadd(aValores , Quotedstr(AllTrim( fCadCli .EdtObs. value )) )
+	Aadd(aValores , Quotedstr(AllTrim( fCadCli .InEst. value )) )
 	If (!lNovo)
 		Aadd(aValores , Quotedstr(ConvDt( dDataBase ) )  )
 	End If
-	Aadd(aValores , chr( 39 ) + AllTrim( fCadCli2 .EndEnt.value ) + Chr( 39 ) )
-	Aadd(aValores ,chr( 39 ) + AllTrim( fCadCli2 .CmbBaiEnt.Displayvalue ) + Chr( 39 ) )
+	Aadd(aValores , chr( 39 ) + AllTrim( fCadCli .EndEnt.value ) + Chr( 39 ) )
+	Aadd(aValores ,chr( 39 ) + AllTrim( fCadCli .CmbBaiEnt.Displayvalue ) + Chr( 39 ) )
 
-	Aadd(aValores ,chr( 39 ) + AllTrim( fCadCli2 .CmbCidEnt.Displayvalue ) + Chr( 39 ) )
+	Aadd(aValores ,chr( 39 ) + AllTrim( fCadCli .CmbCidEnt.Displayvalue ) + Chr( 39 ) )
 
 
 
-	Aadd(aValores ,chr( 39 ) + AllTrim( fTiraChar(fCadCli2 .CepEnt.value) ) + Chr( 39 ) )
+	Aadd(aValores ,chr( 39 ) + AllTrim( fTiraChar(fCadCli .CepEnt.value) ) + Chr( 39 ) )
 
-	Aadd(aValores ,chr( 39 ) + AllTrim( fCadCli2 .RefEnt.value ) + Chr( 39 ) )
+	Aadd(aValores ,chr( 39 ) + AllTrim( fCadCli .RefEnt.value ) + Chr( 39 ) )
 
-	Aadd(aValores , Quotedstr(AllTrim( fCadCli1 .WhatsAp. value )) )
+	Aadd(aValores , Quotedstr(AllTrim( fCadCli .WhatsAp. value )) )
 
 	Aadd(aValores ,   Chr( 39 ) + AllTrim( cCodClasse ) + Chr( 39 )  )
 	Aadd(aValores ,   Chr( 39 ) + AllTrim( cCodCateg ) + Chr( 39 )   )
@@ -660,10 +673,9 @@ Function GrvClien(lNovo)
 
 	IF oQuery:NetErr()
 		//CursorArrow()
-		yAviso( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error() )
+		yAviso( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  , .f. )
 		Return .f.
 	END IF
-
 
 	oServer:Destroy()
 	oServer := Nil
@@ -673,7 +685,7 @@ Function GrvClien(lNovo)
 
 	//SysWait(.1)
 
-	fNewCadCli.Release()
+	fCadCli.Release()
 
 	lOkCad := .t.
 
@@ -762,8 +774,6 @@ FUNCTION AtuNewLine( cTb, Condicao, cJan, cSql1 )
 
 RETURN
 
-
-
 FUNCTION RetRecord( cSql1, cTabela )
 
 	LOCAL oServer := GetConexao()
@@ -826,6 +836,9 @@ RETURN aM1
 
 
 
+
+
+
 FUNCTION InpCadCli()
 
 	STATIC lTracking45 := .F.
@@ -838,16 +851,20 @@ FUNCTION InpCadCli()
 	Local cForm
 
 
+
 	IF ( nMsg == WM_MOUSEMOVE ) .and. (!lTracking45)
 
 		lTracking45 := TrackMouseEvent( nHWnd ) // TME_LEAVE is default flag
 		GetControlNameByHandle(nHWnd, @cControl, @cForm)
 		//msginfo(cControl)
 
+
+
+
 		If (cControl = 'ImgLupa') .Or. (cControl = 'ImgEnd')			
 
-			SetHandCursor(GetControlHandle( cControl , 'fCadCli1' )   , "Finger.cur" )
-			_SetToolTip(cControl,'fCadCli1',hb_AnsiToOem("Resgata Endereço Baseado no CEP Informado.") )
+			SetHandCursor(GetControlHandle( cControl , 'fCadCli' )   , "Finger.cur" )
+			_SetToolTip(cControl,'fCadCli',hb_AnsiToOem("Resgata Endereço Baseado no CEP Informado.") )
 
 
 		End If
@@ -888,6 +905,7 @@ Function GetCmbItens( cForm1 , cCmb  )
 	If !_isControlDefined( cCmb , cForm1 )
 		Return aM2
 	End If 
+
 
 	nCount := Getproperty( cForm1 , cCmb  , 'ItemCount' )
 
@@ -930,7 +948,7 @@ Return
 
 Function xChgUf()
 
-	Local cUf1 := fCadcli1.cmbUf.DisplayValue
+	Local cUf1 := fCadcli.cmbUf.DisplayValue
 
 	If !Empty(cUf1)
 
@@ -939,12 +957,12 @@ Function xChgUf()
 		//sysWait(.1)
 
 
-		DoMethod( 'fCadcli1' , 'CmbBairros'  , 'DeleteAllItems' )
-		DoMethod( 'fCadcli2' , 'CmbBaiEnt'  , 'DeleteAllItems' )
+		DoMethod( 'fCadcli' , 'CmbBairros'  , 'DeleteAllItems' )
+		DoMethod( 'fCadcli' , 'CmbBaiEnt'  , 'DeleteAllItems' )
 
 
-		EncheCmb( 'fCadcli1' , 'CmbCidade' , "select municipio from ibge where uf = '" + cUf1  + "' order by 1" )
-		EncheCmb( 'fCadcli2' , 'CmbCidEnt' , "select municipio from ibge where uf = '" + cUf1  + "' order by 1" )
+		EncheCmb( 'fCadcli' , 'CmbCidade' , "select municipio from ibge where uf = '" + cUf1  + "' order by 1" )
+		EncheCmb( 'fCadcli' , 'CmbCidEnt' , "select municipio from ibge where uf = '" + cUf1  + "' order by 1" )
 
 
 
@@ -955,73 +973,98 @@ return
 
 Function xPesqCep()
 
-	Local cCep := fTiraChar(GetProperty('fCadCli1','Cep','Value'))
+	Local cCep := fTiraChar(GetProperty('fCadCli','Cep','Value'))
+
+	Local cCepEnt := fTiraChar(GetProperty('fCadCli','CepEnt','Value'))
 
 	Local oServer:=GetConexao()
 	Local oQry
+
+	Local cControl
+	Local cForm 
 
 	Local aM1
 	Local oRow
 	Local nCidade
 	Local aBairros
-	Local cJanx1 := 'fCadCli1'
+	Local cJanx1 := 'fCadCli'
 
-	//SetWaitCursor(GetControlHandle( 'imgLupa' , cJanx1 ) )
-
-	SetWaitCursor( fCadCli1.Handle  )
-	SetWaitCursor( fCadCli1.Handle   , "Finger.cur" )
-
-	oQry := oServer:Query("select * from cep where cep = '" + cCep + "'")
+	GetControlNameByHandle(GetFocus() , @cControl , @cForm )
 
 
+	If (Alltrim(cControl) != 'Cep') .And. (Alltrim(cControl) != 'CepEnt')
+		yAviso("Campo CEP(Cadastro ou Entrega) Deve estar Selecionado Para Fazer a Consulta." , .f.)	
+		Return 
+	End If 	
+
+	SysWait(.1)
+
+	
+	If Alltrim(cControl) == 'Cep'
+		oQry := oServer:Query("select * from cep where cep = '" + cCep + "'")
+	Else 		
+		oQry := oServer:Query("select * from cep where cep = '" + cCepEnt + "'")
+	End If 	
 
 	If oQry:LastRec() > 0
 
 		oRow := oQry:GetRow(1)
 
-		aM1      := GetCmbItens( 'fCadCli1' , 'CmbUf'  )
-		SetProperty( 'fCadCli1','CmbUf','Value' , Ascan(aM1 , Alltrim(GetCampo(oRow , 'Uf')) )  )
+		aM1      := GetCmbItens( 'fCadCli' , 'CmbUf'  )
+		SetProperty( 'fCadCli','CmbUf','Value' , Ascan(aM1 , Alltrim(GetCampo(oRow , 'Uf')) )  )
 
 
 		xChgUf()
 
 
-		aM1 := GetCmbItens( 'fCadCli1' , 'CmbCidade'  )
-
+		aM1 := GetCmbItens( 'fCadCli' , 'CmbCidade'  )
 		nCidade := Ascan( aM1  , alltrim(GetCampo(oRow , 'Cidade')) )
 
-
-		SetProperty( 'fCadCli1','CmbCidade','Value' ,  nCidade )
-
-		xChgCidade()
-
-		aBairros := GetCmbItens( 'fCadCli1' , 'CmbBairros'  )
+		//xChgCidade
 
 
+		If Alltrim(cControl) = 'CepEnt'
+			
 
-		SetProperty( 'fCadCli2','CmbCidEnt','Value' ,  nCidade )
+			SetProperty( 'fCadCli','CmbCidEnt','Value' ,  nCidade )
+			xChgCidade(  .t. )
 
-		SetProperty( 'fCadCli1','Endereco','Value' , Alltrim(GetCampo(oRow , 'Endereco')) )
+			aBairros := GetCmbItens( 'fCadCli' , 'CmbBaiEnt'  )
 
-		SetProperty( 'fCadCli2','EndEnt','Value' , Alltrim(GetCampo(oRow , 'Endereco')) )
+			SetProperty( 'fCadCli','EndEnt','Value' , Alltrim(GetCampo(oRow , 'Endereco')) )
+			SetProperty( 'fCadCli','CmbBaiEnt','Value' , Ascan( aBairros  , Alltrim(GetCampo(oRow , 'Bairro')) )  )
 
-		SetProperty( 'fCadCli2','CepEnt','Value' , cCep )
+			//SetProperty( 'fCadCli','CepEnt','Value' , cCep )
+
+			//SetProperty( 'fCadCli','CmbCidade','Value' ,  nCidade )
+
+		Else 
 
 
-		SetProperty( 'fCadCli1','CmbBairros','Value' , Ascan( aBairros  , Alltrim(GetCampo(oRow , 'Bairro')) )  )
+			nCidade := Ascan( aM1  , alltrim(GetCampo(oRow , 'Cidade')) )	
 
-		SetProperty( 'fCadCli2','CmbBaiEnt','Value' , Ascan( aBairros  , Alltrim(GetCampo(oRow , 'Bairro')) )  )
+			SetProperty( 'fCadCli','Endereco','Value' , Alltrim(GetCampo(oRow , 'Endereco')) )
+			SetProperty( 'fCadCli','CmbCidade','Value' ,  nCidade )
 
+			xChgCidade( .f. )
+
+			aBairros := GetCmbItens( 'fCadCli' , 'CmbBairros'  )
+
+			SetProperty( 'fCadCli','CmbBairros','Value' , Ascan( aBairros  , Alltrim(GetCampo(oRow , 'Bairro')) )  )			
+			//SetProperty( 'fCadCli','CmbCidade','Value' ,  nCidade )
+			
+		End If 		
 
 
 	Else
 
-		SetProperty( 'fCadCli1','Endereco','Value' , '' )
-		yAviso('Cep não Localizado.' ,, 'fCadCli1' )
+		SetProperty( 'fCadCli','Endereco','Value' , '' )
+		yAviso('Cep Não Localizado.' , .f. )
 		SysWait(.2)
-		fCadCli1.nome.SetFocus()
+		fCadCli.nome.SetFocus()
 
 	End If
+
 
 
 	oServer:Destroy()
@@ -1033,16 +1076,32 @@ Function xPesqCep()
 
 Return
 
-Function xChgCidade()
+Function xChgCidade( lEntrega )
 
-	Local cCid := Alltrim(fCadcli1.cmbCidade.DisplayValue)
-	Local cUf1 := fCadcli1.cmbUf.DisplayValue
+	Local cCid := Alltrim(fCadcli.cmbCidade.DisplayValue)
+	Local cCid2 := Alltrim(fCadcli.cmbCidEnt.DisplayValue)
+	Local cUf1 := fCadcli.cmbUf.DisplayValue
+	Local cCidade := ''
 
 
-	If !Empty(cCid)
-		SetHandCursor(GetControlHandle( 'Frame_1' , 'fCadCli1' )   , "Finger.cur" )
-		EncheCmb( 'fCadcli1' , 'CmbBairros' , "select  bairro from bairros where uf = '" + cUf1  + "' and cidade = '"  + cCid + "' order by 1" )
-		EncheCmb( 'fCadcli2' , 'CmbBaiEnt' , "select  bairro from bairros where uf = '" + cUf1  + "' and cidade = '"  + cCid + "' order by 1" )
+	If !Empty(Alltrim(cCid+cCid2))
+
+
+		IF !Empty(Alltrim(cCid))
+			cCidade := cCid	
+		Else 			
+			cCidade := cCid2	
+	    End If		
+
+
+		//SetHandCursor(GetControlHandle( 'Tab_1' , 'fCadCli' )   , "Finger.cur" )
+
+		If !lEntrega
+			EncheCmb( 'fCadcli' , 'CmbBairros' , "select  bairro from bairros where uf = '" + cUf1  + "' and cidade = '"  + cCidade + "' order by 1" )
+		Else 	
+			EncheCmb( 'fCadcli' , 'CmbBaiEnt' , "select  bairro from bairros where uf = '" + cUf1  + "' and cidade = '"  + cCidade + "' order by 1" )
+		End If 	
+
 	End If
 
 Return
@@ -1052,13 +1111,12 @@ Return
 
 Function xCidEnt()
 
-	Local cUf1 := fCadcli1.cmbUf.DisplayValue
-	Local cCid := fCadcli2.cmbCidEnt.DisplayValue
+	Local cUf1 := fCadcli.cmbUf.DisplayValue
+	Local cCid := fCadcli.cmbCidEnt.DisplayValue
 
-	SetHandCursor( GetFormHandle( 'fCadCli2' )   , "Finger.cur" )
+	SetHandCursor( GetFormHandle( 'fCadCli' )   , "Finger.cur" )
 
-	EncheCmb( 'fCadcli2' , 'CmbBaiEnt' , "select  bairro from bairros where uf = '" + cUf1  + "' and cidade = '"  + cCid + "' order by 1" )
-
+	EncheCmb( 'fCadcli' , 'CmbBaiEnt' , "select  bairro from bairros where uf = '" + cUf1  + "' and cidade = '"  + cCid + "' order by 1" )
 
 
 REturn
@@ -1079,18 +1137,19 @@ Static Function HabilGrv()
 
 
 	//Local cJanx  := 'fCadCli1'
-	Local cJanx  := 'fNewCadCli'
+	Local cJanx  := 'fCadCli'
 	Local lCpfOk := .f.
 
-	If Len(Alltrim(fCadCli1.Cnpj.Value)) = 11
-		lCpfOk := Validcpf(  Alltrim(fCadCli1.Cnpj.Value)  )
+	If Len(Alltrim(fCadCli.Cnpj.Value)) = 11
+		lCpfOk := Validcpf(  Alltrim(fCadCli.Cnpj.Value)  )
 	Else
-		lCpfOk := ValidCnPj(  Alltrim(fCadCli1.Cnpj.Value)  )
+		lCpfOk := ValidCnPj(  Alltrim(fCadCli.Cnpj.Value)  )
 	End If
 
 
-	If (Len(Alltrim(fCadCli1.Nome.Value)) > 0) .And. (  Len(Alltrim(fCadCli1.Cnpj.Value)) > 0  ) .And. ;
-			(Len(Alltrim(fCadCli1.Endereco.Value)) > 0) .And. (lCpfOk)
+
+	If (Len(Alltrim(fCadCli.Nome.Value)) > 0) .And. (  Len(Alltrim(fCadCli.Cnpj.Value)) > 0  ) .And. ;
+			(Len(Alltrim(fCadCli.Endereco.Value)) > 0) .And. (lCpfOk)
 		OBTN_Enable( cJanx , 353 , .t.)
 	Else
 		OBTN_Enable( cJanx , 353 , .f.)
@@ -1275,7 +1334,7 @@ Function xBloquear(  cCodCli , cStatus )
 
 
 	IF oQuery:NetErr()
-		MsgStop( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error() )
+		MsgStop( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  , .f. )
 		RETURN .f.
 	END IF
 
@@ -1292,7 +1351,7 @@ Return .t.
 
 
 Function xMudaTab()
-	Local nInd1 := fNewCadcli.Tab_1.Value
+	Local nInd1 := fCadCli.Tab_1.Value
 
 
 	//DoMethod("fCadCli1" , "Hide")
@@ -1301,26 +1360,26 @@ Function xMudaTab()
 	
 	If nInd1 = 1
 
-		DoMethod("fCadCli2" , "Hide")
-		DoMethod("fCadCli1" , "Show")
+	//	DoMethod("fCadCli2" , "Hide")
+	//	DoMethod("fCadCli1" , "Show")
 
 
 	//	fCadCli1.Col := 292
 	//	fCadCli1.Row := 270
 		//fCadCli1.Height := 347
 
-		fCadCli1 .nome.SetFocus()
+		fCadCli .nome.SetFocus()
 
 	Else
 
-		DoMethod("fCadCli1" , "Hide")
-		DoMethod("fCadCli2" , "Show")
+	//	DoMethod("fCadCli1" , "Hide")
+	//	DoMethod("fCadCli2" , "Show")
 
 	//	fCadCli2.Col := 292
 		//fCadCli2.Row := 270
 		//fCadCli2.Height := 347
 
-		fCadCli2 .Endent.SetFocus()
+		fCadCli .Endent.SetFocus()
 
 	End If
 

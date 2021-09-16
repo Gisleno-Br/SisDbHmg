@@ -3,8 +3,8 @@
 
 #include <hmg.ch>
 
-//#include "hmg.ch"
 
+//#include "hmg.ch"
 
 
 
@@ -78,6 +78,7 @@ ANNOUNCE RDDSYS
 
 STATIC nIndexEvent := 1
 
+//descriÃ§Ã£o
 
 Define Window Main
 
@@ -87,10 +88,13 @@ REQUEST HB_CODEPAGE_PT850
 
 FUNCTION CadCli()
 
+	
+	
 	LOCAL wCad := 'clientes'
 	Local aOp1 := {'Consultas','Relatorios','Parametros' }
 
 	Local cControl
+
 
 
 	Local  aButOpcoes := {  { "&Incluir", {|| ( fx1( "novo")  )     }, .T., "Cadastra um Novo Cliente", 0 }, ;
@@ -102,8 +106,6 @@ FUNCTION CadCli()
 
 
 	//Local cform
-
-
 
 	Local aOp2 := { {'2-Geral' , { || msginfo('ok') } } ,   ;
 		{'2-Geral1' , { || msginfo('ok1')} },;
@@ -119,6 +121,7 @@ FUNCTION CadCli()
 	LOCAL aCampos := GetCamposDic( wCad, 'S', .T. )
 
 	HB_SETCODEPAGE("UTF8")
+
 
 
 	Private nItMax := 18
@@ -644,7 +647,7 @@ Function ProcFiltro( cTab1 , lEfect )
 
 	If (lOpcaoAberta)
 		//DoMethod(cAuxName , 'Hide' )
-		yAviso("Não é possivel Executar Filtros com a Tela de opções Ativa.")
+		yAviso("Nï¿½o ï¿½ possivel Executar Filtros com a Tela de opï¿½ï¿½es Ativa.")
 		Return
 	End If
 
@@ -716,6 +719,7 @@ Function ProcFiltro( cTab1 , lEfect )
 //	BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , Nil , .t. )
 
 	ShowButTop( .t. )
+
 
 
 REturn
@@ -1100,7 +1104,7 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 
 
 	If (oQuery:Lastrec()  == 0 )
-		yAviso( 'Este Cadastro Não Possui Registros' ,, .f. )	    
+		yAviso( 'Este Cadastro Nï¿½o Possui Registros' ,, .f. )	    
 		//Return 	
 	End If 
 
@@ -2719,14 +2723,14 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 			END IF
 
-			*//Exclusão
+			*//Exclusï¿½o
 			IF nId == 5459
 
 
 				//PushButton( cFormPrin  , nid )
 				PushButton( cFormPrin  , nId )
 
-				If Confirmaviso("Confirma Exclusão dessa Consulta ? " ,cFormPrin )
+				If Confirmaviso("Confirma Exclusï¿½o dessa Consulta ? " ,cFormPrin )
 
 
 					ExcluiConsulta(nIdConsulta)
@@ -2897,6 +2901,7 @@ Function CrieSubMenu(aSub1)
 	// msginfo('ok')
 
 	For n1 := 1 To Len(aSub1)
+		
 
 			nCont1++
 			cLabelx := 'MenuCons' + StrZero(nCont1,3)
@@ -2919,8 +2924,6 @@ Function CrieSubMenu(aSub1)
 
 				nHandle1 := GetControlHandle( cLabelx, cMenuName )
 
-				//HMG_ChangeWindowStyle(nHandle1  , NIL, WS_BORDER  ,  .F., .T.)
-				//HMG_ChangeWindowStyle(nHandle1  , WS_EX_STATICEDGE, NIL, .T., .T.)
 
 				SetHandCursor( nHandle1  , "Finger.cur" )
 
@@ -3165,7 +3168,7 @@ Function OrdeneCol( nIndice )
 	nColOrder := nIndice
 
 	If lOpcaoAberta
-		yAviso("Opção não Disponivel no Momento.")
+		yAviso("Opï¿½ï¿½o nï¿½o Disponivel no Momento.")
 		Return
 	End If
 

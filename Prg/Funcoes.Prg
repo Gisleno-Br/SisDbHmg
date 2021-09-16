@@ -178,7 +178,7 @@ FUNCTION GetCamposDic( cTabela, cBrowse, lCmpTab , lOem )
 	oServ := Nil
 
 	IF Len( aCampos ) == 0
-		yAviso( 'Dicionario de dados não Localizado para Tabela ' +  cTabela + QUEBRA + 'Contacte Suporte.' ,, .f. )
+		yAviso( 'Dicionario de dados nï¿½o Localizado para Tabela ' +  cTabela + QUEBRA + 'Contacte Suporte.' ,, .f. )
 	END IF
 
 RETURN aCampos
@@ -373,7 +373,7 @@ FUNCTION xInit()
 
 
 	IF !File( Alltrim(cInifile) )
-		MsgInfo( 'Arquivo DataBase.ini não Localizado , Impossivel Continuar.' )
+		MsgInfo( 'Arquivo DataBase.ini nï¿½o Localizado , Impossivel Continuar.' )
 		//fPrincipal.Release()
 	END IF
 
@@ -712,7 +712,7 @@ FUNCTION GetCamposInf( cTabela, cInf  ,cCampo )
 	oServ := Nil
 
 	IF Len( aTam ) == 0
-		yAviso( 'Dicionario de Dados não Localizado para Tabela ' +  cTabela  + '(' + cInf + ')'   + QUEBRA + 'Contacte Suporte.' ,, .f.  )
+		yAviso( 'Dicionario de Dados nï¿½o Localizado para Tabela ' +  cTabela  + '(' + cInf + ')'   + QUEBRA + 'Contacte Suporte.' ,, .f.  )
 	END IF
 
 RETURN aTam
@@ -1063,7 +1063,7 @@ Function Grayness_effect_start(  cJanela  )
 	lDrawMain := .f.
 
 	If Alltrim(cJanela) == 'Main'
-	   DoMethod("fSplit6","Hide")
+	    DoMethod("fSplit6","Hide")
 		DoMethod("fSplit2","Hide")
 		DoMethod("fSplit3","Hide")
 		DoMethod("fSplit4","Hide")
@@ -1524,6 +1524,7 @@ Function yEfect(cFormName , lEfect)
 	Local yWidth
 	Local YHeight
 	Local aZ1 := {}
+	Local cMenuName := 'fMenu' + Right(cFormName,5)
 
 
 	If _isWindowDefined(cActiveJan)
@@ -1553,10 +1554,35 @@ Function yEfect(cFormName , lEfect)
 		//MsgInfo('2 ' + cFormName)
 		Flag_AlphaBlend_Effect := .T.
 
-		hBit2 := BT_BitmapCaptureWindow ( cActiveJan , 0 , 0 , yWidth, nDeskTopHeight)
-		hBit11 := BT_BitmapCaptureWindow ('fSplit2' , 0 , 0 , fSplit2.Width , fSplit2.Height)
+		If _isWindowDefined(cMenuName)
+			DoMethod( cMenuName , 'Hide')
+		End If 
 
-		//Grayness_effect_start(  cFormName )
+//		hBit2 := BT_BitmapCaptureWindow ( cActiveJan , 0 , 0 , yWidth, nDeskTopHeight)
+//		hBit11 := BT_BitmapCaptureWindow ('fSplit2' , 0 , 0 , fSplit2.Width , fSplit2.Height)
+
+
+
+		If cFormName = 'Main'
+
+			hBitMain := BT_BitmapCaptureWindow (cActiveJan , 25 , 1 , yWidth, nDeskTopHeight)
+
+			DoMethod("fSplit6","Hide")
+			DoMethod("fSplit2","Hide")
+			DoMethod("fSplit3","Hide")
+			DoMethod("fSplit4","Hide")
+			DoMethod("fSplit5","Hide")
+			DoMethod("fSplit10","Hide")
+			
+	
+		Else
+	
+			hBit2 := BT_BitmapCaptureWindow ( cActiveJan , 0 , 0 , yWidth, nDeskTopHeight)
+			hBit11 := BT_BitmapCaptureWindow ('fSplit2' , 0 , 0 , fSplit2.Width , fSplit2.Height)
+			//lTelaToda := .t.
+	
+		End If
+		
 
 		aZ1 := SetWindowControlsVisible(  cActiveJan , .f. )		
 
@@ -1591,17 +1617,16 @@ REturn aZ1
 Function EfectEnd(cFname1 , aMtr1 )
 
 	Local lEfect := .t.
+	Local cMenuName := 'fMenu' + Right(cFname1,5)
 
 	If (lEfect)
-		//Grayness_effect_End( cFName1 )
-
+		
 		
 		hBitmap := 0
 		hBitmap2 := 0
 		hBitmap3 := 0
 		hBitmap4 := 0
 		hBitmap5 := 0
-
 
 
 		hBitmap6 := 0
@@ -1622,6 +1647,7 @@ Function EfectEnd(cFname1 , aMtr1 )
 		End If
 
 
+
 		hBitMain  := 0	
 
 		
@@ -1635,12 +1661,28 @@ Function EfectEnd(cFname1 , aMtr1 )
 		BT_ClientAreaInvalidateAll ( cActiveJan )
 		BT_ClientAreaInvalidateAll ('Main')
 
+		
+		If _isWindowDefined(cMenuName)
+			DoMethod( cMenuName , 'Show')
+		End If 
+
+		
+		If (Alltrim(cActiveJan) == "Main")
+			DoMethod("fSplit6","Show")
+			DoMethod("fSplit2","Show")
+			DoMethod("fSplit10","Show")
+			DoMethod("fSplit3","Show")
+			DoMethod("fSplit4","Show")
+			DoMethod("fSplit5","Show")
+		End If 	
 
 
 		Syswait(.1)
 		lInvalid := .f.
 
-		PostMessage(   GetControlHandle( 'br_grid', cActiveJan ) , WM_LBUTTONUP,0,0)
+		If _isControlDefined(    'br_grid', cActiveJan   )
+			PostMessage(   GetControlHandle( 'br_grid', cActiveJan ) , WM_LBUTTONUP,0,0)
+		End If 
 
 
 	End If

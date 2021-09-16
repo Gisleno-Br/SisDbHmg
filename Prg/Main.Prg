@@ -134,6 +134,7 @@ FUNCTION Main
 
 
 
+
 	/*
 
 	Private cFormPrin := ''
@@ -181,6 +182,7 @@ FUNCTION Main
 
 
 	//Altd()
+
 
 	PUBLIC cRazaoEmp     := ''
 	PUBLIC cFantadisEmp  := ''
@@ -348,9 +350,9 @@ FUNCTION Main
 
 //	HB_SetCodePage("PT850")
 
-	HB_SETCODEPAGE("UTF8")
+	//HB_SETCODEPAGE("UTF8")
 
-	Public cAviso1 :=  "Deseja Confirmar essa Operação?"
+	Public cAviso1 :=  "Deseja Confirmar essa Operao?"
 	//msginfo(hb_AnsiToOem(cv1))
 
 	//MsgAviso(cv1)
@@ -373,11 +375,13 @@ FUNCTION Main
 	Main.Maximize()
 	
 
+
 	Load Window fSplitSubMenu
+
 
 	Private aRotinas := {}
 
-	Private aOpcoes := {{"Cadastros", Nil , 1 , 0  }, ;
+	Private aOpcoes := {{"Cadastro", Nil , 1 , 0  }, ;
 		{"Movimentos", Nil , 2  , 0  },;
 		{"Relatorios", Nil , 3 , 0    },;
 		{"Parametros", Nil , 4 , 0    } }
@@ -388,15 +392,16 @@ FUNCTION Main
 	 { "1-Vendedores", "Cadastro de Vendedores" } , {"1-Colaboradores",Nil} ,   {"1-Grupo Produtos",Nil} , ;
 		{"1-Locais Estoque",Nil} , {"1-Funções",Nil} , ;
 		{"1-Categoria Produto",Nil} , {"1-Unidades",Nil} , {"1-Tipo Produtos",Nil} ,;
-		{"1-Tipo Produto1s",Nil},{"1-Tipo Produto2s",Nil},{"1-Tipo Produt3os",Nil},{"1-Tipo Produto4s",Nil},{"1-Tipo Produ5tos",Nil},;
-		{"2-Pedidos",Nil} , {"2-Orçamento",Nil}  , {"3-Listagem Clientes",Nil} ,    {"4-Configurações",Nil} }
+		{"1-Tipo Produto1s",Nil},{"1-Tipo Produto2s",Nil},{"1-Tipo Produt3os",Nil},{"1-Tipo Produto4s",Nil},{"1-Tipo Produtos",Nil},;
+		{"2-Pedidos",Nil} , {"2-Orçamento",Nil}  , {"3-Listagem Clientes",Nil} ,    {"4-Configuraes",Nil} }
 
 
 
 
 	Private nRowIni := 10
 
-
+	
+	//HB_SETCODEPAGE("UTF8")
 	n := 1
 
 	For n := 1 to Len(aOpcoes)
@@ -411,7 +416,7 @@ FUNCTION Main
 			FONTNAME  'Arial'
 			FONTSIZE  10
 			HEIGHT    16
-			VALUE     Alltrim(aOpcoes[n][LABEL_NAME])
+			VALUE     Alltrim( hb_UTF8ToStr(aOpcoes[n][LABEL_NAME] )    )
 			ALIGNMENT Left
 			FONTCOLOR FONTCOR
 			BACKCOLOR {255,255,255}
@@ -1667,12 +1672,14 @@ Function OpMenu(aOpcoes , cJan , nLinha , cTitx , nIndx )
   DoMethod(cJan,"Refresh")
   HMG_ChangeWindowStyle( fSplitSubMenu.Handle, WS_EX_CLIENTEDGE , NIL, .T., .T. )
 
+  
+  HB_SETCODEPAGE("UTF8")
+  HB_SETCODEPAGE("PT850")
 
   For n1 := 1 to Len(aOpcoes)
 
     cLbl := "Mnx_" + Alltrim(Str( nIndx)) + "_" +  StrZero(n1  ,4) 
-	
-
+		
     If !_IsControlDefined(cLbl , cJan)
     
 		DEFINE LABEL &(cLbl)
@@ -1684,7 +1691,8 @@ Function OpMenu(aOpcoes , cJan , nLinha , cTitx , nIndx )
 				HEIGHT    nItemHeight
 				FONTNAME  'Arial'
 				FONTSIZE  10
-				VALUE     '         '  + Padr(Alltrim(hb_ansiToOem(aOpcoes[n1])),70) + '                  '
+				//VALUE     '         '  + Padr(Alltrim(aOpcoes[n1]),70) + '                  '
+				VALUE     '         '  + Padr(Alltrim(Hb_AnsiToOem(aOpcoes[n1])),70) + '                  '
 				ALIGNMENT Left
 				TRANSPARENT .f.
 				FONTCOLOR FONTCOR
@@ -1714,7 +1722,7 @@ Function OpMenu(aOpcoes , cJan , nLinha , cTitx , nIndx )
 
 Return nRow
 
-// Realiza a acomodação dos itens do menu abaixo do aberto atualmente.
+// Realiza a acomodao dos itens do menu abaixo do aberto atualmente.
 
 Function RestMenu(nOp1 , nLinha , nTam , nOpSel )
 
@@ -2261,7 +2269,7 @@ Function OpenOpcao( cCadastro , cTitulo , nHandle1 )
 	If cCadastro = 'Fornecedores'
 
 		If ( FindWindowEx( ,, , cTitulo  ) > 0 )
-			yAviso( 'Este Cadastro ja esta Ativo.' ,, .f. )
+			yAviso( 'Este Cadastro ja esta Ativo.'  )
 			RefreshAll('fSplitSubMenu')
 		Else
 
@@ -2282,7 +2290,9 @@ Function OpenOpcao( cCadastro , cTitulo , nHandle1 )
 			MntFornec()
 			
 
+
 			//TestBut()
+
 
 		
 
@@ -2294,7 +2304,7 @@ Function OpenOpcao( cCadastro , cTitulo , nHandle1 )
 
 
 		If ( FindWindowEx( ,, , cTitulo  ) > 0 )
-			yAviso( 'Este Cadastro ja esta Ativo.' ,, .f. )
+			yAviso( 'Este Cadastro ja esta Ativo.'  )
 			//yAviso( 'Este Cadastro ja esta Ativo.' )
 			RefreshAll('fSplitSubMenu')
 		Else
