@@ -48,9 +48,6 @@ FUNCTION xCadCli( lNew, cCodigo1 )
 
 // l1 := xrt1()
 
-
-
-
    PRIVATE cDiaName := 'fCadCli'
 
    PRIVATE nIndexDlg := 0
@@ -58,10 +55,12 @@ FUNCTION xCadCli( lNew, cCodigo1 )
    PRIVATE nZa1 := 0
    PRIVATE nZa2 := 0
 
+   
+   
 
 
    PRIVATE aUf      := {}
-   PRIVATE aCidades := {}
+   PRIVATE aCidades := {}5
    PRIVATE aBairros := {}
 
    PRIVATE lNovo     := lNew
@@ -69,6 +68,8 @@ FUNCTION xCadCli( lNew, cCodigo1 )
 
    PRIVATE aButCli := {}
 
+
+   
 
 
 
