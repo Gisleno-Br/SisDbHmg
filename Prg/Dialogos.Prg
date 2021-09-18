@@ -25,6 +25,8 @@ Function yAviso2( cMensagem , lEfect  )
 
 	Local aMx := {}
 
+
+	
 	
 	Default lEfect := .t.
 
