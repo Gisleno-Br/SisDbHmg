@@ -32,3 +32,9 @@ Prg/Rotinas.bak
 Prg/Cadcli.bak
 Prg/Vendedor.bak
 compo1.txt
+error.log
+windres.log
+_temp.o
+_temp.rc
+.gitignore
+_hmg_resconfig.h

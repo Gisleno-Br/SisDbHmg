@@ -28,6 +28,7 @@ Function yAviso2( cMensagem , lEfect  )
 
 	
 	
+	
 	Default lEfect := .t.
 
 

@@ -55,12 +55,10 @@ FUNCTION xCadCli( lNew, cCodigo1 )
    PRIVATE nZa1 := 0
    PRIVATE nZa2 := 0
 
-   
-   
 
-
+   
    PRIVATE aUf      := {}
-   PRIVATE aCidades := {}5
+   PRIVATE aCidades := {}
    PRIVATE aBairros := {}
 
    PRIVATE lNovo     := lNew
