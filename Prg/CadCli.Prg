@@ -56,6 +56,10 @@ FUNCTION xCadCli( lNew, cCodigo1 )
    PRIVATE nZa2 := 0
 
 
+
+
+   
+
    
    PRIVATE aUf      := {}
    PRIVATE aCidades := {}
@@ -89,6 +93,7 @@ FUNCTION xCadCli( lNew, cCodigo1 )
 
 
 // EfectEnd(cActiveJan , aMx )
+
 
    xInitFrm()
 
