@@ -1,1 +1,0 @@
-select * from dicionario where (camposistema = 'Código') and (tabela = 'CLIENTES')

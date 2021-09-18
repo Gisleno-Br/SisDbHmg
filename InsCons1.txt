@@ -1,1 +1,0 @@
-Insert into Consultas Values(25,1,1,'e1','e1','2021-08-24','Ativo','Clientes')

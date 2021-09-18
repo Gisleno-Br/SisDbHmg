@@ -1,1 +1,0 @@
-select codigo,cpf,endereco,nome,cidade,bairro,ifNull(qtpeds ,0 ) As qtpeds ,ifNull(acumulado ,0 ) As acumulado ,status,ifNull(maiorcompra ,0 ) As maiorcompra  from Clientes Where  Codigo = '000020'

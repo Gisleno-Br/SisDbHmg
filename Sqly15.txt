@@ -1,1 +1,0 @@
-Select endereco,codigo,bairro,nome,cpf from Clientes a  where  codigo = '000012'
