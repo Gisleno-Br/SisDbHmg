@@ -2,156 +2,147 @@
 
 
 
-Function AltTamCampo(cTabx,cCampo , cForm)
+FUNCTION AltTamCampo( cTabx, cCampo, cForm )
 
-	Local cSql := "select * from dicionario where tabela = '" + cTabx + "' and camposistema = '" + Alltrim(hb_oemtoAnsi(cCampo)) + "'"
+   LOCAL cSql := "select * from dicionario where tabela = '" + cTabx + "' and camposistema = '" + AllTrim( hb_OEMToANSI( cCampo ) ) + "'"
 
-	Local oServer := GetConexao()
-	Local oQuery  := oServer:Query( cSql )
-	Local oRow
+   LOCAL oServer := GetConexao()
+   LOCAL oQuery  := oServer:Query( cSql )
+   LOCAL oRow
 
-	LOCAL lBold      := .F.
-	LOCAL lItalic    := .F.
-	LOCAL lUnderline := .F.
-	LOCAL lStrikeOut := .F.
-
-
-
-
-	
+   LOCAL lBold      := .F.
+   LOCAL lItalic    := .F.
+   LOCAL lUnderline := .F.
+   LOCAL lStrikeOut := .F.
 
 
 
-	Private lOkz := .f.
-	Private aButx1
 
-	Private pCampo   := cCampo
-	Private pTabelax := cTabx
+   PRIVATE lOkz := .F.
+   PRIVATE aButx1
 
-	//saveLog('Sqlg.txt' , cSql )
+   PRIVATE pCampo   := cCampo
+   PRIVATE pTabelax := cTabx
 
-	//msginfo(  cCampo + '  ' + cSql )
+   IF ( oQuery:LastRec() > 0 )
 
-	If  (oQuery:LastRec() > 0)
-		oRow := oQuery:GetRow(1)
+      oRow := oQuery:GetRow( 1 )
 
-		Load Window fEditTam
+      Load Window fEditTam
 
-		SET NAVIGATION EXTENDED
+      SET NAVIGATION EXTENDED
 
-		fEditTam.lblcampo.value := Alltrim(GetCampo(oRow , 'campo') )
+      fEditTam .lblcampo. value := AllTrim( GetCampo( oRow, 'campo' ) )
 
-		fEditTam.tamanho.value   := GetCampo(oRow , 'tamdisp')
-		fEditTam.cabecalho.value := Hb_AnsiToOem(GetCampo(oRow , 'camposistema'))
+      fEditTam .tamanho. value   := GetCampo( oRow, 'tamdisp' )
+      fEditTam .cabecalho. value := hb_ANSIToOEM( GetCampo( oRow, 'camposistema' ) )
 
-		fEditTam.mascara.value := GetCampo(oRow , 'mascara')
+      fEditTam .mascara. value := GetCampo( oRow, 'mascara' )
 
-		fEditTam.chkBrowse.Value := GetCampo(oRow , 'browse') == 'S'
+      fEditTam .chkBrowse. Value := GetCampo( oRow, 'browse' ) == 'S'
 
-		ON KEY ESCAPE Of fEditTam Action _ReleaseWindow('fEditTam')
+      ON KEY ESCAPE Of fEditTam Action _ReleaseWindow( 'fEditTam' )
 
-		HMG_ChangeWindowStyle( fEditTam.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
-		HMG_ChangeWindowStyle( fEditTam.Handle, WS_EX_STATICEDGE, NIL, .T., .T. )
+      HMG_ChangeWindowStyle( fEditTam.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
+      HMG_ChangeWindowStyle( fEditTam.Handle, WS_EX_STATICEDGE, NIL, .T., .T. )
 
 
-		OBTN_Create( 'fEditTam' ,  6798, "Ok" , 135, 180  ,  65 ,  24 ,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
-		OBTN_Font( 'fEditTam'   , 6798,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
+      OBTN_Create( 'fEditTam',  6798, "Ok", 135, 180,  65,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
+      OBTN_Font( 'fEditTam', 6798,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
-		OBTN_Create( 'fEditTam' , 6799, "Cancelar" , 135 , 245  ,  65 ,  24 ,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
-		OBTN_Font( 'fEditTam'   , 6799,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
+      OBTN_Create( 'fEditTam', 6799, "Cancelar", 135, 245,  65,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
+      OBTN_Font( 'fEditTam', 6799,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
-		aButx1 := {}
-		Aadd(aButx1 , {  6798 ,  OBTN_Handle( 'fEditTam'  , 6798 )    } )
-		Aadd(aButx1 , {  6799 ,  OBTN_Handle( 'fEditTam'  , 6799 )    } )
+      aButx1 := {}
+      AAdd( aButx1, {  6798,  OBTN_Handle( 'fEditTam', 6798 )    } )
+      AAdd( aButx1, {  6799,  OBTN_Handle( 'fEditTam', 6799 )    } )
 
-		SetProperty( 'fEditTam' , "Label_5" ,"Value" ,  hb_AnsitoOem('Propriedades Visualizaï¿½ï¿½o Campo') )
+      SetProperty( 'fEditTam', "Label_5", "Value",  hb_ANSIToOEM( 'Propriedades Visualizao Campo' ) )
 
-		EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1 , 'fEditTam'  ) },   OBTN_Handle( 'fEditTam' , 6798 )   ), .T. )
-		EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1 , 'fEditTam') },     OBTN_Handle( 'fEditTam' , 6799 )   ), .T. )
+      EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, 'fEditTam'  ) },   OBTN_Handle( 'fEditTam', 6798 )   ), .T. )
+      EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, 'fEditTam' ) },     OBTN_Handle( 'fEditTam', 6799 )   ), .T. )
 
-		Obtn_Enable(  'fEditTam' ,  6798, .f. )
-
-
-		Activate Window fEditTam
+      Obtn_Enable(  'fEditTam',  6798, .F. )
 
 
-	Else
-		yAviso('Campo/Tabela nï¿½o localizado no Dicionario de Dados.')
-		SetProperty(cForm  , 'Image_baixo' , 'Visible', .f. )
-		SetProperty(cForm  , 'Image_cima' , 'Visible', .f. )
-		// msginfo(cForm)
-		Refreshall(cForm)
-	End If
-
-	//yaviso('ok')
+      Activate Window fEditTam
 
 
-	oQuery:Destroy()
-	oQuery := Nil
-
-	oServer:Destroy()
-	oServer := Nil
-
-Return lOkz
-
-
-Function SvTamCampo( cCampo1 , cTab1 , nTam1  )
-
-	Local oSErver
-	Local oQuery
-	Local cSqlUp := "Update dicionario "
-	cSqlUp += " Set tamdisp = " + Alltrim(Str(  nTam1 ))
-	cSqlUp += " where tabela = '" + cTab1 + "' and Camposistema = '" + Alltrim(hb_oemtoAnsi(cCampo1)) + "'"
-
-	oServer := GetConexao()
-	oQuery := oServer:Query( cSqlUp)
-
-	IF oQuery:NetErr()
-		//CursorArrow()
-		yAviso( 'Erro ao Executar Atualizaï¿½ï¿½o -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error() , .f. )
-		RETURN .f.
-	END IF
-
-	oServer:Destroy()
-	oServer := Nil
-
-	oQuery:Destroy()
-	oQuery := Nil
-
-Return .t.
+   ELSE
+      yAviso( 'Campo/Tabela não localizado no Dicionario de Dados.' )
+      SetProperty( cForm, 'Image_baixo', 'Visible', .F. )
+      SetProperty( cForm, 'Image_cima', 'Visible', .F. )
+      Refreshall( cForm )
+   END IF
 
 
-Function SaveCampo( cCampo1 , cTab1  )
+   oQuery:Destroy()
+   oQuery := Nil
 
-	Local oSErver
-	Local oQuery
-	Local cSqlUp := "Update dicionario "
-	cSqlUp += " Set tamdisp = " + Alltrim(Str(  fEditTam.tamanho.value  )) + ","
-	cSqlUp += "camposistema = '" + Alltrim(Hb_AnsiToOem(fEditTam.cabecalho.value)) + "',"
-	cSqlUp += "mascara = '" + Alltrim(fEditTam.mascara.value) + "',"
-	cSqlUp += "browse = '" + Iif(fEditTam.chkBrowse.Value,"S","N") + "' "
-	cSqlUp += " where tabela = '" + cTab1 + "' and Camposistema = '" + Alltrim(hb_oemtoAnsi(cCampo1)) + "'"
+   oServer:Destroy()
+   oServer := Nil
 
-	oServer := GetConexao()
-	oQuery := oServer:Query( cSqlUp)
+RETURN lOkz
 
-	IF oQuery:NetErr()
-		//CursorArrow()
-		yAviso( 'Erro ao Executar Atualizaï¿½ï¿½o -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  ,, .f. )
 
-		oServer:Destroy()
-		oServer := Nil
+FUNCTION SvTamCampo( cCampo1, cTab1, nTam1  )
 
-		oQuery:Destroy()
-		oQuery := Nil
+   LOCAL oSErver
+   LOCAL oQuery
+   LOCAL cSqlUp := "Update dicionario "
 
-		RETURN .f.
-	END IF
+   cSqlUp += " Set tamdisp = " + AllTrim( Str(  nTam1 ) )
+   cSqlUp += " where tabela = '" + cTab1 + "' and Camposistema = '" + AllTrim( hb_OEMToANSI( cCampo1 ) ) + "'"
 
-	oServer:Destroy()
-	oServer := Nil
+   oServer := GetConexao()
+   oQuery := oServer:Query( cSqlUp )
 
-	oQuery:Destroy()
-	oQuery := Nil
+   IF oQuery:NetErr()
+      yAviso( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
+      RETURN .F.
+   END IF
 
-Return .t.
+   oServer:Destroy()
+   oServer := Nil
+
+   oQuery:Destroy()
+   oQuery := Nil
+
+RETURN .T.
+
+
+FUNCTION SaveCampo( cCampo1, cTab1  )
+
+   LOCAL oSErver
+   LOCAL oQuery
+   LOCAL cSqlUp := "Update dicionario "
+
+   cSqlUp += " Set tamdisp = " + AllTrim( Str(  fEditTam .tamanho. value  ) ) + ","
+   cSqlUp += "camposistema = '" + AllTrim( hb_ANSIToOEM( fEditTam .cabecalho. value ) ) + "',"
+   cSqlUp += "mascara = '" + AllTrim( fEditTam .mascara. value ) + "',"
+   cSqlUp += "browse = '" + iif( fEditTam .chkBrowse. Value, "S", "N" ) + "' "
+   cSqlUp += " where tabela = '" + cTab1 + "' and Camposistema = '" + AllTrim( hb_OEMToANSI( cCampo1 ) ) + "'"
+
+   oServer := GetConexao()
+   oQuery := oServer:Query( cSqlUp )
+
+   IF oQuery:NetErr()
+
+      yAviso( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
+
+      oServer:Destroy()
+      oServer := Nil
+
+      oQuery:Destroy()
+      oQuery := Nil
+
+      RETURN .F.
+   END IF
+
+   oServer:Destroy()
+   oServer := Nil
+
+   oQuery:Destroy()
+   oQuery := Nil
+
+RETURN .T.

@@ -8,27 +8,15 @@ goto End
 
 :GoodParameter
 
-
-rem SET HMGPATH=c:\Hmg
-
-rem set PATH=C:\hmg\HARBOUR\bin;C:\hmg\MINGW\bin;%PATH%;c:\Hmg
-rem set HB_COMPILER=mingw
-rem set HB_PATH=C:\Hmg\Harbour
 echo Compilando..
 
 
 
-rem SET PATH=%HMGPATH%\harbour\bin;%HMGPATH%\mingw\bin;%PATH%
 
 
-set PATH=C:\Harbour64\bin\win\mingw64;C:\MINGW64\bin;%PATH%;c:\Hmg
+set PATH=D:\Harbour64\bin\win\mingw64;D:\MINGW64\bin;%PATH%;D:\Hmg
 set HB_COMPILER=mingw64
-set HB_PATH=C:\Harbour64
-
-
-rem C:
-rem cd\sisDbHmg
-rem Cd %1
+set HB_PATH=D:\Harbour64
 
 if %1 == debug (
 	   echo Debug Compilacao.

@@ -13,9 +13,6 @@ DECLARE WINDOW fSplit6
 
 
 
-
-
-
 DECLARE WINDOW fDialogo
 //DECLARE WINDOW fCadCli
 
@@ -25,7 +22,8 @@ DECLARE WINDOW fDialogo
 
 Function yAviso2( cMensagem , lEfect  )
 
-	Local aMx
+
+	Local aMx := {}
 
 	
 	Default lEfect := .t.

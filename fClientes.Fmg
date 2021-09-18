@@ -8,8 +8,6 @@ DEFINE WINDOW TEMPLATE AT 100 , 52 WIDTH 1362 HEIGHT 700 VIRTUAL WIDTH Nil VIRTU
         LOAD WINDOW fMenuConsulta as &cMenuName
     END SPLITBOX
 
-
-
     DEFINE IMAGE Image_cima
         ROW    475
         COL    2

@@ -3,29 +3,31 @@
 
 #include <hmg.ch>
 
-//#include "hmg.ch"
+// #include "hmg.ch"
 
 
 
 
-*** CONSTANTS (nControl) ***
-#Define _GRID_COLUMNCAPTION_    7
-#Define _GRID_COLUMNWIDTH_      31
-#Define _GRID_COLUMNJUSTIFY_    37
-#Define _GRID_COLUMNCONTROLS_   2
-#Define _GRID_DYNAMICBACKCOLOR_ 3
-#Define _GRID_DYNAMICFORECOLOR_ 4
-#Define _GRID_COLUMNVALID_      5
-#Define _GRID_COLUMNWHEN_       6
-#Define _GRID_ONHEADCLICK_      17
+* ** CONSTANTS ( nControl ) ** *
+#define _GRID_COLUMNCAPTION_    7
+#define _GRID_COLUMNWIDTH_      31
+#define _GRID_COLUMNJUSTIFY_    37
+#define _GRID_COLUMNCONTROLS_   2
+#define _GRID_DYNAMICBACKCOLOR_ 3
+#define _GRID_DYNAMICFORECOLOR_ 4
+#define _GRID_COLUMNVALID_      5
+#define _GRID_COLUMNWHEN_       6
+#define _GRID_ONHEADCLICK_      17
+
+
 
 
 #include "dbinfo.ch"
 #include "error.ch"
 
-#DEFINE COLUNA  1
-#DEFINE TAMANHO 2
-#DEFINE TEXTO   3
+#define COLUNA  1
+#define TAMANHO 2
+#define TEXTO   3
 
 
 
@@ -73,162 +75,146 @@
 
 REQUEST SDDMY, SQLMIX
 
-//ANNOUNCE RDDSYS
+// ANNOUNCE RDDSYS
 
 STATIC nIndexEvent := 1
 
-//STATIC aButtons := {}
+// STATIC aButtons := {}
 
 
 Define Window Main
 
-//REQUEST HB_LANG_PT
-//REQUEST HB_CODEPAGE_PT850
+// REQUEST HB_LANG_PT
+// REQUEST HB_CODEPAGE_PT850
 
 
 FUNCTION MntVend()
 
-	LOCAL wCad := 'vendedores'
-	Local aOp1 := {'Consultas','Relatorios','Parametros' }
+   LOCAL wCad := 'vendedores'
+   LOCAL aOp1 := { 'Consultas', 'Relatorios', 'Parametros' }
 
-	Local cControl
+   LOCAL cControl
 
-	Local  aButOpcoes := {  { "&Incluir", {|| ( fx2( "I")  )     }, .T., "Cadastra um Novo Vendedor", 0 }, ;
-		{ "&Modificar", {||  fx2("edit")   } , .T., "Modifica um Vendedor Existente." , 0 }, ;
-		{ "&Bloquear", {||  fx1( "bloquear" ) }, .T., "Bloqueia/Inativa um Vendedor Ativo.", 0 } ,;
-		{ "&Filtrar", {|| ProcFiltro( 'vendedores' )    }, .T., "Filtra Registros", 0 } ,;
-		{ Hb_AnsiToOem("Opções") , {|| xSetOpcao()  }, .T., Hb_AnsiToOem("Opções Diversas") , 0 } }
+   LOCAL  aButOpcoes := {  { "&Incluir", {|| ( fx2( "I")  )     }, .T., "Cadastra um Novo Vendedor", 0 }, ;
+      { "&Modificar", {||  fx2( "edit" )   }, .T., "Modifica um Vendedor Existente.", 0 }, ;
+      { "&Bloquear", {||  fx1( "bloquear" ) }, .T., "Bloqueia/Inativa um Vendedor Ativo.", 0 }, ;
+      { "&Filtrar", {|| ProcFiltro( 'vendedores' )    }, .T., "Filtra Registros", 0 }, ;
+      { hb_ANSIToOEM( "Opções" ), {|| xSetOpcao()  }, .T., hb_ANSIToOEM( "Opções Diversas" ), 0 } }
 
 
 
-	Local aOp2 := { {'2-Geral' , { || msginfo('ok') } } ,   ;
-		{'2-Geral1' , { || msginfo('ok1')} },;
-		{'2-Geral2' , { || msginfo('ok3')} } ,;
-		{'3-Geral4' , { || msginfo('ok4') } },;
-		{'3-Geral' , { || msginfo('ok5') } } }
+   LOCAL aOp2 := { { '2-Geral', {|| msginfo( 'ok') } },   ;
+      { '2-Geral1', {|| msginfo( 'ok1' ) } }, ;
+      { '2-Geral2', {|| msginfo( 'ok3' ) } }, ;
+      { '3-Geral4', {|| msginfo( 'ok4' ) } }, ;
+      { '3-Geral', {|| msginfo( 'ok5' ) } } }
 
 
-	LOCAL aTam    := GetCamposInf( wCad, 'TAM' )
-	LOCAL aCabec  := GetCamposInf( wCad, 'CABEC' )
-	LOCAL aCampos := GetCamposDic( wCad, 'S', .T. )
+   LOCAL aTam    := GetCamposInf( wCad, 'TAM' )
+   LOCAL aCabec  := GetCamposInf( wCad, 'CABEC' )
+   LOCAL aCampos := GetCamposDic( wCad, 'S', .T. )
 
 
 
-	Private nItMax := 18
-	Private nItx1  := nItMax
+   PRIVATE nItMax := 18
+   PRIVATE nItx1  := nItMax
 
-	Private nItemId := 0
+   PRIVATE nItemId := 0
 
-	Private lArrastou := .f.
+   PRIVATE lArrastou := .F.
 
-	Private lDrag     := .f.
-	Private nObjDrag  := 0
+   PRIVATE lDrag     := .F.
+   PRIVATE nObjDrag  := 0
 
-	Private lDrawOk := .f.
+   PRIVATE lDrawOk := .F.
 
-	private cButVerde := ".&Filtrar."
+   PRIVATE cButVerde := ".&Filtrar."
 
-	//Private nTotWidth := 0
 
-	Private nRowIni2 := 10
 
-	Private cTituloJan := ''
-	Private nQRegx     := 0
+   PRIVATE nRowIni2 := 10
 
-	Private nColOrder  := 0
+   PRIVATE cTituloJan := ''
+   PRIVATE nQRegx     := 0
 
+   PRIVATE nColOrder  := 0
 
-	Private lAumentou := .f.
 
-	Private aMtrHeader := {}
+   PRIVATE lAumentou := .F.
 
-	Private nEven1 := 0
-	Private nEven2 := 0
+   PRIVATE aMtrHeader := {}
 
+   PRIVATE nEven1 := 0
+   PRIVATE nEven2 := 0
 
-	Private aFont2 := ARRAY FONT "Arial" SIZE 9 BOLD ITALIC
-	Private aFont1 := ARRAY FONT "Arial" SIZE 9
-	//BOLD ITALIC
 
+   PRIVATE aFont2 := ARRAY FONT "Arial" SIZE 9 BOLD ITALIC
+   PRIVATE aFont1 := ARRAY FONT "Arial" SIZE 9
 
-	PRIVATE nGradDirF  := 0
-	PRIVATE cFontName  := 'Arial'
-	PRIVATE nFontSize  := 9
 
-	PRIVATE aBtnFont  := { cFontName , 8 , .F., .F., .F., .F. }
 
 
-	Private nPosAnt  := -1
+   PRIVATE nGradDirF  := 0
+   PRIVATE cFontName  := 'Arial'
+   PRIVATE nFontSize  := 9
 
+   PRIVATE aBtnFont  := { cFontName, 8, .F., .F., .F., .F. }
 
-	Private nInd2 := 0
 
-	Private lAscendente := .t.
+   PRIVATE nPosAnt  := -1
 
-	Private lDragMode := .f.
 
-	Private lDrawHead := .f.
-	Private nSec11    := 0
+   PRIVATE nInd2 := 0
 
+   PRIVATE lAscendente := .T.
 
-	Private nSaveScr := 0
+   PRIVATE lDragMode := .F.
 
-	Private nColIni := 0
+   PRIVATE lDrawHead := .F.
+   PRIVATE nSec11    := 0
 
-	Private lOkCad := .f.
 
-	Private nColSel := 0
 
-	Private nIndexEve1 := 0
+   PRIVATE nSaveScr := 0
 
+   PRIVATE nColIni := 0
 
-	Private cLblConsu := ''
+   PRIVATE lOkCad := .F.
 
-	Private lSoltou := .f.
+   PRIVATE nColSel := 0
 
-	Private nTotWidth := 0
+   PRIVATE nIndexEve1 := 0
 
-	Private nObjSize := 0
-	Private lmodeSize := .f.
+   PRIVATE cLblConsu := ''
 
-	Private cBufHeader := ''
+   PRIVATE lSoltou := .F.
 
-	Private aButx1 := {}
+   PRIVATE nTotWidth := 0
 
+   PRIVATE nObjSize := 0
+   PRIVATE lmodeSize := .F.
 
-    /*
-	SET LANGUAGE TO PORTUGUESE
-	SET CODEPAGE TO PORTUGUESE
+   PRIVATE cBufHeader := ''
 
-	HB_SetCodePage( "PT850" )
-	hb_langSelect( "PT" )
-    */
+   PRIVATE aButx1 := {}
 
-    SET CODEPAGE TO PORTUGUESE
-	REQUEST HB_LANG_PT
-	REQUEST HB_CODEPAGE_PT850
+   // SET CODEPAGE TO PORTUGUESE
+// REQUEST HB_LANG_PT
+// REQUEST HB_CODEPAGE_PT850
 
-   
-    HB_SetCodePage("PT850")
+// HB_SetCodePage( "PT850" )
 
-    
 
-	//MSGINFO(HB_LANGSELECT() )
+   _HMG_SYSDATA[ 348 ] := { 199, 250, 225 }
+   _HMG_SYSDATA[ 349 ] := { 007, 071, 041 }
+   _HMG_SYSDATA[ 350 ] := { 235, 237, 095 }
+   _HMG_SYSDATA[ 351 ] := { 069, 015, 135 }
 
+   ManutDb( aCabec, aCampos,  GetSql( "Vendedores", .F. ), "Vende", aTam, "Cadastro de Vendedores", "Vendedores", aOp1, aOp2, aButOpcoes )
 
-	_HMG_SYSDATA[ 348 ] := { 199, 250, 225 }
-	_HMG_SYSDATA[ 349 ] := { 007, 071, 041 }
-	_HMG_SYSDATA[ 350 ] := { 235, 237, 095 }
-	_HMG_SYSDATA[ 351 ] := { 069, 015, 135 }
+RETURN
 
-	//Private aButtons := Aclone(aButOpcoes)
 
-	ManutDb( aCabec, aCampos,  GetSql( "Vendedores", .F. ), "Vende" , aTam , "Cadastro de Vendedores" ,"Vendedores" , aOp1  , aOp2 , aButOpcoes )
+STATIC FUNCTION Fx2()
 
-
-Return 
-
-
-Static Function Fx2()
-
-Return 
+RETURN

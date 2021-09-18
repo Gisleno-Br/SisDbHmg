@@ -149,6 +149,7 @@ FUNCTION CadCli()
 	Private cTituloJan := ''
 	Private nQRegx     := 0
 
+	
 	Private nColOrder  := 0
 
 
