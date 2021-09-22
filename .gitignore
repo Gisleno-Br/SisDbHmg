@@ -38,3 +38,4 @@ _temp.o
 _temp.rc
 .gitignore
 _hmg_resconfig.h
+BuildEXE.bat

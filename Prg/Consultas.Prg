@@ -14,6 +14,7 @@ REQUEST HB_CODEPAGE_PT850
 
 
 
+
 #define DBI_QUERY             1001
 #define RDDI_CONNECT          1001
 #define RDDI_DISCONNECT       1002

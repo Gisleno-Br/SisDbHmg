@@ -6,8 +6,6 @@
 //#include "hmg.ch"
 
 
-
-
 *** CONSTANTS (nControl) ***
 #Define _GRID_COLUMNCAPTION_    7
 #Define _GRID_COLUMNWIDTH_      31
