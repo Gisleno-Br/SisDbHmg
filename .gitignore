@@ -40,3 +40,12 @@ _temp.rc
 _hmg_resconfig.h
 BuildEXE.bat
 BuildEXE.bat
+build.log
+compo122.log
+debug.log
+hb_out.log
+Bairros/build.log
+Browser/build.log
+Browser/hb_out.log
+img/build.log
+Tab/hbmk.log
