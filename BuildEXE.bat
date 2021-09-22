@@ -14,6 +14,8 @@ echo Compilando..
 
 
 
+
+
 set PATH=c:\Harbour64\bin\win\mingw64;c:\MINGW64\bin;%PATH%;c:\Hmg
 set HB_COMPILER=mingw64
 set HB_PATH=c:\Harbour64
