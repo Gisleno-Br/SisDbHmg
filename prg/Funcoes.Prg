@@ -1013,7 +1013,6 @@ Function xCaptJan(cJanela)
 
 		BT_BitmapSaveFile (hBit2  , "hBit2.bmp")
 
-		
 	Else
 		Return
 	End If

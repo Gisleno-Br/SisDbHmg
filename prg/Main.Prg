@@ -25,8 +25,6 @@
 
 
 
-
-
 #define LABEL_NAME 1
 #define LABEL_HWND 2
 
@@ -350,13 +348,23 @@ FUNCTION Main
 
 	HB_LANGSELECT( 'PT' )
 
+//	HB_SetCodePage("PT850")
+
+	//HB_SETCODEPAGE("UTF8")
 
 	Public cAviso1 :=  "Deseja Confirmar essa Operaùùo?"
+	//msginfo(hb_AnsiToOem(cv1))
+
+	//MsgAviso(cv1)
+
 
 	Set AutoScroll On
 
 	Aadd(aJanelas , { 'Main' , 'Main'  , 0}  )
 
+	//HMG_ActivateMainWindowFirst(.t.)
+
+	//msginfo('l')
 
 
 	Load Window Main
@@ -382,7 +390,7 @@ FUNCTION Main
 
 	Private aItens := { {"1-Clientes","Cadastro de Clientes"} , { "1-Fornecedores","Cadastro de Fornecedores"} , ;
 	 { "1-Vendedores", "Cadastro de Vendedores" } , {"1-Colaboradores",Nil} ,   {"1-Grupo Produtos",Nil} , ;
-		{"1-Locais Estoque",Nil} , {"1-FunÁıes",Nil} , ;
+		{"1-Locais Estoque",Nil} , {"1-FunÁıess",Nil} , ;
 		{"1-Categoria Produto",Nil} , {"1-Unidades",Nil} , {"1-Tipo Produtos",Nil} ,;
 		{"1-Tipo Produto1s",Nil},{"1-Tipo Produto2s",Nil},{"1-Tipo Produt3os",Nil},{"1-Tipo Produtos",Nil},{"1-Tipo Produtos",Nil},;
 		{"2-Pedidos",Nil} , {"2-OrÁamento",Nil}  , {"3-Listagem Clientes",Nil} ,    {"4-ConfiguraÁıes",Nil} }
@@ -1638,7 +1646,7 @@ Function OpMenu(aOpcoes , cJan , nLinha , cTitx , nIndx )
 
 Return nRow
 
-// Realiza a acomodaÁ„o dos itens do menu abaixo do aberto atualmente.
+// Realiza a acomodaùùo dos itens do menu abaixo do aberto atualmente.
 
 Function RestMenu(nOp1 , nLinha , nTam , nOpSel )
 
@@ -1712,7 +1720,7 @@ Function RestMenu(nOp1 , nLinha , nTam , nOpSel )
 Return
 
 
-
+/////////////
 
 
 FUNCTION LabelEventHandler(aLabel)

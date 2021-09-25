@@ -14,8 +14,6 @@ REQUEST HB_CODEPAGE_PT850
 
 
 
-
-
 #define DBI_QUERY             1001
 #define RDDI_CONNECT          1001
 #define RDDI_DISCONNECT       1002
@@ -2291,7 +2289,7 @@ FUNCTION xInitMov(  nIdc1, nTpVnd9, cTabelax, lMvTable, cJanName )
 	Else
 
 
-		yAviso2( 'Parametros Nï¿½o Localizados, Recrie a Consulta.')
+		yAviso2( 'Parametros Não Localizados, Recrie a Consulta.')
 		Return .f.        
 
 	End If 		
