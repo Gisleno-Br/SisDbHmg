@@ -450,7 +450,9 @@ FUNCTION LoadCliente(  cCod )
          fCadCli .CmbUf. Value := nind2
       END IF
 
+      
 
+      
 // msginfo( GetCampo(oRow , 'Cidade')  + ' ' + Str( Ascan( GetCmbItens( 'fCadCli' , 'cmbCidade'  )  , alltrim(GetCampo(oRow , 'Cidade')) ) ) )
 
 
@@ -535,7 +537,7 @@ FUNCTION GrvClien( lNovo )
       'dtbloqueio', 'maiorcompra', 'codmun', 'fone3' }
 
    IF !lNovo
-      cMsg := 'Confirma Alteração no Cadastro deste Cliente?'
+      cMsg := 'Confirma Alterao no Cadastro deste Cliente?'
    END IF
 
 
@@ -628,7 +630,7 @@ FUNCTION GrvClien( lNovo )
    oQuery := oServer:Query( cSqlz1 )
 
    IF oQuery:NetErr()
-      yAviso( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
+      yAviso( 'Erro ao Executar Atualizao -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
       RETURN .F.
    END IF
 
@@ -993,7 +995,7 @@ FUNCTION xPesqCep()
    ELSE
 
       SetProperty( 'fCadCli', 'Endereco', 'Value', '' )
-      yAviso( 'Cep Não Localizado.', .F. )
+      yAviso( 'Cep No Localizado.', .F. )
       SysWait( .2 )
       fCadCli .nome. SetFocus()
 
@@ -1199,7 +1201,7 @@ FUNCTION xPesqEnt()
 
       SetProperty( 'fCadCli', 'EndEnt', 'Value', '' )
 
-      yAviso( 'Cep não Localizado.',, 'fCadCli' )
+      yAviso( 'Cep no Localizado.',, 'fCadCli' )
 
    END IF
 
@@ -1241,7 +1243,7 @@ FUNCTION xBloquear(  cCodCli, cStatus )
 
    LOCAL cSql  := "update " + AllTrim( cTabela ) + " set status = '" + cStatus + "' , dtbloqueio = " + Quotedstr( ConvDt( dDataBase ) )  + " where codigo = '" + cCodCli + "'"
 
-   IF !Confirmaviso( 'Confirma Mudança de Status(' + cStatus + ') Para Este Registro?', cActiveJan, .T. )
+   IF !Confirmaviso( 'Confirma Mudana de Status(' + cStatus + ') Para Este Registro?', cActiveJan, .T. )
       RETURN .F.
    END IF
 
@@ -1257,7 +1259,7 @@ FUNCTION xBloquear(  cCodCli, cStatus )
 
 
    IF oQuery:NetErr()
-      MsgStop( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
+      MsgStop( 'Erro ao Executar Atualizao -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
       RETURN .F.
    END IF
 

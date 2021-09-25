@@ -25,8 +25,6 @@ Function yAviso2( cMensagem , lEfect  )
 
 	Local aMx := {}
 
-
-	
 	
 	
 	Default lEfect := .t.
@@ -744,7 +742,7 @@ FUNCTION xIniProgress( nTp )
 		Else
 
 			OBTN_Create( cJanx, 6653, "Sim", 185, 375,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-			OBTN_Create( cJanx, 6654, hb_ANSIToOEM( "NÔøΩo" ), 185, 435,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+			OBTN_Create( cJanx, 6654, hb_ANSIToOEM( "Nùo" ), 185, 435,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 
 			OBTN_Font( cJanx, 6653,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 			OBTN_Font( cJanx, 6654,  { cFontName, nFontSize, .F., .F., .F., .F. } )

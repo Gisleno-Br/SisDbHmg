@@ -69,7 +69,7 @@ FUNCTION AltTamCampo( cTabx, cCampo, cForm )
 
 
    ELSE
-      yAviso( 'Campo/Tabela não localizado no Dicionario de Dados.' )
+      yAviso( 'Campo/Tabela não Localizado no Dicionario de Dados.' )
       SetProperty( cForm, 'Image_baixo', 'Visible', .F. )
       SetProperty( cForm, 'Image_cima', 'Visible', .F. )
       Refreshall( cForm )

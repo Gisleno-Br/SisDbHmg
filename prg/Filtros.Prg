@@ -8,8 +8,6 @@ REQUEST HB_CODEPAGE_PT850
 
 
 
-
-
 Function LoadFitros(cTabela1)
 
 
@@ -21,7 +19,7 @@ Function LoadFitros(cTabela1)
    Local nIndexFiltro := 0
    Local oQuery
    Local oRow
-   local cCab1 := hb_ansiTooem('Expressï¿½o')
+   local cCab1 := hb_ansiTooem('Expresso')
    
    Private aHed1 := { 'Id' , 'Filtro',cCab1}
    
@@ -139,7 +137,7 @@ Function xExclFiltro()
   Local oServer
   Local oQuery
 
- If Confirmaviso("Confirma  Exclusï¿½o desse Filtro ? " , , , , .f. )    
+ If Confirmaviso("Confirma  Excluso desse Filtro ? " , , , , .f. )    
  
      cSqlx1 := "delete from filtros where tabela = '" + cTabx + "' and idfiltros = " +  alltrim(aMtr[1])
     //msginfo(cSqlx1)
@@ -556,7 +554,7 @@ Static Function SaveFiltro( lNovo  , nIdFiltro1 )
   
   Default lNovo := .t.
 
-  If Confirmaviso("Confirma Gravaï¿½ï¿½o desse Filtro ? " , , .f. )
+  If Confirmaviso("Confirma Gravao desse Filtro ? " , , .f. )
   
      If lNovo
         lOk := GrvFiltro( cTabx , alltrim(fFiltro.Titulo.Value) , alltrim(fFiltro.EdtFiltro.Value)   ,  fFiltro.CmbOrdem.DisplayValue  , ;
@@ -575,7 +573,7 @@ Static Function SaveFiltro( lNovo  , nIdFiltro1 )
 
 		    IF oQuery:NetErr()
 		      //CursorArrow()
-		       MsgStop( 'Erro ao Executar AtualizaÃ§Ã£o -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  , .f. )
+		       MsgStop( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  , .f. )
 		       RETURN .f.
 		    END IF
 		    

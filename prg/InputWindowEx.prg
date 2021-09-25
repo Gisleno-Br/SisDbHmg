@@ -119,7 +119,7 @@ Function InputWindowEx( cTitle , aLabels , aValues , aFormats ,;
         nY := 0
 
         //Nome Fantasia
-        //Data Modificação Cadastro
+        //Data Modificao Cadastro
         For nx1 := 1 To imax
 
           If Len(  Alltrim(aLabels[nx1])   ) >= nY

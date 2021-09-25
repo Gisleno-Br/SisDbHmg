@@ -390,7 +390,7 @@ FUNCTION Main
 
 	Private aItens := { {"1-Clientes","Cadastro de Clientes"} , { "1-Fornecedores","Cadastro de Fornecedores"} , ;
 	 { "1-Vendedores", "Cadastro de Vendedores" } , {"1-Colaboradores",Nil} ,   {"1-Grupo Produtos",Nil} , ;
-		{"1-Locais Estoque",Nil} , {"1-Funçõess",Nil} , ;
+		{"1-Locais Estoque",Nil} , {"1-Funçõeses",Nil} , ;
 		{"1-Categoria Produto",Nil} , {"1-Unidades",Nil} , {"1-Tipo Produtos",Nil} ,;
 		{"1-Tipo Produto1s",Nil},{"1-Tipo Produto2s",Nil},{"1-Tipo Produt3os",Nil},{"1-Tipo Produtos",Nil},{"1-Tipo Produtos",Nil},;
 		{"2-Pedidos",Nil} , {"2-Orçamento",Nil}  , {"3-Listagem Clientes",Nil} ,    {"4-Configurações",Nil} }

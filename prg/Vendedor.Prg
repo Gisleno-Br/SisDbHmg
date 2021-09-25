@@ -99,7 +99,7 @@ FUNCTION MntVend()
       { "&Modificar", {||  fx2( "edit" )   }, .T., "Modifica um Vendedor Existente.", 0 }, ;
       { "&Bloquear", {||  fx1( "bloquear" ) }, .T., "Bloqueia/Inativa um Vendedor Ativo.", 0 }, ;
       { "&Filtrar", {|| ProcFiltro( 'vendedores' )    }, .T., "Filtra Registros", 0 }, ;
-      { hb_ANSIToOEM( "OpÁıes" ), {|| xSetOpcao()  }, .T., hb_ANSIToOEM( "OpÁıes Diversas" ), 0 } }
+      { hb_ANSIToOEM( "Opùùes" ), {|| xSetOpcao()  }, .T., hb_ANSIToOEM( "Opùùes Diversas" ), 0 } }
 
 
 
@@ -197,13 +197,6 @@ FUNCTION MntVend()
    PRIVATE cBufHeader := ''
 
    PRIVATE aButx1 := {}
-
-   // SET CODEPAGE TO PORTUGUESE
-// REQUEST HB_LANG_PT
-// REQUEST HB_CODEPAGE_PT850
-
-// HB_SetCodePage( "PT850" )
-
 
    _HMG_SYSDATA[ 348 ] := { 199, 250, 225 }
    _HMG_SYSDATA[ 349 ] := { 007, 071, 041 }

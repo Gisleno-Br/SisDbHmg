@@ -63,7 +63,7 @@ Function SetCampoOrdem(cTabela , cCampo , nOrdem1 )
 
 
 	IF oQuery:NetErr()
-		yAviso( 'Erro ao Executar AtualizaÔøΩÔøΩo -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  ,, .f.  )
+		yAviso( 'Erro ao Executar Atualizaùùo -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  ,, .f.  )
 		RETURN .f.
 	END IF
 
@@ -97,7 +97,7 @@ Function SetCampoTam(cTabela , cCampo , nOrdem1 )
 
 	IF oQuery:NetErr()
 		//SetArrwCursor(nHandle)
-		yAviso( 'Erro ao Executar AtualizaÔøΩÔøΩo -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error() ,, .f. )
+		yAviso( 'Erro ao Executar Atualizaùùo -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error() ,, .f. )
 		RETURN .f.
 	END IF
 
@@ -178,7 +178,7 @@ FUNCTION GetCamposDic( cTabela, cBrowse, lCmpTab , lOem )
 	oServ := Nil
 
 	IF Len( aCampos ) == 0
-		yAviso( 'Dicionario de dados nÔøΩo Localizado para Tabela ' +  cTabela + QUEBRA + 'Contacte Suporte.' ,, .f. )
+		yAviso( 'Dicionario de dados nùo Localizado para Tabela ' +  cTabela + QUEBRA + 'Contacte Suporte.' ,, .f. )
 	END IF
 
 RETURN aCampos
@@ -373,7 +373,7 @@ FUNCTION xInit()
 
 
 	IF !File( Alltrim(cInifile) )
-		MsgInfo( 'Arquivo DataBase.ini nÔøΩo Localizado , Impossivel Continuar.' )
+		MsgInfo( 'Arquivo DataBase.ini nùo Localizado , Impossivel Continuar.' )
 		//fPrincipal.Release()
 	END IF
 
@@ -712,7 +712,7 @@ FUNCTION GetCamposInf( cTabela, cInf  ,cCampo )
 	oServ := Nil
 
 	IF Len( aTam ) == 0
-		yAviso( 'Dicionario de Dados nÔøΩo Localizado para Tabela ' +  cTabela  + '(' + cInf + ')'   + QUEBRA + 'Contacte Suporte.' ,, .f.  )
+		yAviso( 'Dicionario de Dados nùo Localizado para Tabela ' +  cTabela  + '(' + cInf + ')'   + QUEBRA + 'Contacte Suporte.' ,, .f.  )
 	END IF
 
 RETURN aTam
