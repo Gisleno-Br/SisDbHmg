@@ -1,0 +1,253 @@
+* HMG-IDE UNICODE Form Designer Generated Code
+* (c) Roberto Lopez - http://sites.google.com/site/hmgweb
+
+DEFINE WINDOW TEMPLATE AT 100 , 52 WIDTH 1362 HEIGHT 700 VIRTUAL WIDTH Nil VIRTUAL HEIGHT Nil TITLE "" ICON NIL CHILD NOSIZE NOSYSMENU NOCAPTION CURSOR NIL ON INIT InitTela() ON RELEASE Nil ON INTERACTIVECLOSE Nil ON MOUSECLICK Nil ON MOUSEDRAG Nil ON MOUSEMOVE Nil ON SIZE Nil ON MAXIMIZE Nil ON MINIMIZE Nil ON PAINT DrawTransp(cActiveJan , hBit2 ) BACKCOLOR {255,255,255} NOTIFYICON NIL NOTIFYTOOLTIP NIL ON NOTIFYCLICK Nil ON GOTFOCUS xInvalidate() ON LOSTFOCUS Nil ON SCROLLUP Nil ON SCROLLDOWN Nil ON SCROLLLEFT Nil ON SCROLLRIGHT msginfo('ri') ON HSCROLLBOX Nil ON VSCROLLBOX Nil
+
+    DEFINE SPLITBOX
+        LOAD WINDOW fCad1 as &cAuxName
+        LOAD WINDOW fMenuConsulta as &cMenuName
+    END SPLITBOX
+    
+
+
+
+    DEFINE IMAGE Image_cima
+        ROW    475
+        COL    2
+        WIDTH  177
+        HEIGHT 17
+        PICTURE "img\setac2d.png"
+        HELPID Nil
+        VISIBLE .F.
+        STRETCH .F.
+        ACTION Nil
+    END IMAGE
+
+    DEFINE IMAGE Image_baixo
+        ROW    495
+        COL    2
+        WIDTH  177
+        HEIGHT 17
+        PICTURE "img\setab2d.png"
+        HELPID Nil
+        VISIBLE .F.
+        STRETCH .F.
+        ACTION Nil
+    END IMAGE
+
+    DEFINE LABEL Label1
+        ROW    530
+        COL    10
+        WIDTH  95
+        HEIGHT 20
+        VALUE "Qtde. Consultas :"
+        FONTNAME "Arial"
+        FONTSIZE 10
+        TOOLTIP ""
+        FONTBOLD .F.
+        FONTITALIC .F.
+        FONTUNDERLINE .F.
+        FONTSTRIKEOUT .F.
+        HELPID Nil
+        VISIBLE .F.
+        TRANSPARENT .T.
+        ACTION Nil
+        AUTOSIZE .F.
+        BACKCOLOR NIL
+        FONTCOLOR NIL
+    END LABEL
+
+    DEFINE LABEL LblQtConsu
+        ROW    530
+        COL    120
+        WIDTH  85
+        HEIGHT 20
+        VALUE "0"
+        FONTNAME "Arial"
+        FONTSIZE 10
+        TOOLTIP ""
+        FONTBOLD .T.
+        FONTITALIC .F.
+        FONTUNDERLINE .F.
+        FONTSTRIKEOUT .F.
+        HELPID Nil
+        VISIBLE .F.
+        TRANSPARENT .T.
+        ACTION Nil
+        AUTOSIZE .F.
+        BACKCOLOR NIL
+        FONTCOLOR NIL
+    END LABEL
+
+    DEFINE LABEL LblMsg1
+        ROW    760
+        COL    350
+        WIDTH  120
+        HEIGHT 24
+        VALUE "Label_1"
+        FONTNAME "Arial"
+        FONTSIZE 9
+        TOOLTIP ""
+        FONTBOLD .F.
+        FONTITALIC .F.
+        FONTUNDERLINE .F.
+        FONTSTRIKEOUT .F.
+        HELPID Nil
+        VISIBLE .F.
+        TRANSPARENT .T.
+        ACTION Nil
+        AUTOSIZE .F.
+        BACKCOLOR NIL
+        FONTCOLOR {255,255,255}
+    END LABEL
+
+    DEFINE FRAME Frame_1
+        ROW    58
+        COL    182
+        WIDTH  1
+        HEIGHT 710
+        FONTNAME "Arial"
+        FONTSIZE 9
+        FONTBOLD .F.
+        FONTITALIC .F.
+        FONTUNDERLINE .F.
+        FONTSTRIKEOUT .F.
+        CAPTION NIL
+        BACKCOLOR NIL
+        FONTCOLOR NIL
+        OPAQUE .F.
+    END FRAME
+
+    DEFINE LABEL Label_1
+        ROW    580
+        COL    120
+        WIDTH  120
+        HEIGHT 20
+        VALUE "Qtde. Registros :"
+        FONTNAME "Arial"
+        FONTSIZE 9
+        TOOLTIP ""
+        FONTBOLD .T.
+        FONTITALIC .F.
+        FONTUNDERLINE .F.
+        FONTSTRIKEOUT .F.
+        HELPID Nil
+        VISIBLE .T.
+        TRANSPARENT .T.
+        ACTION Nil
+        AUTOSIZE .F.
+        BACKCOLOR NIL
+        FONTCOLOR NIL
+    END LABEL
+
+    DEFINE LABEL lblQtReg
+        ROW    580
+        COL    215
+        WIDTH  120
+        HEIGHT 20
+        VALUE "0"
+        FONTNAME "Arial"
+        FONTSIZE 9
+        TOOLTIP ""
+        FONTBOLD .F.
+        FONTITALIC .F.
+        FONTUNDERLINE .F.
+        FONTSTRIKEOUT .F.
+        HELPID Nil
+        VISIBLE .T.
+        TRANSPARENT .T.
+        ACTION Nil
+        AUTOSIZE .F.
+        BACKCOLOR NIL
+        FONTCOLOR NIL
+    END LABEL
+
+    DEFINE LABEL Lbltitulo
+        ROW    580
+        COL    780
+        WIDTH  650
+        HEIGHT 24
+        VALUE "Label_2"
+        FONTNAME "Arial Narrow"
+        FONTSIZE 12
+        TOOLTIP ""
+        FONTBOLD .T.
+        FONTITALIC .F.
+        FONTUNDERLINE .F.
+        FONTSTRIKEOUT .F.
+        HELPID Nil
+        VISIBLE .T.
+        TRANSPARENT .T.
+        ACTION Nil
+        AUTOSIZE .F.
+        BACKCOLOR NIL
+        FONTCOLOR {255,255,255}
+    END LABEL
+
+    DEFINE IMAGE Image_12
+        ROW    599
+        COL    320
+        WIDTH  25
+        HEIGHT 25
+        PICTURE "img\user.Png"
+        HELPID Nil
+        VISIBLE .T.
+        STRETCH .T.
+        ACTION Nil
+    END IMAGE
+
+    DEFINE IMAGE Image_2196
+        ROW    600
+        COL    750
+        WIDTH  22
+        HEIGHT 22
+        PICTURE "img\ok245.bmp"
+        HELPID Nil
+        VISIBLE .T.
+        STRETCH .T.
+        ACTION Nil
+    END IMAGE
+
+    DEFINE LABEL LblUser1
+        ROW    610
+        COL    365
+        WIDTH  120
+        HEIGHT 24
+        VALUE "Label_3"
+        FONTNAME "Arial"
+        FONTSIZE 9
+        TOOLTIP ""
+        FONTBOLD .T.
+        FONTITALIC .F.
+        FONTUNDERLINE .F.
+        FONTSTRIKEOUT .F.
+        HELPID Nil
+        VISIBLE .T.
+        TRANSPARENT .T.
+        ACTION Nil
+        AUTOSIZE .F.
+        BACKCOLOR NIL
+        FONTCOLOR NIL
+    END LABEL
+
+    DEFINE FRAME Frame_2
+        ROW    573
+        COL    1
+        WIDTH  180
+        HEIGHT 5
+        FONTNAME "Arial"
+        FONTSIZE 9
+        FONTBOLD .F.
+        FONTITALIC .F.
+        FONTUNDERLINE .F.
+        FONTSTRIKEOUT .F.
+        CAPTION NIL
+        BACKCOLOR NIL
+        FONTCOLOR NIL
+        OPAQUE .T.
+    END FRAME
+
+    DEFINE TIMER Timer_1 INTERVAL 1000 ACTION xInvalidate()
+
+END WINDOW
+
