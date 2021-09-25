@@ -98,7 +98,7 @@ FUNCTION MntFornec()
 		{ "&Modificar", {||  fx2("edit")   } , .T., "Modifica um Fornecedor Existente." , 0 }, ;
 		{ "&Bloquear", {||  fx1( "bloquear" ) }, .T., "Bloqueia/Inativa um Cadastro Ativo.", 0 } ,;
 		{ "&Filtrar", {|| ProcFiltro( 'fornecedor' )    }, .T., "Filtra Registros", 0 } ,;
-		{ Hb_AnsiToOem("Opùùes") , {|| xSetOpcao()  }, .T., Hb_AnsiToOem("Opùùes Diversas") , 0 } }
+		{ Hb_AnsiToOem("OpÁıes") , {|| xSetOpcao()  }, .T., Hb_AnsiToOem("OpÁıes Diversas") , 0 } }
 
 
 	//Local cform
