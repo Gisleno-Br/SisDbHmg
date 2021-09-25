@@ -392,21 +392,21 @@ FUNCTION Main
 	 { "1-Vendedores", "Cadastro de Vendedores" } , {"1-Colaboradores",Nil} ,   {"1-Grupo Produtos",Nil} , ;
 		{"1-Locais Estoque",Nil} , {"1-FunÁıes",Nil} , ;
 		{"1-Categoria Produto",Nil} , {"1-Unidades",Nil} , {"1-Tipo Produtos",Nil} ,;
-		{"1-Tipo Produto1s",Nil},{"1-Tipo Produto2s",Nil},{"1-Tipo Produt3os",Nil},{"1-Tipo Produto4s",Nil},{"1-Tipo Produtos",Nil},;
-		{"2-Pedidos",Nil} , {"2-OrÁamento",Nil}  , {"3-Listagem Clientes",Nil} ,    {"4-Configuraùùes",Nil} }
-
+		{"1-Tipo Produto1s",Nil},{"1-Tipo Produto2s",Nil},{"1-Tipo Produt3os",Nil},{"1-Tipo Produtos",Nil},{"1-Tipo Produtos",Nil},;
+		{"2-Pedidos",Nil} , {"2-OrÁamento",Nil}  , {"3-Listagem Clientes",Nil} ,    {"4-ConfiguraÁıes",Nil} }
 
 
 
 	Private nRowIni := 10
 
 	
-	//HB_SETCODEPAGE("UTF8")
+	HB_SETCODEPAGE("UTF8")
 	n := 1
 
-	For n := 1 to Len(aOpcoes)
+	
+ 
+	While n  <= Len(aOpcoes)
 
-		//msginfo( aOpcoes[n][LABEL_NAME] )
 
 		DEFINE LABEL &(aOpcoes[n][LABEL_NAME] )
 			PARENT    fSplit6
@@ -422,7 +422,7 @@ FUNCTION Main
 			BACKCOLOR {255,255,255}
 		END LABEL
 
-	//msginfo( aOpcoes[n][LABEL_NAME] )
+
 		Aadd(aMtrPos  , nRowIni)
 		aOpcoes[n][4] := nRowIni
 
@@ -432,18 +432,15 @@ FUNCTION Main
 		SetHandCursor( GetControlHandle(aOpcoes[n][LABEL_NAME] , "fSplit6"), "Finger.cur" )
 
 		EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, aOpcoes[n][LABEL_HWND]), .T.)
-	//n++
 
-	Next
+		n++
 
-//GetControlHandle(  'lblTeste'  , 'Main' )
-
-//EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) },  GetControlHandle(  'lblTeste'  , 'Main' )  ), .T.)
+	Enddo
 
 	EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) },   fSplit6.Img_seta1.Handle ) , .T.)
 	EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) },   fSplit6.img_seta2.Handle ) , .T.)
 
-	HMG_ChangeWindowStyle( fSplit6.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
+    HMG_ChangeWindowStyle( fSplit6.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
 
 	HMG_ChangeWindowStyle( fSplit3.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
 	HMG_ChangeWindowStyle( fSplit4.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
@@ -526,11 +523,8 @@ FUNCTION Main
 
 	nIndexEvent := EventCreate (  { ||   xMainHandle( )   }  )  		
 
-
-	//InstallEventHandler('EventConsu')
-
-
 	Main.Activate
+    
 
 RETURN
 
@@ -559,10 +553,9 @@ Function xMenuPrin()
 
 	Local n1    := 1
 	
-
-	//If Len(aButTop) = 0
+	
 	EscondeJan()
-	//End If 	
+	
 
 	cActiveJan  := "Main"
 
@@ -935,19 +928,6 @@ Return
 
 
 
-Function RefJanAll()
-
-	Local n1
-
-	For n1 := 1 To Len(aJanelas)
-		If OBTN_Visible('fSplit2',  aJanelas[n1][3] )
-			PostMessage(   OBTN_Handle('fSplit2',  aJanelas[n1][3] )   , WM_MOUSELEAVE,0,0)
-		End If
-	Next
-
-Return
-
-
 Function PushButton( cjanela  , nIdBut , bBlock )
 
 
@@ -956,7 +936,6 @@ Function PushButton( cjanela  , nIdBut , bBlock )
 	EnableButton(cJanela  , nIdBut   , .f.)
 	EnableButton(cJanela  , nIdBut  , .t.)
 	
-
 
 	If (bBlock != Nil )
 		Eval(bBlock)
@@ -1008,10 +987,6 @@ Function LabelEvx()
 			End If
 
 			_ReleaseWindow( cActiveJan )
-
-			//OpMenuPrin()
-
-			//DoMethod('Main' , 'Show' )
 
 
 		End If
@@ -1195,11 +1170,9 @@ Function ButtonsTop( lCria )
 
 		End If
 
-		nCol += nPulo+2
+		nCol += nPulo+2		
 
-		//msginfo('ok')
-
-	Next
+	Next 
 
 
 	If !Empty(cSelected)
@@ -1209,14 +1182,12 @@ Function ButtonsTop( lCria )
 	lVScrool := .f.
 
 
-	If (nacum >= GetProperty('fSplit2','Width'))
-		//lTracking6 := .f.
+	If (nacum >= GetProperty('fSplit2','Width'))		
 		lVScrool := .t.
 		lVertScrol( .t. )
 	End If
 
-	//SysWait(.3)
-
+	
 Return nColx
 
 Function FechaJan(  cJanela  , lExclBut , nI1 , nI2)
@@ -1366,57 +1337,21 @@ Function xRealocButs( nId , nColx )
 
 	For n1 := 1 to 300
 
-		//If (n1 >= nId - 1)
+		
 			If _isControlDefined('LblUp' + StrZero(n1,4) , 'fSplit2' )
 
-				//nColz := GetProperty('fSplit2' ,  'LblUp' + StrZero(n1,4) , 'Col' )
-				//nColz -= 132
 
 				SetProperty('fSplit2' ,  'LblUp' + StrZero(n1,4) , 'Col' ,  nColIni       )								
 				SetProperty('fSplit2' ,"Img_"    + StrZero(n1,4) , 'Col',   nColini+110   )
 
-				nColIni += 130
-
-				/*
-
-				If laJuste
-
-				   If (Val( Right(cLblSelected,4 ) ) = n1 )
-                       cImg1 := 'Img' + Right(cLblSelected,4)
-					   If _isControlDefined(cImg1 , 'fSplit2' )					   		
-		
-							_ReleaseControl( 'LblUp' + StrZero(n1,4)  , 'fSplit2' )
-							_ReleaseControl( 'Img_'  + StrZero(n1,4)  , 'fSplit2' )
-
-
-					       
-					   		SetProperty('fSplit2' , cImg1 , 'Col', nColini+110   )
-					   		SetProperty('fSplit2' , 'Image_5' , 'Col', nColini   )
-
-							//msginfo('ok')   
-
-					   End If 
-				   End If 
-
-
-				End If 
-				*/
-
-				
+				nColIni += 130				
 
 			Else
-			   //msginfo('nf ' + StrZero(n1,4) )
+			   
 
 			End If 	
-	//	End If 
+
 	Next 
-
-//	DoMethod('fSplit2'  , 'Refresh' )
-	//SysWait(.2)
-
-	//msginfo('nf ')	
-
-
 
 Return 
 
@@ -1430,18 +1365,6 @@ Function DelImgBut()
 	End If
 
 Return
-
-Function BusqueCord(xCord)
-
-	//Aadd( aCords  , { cLabelx , nCol ,nCol+110} )
-	Local nret := 0
-	Local n1 := Ascan( aCords , { |a| (xCord >= a[2]) .and. (xCord <= a[3] ) } )
-
-	If n1 > 0
-		nRet := aCords[n1][2]
-	End If
-
-Return nRet
 
 Function ReleaseTeto()
 
@@ -1676,6 +1599,7 @@ Function OpMenu(aOpcoes , cJan , nLinha , cTitx , nIndx )
   HB_SETCODEPAGE("UTF8")
   HB_SETCODEPAGE("PT850")
 
+
   For n1 := 1 to Len(aOpcoes)
 
     cLbl := "Mnx_" + Alltrim(Str( nIndx)) + "_" +  StrZero(n1  ,4) 
@@ -1722,7 +1646,7 @@ Function OpMenu(aOpcoes , cJan , nLinha , cTitx , nIndx )
 
 Return nRow
 
-// Realiza a acomodaùùo dos itens do menu abaixo do aberto atualmente.
+// Realiza a acomodaÁ„o dos itens do menu abaixo do aberto atualmente.
 
 Function RestMenu(nOp1 , nLinha , nTam , nOpSel )
 
@@ -1879,7 +1803,7 @@ FUNCTION LabelEventHandler(aLabel)
 			HideAll("fSplit6" )
 			ShowMain()
 			nLevelMenu     := 1
-			MenuPrin(.t.)
+			//MenuPrin(.t.)
 			SaidaFocus(aOpcoes)
 
 			HideAll("fSplit3"  , .t. )
@@ -2288,12 +2212,6 @@ Function OpenOpcao( cCadastro , cTitulo , nHandle1 )
 			cForm    := ''			
 		
 			MntFornec()
-			
-
-
-			//TestBut()
-
-
 		
 
 		End If
@@ -2391,7 +2309,7 @@ Function xHighMenu(  cForm1 , cControl1    , nLinx   )
 	SetProperty(cForm1,"Image4","Col", 1)
 
 Return
-
+/*
 Function RetIndJan()
 
 	Local nI1 := Ascan(aButTop , {|a|  ('F' + Left(a[2],5)) ==  (Alltrim(cActiveJan))    } )
@@ -2401,7 +2319,9 @@ Function RetIndJan()
 	End If
 
 Return StrZero( nI1 , 4)
+*/
 
+/*
 Function MenuPrin(lVisible)
 
 	SetProperty("fSplit6","Cadastros","Visible",lVisible)
@@ -2412,6 +2332,7 @@ Function MenuPrin(lVisible)
 DO EVENTS
 
 Return
+*/
 
 
 Function PutSeta( nLin1  , nLin2 )
@@ -2484,26 +2405,6 @@ Function ScrTest( nDir , nTamanho )
 
 Return
 
-FUNCTION LabelSetBorder(aLabel, nHWnd)
-	LOCAL nPosDel := aScan(aLabel, { |a1| HMG_IsWindowStyle(a1[LABEL_HWND], WS_BORDER) })
-	LOCAL nPosSet := aScan(aLabel, { |a1| nHWnd == a1[LABEL_HWND] })
-
-
-	IF nPosDel != nPosSet
-		IF nPosDel > 0
-			HMG_ChangeWindowStyle(aLabel[nPosDel][LABEL_HWND], NIL, WS_BORDER, .F., .T.)
-			HMG_ChangeWindowStyle(aLabel[nPosDel][LABEL_HWND], WS_EX_STATICEDGE, NIL, .T., .T.)
-		ENDIF
-
-		IF nPosSet > 0
-			HMG_ChangeWindowStyle(aLabel[nPosSet][LABEL_HWND], WS_BORDER, NIL, .F., .T.)
-			HMG_ChangeWindowStyle(aLabel[nPosSet][LABEL_HWND], NIL, WS_EX_STATICEDGE, .T., .T.)
-		ENDIF
-	ENDIF
-
-
-
-RETURN NIL
 
 Function ShowButTop( lShow )
 

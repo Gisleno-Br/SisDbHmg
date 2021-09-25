@@ -63,7 +63,7 @@ Function SetCampoOrdem(cTabela , cCampo , nOrdem1 )
 
 
 	IF oQuery:NetErr()
-		yAviso( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  ,, .f.  )
+		yAviso( 'Erro ao Executar Atualizaï¿½ï¿½o -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  ,, .f.  )
 		RETURN .f.
 	END IF
 
@@ -97,7 +97,7 @@ Function SetCampoTam(cTabela , cCampo , nOrdem1 )
 
 	IF oQuery:NetErr()
 		//SetArrwCursor(nHandle)
-		yAviso( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error() ,, .f. )
+		yAviso( 'Erro ao Executar Atualizaï¿½ï¿½o -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error() ,, .f. )
 		RETURN .f.
 	END IF
 
@@ -1000,7 +1000,6 @@ Function xCaptJan(cJanela)
 
 	Local Ywidth := 0
 	Local YHeight := 0
-
 
 	If _isWindowDefined(cJanela)
 

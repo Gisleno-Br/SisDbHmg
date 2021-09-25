@@ -258,7 +258,7 @@ Return
 FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOpx1 ,aOpx2 , aOpcoes )
 
 
-	Local cIndice1 := RetIndJan()
+//	Local cIndice1 := RetIndJan()
 
 	Private cTitle := ''
 
@@ -3064,7 +3064,7 @@ FUNCTION LabelEventH2(aLabel)
 
 
 		SetFocus(nHWnd)
-		LabelSetBorder(aLabel, nHWnd)
+		//LabelSetBorder(aLabel, nHWnd)
 		cOpcao := GetProperty(cForm, cControl, "VALUE")
 		// msginfo(copcao)
 
