@@ -24,6 +24,8 @@
 #include "dbinfo.ch"
 #include "error.ch"
 
+
+
 #DEFINE COLUNA  1
 #DEFINE TAMANHO 2
 #DEFINE TEXTO   3
@@ -233,6 +235,7 @@ Static Function Fx2( cTexto )
 	Local aCli := GetProperty( cactiveJan , 'br_grid', 'Item' ,   nValue1[1]    )
 	Local cAx1 := 'FTop1' + Right( cActiveJan,5)
 	Local cTexto1 := OBTN_Caption(cAx1   , aButtons[3][5] )
+
 
 
 	If cTexto = 'I'
