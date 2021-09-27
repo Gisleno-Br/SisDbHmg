@@ -3,6 +3,7 @@
 
 #define WM_SETFOCUS 7
 
+//25-09
 
 STATIC lTracking45 := .F.
 
@@ -49,139 +50,11 @@ FUNCTION yAviso( cMsgx1 , lEfect )
 
 Return 	
 
-/*
-FUNCTION yAviso( cMsgx1 , lEfect  ,  cJanExtra  )
-
-	LOCAL cControl := ''
-	LOCAL cForm    := ''
-	LOCAL cFormName := ''
-	Local cSalvaD := cDiaName
-	Local cSave1    := cDiaName
-	Local aL1
-	Local al2
-	Local aL3
-	Local aL4
-	Local aL5
-	Local l1 := .f.
-
-
-
-	Default lEfect := .t.
-	//Default lCadJan := .t.
-	Default cJanExtra := ''
-
-	Private n20 := 0
-	Private n21 := 0
-
-
-	cDiaName := 'fDialogo'
-	//cActiveJan := cDiaName
-
-
-	//GetFormNameByHandle ( GetActiveWindow(), @cFormName )
-
-	//GetFormNameByHandle (  cActiveJan, @cFormName )
-
-	cFormName := cActiveJan
-
-	lAtivaBlack := (Alltrim(cFormName) != "Main" )
-
-	BT_BitmapRelease (hBit10)
-	BT_BitmapRelease (hBit11)
-	BT_BitmapRelease (hBit12)
-	BT_BitmapRelease (hBit20)
-
-	xCaptJan(cActiveJan)
-
-
-	Flag_AlphaBlend_Effect := .T.
-
-	If lEfect
-		Grayness_effect_start(  cActiveJan )
-		ShowButTop( .f. )
-	End If
-
-
-
-	If _isWindowDefined('fSplit5')
-		If isWindowVisible(  GetFormHandle( 'fSplit5')    )
-		DoMethod( 'fSplit5'  , 'Hide')
-	End If
-End If
-
-//msginfo('ok2')
-
-msgAviso( cMsgx1 )
-
-Grayness_effect_End(  cActiveJan )
-lAtivaBlack := .f.
-
-If !ResButSel()
-	ShowButTop( .t. )
-End If
-
-cDiaName := cSalvaD
-
-If !Empty(cJanExtra)
-Domethod( cJanExtra , 'SetFocus')
-End If
-
-
-
-
-RETURN
-
-*/
 
 
 FUNCTION ConfirmAviso( cMsgx1,  cJanPadrao ,  lEfect )
 
-	 /*
-
-	LOCAL cControl := ''
-	LOCAL cForm    := ''
-	LOCAL cFormName := ''
-	LOCAL lOk := .F.
-	Local cSalvad := cDiaName
-	Local al1 := {}
-
-
-	PRIVATE lRetx := .F.
-	Private n20 := 0
-	Private n21 := 0
-
-	cDiaName := 'fDialogo'
-
-	Default cJanPadrao := 'Main'
-
-	DEfault lEfect := .t.
-
-	cFormName := cJanPadrao
-
-
-	BT_BitmapRelease (hBit10)
-	BT_BitmapRelease (hBit11)
-	BT_BitmapRelease (hBit12)
-
-	//msginfo('l32')
-
-
-
-	If lEfect
-
-		lAtivaBlack := (Alltrim(cFormName) != "Main" )
-
-		xCaptJan(cFormName)
-		Flag_AlphaBlend_Effect := .T.
-
-		Grayness_effect_start(  cFormName )
-		ShowButTop( .f. )
-		DoMethod( 'fSplit5'  , 'Hide')
-
-	End If
-
-	*/
-
+	
 	Local aMx := {}
 	PRIVATE lRetx := .F.
 
@@ -199,19 +72,7 @@ FUNCTION ConfirmAviso( cMsgx1,  cJanPadrao ,  lEfect )
 
 	If lEfect
 
-		/*
-		Grayness_effect_End(  cFormName )
-		lAtivaBlack := .f.
-
-		Flag_AlphaBlend_Effect := .f.
-
-
-		If !ResButSel()
-			ShowButTop( .t. )
-		End If
-		*/
-
-		
+			
 		
 		EfectEnd(cActiveJan , aMx )		
 
@@ -741,8 +602,9 @@ FUNCTION xIniProgress( nTp )
 
 		Else
 
+
 			OBTN_Create( cJanx, 6653, "Sim", 185, 375,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-			OBTN_Create( cJanx, 6654, hb_ANSIToOEM( "Nùo" ), 185, 435,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+			OBTN_Create( cJanx, 6654, hb_ANSIToOEM( "N„o" ), 185, 435,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 
 			OBTN_Font( cJanx, 6653,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 			OBTN_Font( cJanx, 6654,  { cFontName, nFontSize, .F., .F., .F., .F. } )

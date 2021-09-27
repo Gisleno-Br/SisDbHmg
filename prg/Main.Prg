@@ -1,3 +1,5 @@
+  // VERSAO 25/09/2021
+
 #include <hmg.ch>
 #include <minigui.ch>
 
@@ -338,6 +340,8 @@ FUNCTION Main
 	Public lMainJan := .t.
 
 
+	
+	
 
 
 	SET DATE BRIT
@@ -346,9 +350,10 @@ FUNCTION Main
 
 	SET NAVIGATION EXTENDED
 
-	HB_LANGSELECT( 'PT' )
+	//HB_LANGSELECT( 'PT' )
 
-//	HB_SetCodePage("PT850")
+	//HB_SetCodePage("PT850")
+
 
 	//HB_SETCODEPAGE("UTF8")
 
@@ -390,23 +395,25 @@ FUNCTION Main
 
 	Private aItens := { {"1-Clientes","Cadastro de Clientes"} , { "1-Fornecedores","Cadastro de Fornecedores"} , ;
 	 { "1-Vendedores", "Cadastro de Vendedores" } , {"1-Colaboradores",Nil} ,   {"1-Grupo Produtos",Nil} , ;
-		{"1-Locais Estoque",Nil} , {"1-Funçõeses",Nil} , ;
+		{"1-Locais Estoque",Nil} , {"1-Funções",Nil} , ;
 		{"1-Categoria Produto",Nil} , {"1-Unidades",Nil} , {"1-Tipo Produtos",Nil} ,;
 		{"1-Tipo Produto1s",Nil},{"1-Tipo Produto2s",Nil},{"1-Tipo Produt3os",Nil},{"1-Tipo Produtos",Nil},{"1-Tipo Produtos",Nil},;
 		{"2-Pedidos",Nil} , {"2-Orçamento",Nil}  , {"3-Listagem Clientes",Nil} ,    {"4-Configurações",Nil} }
 
 
 
-	Private nRowIni := 10
 
+
+	Private nRowIni := 10
 	
 	HB_SETCODEPAGE("UTF8")
 	n := 1
+ 
 
 	
- 
-	While n  <= Len(aOpcoes)
 
+	While n  <= Len(aOpcoes)
+		
 
 		DEFINE LABEL &(aOpcoes[n][LABEL_NAME] )
 			PARENT    fSplit6
@@ -576,10 +583,8 @@ Function xMenuPrin()
 	ButtonsTop( .f. )
 
 
-
 	If nHanSelected > 0
-		EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, nHanSelected  ), .T.)
-		//RefreshAll('fSplitSubMenu')
+		EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, nHanSelected  ), .T.)		
 		PostMessage( nHanSelected   , WM_MOUSELEAVE , 0, 0)	
 	End If
 
@@ -951,76 +956,6 @@ Return
 
 
 
-Function LabelEvx()
-
-	STATIC lTracking10 := .F.
-	LOCAL  nHWnd   := EventHWND()
-	LOCAL  nMsg    := EventMSG()
-	LOCAL  nWParam := EventWPARAM()
-	LOCAL  cControl
-	LOCAL  cForm
-	Local cName
-
-	GetControlNameByHandle(nHWnd, @cControl, @cForm)
-
-	//cLabel3 := "LblX2" + StrZero(n1,4)
-
-	If (Left(cControl,5) == 'LblX2')
-
-		If (nMsg == WM_LBUTTONDOWN)
-
-			nI1 := Ascan(aJanelas , {|a|a[2] == Alltrim(cActiveJan) } )
-
-			If nI1 > 0
-				nTam := Len(aJanelas)
-				Adel(aJanelas , nI1 )
-				aSize(aJanelas, nTam - 1)
-			End If
-
-
-			If _isControlDefined( 'Lblx1_' , 'fSplit2')
-				_ReleaseControl( 'Lblx1_' , 'fSplit2')
-			End If
-
-			If _isControlDefined( 'Lblx2' , 'fSplit2')
-				_ReleaseControl( 'Lblx2' , 'fSplit2')
-			End If
-
-			_ReleaseWindow( cActiveJan )
-
-
-		End If
-
-
-		If (nMsg =  WM_MOUSEMOVE) .And. (!lTracking10)
-
-			//SetProperty( 'fSplit2',cControl,'BACKCOLOR', {5,102,126} )
-
-			SetProperty(cForm, cControl, "BACKCOLOR", {4,66,81}  )
-			SetProperty(cForm, cControl, "FONTBOLD", .T.)
-
-			lTracking10 := TrackMouseEvent(nHWnd) //TME_LEAVE is default flag
-
-
-		End If
-
-		If (nMsg =  WM_MOUSELEAVE)
-
-			// msginfo('ok')
-
-			SetProperty(cForm, cControl, "BACKCOLOR", {5,102,126} )
-			//SetProperty(cForm, cControl, "FONTBOLD", .f.)
-			lTracking10 := .F.
-
-		End If
-
-
-	End If
-
-
-Return
-
-
 
 Function EscondeJan()
 
@@ -1355,17 +1290,6 @@ Function xRealocButs( nId , nColx )
 
 Return 
 
-Function DelImgBut()
-
-	Local cImg1 := 'Img' + Right(cLblSelected,4)
-
-	If _IsControlDefined(cImg1 , 'fSplit2' )
-		_ReleaseControl( cImg1 , 'fSplit2' )
-		_ReleaseControl( 'Image_5' , 'fSplit2' )
-	End If
-
-Return
-
 Function ReleaseTeto()
 
 	Local n1
@@ -1395,29 +1319,6 @@ Function ReleaseTeto()
 
 Return
 
-
-
-
-Function VisibleLbl(lVisible)
-
-	Local cMenuName := 'fSplit2'
-	Local cLabelx
-	Local n1
-
-	Default lVisible := .f.
-
-	For n1 := 1 To Len(aButTop)
-
-		cLabelx := "LblUp" + StrZero(n1,4)
-
-		If _IsControlDefined( cLabelx, cMenuName )
-			SetProperty(cMenuName , cLabelx , "Visible" , lVisible )
-		End If
-
-	Next
-
-
-Return
 
 Function lVertScrol( lVisible )
 
@@ -1511,15 +1412,6 @@ function TestBut()
 
 	// msginfo('ok')
 
-
-Return
-
-
-Function ShowBut( cForm1 , nidBut1 )
-
-	OBTN_Color( cForm1,  nIdBut1,  aBtnCorSl , .T. )
-	OBTN_Enable( cForm1, nIdBut1,   .T. )
-	OBTN_Visible( cForm1 , nIdBut1, .T. )
 
 Return
 
@@ -2121,6 +2013,7 @@ Function xDropDown(  cMenuDesc  , nTopx1 )
 
 	nContItens := 0
 	Aeval(aItens , { | a | Iif( Left(a[1],1) == Alltrim(Str(nindice)) , nContItens++ , Nil ) } )
+	
 
 
 				//msginfo(Str(nContItens))
@@ -2247,8 +2140,6 @@ Function OpenOpcao( cCadastro , cTitulo , nHandle1 )
 
 
 
-
-
 	If cCadastro = 'Clientes'
 
 		If ( FindWindowEx( ,, , cTitulo  ) > 0 )
@@ -2309,30 +2200,6 @@ Function xHighMenu(  cForm1 , cControl1    , nLinx   )
 	SetProperty(cForm1,"Image4","Col", 1)
 
 Return
-/*
-Function RetIndJan()
-
-	Local nI1 := Ascan(aButTop , {|a|  ('F' + Left(a[2],5)) ==  (Alltrim(cActiveJan))    } )
-
-	If nI1 <= 0
-
-	End If
-
-Return StrZero( nI1 , 4)
-*/
-
-/*
-Function MenuPrin(lVisible)
-
-	SetProperty("fSplit6","Cadastros","Visible",lVisible)
-	SetProperty("fSplit6","Movimentos","Visible",lVisible)
-	SetProperty("fSplit6","Relatorios","Visible",lVisible)
-	SetProperty("fSplit6","Parametros","Visible",lVisible)
-
-DO EVENTS
-
-Return
-*/
 
 
 Function PutSeta( nLin1  , nLin2 )
@@ -2458,7 +2325,6 @@ REturn
 Function D1Black(cJan,zBitMap)
 
 	Local hDc
-//    Local cJan 
 
 	Local nRow := 0
 	Local nCol := 0
@@ -2481,8 +2347,7 @@ Function D1Black(cJan,zBitMap)
 	Else
 
 		Proc_ON_PAINT(cJan)
-		//DrawTransp( cJan,zBitMap )
-
+		
 	End If
 
 
@@ -2529,22 +2394,17 @@ fUNCTION DrawTransp(cJan , zBitMap , cTitulo , nQreg , cTitConsu , cTitFltr )
 
 	If Flag_AlphaBlend_Effect
 
-		//msginfo('apl ' + cJan)
-
+		
 		BT_DrawGradientFillVertical (hDC,  nRow  ,  nCol  ,  Width,  Height , BLACK , BLACK)              //
 
-		//BT_DrawBitmapAlphaBlend (hDC, nRow   ,  nCol  , nil, nil, 120 , BT_COPY  , zBitmap)
-
-
+		
 		If !lTelaToda
 			BT_DrawBitmapAlphaBlend (hDC, 0 ,  nCol  , nil, nil, 120 , BT_COPY  , zBitmap)
 		Else
 			BT_DrawBitmapAlphaBlend (hDC, GetProperty("fSplit2","Height" ) ,  nCol  , nil, nil, 120 , BT_COPY  , zBitmap)
 		End If 	
 
-		//lTelaToda := .f.
 		
-		//GetProperty("fSplit2","Height" )
 
 		BT_DeleteDC (BTstruct )
 

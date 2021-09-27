@@ -1,6 +1,8 @@
 #require "rddsql"
 #require "sddmy"
 
+//25/09
+
 #include <hmg.ch>
 
 
@@ -80,7 +82,7 @@ ANNOUNCE RDDSYS
 
 STATIC nIndexEvent := 1
 
-//descri√ß√£o
+//descriÁ„o
 
 Define Window Main
 
@@ -421,6 +423,7 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 	
 	
 	//SetCursorOnControls( IDC_WAIT )
+
 	Load Window fClientes as &cFormPrin
 
 	
@@ -642,6 +645,7 @@ Function ProcFiltro( cTab1 , lEfect )
 	Local aL3
 	Local aL4
 	Local aL5
+	Local aMx 
 
 
 	Local cCapt := Alltrim(OBTN_Caption(cAuxName   , aButtons[4][5] ))
@@ -652,7 +656,7 @@ Function ProcFiltro( cTab1 , lEfect )
 
 	If (lOpcaoAberta)
 		//DoMethod(cAuxName , 'Hide' )
-		yAviso("NÔøΩo ÔøΩ possivel Executar Filtros com a Tela de opÔøΩÔøΩes Ativa.")
+		yAviso("N„o Sera possivel Executar Filtros com a Tela de opÁıes Ativa." , .f.)
 		Return
 	End If
 
@@ -676,31 +680,13 @@ Function ProcFiltro( cTab1 , lEfect )
 
 	//cActiveJan := 'fFiltro'
 
-	If (lEfect)
-
-		lAtivaBlack := .t.
-
-		Flag_AlphaBlend_Effect := .T.
-		DoMethod( 'fSplit5' , 'Hide' )
-
-		xCaptJan(cActiveJan)
-
-		Grayness_effect_start(  cActiveJan )
-		ShowButTop( .f. )
-
-
-	End If
+	
+	aMx := yEfect(  cActiveJan , aMx  )		
 
 
 	cFiltros := LoadFitros(cTab1 )
 
-
-	Flag_AlphaBlend_Effect := .f.
-	Grayness_effect_End(  cActiveJan )
-	lAtivaBlack := .f.
-
-	//msginfo('1')
-
+	EfectEnd(  cActiveJan ,  aMx)
 
 	cTexto := GetProperty('fSplit2' ,cLblSelected , 'Value')
 
@@ -714,14 +700,9 @@ Function ProcFiltro( cTab1 , lEfect )
 
 	End If
 
-	//cActiveJan := cFormPrin
+
 	ResButSel()
 
-	//msginfo('1')
-
-//
-	//SysWait(.1)
-//	BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , Nil , .t. )
 
 	ShowButTop( .t. )
 
@@ -796,7 +777,6 @@ Function InitTela(  lIni1  , nColz1)
 
 
 	IntCli()
-
 
 
 	
@@ -1109,7 +1089,7 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 
 
 	If (oQuery:Lastrec()  == 0 )
-		yAviso( 'Este Cadastro NÔøΩo Possui Registros' ,, .f. )	    
+		yAviso( 'Este Cadastro N„o Possui Registros' , .f. )	    
 		//Return 	
 	End If 
 
@@ -1645,7 +1625,7 @@ Function xMudouTam()
 		End If
 
 		LISTVIEW_SETCOLUMNWIDTH ( aHandle , nindice , nSalva )
-		yAviso("Tamanho incorreto para a Coluna.")
+		yAviso("Tamanho incorreto para a Coluna." , .f. )
 
 		nColSel := 0
 
@@ -2728,14 +2708,14 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 			END IF
 
-			*//ExclusÔøΩo
+			*//Exclusùo
 			IF nId == 5459
 
 
 				//PushButton( cFormPrin  , nid )
 				PushButton( cFormPrin  , nId )
 
-				If Confirmaviso("Confirma ExclusÔøΩo dessa Consulta ? " ,cFormPrin )
+				If Confirmaviso("Confirma Exclus„o dessa Consulta ? " ,cFormPrin )
 
 
 					ExcluiConsulta(nIdConsulta)
@@ -2887,10 +2867,7 @@ Function LimpaLabels( lDest )
 
 Return
 
-
-
-
-
+  // Cria Sub menu na opÁ„o Consultas.
 
 Function CrieSubMenu(aSub1)
 
@@ -3173,7 +3150,7 @@ Function OrdeneCol( nIndice )
 	nColOrder := nIndice
 
 	If lOpcaoAberta
-		yAviso("OpÔøΩÔøΩo nÔøΩo Disponivel no Momento.")
+		yAviso("OpÁ„o n„oo Disponivel no Momento.")
 		Return
 	End If
 

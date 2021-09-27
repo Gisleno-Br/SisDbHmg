@@ -1,5 +1,7 @@
 #include "hmg.ch"
 
+//25-09-2021
+
 #define QUEBRA chr(13)+chr(10)
 
 #define WM_SETFOCUS 7
@@ -63,7 +65,7 @@ Function SetCampoOrdem(cTabela , cCampo , nOrdem1 )
 
 
 	IF oQuery:NetErr()
-		yAviso( 'Erro ao Executar Atualizaùùo -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  ,, .f.  )
+		yAviso( 'Erro ao Executar AtualizaÁ„o -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  ,, .f.  )
 		RETURN .f.
 	END IF
 
@@ -97,7 +99,7 @@ Function SetCampoTam(cTabela , cCampo , nOrdem1 )
 
 	IF oQuery:NetErr()
 		//SetArrwCursor(nHandle)
-		yAviso( 'Erro ao Executar Atualizaùùo -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error() ,, .f. )
+		yAviso( 'Erro ao Executar AtualizaÁ„o -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error() ,, .f. )
 		RETURN .f.
 	END IF
 
@@ -178,7 +180,7 @@ FUNCTION GetCamposDic( cTabela, cBrowse, lCmpTab , lOem )
 	oServ := Nil
 
 	IF Len( aCampos ) == 0
-		yAviso( 'Dicionario de dados nùo Localizado para Tabela ' +  cTabela + QUEBRA + 'Contacte Suporte.' ,, .f. )
+		yAviso( 'Dicionario de dados n„o Localizado para Tabela ' +  cTabela + QUEBRA + 'Contacte Suporte.' , .f. )
 	END IF
 
 RETURN aCampos
@@ -286,18 +288,6 @@ FUNCTION GetIndexes( cTabela )
 RETURN aM1
 
 
-FUNCTION QtReg( nX1 )
-
-	// fClientes.lblQreg.Value := Alltrim(Transform( Reccount() , '999,999,999'))
-
-	//tProperty( cFName, "LblQReg", "Value",  AllTrim( Transform( nX1, '999,999,999' ) ) )
-	//DoMethod( cFname, "LblQReg", "refresh" )
-
-	//DrawTit()
-
-RETURN
-
-
 
 FUNCTION GetReg( cTabela , cCampoId )
 
@@ -373,7 +363,7 @@ FUNCTION xInit()
 
 
 	IF !File( Alltrim(cInifile) )
-		MsgInfo( 'Arquivo DataBase.ini nùo Localizado , Impossivel Continuar.' )
+		MsgInfo( 'Arquivo DataBase.ini n„o Localizado , Impossivel Continuar.' )
 		//fPrincipal.Release()
 	END IF
 
@@ -712,7 +702,7 @@ FUNCTION GetCamposInf( cTabela, cInf  ,cCampo )
 	oServ := Nil
 
 	IF Len( aTam ) == 0
-		yAviso( 'Dicionario de Dados nùo Localizado para Tabela ' +  cTabela  + '(' + cInf + ')'   + QUEBRA + 'Contacte Suporte.' ,, .f.  )
+		yAviso( 'Dicionario de Dados n„o Localizado para Tabela ' +  cTabela  + '(' + cInf + ')'   + QUEBRA + 'Contacte Suporte.' ,, .f.  )
 	END IF
 
 RETURN aTam
@@ -826,79 +816,7 @@ FUNCTION GetJoinTab( cTabela )
 
 RETURN cJoin
 
-FUNCTION PesqSql( cTabela, aHeaders  )
 
-//   LOCAL cCampo := ''
-//   LOCAL nTam   := 0
-//   LOCAL aVal1  := {}
-//
-//   DEFAULT aHeaders := GetCamposDic( cTabela, 'S', '', .F. )
-//
-//   PRIVATE aCamposX := aHeaders
-//
-//   PRIVATE cSqlConsul := "select "
-//
-//   PRIVATE aCamposDb := {}
-//   PRIVATE aHeaderDb   := aHeaders
-//   PRIVATE aTamDb := {}
-//
-//   PRIVATE cTabx := cTabela
-//
-//   PRIVATE bColorGrid := {|| iif( This.CellRowIndex / 2 <> Int( This.CellRowIndex / 2 ), { 222,222,222 }, { 255,255,255 } ) }
-//
-//   PRIVATE aValores := {}
-//
-//   PRIVATE nIdRet := 0
-//
-//   PRIVATE aBcolor1 := {}
-//
-//   FOR nX := 1 TO Len( aHeaderDb )
-//      // msginfo( aHeaderDb[nx]  )
-//      AAdd( aBcolor1, bColorGrid )
-//   NEXT
-//
-//   FOR i := 1 TO Len( aHeaders )
-//
-//      cCampo := GetInfoDic( aHeaders[ i ], cTabela, 'CAMPO' )
-//      nTam   := GetInfoDic( aHeaders[ i ], cTabela, 'TAM' )
-//
-//      IF Len( cCAmpo ) > 0
-//         cSqlConsul += ( AllTrim( Lower(cCampo ) ) + ',' )
-//
-//         AAdd( aCamposDb, cCampo )
-//         AAdd( aTamDb, nTam )
-//
-//         AAdd( aVal1, "" )
-//      END IF
-//
-//   NEXT
-//
-//   cSqlConsul := Left( cSqlConsul, Len( cSqlConsul ) -1 )
-//
-//   cSqlConsul += ( " from " + ctabela )
-//
-//   cSqlConsul += GetJoinTab( cTabela )
-//
-//   AAdd( aValores, aVal1 )
-//
-//   Load Window fPesqSql
-//   ON KEY ESCAPE of fPesqSql Action ( fPesqSql.Release(),  fPesqSql := Nil )
-//   ON KEY RETURN of fPesqSql Action iif( GetProperty( "fPesqSql", "FocusedControl" ) != "EdtPesq", SetOk(), Consulty() )
-//
-//   //DrawResults( 0 )
-//
-//   Center Window fPesqSql
-//
-//   fPesqSql .Lbltit1. value := 'Pesquisa ' + AllTrim( cTabela )
-//   // fPesqSql.EdtPesq.SetFocus()
-//
-//   fPesqSql .CmbCampos. Value := 2
-//
-//   Activate Window fPesqSql
-
-	// msginfo( nIdREt)
-
-RETURN nIdRet
 
 FUNCTION rTrans( cPar1 )
 
@@ -1092,18 +1010,18 @@ Return
 
 Function HideMain()
 
-DoMethod("fSplit6","Hide")
-DoMethod("fSplit3","Hide")
-DoMethod("fSplit4","Hide")
+	DoMethod("fSplit6","Hide")
+	DoMethod("fSplit3","Hide")
+	DoMethod("fSplit4","Hide")
 
 
 Return
 
 Function ShowMain()
 
-DoMethod("fSplit6","Show")
-DoMethod("fSplit3","Show")
-DoMethod("fSplit4","Show")
+	DoMethod("fSplit6","Show")
+	DoMethod("fSplit3","Show")
+	DoMethod("fSplit4","Show")
 
 
 Return
@@ -1238,11 +1156,6 @@ function SetWindowControlsVisible(cForm , lVisible , aMVisible , lShow  )
 
 				If lVisible
 
-
-				//	if _HMG_SYSDATA [  2,i] = 'Frame_1'
-				//		Altd()
-				//	End If 
-
 					nIndice := Ascan( aMVisible , {|a,b| (a[1] == cForm) .And. (a[2] == _HMG_SYSDATA [  2,i] )  }  )
 
 					If (Len(aMVisible) > 0) .And. (nIndice > 0)
@@ -1273,39 +1186,6 @@ Return aM1
 //aclone(aControlList)
 
 
-Function MaxJanela()
-
-	Local cFormName := ''
-	Local cFname    := ''
-	GetFormNameByHandle ( GetActiveWindow(), @cFormName )
-
-	msginfo('ok2')
-
-
-	If (Alltrim(cactivejan) != "Main")
-
-		If _isWindowDefined(cactivejan)
-
-			cFname := cactivejan
-
-		DoMethod(cFname    ,"Show")
-	DoMethod( cFname   ,"SetFocus")
-
-	SysWait(.2)
-
-End If
-
-Else
-
-	xMenuPrin()
-
-End If
-
-msginfo('ok2')
-
-//DoMethod( cFormName ,"Show")
-
-Return
 
 Function RefreshAll(cForm)
 
@@ -1327,36 +1207,28 @@ Function RefreshAll(cForm)
 				nHan := GetControlHandle(_HMG_SYSDATA [  2,i]   , cForm)
 				if nHan != 0
 					cTxt1 += ( Procname(1) + ' ' + cForm +  ' ' +  _HMG_SYSDATA [  2,i]  + Chr(13)+Chr(10) )
+
+					PostMessage( nHan   , WM_MOUSEMOVE , 0, 0)
+
 					PostMessage( nHan   , WM_MOUSELEAVE , 0, 0)
+
+
+
 				End If
 			End If
 		End If
 	Next i
 
 
-
-
-	//SysWait(.3)
+	ShowWindow( GetFormHandle(cForm))
+	
+	SysWait(.3)
+	
 
 	//SaveLog( 'Janelas2.txt', cTxt1)
 
 
 Return Nil
-
-
-Function ScrTestx()
-
-	Local hNandle := GetFormHandle( 'fSplitSubMenu' )
-
-	msginfo('p2')
-
-	SetScrollPos ( hNandle, SB_VERT, 0, .T. )
-	SendMessage  ( hNandle, WM_VSCROLL, SB_LINEUP, 0 )
-
-Do Events
-
-
-Return
 
 
 **********************************************************************
@@ -1379,9 +1251,9 @@ Function SysWait(nWait)
 
 	Do While Seconds() - iTime < nWait
 		ntim++
-	DO EVENTS
-	//SaveLog( 'Syswait.txt' ,  " SysWait " + Str(nTim) )
-EndDo
+		DO EVENTS
+		//SaveLog( 'Syswait.txt' ,  " SysWait " + Str(nTim) )
+	EndDo
 
 Return
 
@@ -1495,24 +1367,6 @@ Function xSqlInsert(cTabela , aValores ,aCamposF )
 REturn cSql1
 
 
-Function xWaitMsg( cText1 ,bBlock )
-
-	Private BlockRun := bBlock
-
-	Private cJanxDialog := ''
-
-	Load Window fWaitMsg
-
-	fWaitMsg.Lblmsg1.Value := Alltrim(cText1)
-
-	Center Window fWaitMsg
-
-	Activate Window fWaitMsg
-
-
-REturn
-
-
 
 Function yEfect(cFormName , lEfect)
 
@@ -1547,18 +1401,13 @@ Function yEfect(cFormName , lEfect)
 
 	CaptTelas()
 
-
-
 	If (lEfect)
-		//MsgInfo('2 ' + cFormName)
+
 		Flag_AlphaBlend_Effect := .T.
 
 		If _isWindowDefined(cMenuName)
 			DoMethod( cMenuName , 'Hide')
 		End If 
-
-//		hBit2 := BT_BitmapCaptureWindow ( cActiveJan , 0 , 0 , yWidth, nDeskTopHeight)
-//		hBit11 := BT_BitmapCaptureWindow ('fSplit2' , 0 , 0 , fSplit2.Width , fSplit2.Height)
 
 
 
@@ -1601,8 +1450,6 @@ Function yEfect(cFormName , lEfect)
 		BT_ClientAreaInvalidateAll ( cActiveJan  )
 		BT_ClientAreaInvalidateAll ( 'fSplit2'  )
 
-
-//		msginfo('ok')
 
 
 	Else
@@ -1655,6 +1502,14 @@ Function EfectEnd(cFname1 , aMtr1 )
 		End If
 
 
+		//'fMenu' + Right(cActiveJan,5)
+
+		//If _isWindowDefined( 'fMenu' + Right(cActiveJan,5) )
+		//	DoMethod( 'fMenu' + Right(cActiveJan,5) , 'Hide')
+			//msginfo('ok')
+		//End If
+
+
 		SetWindowControlsVisible(  cActiveJan , .t.  ,  aMtr1 , .t. )	
 
 		BT_ClientAreaInvalidateAll ( cActiveJan )
@@ -1678,6 +1533,13 @@ Function EfectEnd(cFname1 , aMtr1 )
 
 		Syswait(.1)
 		lInvalid := .f.
+
+		
+
+		If _isWindowDefined( cMenuName)
+			DoMethod(cMenuName , 'Hide')
+        End If 
+
 
 		If _isControlDefined(    'br_grid', cActiveJan   )
 			PostMessage(   GetControlHandle( 'br_grid', cActiveJan ) , WM_LBUTTONUP,0,0)

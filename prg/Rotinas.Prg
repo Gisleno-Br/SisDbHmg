@@ -57,7 +57,7 @@ FUNCTION AltTamCampo( cTabx, cCampo, cForm )
       AAdd( aButx1, {  6798,  OBTN_Handle( 'fEditTam', 6798 )    } )
       AAdd( aButx1, {  6799,  OBTN_Handle( 'fEditTam', 6799 )    } )
 
-      SetProperty( 'fEditTam', "Label_5", "Value",  hb_ANSIToOEM( 'Propriedades Visualizao Campo' ) )
+      SetProperty( 'fEditTam', "Label_5", "Value",  hb_ANSIToOEM( 'Propriedades Visualizaï¿½ï¿½o Campo' ) )
 
       EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, 'fEditTam'  ) },   OBTN_Handle( 'fEditTam', 6798 )   ), .T. )
       EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, 'fEditTam' ) },     OBTN_Handle( 'fEditTam', 6799 )   ), .T. )
@@ -69,7 +69,7 @@ FUNCTION AltTamCampo( cTabx, cCampo, cForm )
 
 
    ELSE
-      yAviso( 'Campo/Tabela não Localizado no Dicionario de Dados.' )
+      yAviso( 'Campo/Tabela nÃ£o Localizado no Dicionario de Dados.' )
       SetProperty( cForm, 'Image_baixo', 'Visible', .F. )
       SetProperty( cForm, 'Image_cima', 'Visible', .F. )
       Refreshall( cForm )
@@ -98,7 +98,7 @@ FUNCTION SvTamCampo( cCampo1, cTab1, nTam1  )
    oQuery := oServer:Query( cSqlUp )
 
    IF oQuery:NetErr()
-      yAviso( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
+      yAviso( 'Erro ao Executar AtualizaÃ§Ã£o -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
       RETURN .F.
    END IF
 
@@ -128,7 +128,7 @@ FUNCTION SaveCampo( cCampo1, cTab1  )
 
    IF oQuery:NetErr()
 
-      yAviso( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
+      yAviso( 'Erro ao Executar AtualizaÃ§Ã£o -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
 
       oServer:Destroy()
       oServer := Nil

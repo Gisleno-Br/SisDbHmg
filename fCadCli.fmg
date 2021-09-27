@@ -3,9 +3,21 @@
 
 DEFINE WINDOW TEMPLATE AT 185 , 551 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTUAL HEIGHT Nil TITLE "" ICON NIL MODAL NOSIZE NOSYSMENU NOCAPTION CURSOR NIL ON INIT xInitCad() ON RELEASE Nil ON INTERACTIVECLOSE Nil ON MOUSECLICK Nil ON MOUSEDRAG Nil ON MOUSEMOVE Nil ON SIZE Nil ON PAINT Proc_Cadastro("Cadastro de Clientes" , ThisWindow.Name) BACKCOLOR Nil ON GOTFOCUS Nil ON LOSTFOCUS Nil ON SCROLLUP Nil ON SCROLLDOWN Nil ON SCROLLLEFT Nil ON SCROLLRIGHT Nil ON HSCROLLBOX Nil ON VSCROLLBOX Nil
 
-    DEFINE TAB Tab_1 AT 40 , 4 WIDTH 856 HEIGHT 339 VALUE 1 FONT "Arial" SIZE 9 TOOLTIP "" BUTTONS HOTTRACK ON CHANGE RefreshAll( 'fCadCli' ) MULTILINE
+    DEFINE TAB Tab_1 AT 40 , 4 WIDTH 856 HEIGHT 339 VALUE 1 FONT "Arial" SIZE 9 TOOLTIP "" BUTTONS HOTTRACK ON CHANGE Nil MULTILINE
 
         PAGE "Dados Cliente" IMAGE "img\new.bmp"
+
+            DEFINE IMAGE Image_1
+                ROW    22
+                COL    0
+                WIDTH  498
+                HEIGHT 378
+                PICTURE "Tab.jpg"
+                HELPID Nil
+                VISIBLE .F.
+                STRETCH .F.
+                ACTION Nil
+            END IMAGE
 
             DEFINE LABEL Label_1
                 ROW    41
@@ -713,7 +725,7 @@ DEFINE WINDOW TEMPLATE AT 185 , 551 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 ONDISPLAYCHANGE Nil
                 DISPLAYEDIT .F.
                 IMAGE Nil
-                DROPPEDWIDTH Nil
+                DROPPEDWIDTH 250
                 ONDROPDOWN Nil
                 ONCLOSEUP Nil
             END COMBOBOX
@@ -1119,6 +1131,18 @@ DEFINE WINDOW TEMPLATE AT 185 , 551 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
         END PAGE 
 
         PAGE "Outros" IMAGE "img\ic_janela.bmp"
+
+            DEFINE IMAGE Image_2
+                ROW    22
+                COL    0
+                WIDTH  498
+                HEIGHT 378
+                PICTURE "Tab.jpg"
+                HELPID Nil
+                VISIBLE .T.
+                STRETCH .F.
+                ACTION Nil
+            END IMAGE
 
             DEFINE FRAME Frame_3
                 ROW    24
@@ -1581,7 +1605,7 @@ DEFINE WINDOW TEMPLATE AT 185 , 551 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 CAPTION "Informações Cliente"
                 BACKCOLOR NIL
                 FONTCOLOR NIL
-                OPAQUE .T.
+                OPAQUE .F.
             END FRAME
 
             DEFINE LABEL Label_22
@@ -1730,7 +1754,7 @@ DEFINE WINDOW TEMPLATE AT 185 , 551 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 CAPTION "Observação"
                 BACKCOLOR NIL
                 FONTCOLOR NIL
-                OPAQUE .T.
+                OPAQUE .F.
             END FRAME
 
             DEFINE EDITBOX EdtObs

@@ -119,7 +119,7 @@ Function InputWindowEx( cTitle , aLabels , aValues , aFormats ,;
         nY := 0
 
         //Nome Fantasia
-        //Data Modificao Cadastro
+        //Data Modificaï¿½ï¿½o Cadastro
         For nx1 := 1 To imax
 
           If Len(  Alltrim(aLabels[nx1])   ) >= nY
@@ -332,6 +332,10 @@ Function InputWindowEx( cTitle , aLabels , aValues , aFormats ,;
       End If
 
 RETURN ( aResult )
+
+Function PesqSql()
+
+REturn 
 
 Function InputHndBut()
 

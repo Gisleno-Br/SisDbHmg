@@ -1,3 +1,5 @@
+//25-09
+
 #include <hmg.ch>
 
 REQUEST HB_LANG_PT
@@ -18,8 +20,8 @@ Function LoadFitros(cTabela1)
    Local oSErver
    Local nIndexFiltro := 0
    Local oQuery
-   Local oRow
-   local cCab1 := hb_ansiTooem('Expresso')
+   Local oRo
+   local cCab1 := hb_ansiTooem('Expressão')
    
    Private aHed1 := { 'Id' , 'Filtro',cCab1}
    
@@ -137,7 +139,7 @@ Function xExclFiltro()
   Local oServer
   Local oQuery
 
- If Confirmaviso("Confirma  Excluso desse Filtro ? " , , , , .f. )    
+ If Confirmaviso("Confirma  Exclusão desse Filtro ? " , , , , .f. )    
  
      cSqlx1 := "delete from filtros where tabela = '" + cTabx + "' and idfiltros = " +  alltrim(aMtr[1])
     //msginfo(cSqlx1)
@@ -554,7 +556,7 @@ Static Function SaveFiltro( lNovo  , nIdFiltro1 )
   
   Default lNovo := .t.
 
-  If Confirmaviso("Confirma Gravao desse Filtro ? " , , .f. )
+  If Confirmaviso("Confirma Gravação desse Filtro ? " , , .f. )
   
      If lNovo
         lOk := GrvFiltro( cTabx , alltrim(fFiltro.Titulo.Value) , alltrim(fFiltro.EdtFiltro.Value)   ,  fFiltro.CmbOrdem.DisplayValue  , ;
@@ -571,19 +573,18 @@ Static Function SaveFiltro( lNovo  , nIdFiltro1 )
  		  oQuery := oServer:Query( cSql)			  
  			  
 
-		    IF oQuery:NetErr()
-		      //CursorArrow()
+		   IF oQuery:NetErr()		   
 		       MsgStop( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  , .f. )
 		       RETURN .f.
-		    END IF
+		   END IF
 		    
-		    lOk := .t.
+		   lOk := .t.
 		
 	  	  oServer:Destroy()
-	 	    oServer := Nil
+	 	  oServer := Nil
 		
-		    oQuery:Destroy()
-		    oQuery := Nil
+		  oQuery:Destroy()
+		  oQuery := Nil
      
      End If
 

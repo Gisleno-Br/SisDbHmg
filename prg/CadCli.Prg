@@ -1,6 +1,7 @@
 #include <hmg.ch>
 
 // DECLARE WINDOW fCliCad
+// 25/09
 
 
 STATIC lTracking55 := .F.
@@ -18,6 +19,8 @@ DECLARE WINDOW fNewCadcli
 
 
 
+
+
 REQUEST HB_LANG_PT
 REQUEST HB_CODEPAGE_PT850
 
@@ -28,11 +31,21 @@ FUNCTION xInitFrm()
 
 
 
+   
+   
+
+
+
    HMG_ChangeWindowStyle(  fCadCli.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
 
 
-
    ON KEY F5 OF fCadCli ACTION xPesqCep()
+
+   RefreshAll('fCadCli')
+
+   syswait(.2)
+
+   fCadcli.Image_1.Visible := .t. 
 
    Center Window fCadCli
 
@@ -45,6 +58,9 @@ FUNCTION xCadCli( lNew, cCodigo1 )
    LOCAL aValores := {}
    LOCAL cSalvaJan := cActiveJan
    LOCAL aMx       := {}
+
+
+
 
 // l1 := xrt1()
 
@@ -81,32 +97,14 @@ FUNCTION xCadCli( lNew, cCodigo1 )
    PRIVATE aButx1 := {}
    PRIVATE cJanx1  := ''
 
-// SETWAITCURSOR(   GetFormHandle(cActiveJan)    )
-
-
-// aMx := yEfect(  cActiveJan  )
-
-// yAviso2('ok')
-
-
-// yRun("Aguarde Inicializando Tela..... " , { ||   xInitFrm()  } )
-
-
-// EfectEnd(cActiveJan , aMx )
-
-
    xInitFrm()
 
-
-
-// ON KEY ESCAPE OF fNewCadCli ACTION _FechaJan('fNewCadCli' )
 
    ON KEY ESCAPE OF fCadCli ACTION _FechaJan( 'fCadCli' )
 
 
    InstallEventHandler( 'EventClih' )
 
-// Activate Window fNewCadCli
 
    Activate Window fCadCli
 
@@ -277,115 +275,6 @@ FUNCTION gColor2( cJan, cObj )
 RETURN
 
 
-STATIC FUNCTION ShowButConsul( lVisible )
-
-   LOCAL cForm := 'fCadCli'
-
-RETURN
-
-FUNCTION EveCadCli( cJan1 )
-
-// STATIC lTracking45 := .F.
-
-
-   LOCAL  nHWnd   := EventHWND()
-   LOCAL  nMsg    := EventMSG()
-   LOCAL  nWParam := EventWPARAM()
-   LOCAL  nLParam := EventLPARAM()
-
-   LOCAL cFormx := 'fCadCli'
-
-
-   LOCAL nind1
-   LOCAL nIdBut := 0
-
-   LOCAL n1
-   LOCAL ButHnd
-
-   lTracking55 := .F.
-
-// DEFAULT cFormx := 'fDialogo'
-
-
-// LOCAL n1
-   IF ( AllTrim( cJan1 ) = "fCadCli" )
-      FOR n1 := 50 TO 400
-         IF ( OBTN_Handle( cFormx, n1 ) == nHWnd )
-            IF nIdBut == 0
-               nIdBut := n1
-            END IF
-         END IF
-      NEXT
-   END IF
-
-
-   IF ( AllTrim( cJan1 ) != "fCadCli" )
-
-      FOR n1 := 1 TO 100
-         IF ( OBTN_Handle( cJan1, n1 ) == nHWnd )
-            IF nIdBut == 0
-               cFormx := cJan1
-               nIdBut := n1
-            END IF
-         END IF
-      NEXT
-
-   END IF
-
-
-
-
-   IF ( nIdBut > 0 )
-
-
-      IF nMsg == WM_DRAWITEM
-
-
-         IF ( nWParam >=  50 ) .AND.  ( nWParam <=  360 )
-            OBTN_Draw( nHWnd,  nwParam, nLParam )
-         END IF
-
-      END IF
-
-
-      IF nMsg == 273
-         msginfo( 'zz1' )
-      END IF
-
-      IF ( nMsg == WM_MOUSEMOVE ) .AND. ( !lTracking55 )
-
-         lTracking55 := TrackMouseEvent( nHWnd ) // TME_LEAVE is default flag
-
-         OBTN_Color( cFormx, nIdBut, RetColor1( 2 ), .T. )
-
-         OBTN_Enable( cFormx, nIdBut, .T. )
-         OBTN_Visible( cFormx, nIdBut, .T. )
-
-      END IF
-
-
-
-
-      IF ( nMsg == WM_MOUSELEAVE )
-
-         OBTN_Color( cFormx,  nIdBut, RetColor1( 1 ), .T. )
-         OBTN_Enable( cFormx, nIdBut, .T. )
-         OBTN_Visible( cFormx, nIdBut, .T. )
-
-         lTracking55 := .F.
-
-      END IF
-
-
-   ELSE
-
-   END IF
-
-RETURN
-
-
-
-
 FUNCTION LoadCliente(  cCod )
 
    LOCAL cSql := "Select * from clientes where codigo = '" + cCod + "'"
@@ -450,11 +339,6 @@ FUNCTION LoadCliente(  cCod )
          fCadCli .CmbUf. Value := nind2
       END IF
 
-      
-
-      
-// msginfo( GetCampo(oRow , 'Cidade')  + ' ' + Str( Ascan( GetCmbItens( 'fCadCli' , 'cmbCidade'  )  , alltrim(GetCampo(oRow , 'Cidade')) ) ) )
-
 
       fCadCli .CmbCidade. Value := AScan( GetCmbItens( 'fCadCli', 'cmbCidade'  ), AllTrim( GetCampo(oRow, 'Cidade' ) ) )
 
@@ -501,7 +385,6 @@ FUNCTION LoadCliente(  cCod )
       IF AllTrim( GetCampo( oRow, 'Status' ) ) = 'Inativo'
          yAviso( "Cliente com Cadastro Bloqueado\Inativo.Apenas sera Visualizado(Somente Leitura)." )
          SetWindowControlsEnable( 'fCadCli', .F. )
-// SetWindowControlsEnable('fCadCli' , .f. )
       END IF
 
    ELSE
@@ -537,7 +420,7 @@ FUNCTION GrvClien( lNovo )
       'dtbloqueio', 'maiorcompra', 'codmun', 'fone3' }
 
    IF !lNovo
-      cMsg := 'Confirma Alterao no Cadastro deste Cliente?'
+      cMsg := 'Confirma Alteração no Cadastro deste Cliente?'
    END IF
 
 
@@ -630,7 +513,7 @@ FUNCTION GrvClien( lNovo )
    oQuery := oServer:Query( cSqlz1 )
 
    IF oQuery:NetErr()
-      yAviso( 'Erro ao Executar Atualizao -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
+      yAviso( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
       RETURN .F.
    END IF
 
@@ -868,6 +751,9 @@ RETURN aM2
 
 // aM2
 
+
+
+
 FUNCTION EncheCmb( cForm1, cCmb, cSqlx1 )
 
    LOCAL oServer := GetConexao()
@@ -895,6 +781,7 @@ RETURN
 
 
 FUNCTION xChgUf()
+
 
    LOCAL cUf1 := fCadcli .cmbUf. DisplayValue
 
@@ -995,7 +882,7 @@ FUNCTION xPesqCep()
    ELSE
 
       SetProperty( 'fCadCli', 'Endereco', 'Value', '' )
-      yAviso( 'Cep No Localizado.', .F. )
+      yAviso( 'Cep Não Localizado.', .F. )
       SysWait( .2 )
       fCadCli .nome. SetFocus()
 
@@ -1037,9 +924,6 @@ FUNCTION xChgCidade( lEntrega )
    END IF
 
 RETURN
-
-
-
 
 
 
@@ -1201,7 +1085,7 @@ FUNCTION xPesqEnt()
 
       SetProperty( 'fCadCli', 'EndEnt', 'Value', '' )
 
-      yAviso( 'Cep no Localizado.',, 'fCadCli' )
+      yAviso( 'Cep não Localizado.',, 'fCadCli' )
 
    END IF
 
@@ -1243,7 +1127,7 @@ FUNCTION xBloquear(  cCodCli, cStatus )
 
    LOCAL cSql  := "update " + AllTrim( cTabela ) + " set status = '" + cStatus + "' , dtbloqueio = " + Quotedstr( ConvDt( dDataBase ) )  + " where codigo = '" + cCodCli + "'"
 
-   IF !Confirmaviso( 'Confirma Mudana de Status(' + cStatus + ') Para Este Registro?', cActiveJan, .T. )
+   IF !Confirmaviso( 'Confirma Mudança de Status(' + cStatus + ') Para Este Registro?', cActiveJan, .T. )
       RETURN .F.
    END IF
 
@@ -1259,7 +1143,7 @@ FUNCTION xBloquear(  cCodCli, cStatus )
 
 
    IF oQuery:NetErr()
-      MsgStop( 'Erro ao Executar Atualizao -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
+      MsgStop( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
       RETURN .F.
    END IF
 

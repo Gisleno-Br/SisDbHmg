@@ -1,5 +1,7 @@
 #include <hmg.ch>
 
+//25-09
+
 #include <minigui.ch>
 
 #define QUEBRA Chr(13)+Chr(10)
@@ -1028,12 +1030,9 @@ FUNCTION GFocus()
 		OBTN_Enable( 'fCriaConsulta', 6596, .T. )
 		OBTN_Enable( 'fCriaConsulta', 6595, .T. )
 
-		// SetProperty( 'fCriaConsulta', 'BtnDelPar', 'Enabled', .T. )
-		// SetProperty( 'fCriaConsulta', 'BtnEditPar', 'Enabled', .T. )
 
 	ELSE
-		// SetProperty( 'fCriaConsulta', 'BtnDelPar', 'Enabled', .F. )
-		// SetProperty( 'fCriaConsulta', 'BtnEditPar', 'Enabled', .F. )
+
 		OBTN_Enable( 'fCriaConsulta', 6596, .F. )
 		OBTN_Enable( 'fCriaConsulta', 6595, .F. )
 
@@ -1076,7 +1075,7 @@ FUNCTION GrvFiltro( cTabela, cDescr, cFiltro, cOrdem, lCresc )
 	oQuery := oServer:Query(  cSql )
 
 	IF oServer:NetErr()
-		yAviso( "Error ao Executar Query " + cSql + ": " + oServer:Error()  ,, .f. )
+		yAviso( "Error ao Executar Query " + cSql + ": " + oServer:Error()  , .f. )
 		RETURN .F.
 	ENDIF
 
@@ -1086,37 +1085,7 @@ FUNCTION GrvFiltro( cTabela, cDescr, cFiltro, cOrdem, lCresc )
 	oQuery:Destroy()
 	oQuery := Nil
 
- /*
-  Local wAlias := "Filt"
-  Local nRec   := 0
-  Local wAliasAnt := Select()
-
-   USE (cBanco) VIA  "ADORDD" TABLE "filtros" MYSQL ;
-  FROM cServer USER cUserDb PASSWORD cPassDb SHARED NEW ALIAS (wAlias)
-
-  DbSelectArea(wAlias)
-
-  nRec := Filt->(LastRec())
-
-  Filt->(DbAppend())
-  Filt->(RLock())
-
-  Filt->IdFiltros := nRec+1
-  Filt->Descricao := cDescr
-  Filt->Tabela    := cTabela
-  Filt->Filtro    := cfiltro
-  Filt->Ativo     := "S"
-
-  Filt->(dbCommitAll())
-  Filt->(DbUnlock())
-
-   DbSelectArea(wAlias)
-   Use
-
-   SELECT Alias(wAliasAnt)
-
-   */
-
+ 
 RETURN .T.
 
 Function Contey( cChar , cC1)
@@ -1158,26 +1127,15 @@ STATIC FUNCTION RetFiltro()
 		iif( fFiltro .ChkRequerido. Value, hb_ANSIToOEM( 'Sim' ), hb_ANSIToOEM( 'Nï¿½o' ) ),  Replicate('(',nX1) ,  Replicate(')',nX2)     }
 
 
-   /*
-	IF ( ( (fFiltro .ChkPar1. Value ) .OR. (fFiltro .ChkPar2. Value ) ) .AND. ( fFiltro .cmbLogico. DisplayValue = 'Nenhum' ) )
-		IF nCount == 0
-         yaviso( "A " + hb_ansiTooem('Expressï¿½o') + " deve conter um operador logico,se estiver marcado adicionar Parenteses '(' ou ')'" , .f. )
-         RETURN .F.
-		END IF
-	END IF
-   */
-
 	IF lNovoFilt
-	DoMethod( "fCriaConsulta", "GridPar", "AddItem", aM1 )
-ELSE
-	nItem := fCriaConsulta .GridPar. value
-	fCriaConsulta .GridPar. Item( nItem ) := aM1
-END IF
+		DoMethod( "fCriaConsulta", "GridPar", "AddItem", aM1 )
+	ELSE
+		nItem := fCriaConsulta .GridPar. value
+		fCriaConsulta .GridPar. Item( nItem ) := aM1
+	END IF
 
-CheckOk()
-
-//DoMethod( "fFiltro", "Release" )
-_FechaJan( 'fFiltro' )
+	CheckOk()
+	_FechaJan( 'fFiltro' )
 
 
 RETURN
@@ -1265,59 +1223,59 @@ FUNCTION ChgField()
 		OBTN_Enable( 'fFiltro', 6600, .T. )
 		// Aviso('kk')
 
+		DO EVENTS
+
+	END IF
+
+	IF ( cTipo == 'B' )
+
+		SetProperty( "fFiltro", "DoubleEdit", "Visible", .T. )
+		SetProperty( "fFiltro", "DoubleEdit", "Col", 150 )
+		SetProperty( "fFiltro", "DoubleEdit", "Row", 116 )
+
+		fFiltro .DoubleEdit. Value := AllTrim( Transform( 0, cMask ) )
+		SendMessage( GetControlHandle( "DoubleEdit", ThisWindow.Name ), WM_PAINT, 0, 0 )
+
+		// fFiltro .Btnok. Enabled := .T.
+		OBTN_Enable( 'fFiltro', 6600, .T. )
+		fFiltro .DoubleEdit. SetFocus()
+		// fFiltro .Valor. Refresh()
+	END IF
+
+
+	IF ( cTipo == 'N' ) .OR. ( cTipo == 'I' )
+
+
+		SetProperty( "fFiltro", "EdtNum", "Visible", .T. )
+		SetProperty( "fFiltro", "EdtNum", "Col", 150 )
+		SetProperty( "fFiltro", "EdtNum", "Row", 116 )
+
+		fFiltro .EdtNum. Value := 0
+		SendMessage( GetControlHandle( "IntEdit", ThisWindow.Name ), WM_PAINT, 0, 0 )
+
+		// fFiltro .Btnok. Enabled := .T.
+
+		OBTN_Enable( 'fFiltro', 6600, .T. )
+
+		fFiltro .IntEdit. SetFocus()
+		// fFiltro .Valor. Refresh()
+	END IF
+
+	IF cTipo == 'C'
+		SetProperty( "fFiltro", "Valor", "Visible", .T. )
+		fFiltro .Valor. Value := ''
+		SendMessage( GetControlHandle( "Valor", ThisWindow.Name ), WM_PAINT, 0, 0 )
+		// fFiltro .Btnok. Enabled := .T.
+		OBTN_Enable( 'fFiltro', 6600, .T. )
+		fFiltro .Valor. SetFocus()
+	END IF
+
+	// fFiltro .BtnAdd. Enabled := .F.
+
+	// fFiltro .Valor. SetFocus()
+	//OBTN_Enable( 'fFiltro', 6602, .F. )
+
 	DO EVENTS
-
-END IF
-
-IF ( cTipo == 'B' )
-
-	SetProperty( "fFiltro", "DoubleEdit", "Visible", .T. )
-	SetProperty( "fFiltro", "DoubleEdit", "Col", 150 )
-	SetProperty( "fFiltro", "DoubleEdit", "Row", 116 )
-
-	fFiltro .DoubleEdit. Value := AllTrim( Transform( 0, cMask ) )
-	SendMessage( GetControlHandle( "DoubleEdit", ThisWindow.Name ), WM_PAINT, 0, 0 )
-
-	// fFiltro .Btnok. Enabled := .T.
-	OBTN_Enable( 'fFiltro', 6600, .T. )
-	fFiltro .DoubleEdit. SetFocus()
-	// fFiltro .Valor. Refresh()
-END IF
-
-
-IF ( cTipo == 'N' ) .OR. ( cTipo == 'I' )
-
-
-	SetProperty( "fFiltro", "EdtNum", "Visible", .T. )
-	SetProperty( "fFiltro", "EdtNum", "Col", 150 )
-	SetProperty( "fFiltro", "EdtNum", "Row", 116 )
-
-	fFiltro .EdtNum. Value := 0
-	SendMessage( GetControlHandle( "IntEdit", ThisWindow.Name ), WM_PAINT, 0, 0 )
-
-	// fFiltro .Btnok. Enabled := .T.
-
-	OBTN_Enable( 'fFiltro', 6600, .T. )
-
-	fFiltro .IntEdit. SetFocus()
-	// fFiltro .Valor. Refresh()
-END IF
-
-IF cTipo == 'C'
-	SetProperty( "fFiltro", "Valor", "Visible", .T. )
-	fFiltro .Valor. Value := ''
-	SendMessage( GetControlHandle( "Valor", ThisWindow.Name ), WM_PAINT, 0, 0 )
-	// fFiltro .Btnok. Enabled := .T.
-	OBTN_Enable( 'fFiltro', 6600, .T. )
-	fFiltro .Valor. SetFocus()
-END IF
-
-// fFiltro .BtnAdd. Enabled := .F.
-
-// fFiltro .Valor. SetFocus()
-//OBTN_Enable( 'fFiltro', 6602, .F. )
-
-DO EVENTS
 
 RETURN
 
@@ -1370,7 +1328,7 @@ FUNCTION GetInfoDic( cCampo1, cTabela, cInfo )
 
 
 	IF oQuery:Eof()
-		yAviso(  'Houve um Erro ao tenta recuperar Informaï¿½ï¿½es do Campo : ' + cCampo1  + "." + QUEBRA + ;
+		yAviso(  'Houve um Erro ao tenta recuperar Informações do Campo : ' + cCampo1  + "." + QUEBRA + ;
 			"Tabela : " + cTabela + "/" + cInfo + QUEBRA + ;
 			'Contactar Suporte!' , .f. )
 
@@ -1438,37 +1396,15 @@ FUNCTION InitCons()
 
 RETURN
 
-STATIC FUNCTION IniFiltro()
-
-	HMG_ChangeWindowStyle( fFiltro.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
-
-
-	// HMG_ChangeWindowStyle( fFiltro .LblTabela. Handle, WS_EX_STATICEDGE, NIL, .T., .T. )
-
-	// HMG_ChangeWindowStyle( fFiltro.Handle     , WS_BORDER, NIL, .F., .T.)
-	// HMG_ChangeWindowStyle( fFiltro.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
-
-	// fCriaConsulta .BtnDelPar. Enabled := .F.
-	// fCriaConsulta .BtnEditPar. Enabled := .F.
-
-DO EVENTS
-
-RETURN
-
 FUNCTION InitFilt()
-
-	// _DisableControl( "BtnOk", "fFiltro" )
-	// _DisableControl( "BtnAdd", "fFiltro" )
-
 	OBTN_Enable( 'fFiltro', 6602, .t. )
 
 	DECLARE Window fFiltro
-	// fFiltro.CmbCampo.setFocus()
+	
 
 	fFiltro .Titulo. SetFocus()
 
-	// ProcessMessages()
-
+	
 RETURN( NIL )
 
 
@@ -1529,7 +1465,7 @@ FUNCTION FiltroAdd()
 		If Empty(alltrim(fFiltro.EdtFiltro.value)) .And. ;
 				(Alltrim(fFiltro.EdtFiltro.value) != "And") .And. ;
 				(Alltrim(fFiltro.EdtFiltro.value) != "Or")
-			yaviso("Quando existe mais de um Parametro para a Consulta,a Segunda em diante Deve comeï¿½ar com um op.Logico(And ou Or)." , .f.)
+			yaviso("Quando existe mais de um Parametro para a Consulta,a Segunda em diante Deve Começar com um op.Logico(And ou Or)." , .f.)
 			BT_ClientAreaInvalidateAll ('fFiltro')
 			Return
 		Else
@@ -1713,7 +1649,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 	IF Len( fCriaConsulta .LstOrdem. Value ) > 1
 		FOR nx := 1 TO  Len( fCriaConsulta .LstOrdem. Value )
 			IF AllTrim( fCriaConsulta .LstOrdem. Item(  fCriaConsulta .LstOrdem. Value[ nx ] ) )  = 'Nenhum'
-				yaviso(  "Em Ordenaï¿½ï¿½o dos Campos nï¿½o pode estar Marcado 'Nenhum',Caso haja Campos Selecionados para ordenaï¿½ï¿½o."  , .f. )
+				yaviso(  "Em Ordenação dos Campos nÃ£o pode estar Marcado 'Nenhum',Caso haja Campos Selecionados para OrdenaÃ§Ã£o."  , .f. )
 				RETURN
 			ELSE
 				cCampoORd += ( AllTrim( fCriaConsulta .LstOrdem. Item(  fCriaConsulta .LstOrdem. Value[ nx ] ) ) + "." )
@@ -1771,7 +1707,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 	hb_MemoWrit( 'Cons1.txt', cSql )
 
 	IF oQuery == Nil
-		yaviso( "Execuï¿½ï¿½o da Rotina sera Interrompida(Cons  Cab). " + QUEBRA + "Contacte Suporte." , .f. )
+		yaviso( "Execução da Rotina sera Interrompida(Cons  Cab). " + QUEBRA + "Contacte Suporte." , .f. )
 		RETURN .F.
 	END IF
 
@@ -1789,7 +1725,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 
 
 	If !GravaDic( nId  , cTabelax )
-		yAviso( "Houve Falha no processo de Gravaï¿½ï¿½o no Dicionario de Dados." ,, .f.  )
+		yAviso( "Houve Falha no processo de Gravação no Dicionario de Dados." ,, .f.  )
 		Return
 	End If
 
@@ -1831,7 +1767,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 		oQuery := ExecSql( @oServer, cSqlx1 )
 
 		IF oQuery == Nil
-			yAviso( hb_UTF8TOSTR("Execuï¿½ï¿½o da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." , .f. )
+			yAviso( hb_UTF8TOSTR("Execução da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." , .f. )
 			RETURN
 		END IF
 
@@ -1861,7 +1797,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 		hb_MemoWrit( 'ConsParam.txt', cSqlx1 )
 
 		IF oQuery == Nil
-			yAviso( hb_UTF8TOSTR("Execuï¿½ï¿½o da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." ,  .f. )
+			yAviso( hb_UTF8TOSTR("Execução da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." ,  .f. )
 			RETURN .F.
 		END IF
 
@@ -1933,7 +1869,7 @@ Function GravaDic( nIdConsul  ,cTabOri)
 		hb_MemoWrit( 'ConsInsert.txt', cSql )
 
 		If oQuery == Nil
-			yAviso( "Execuï¿½ï¿½o da Rotina sera Interrompida(Cons  item)." + QUEBRA + "Contacte Suporte." , .f. )
+			yAviso( "Execução da Rotina sera Interrompida(Cons  item)." + QUEBRA + "Contacte Suporte." , .f. )
 
 			oServer:Destroy()
 			oServer := Nil
@@ -2283,13 +2219,13 @@ FUNCTION xInitMov(  nIdc1, nTpVnd9, cTabelax, lMvTable, cJanName )
 
 	If Len(aRes1) > 0 
 		IF ( aRes1[ 1 ] == Nil )
-			yaviso2( 'Sera Necessario Preencher os Parametros para Prosseguir.')
+			yaviso2( 'Sera Necessario Preencher os Parametros para Prosseguir.' , .f. )
 			Return .f.
 		END IF
 	Else
 
 
-		yAviso2( 'Parametros Não Localizados, Recrie a Consulta.')
+		yAviso2( 'Parametros NÃ£o Localizados, Recrie a Consulta.' , .f.)
 		Return .f.        
 
 	End If 		
@@ -2922,13 +2858,12 @@ Function xStop( cObj ,cCampo )
 
 	SetProperty( '_InputWindow', cObj  , 'BackColor', RED )
 
-	PlayBeep()
-	//SysWait( .5 )
-	msginfo( 'Este campo deve estar Preenchido(' + Left(cCampo, Len(cCampo) - 2  ) + ')' + QUEBRA + 'Para que a consulta possa ser executada. ' , .t. )
+	PlayBeep()	
+	yAviso( 'Este campo deve estar Preenchido(' + Left(cCampo, Len(cCampo) - 2  ) + ')' + QUEBRA + 'Para que a consulta possa ser executada. ' , .f. )
 
 	SetProperty( '_InputWindow', cObj  , 'BackColor', WHITE )
 
-DoMethod( '_InputWindow', cObj ,'SetFocus' )
+	DoMethod( '_InputWindow', cObj ,'SetFocus' )
 
 Return
 
@@ -2993,16 +2928,14 @@ STATIC FUNCTION xIfEmpty()
 		SetProperty( '_InputWindow', This.Name, 'BackColor', RED )
 		PlayBeep()
 		// SysWait( .5 )
-		msginfo( 'Este campo deve estar Preenchido,' + QUEBRA + 'Para que a consulta possa ser executada. ' + This.name , .t. )
-	DoMethod( '_InputWindow', This.Name, 'SetFocus' )
+		yAviso( 'Este campo deve estar Preenchido,' + QUEBRA + 'Para que a consulta possa ser executada. ' + This.name , .f. )
+		DoMethod( '_InputWindow', This.Name, 'SetFocus' )
 
-	SetProperty( '_InputWindow', This.Name, 'BackColor', WHITE )
+		SetProperty( '_InputWindow', This.Name, 'BackColor', WHITE )
 
-	// SetFocus(GetNextDlgTabItem(GetFormHandle('_InputWindow'), nHButton, .F.))
-
-	//SysWait(2)
-Return .f.
-ENDIF
+	
+		Return .f.
+	ENDIF
 
 RETURN .t.
 

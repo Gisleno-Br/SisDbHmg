@@ -1,6 +1,8 @@
 #require "rddsql"
 #require "sddmy"
 
+//25/09
+
 #include <hmg.ch>
 
 // #include "hmg.ch"
@@ -99,7 +101,7 @@ FUNCTION MntVend()
       { "&Modificar", {||  fx2( "edit" )   }, .T., "Modifica um Vendedor Existente.", 0 }, ;
       { "&Bloquear", {||  fx1( "bloquear" ) }, .T., "Bloqueia/Inativa um Vendedor Ativo.", 0 }, ;
       { "&Filtrar", {|| ProcFiltro( 'vendedores' )    }, .T., "Filtra Registros", 0 }, ;
-      { hb_ANSIToOEM( "Opùùes" ), {|| xSetOpcao()  }, .T., hb_ANSIToOEM( "Opùùes Diversas" ), 0 } }
+      { hb_ANSIToOEM( "OpÔøΩÔøΩes" ), {|| xSetOpcao()  }, .T., hb_ANSIToOEM( "OpÔøΩÔøΩes Diversas" ), 0 } }
 
 
 
