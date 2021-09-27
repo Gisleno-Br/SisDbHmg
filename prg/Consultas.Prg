@@ -3,6 +3,7 @@
 //25-09
 
 
+
 #include <minigui.ch>
 
 #define QUEBRA Chr(13)+Chr(10)
@@ -17,6 +18,7 @@ REQUEST HB_CODEPAGE_PT850
 
 
 
+
 #define DBI_QUERY             1001
 #define RDDI_CONNECT          1001
 #define RDDI_DISCONNECT       1002
@@ -28,6 +30,7 @@ REQUEST HB_CODEPAGE_PT850
 #define RDDI_QUERY            1008
 
 REQUEST SDDMY, SQLMIX
+
 
 
 
@@ -150,6 +153,10 @@ Function EditConsulta( cTabela , nIdConsu , lMovTable )
 	n1++
 
 ENDDO
+
+
+
+
 
 
 fCriaConsulta .LstCampos.Value := aSelected
@@ -1086,7 +1093,7 @@ FUNCTION GrvFiltro( cTabela, cDescr, cFiltro, cOrdem, lCresc )
 	oQuery:Destroy()
 	oQuery := Nil
 
- 
+
 RETURN .T.
 
 Function Contey( cChar , cC1)
@@ -1129,14 +1136,14 @@ STATIC FUNCTION RetFiltro()
 
 
 	IF lNovoFilt
-		DoMethod( "fCriaConsulta", "GridPar", "AddItem", aM1 )
-	ELSE
-		nItem := fCriaConsulta .GridPar. value
-		fCriaConsulta .GridPar. Item( nItem ) := aM1
-	END IF
+	DoMethod( "fCriaConsulta", "GridPar", "AddItem", aM1 )
+ELSE
+	nItem := fCriaConsulta .GridPar. value
+	fCriaConsulta .GridPar. Item( nItem ) := aM1
+END IF
 
-	CheckOk()
-	_FechaJan( 'fFiltro' )
+CheckOk()
+_FechaJan( 'fFiltro' )
 
 
 RETURN
@@ -1224,59 +1231,59 @@ FUNCTION ChgField()
 		OBTN_Enable( 'fFiltro', 6600, .T. )
 		// Aviso('kk')
 
-		DO EVENTS
-
-	END IF
-
-	IF ( cTipo == 'B' )
-
-		SetProperty( "fFiltro", "DoubleEdit", "Visible", .T. )
-		SetProperty( "fFiltro", "DoubleEdit", "Col", 150 )
-		SetProperty( "fFiltro", "DoubleEdit", "Row", 116 )
-
-		fFiltro .DoubleEdit. Value := AllTrim( Transform( 0, cMask ) )
-		SendMessage( GetControlHandle( "DoubleEdit", ThisWindow.Name ), WM_PAINT, 0, 0 )
-
-		// fFiltro .Btnok. Enabled := .T.
-		OBTN_Enable( 'fFiltro', 6600, .T. )
-		fFiltro .DoubleEdit. SetFocus()
-		// fFiltro .Valor. Refresh()
-	END IF
-
-
-	IF ( cTipo == 'N' ) .OR. ( cTipo == 'I' )
-
-
-		SetProperty( "fFiltro", "EdtNum", "Visible", .T. )
-		SetProperty( "fFiltro", "EdtNum", "Col", 150 )
-		SetProperty( "fFiltro", "EdtNum", "Row", 116 )
-
-		fFiltro .EdtNum. Value := 0
-		SendMessage( GetControlHandle( "IntEdit", ThisWindow.Name ), WM_PAINT, 0, 0 )
-
-		// fFiltro .Btnok. Enabled := .T.
-
-		OBTN_Enable( 'fFiltro', 6600, .T. )
-
-		fFiltro .IntEdit. SetFocus()
-		// fFiltro .Valor. Refresh()
-	END IF
-
-	IF cTipo == 'C'
-		SetProperty( "fFiltro", "Valor", "Visible", .T. )
-		fFiltro .Valor. Value := ''
-		SendMessage( GetControlHandle( "Valor", ThisWindow.Name ), WM_PAINT, 0, 0 )
-		// fFiltro .Btnok. Enabled := .T.
-		OBTN_Enable( 'fFiltro', 6600, .T. )
-		fFiltro .Valor. SetFocus()
-	END IF
-
-	// fFiltro .BtnAdd. Enabled := .F.
-
-	// fFiltro .Valor. SetFocus()
-	//OBTN_Enable( 'fFiltro', 6602, .F. )
-
 	DO EVENTS
+
+END IF
+
+IF ( cTipo == 'B' )
+
+	SetProperty( "fFiltro", "DoubleEdit", "Visible", .T. )
+	SetProperty( "fFiltro", "DoubleEdit", "Col", 150 )
+	SetProperty( "fFiltro", "DoubleEdit", "Row", 116 )
+
+	fFiltro .DoubleEdit. Value := AllTrim( Transform( 0, cMask ) )
+	SendMessage( GetControlHandle( "DoubleEdit", ThisWindow.Name ), WM_PAINT, 0, 0 )
+
+	// fFiltro .Btnok. Enabled := .T.
+	OBTN_Enable( 'fFiltro', 6600, .T. )
+	fFiltro .DoubleEdit. SetFocus()
+	// fFiltro .Valor. Refresh()
+END IF
+
+
+IF ( cTipo == 'N' ) .OR. ( cTipo == 'I' )
+
+
+	SetProperty( "fFiltro", "EdtNum", "Visible", .T. )
+	SetProperty( "fFiltro", "EdtNum", "Col", 150 )
+	SetProperty( "fFiltro", "EdtNum", "Row", 116 )
+
+	fFiltro .EdtNum. Value := 0
+	SendMessage( GetControlHandle( "IntEdit", ThisWindow.Name ), WM_PAINT, 0, 0 )
+
+	// fFiltro .Btnok. Enabled := .T.
+
+	OBTN_Enable( 'fFiltro', 6600, .T. )
+
+	fFiltro .IntEdit. SetFocus()
+	// fFiltro .Valor. Refresh()
+END IF
+
+IF cTipo == 'C'
+	SetProperty( "fFiltro", "Valor", "Visible", .T. )
+	fFiltro .Valor. Value := ''
+	SendMessage( GetControlHandle( "Valor", ThisWindow.Name ), WM_PAINT, 0, 0 )
+	// fFiltro .Btnok. Enabled := .T.
+	OBTN_Enable( 'fFiltro', 6600, .T. )
+	fFiltro .Valor. SetFocus()
+END IF
+
+// fFiltro .BtnAdd. Enabled := .F.
+
+// fFiltro .Valor. SetFocus()
+//OBTN_Enable( 'fFiltro', 6602, .F. )
+
+DO EVENTS
 
 RETURN
 
@@ -1401,11 +1408,11 @@ FUNCTION InitFilt()
 	OBTN_Enable( 'fFiltro', 6602, .t. )
 
 	DECLARE Window fFiltro
-	
+
 
 	fFiltro .Titulo. SetFocus()
 
-	
+
 RETURN( NIL )
 
 
@@ -2218,7 +2225,7 @@ FUNCTION xInitMov(  nIdc1, nTpVnd9, cTabelax, lMvTable, cJanName )
 
 	// IF aRes1[ 1 ] == Nil
 
-	If Len(aRes1) > 0 
+	If Len(aRes1) > 0
 		IF ( aRes1[ 1 ] == Nil )
 			yaviso2( 'Sera Necessario Preencher os Parametros para Prosseguir.' , .f. )
 			Return .f.
@@ -2227,9 +2234,9 @@ FUNCTION xInitMov(  nIdc1, nTpVnd9, cTabelax, lMvTable, cJanName )
 
 
 		yAviso2( 'Parametros Não Localizados, Recrie a Consulta.' , .f.)
-		Return .f.        
+		Return .f.
 
-	End If 		
+	End If
 
 	FOR nx1 := 1 TO Len( aFiltro )
 
@@ -2506,124 +2513,124 @@ FUNCTION BrowConsulta( cSqlp, aCabecario, aTamanhos, aCampos, cJanx1  , aTps , c
 	dbGoTop()
 
 	If _IsControlDefined( "br_Main",  cForm )
-		DoMethod( cForm, "br_Main", "Release" )
-	End If
+	DoMethod( cForm, "br_Main", "Release" )
+End If
 
 
-	cAlias := "tmp"
+cAlias := "tmp"
 
 
 
-	If (Select(calias) > 0)
-		dbSelectArea( cAlias )
-		Use
-	End If
+If (Select(calias) > 0)
+	dbSelectArea( cAlias )
+	Use
+End If
 
 //msginfo(cSqlp)
 
-	dbUseArea( .T.,,  cSqlp, cAlias )
-	dbSelectArea( cAlias )
-	dbGoTop()
+dbUseArea( .T.,,  cSqlp, cAlias )
+dbSelectArea( cAlias )
+dbGoTop()
 
-	If ( RecCount() == 0 )
+If ( RecCount() == 0 )
 
-		Yaviso( "Consulta N�o Retornou Registros." , .t. )
-		lOk1 := .f.
-		//Return .f.
+	Yaviso( "Consulta N�o Retornou Registros." , .t. )
+	lOk1 := .f.
+	//Return .f.
 
-	Else
-		//PrepareGrid()
-	End If
+Else
+	//PrepareGrid()
+End If
 
-	//Msginfo(  Str(fCount()) + '   ' +   Str( len( aTps))  + '   ' +  Str( len( aCabecario))  + '  ' + Str( len( aTamanhos))    )
+//Msginfo(  Str(fCount()) + '   ' +   Str( len( aTps))  + '   ' +  Str( len( aCabecario))  + '  ' + Str( len( aTamanhos))    )
 
-	aItens := {}
+aItens := {}
 
-	While !Eof()
+While !Eof()
 
-		aM1 := {}
+	aM1 := {}
 
-		For n1 := 1 TO FCount()
+	For n1 := 1 TO FCount()
 
-			cType := aTps[n1]
+		cType := aTps[n1]
 
-			//msginfo( fieldname(n1) +'   ' + str(aTamanhos[n1]) )
+		//msginfo( fieldname(n1) +'   ' + str(aTamanhos[n1]) )
 
-			If aTamanhos[n1] <= 1
-				aTamanhos[n1] := 120
+		If aTamanhos[n1] <= 1
+			aTamanhos[n1] := 120
+		End If
+
+		If (cType $ 'B.N')
+
+
+			nTam1 := 120
+
+			cValor := PadL(alltrim(Transform( FieldGet(n1) , "@E 999,999,999.99" )),19)
+
+			If cTYpe = 'N'
+				cValor :=  Alltrim(Str( FieldGet(n1) )  )
 			End If
 
-			If (cType $ 'B.N')
+			Aadd(aM1 , cValor )
 
-
-				nTam1 := 120
-
-				cValor := PadL(alltrim(Transform( FieldGet(n1) , "@E 999,999,999.99" )),19)
-
-				If cTYpe = 'N'
-					cValor :=  Alltrim(Str( FieldGet(n1) )  )
-				End If
-
-				Aadd(aM1 , cValor )
-
-			Else
-				AAdd( aM1, alltrim(hb_ANSIToOEM( &(FieldName(n1 ))  ))   )
-			End If
-
-		Next
-
-
-		AAdd( aItens, aM1 )
-		dbSkip()
-
-	Enddo
-
-
-	//SysWait(.4)
-
-	If _IsControlDefined(cGridname , cFormPrin )
-		_ReleaseControl( cGridname , cFormPrin )
-	End If
-
-	bGrid1 := {}
-	bGrid2 := {}
-
-
-	nColl   := 5
-	//10
-	nSeqx   := 345
-
-	nTotw1 := 0
-
-	aM2 := {}
-
-	For n2 := 1 TO Len(aTps)
-
-		Aadd(aM2 , {  nColL , aTamanhos[n2]  , Alltrim(aCabecario[n2])  } )
-		nColL  += aTamanhos[n2]
-		nTotW1 += aTamanhos[n2]
+		Else
+			AAdd( aM1, alltrim(hb_ANSIToOEM( &(FieldName(n1 ))  ))   )
+		End If
 
 	Next
 
-	aMtrHeader := Aclone(aM2)
 
-	nTotWidth  := nTotW1
+	AAdd( aItens, aM1 )
+	dbSkip()
 
-	For nx2 := 1 TO Len(aCabecario)
-		AAdd( bGrid1, bColorGrid  )
-		AAdd( bGrid2, fColorGrid )
-	Next
+Enddo
 
-	DbGotop()
 
-	Private aZCol := {}
+//SysWait(.4)
 
-	//Private n2 := 1
+If _IsControlDefined(cGridname , cFormPrin )
+	_ReleaseControl( cGridname , cFormPrin )
+End If
 
-	nI := 0
-	n2:=1
+bGrid1 := {}
+bGrid2 := {}
+
+
+nColl   := 5
+//10
+nSeqx   := 345
+
+nTotw1 := 0
+
+aM2 := {}
+
+For n2 := 1 TO Len(aTps)
+
+	Aadd(aM2 , {  nColL , aTamanhos[n2]  , Alltrim(aCabecario[n2])  } )
+	nColL  += aTamanhos[n2]
+	nTotW1 += aTamanhos[n2]
+
+Next
+
+aMtrHeader := Aclone(aM2)
+
+nTotWidth  := nTotW1
+
+For nx2 := 1 TO Len(aCabecario)
+	AAdd( bGrid1, bColorGrid  )
+	AAdd( bGrid2, fColorGrid )
+Next
+
+DbGotop()
+
+Private aZCol := {}
+
+//Private n2 := 1
+
+nI := 0
+n2:=1
 	/*
-	FOR n2 := 1 TO Len(aCabec)
+FOR n2 := 1 TO Len(aCabec)
 
 			nI++
 
@@ -2634,92 +2641,92 @@ FUNCTION BrowConsulta( cSqlp, aCabecario, aTamanhos, aCampos, cJanx1  , aTps , c
 
 			//msginfo(aCabec[n2] + ' ' + Str( aTams[n2]) )
 
-	Next
+Next
 	*/
 
-	_HMG_SYSDATA [ 348 ] := {255,255,255}
-	_HMG_SYSDATA [ 349 ] := {28,157,189}
-	_HMG_SYSDATA [ 350 ] := {255,255,255}
-	_HMG_SYSDATA [ 351 ] := {28,157,189}
+_HMG_SYSDATA [ 348 ] := {255,255,255}
+_HMG_SYSDATA [ 349 ] := {28,157,189}
+_HMG_SYSDATA [ 350 ] := {255,255,255}
+_HMG_SYSDATA [ 351 ] := {28,157,189}
 
-	//EventRemove(nIndexEve1)
+//EventRemove(nIndexEve1)
 
-	//msginfo('pl')
-
-
-
-	//270
-	@ 54 , 184 GRID &cGridName ;
-		OF &cJanx1 ;
-		WIDTH GetDeskTopWidth() ;
-		HEIGHT GetDeskTopHeight() - 195 ;
-		NOLINES ;
-		HEADERS aCabecario ;
-		FONT 'Arial' SIZE 9;
-		ITEMS aItens ;
-		FONTCOLOR { 78, 78, 78 } ;
-		JUSTIFY aJustify ;
-		CELLNAVIGATION ;
-		WIDTHS aTamanhos ;
-		BACKCOLOR {255,255,255} ;
-		DYNAMICBACKCOLOR bGrid1
+//msginfo('pl')
 
 
 
+//270
+@ 54 , 184 GRID &cGridName ;
+	OF &cJanx1 ;
+	WIDTH GetDeskTopWidth() ;
+	HEIGHT GetDeskTopHeight() - 195 ;
+	NOLINES ;
+	HEADERS aCabecario ;
+	FONT 'Arial' SIZE 9;
+	ITEMS aItens ;
+	FONTCOLOR { 78, 78, 78 } ;
+	JUSTIFY aJustify ;
+	CELLNAVIGATION ;
+	WIDTHS aTamanhos ;
+	BACKCOLOR {255,255,255} ;
+	DYNAMICBACKCOLOR bGrid1
 
 
-	SetProperty( cJanx1  , cGridName , "PaintDoubleBuffer" , .t.)
 
-	If aTps[1] $ "BN"
-		SetProperty(cJanx1, cGridName , "COLUMNDYNAMICFONT" ,  1 , {|| ARRAY FONT "Arial" SIZE 8 BOLD   } )
+
+
+SetProperty( cJanx1  , cGridName , "PaintDoubleBuffer" , .t.)
+
+If aTps[1] $ "BN"
+	SetProperty(cJanx1, cGridName , "COLUMNDYNAMICFONT" ,  1 , {|| ARRAY FONT "Arial" SIZE 8 BOLD   } )
+End If
+
+For nz1 := 2 to Len(aTps)
+
+	If (aTps[nz1] $ "BN")
+		SetProperty(cJanx1, cGridName , "COLUMNDYNAMICFONT" ,  nZ1 , {|| ARRAY FONT "Courier New" SIZE 9 BOLD   } )
 	End If
 
-	For nz1 := 2 to Len(aTps)
-
-		If (aTps[nz1] $ "BN")
-			SetProperty(cJanx1, cGridName , "COLUMNDYNAMICFONT" ,  nZ1 , {|| ARRAY FONT "Courier New" SIZE 9 BOLD   } )
-		End If
-
-		If aCabecario[nz1 - 1] = 'Codigo'
-			SetProperty(cJanx1, cGridName , "COLUMNDYNAMICFONT" ,  nZ1 - 1 , {|| ARRAY FONT "Arial" SIZE 9 BOLD   } )
-		End If
+	If aCabecario[nz1 - 1] = 'Codigo'
+		SetProperty(cJanx1, cGridName , "COLUMNDYNAMICFONT" ,  nZ1 - 1 , {|| ARRAY FONT "Arial" SIZE 9 BOLD   } )
+	End If
 
 
-	Next
+Next
 
-	//nTotWidth := 0
-	l1        := 0
+//nTotWidth := 0
+l1        := 0
 
 
 
-	nQRegx     := TMP->(Reccount())
-	//Bt_ClientAreaInvalidateAll( cJanx1 )
+nQRegx     := TMP->(Reccount())
+//Bt_ClientAreaInvalidateAll( cJanx1 )
 
 
-	DoMethod('main','SetFocus')
+DoMethod('main','SetFocus')
 
-	DoMethod(cjanx1,'SetFocus')
-	DoMethod(cjanx1, cgridname, 'Refresh')
+DoMethod(cjanx1,'SetFocus')
+DoMethod(cjanx1, cgridname, 'Refresh')
 
-	//SetProperty( cFormPrin , 'br_grid' , 'Visible' , .f. )
-
-
-	//SetProperty( cFormPrin , 'Lblb01x'  , 'Value' , Space(135) + cTitle + ' ' + Alltrim(Str(nQRegx)) + ' Registros ' )
-
-	EventProcessAllHookMessage(EventCreate({ || LabelEventH4() },   ListView_GetHeader(GetControlHandle( 'br_grid', cJanx1  ))   ), .T.)
-
-	SetProperty(cjanx1, cgridname, "Value" , 1)
-	HMG_ChangeWindowStyle(GetControlHandle( cgridname  , cJanx1 )   , NIL, WS_BORDER  ,  .F., .T.)
-
-	SetProperty( cFormPrin , 'lblQtReg' , 'Value' , Alltrim( Transform(   Len(aItens) , '@E 999,999,999'   ))         )
-
-	cTitulo := GetProperty( cFormPrin , 'LblTitulo' , 'Value' )
+//SetProperty( cFormPrin , 'br_grid' , 'Visible' , .f. )
 
 
+//SetProperty( cFormPrin , 'Lblb01x'  , 'Value' , Space(135) + cTitle + ' ' + Alltrim(Str(nQRegx)) + ' Registros ' )
 
-	SetProperty( cFormPrin , 'LblTitulo' , 'Value' ,  Alltrim(cTitulo) + " " + Alltrim(cTitle)  )
+EventProcessAllHookMessage(EventCreate({ || LabelEventH4() },   ListView_GetHeader(GetControlHandle( 'br_grid', cJanx1  ))   ), .T.)
 
-	xRefresh()
+SetProperty(cjanx1, cgridname, "Value" , 1)
+HMG_ChangeWindowStyle(GetControlHandle( cgridname  , cJanx1 )   , NIL, WS_BORDER  ,  .F., .T.)
+
+SetProperty( cFormPrin , 'lblQtReg' , 'Value' , Alltrim( Transform(   Len(aItens) , '@E 999,999,999'   ))         )
+
+cTitulo := GetProperty( cFormPrin , 'LblTitulo' , 'Value' )
+
+
+
+SetProperty( cFormPrin , 'LblTitulo' , 'Value' ,  Alltrim(cTitulo) + " " + Alltrim(cTitle)  )
+
+xRefresh()
 
 
 
@@ -2859,12 +2866,12 @@ Function xStop( cObj ,cCampo )
 
 	SetProperty( '_InputWindow', cObj  , 'BackColor', RED )
 
-	PlayBeep()	
+	PlayBeep()
 	yAviso( 'Este campo deve estar Preenchido(' + Left(cCampo, Len(cCampo) - 2  ) + ')' + QUEBRA + 'Para que a consulta possa ser executada. ' , .f. )
 
 	SetProperty( '_InputWindow', cObj  , 'BackColor', WHITE )
 
-	DoMethod( '_InputWindow', cObj ,'SetFocus' )
+DoMethod( '_InputWindow', cObj ,'SetFocus' )
 
 Return
 
@@ -2930,13 +2937,13 @@ STATIC FUNCTION xIfEmpty()
 		PlayBeep()
 		// SysWait( .5 )
 		yAviso( 'Este campo deve estar Preenchido,' + QUEBRA + 'Para que a consulta possa ser executada. ' + This.name , .f. )
-		DoMethod( '_InputWindow', This.Name, 'SetFocus' )
+	DoMethod( '_InputWindow', This.Name, 'SetFocus' )
 
-		SetProperty( '_InputWindow', This.Name, 'BackColor', WHITE )
+	SetProperty( '_InputWindow', This.Name, 'BackColor', WHITE )
 
-	
-		Return .f.
-	ENDIF
+
+Return .f.
+ENDIF
 
 RETURN .t.
 
