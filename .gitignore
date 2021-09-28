@@ -56,3 +56,7 @@ _temp.o
 .gitignore
 error.log
 .gitignore
+DataBase.ini
+libcrypto-1_1-x64.dll
+libmysql.dll
+libssl-1_1-x64.dll
