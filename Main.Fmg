@@ -14,6 +14,8 @@ DEFINE WINDOW TEMPLATE AT 138 , 236 WIDTH 852 HEIGHT 457 VIRTUAL WIDTH Nil VIRTU
        
     
 
+    
+
     DEFINE IMAGE Image_1
         ROW    210
         COL    250
