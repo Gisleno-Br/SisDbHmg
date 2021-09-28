@@ -115,6 +115,7 @@ FUNCTION Main
 
 	PUBLIC cDiaName := 'fDialogo'
 
+	Public XBACK1 := {232,246,239}  
  
 
 	Private nSec1 := 0
@@ -2353,6 +2354,55 @@ Function D1Black(cJan,zBitMap)
 
 
 Return
+
+
+Function Box(CurSRow, CurSCol, LastSWidth, LastSHeight , NOSm , cImgTab )
+
+	LOCAL Sclavel01 :=   ALLTRIM("ImgxY") + ALLTRIM(NoSm) 
+	
+	DEFAULT cImgTab := "Tab.Jpg"
+
+
+	/*
+    DEFINE label &Sclavel01       
+        ROW    CurSRow
+        COL    CurSCol  
+        WIDTH  LastSWidth 
+        HEIGHT LastSHeight 
+        VALUE ""
+        FONTNAME "Ms Sans Serif"
+        FONTSIZE 11
+        FONTBOLD .F.
+        FONTITALIC .F.
+        VISIBLE  .T.  
+        BACKCOLOR SColorx 
+        FONTCOLOR Nil
+        BORDER .T. 
+        CLIENTEDGE .T. 
+    END LABEL
+	*/
+
+
+
+	
+    DEFINE IMAGE &Sclavel01
+        ROW    CurSRow
+        COL    CurSCol
+        WIDTH  LastSWidth
+        HEIGHT LastSHeight
+        PICTURE cImgTab
+        HELPID Nil
+        VISIBLE .T.
+        STRETCH .T.
+        ACTION Nil
+    END IMAGE
+
+
+
+
+	SetProperty("fCadCli",Sclavel01,"Enabled",.F.)
+	
+RETURN
 
 fUNCTION DrawTransp(cJan , zBitMap , cTitulo , nQreg , cTitConsu , cTitFltr )
 

@@ -44,6 +44,8 @@ REQUEST SDDMY, SQLMIX
 Function EditConsulta( cTabela , nIdConsu , lMovTable )
 
 
+
+
 	LOCAL aCabec  := GetCamposDic( cTabela, ' ', .F. )
 	LOCAL n1 := 1
 	Local lDEsc := .t.
@@ -55,6 +57,8 @@ Function EditConsulta( cTabela , nIdConsu , lMovTable )
 	Local oSErver
 	Local oQuery
 	Local oRow
+
+
 
 	Local n2
 	Local n3

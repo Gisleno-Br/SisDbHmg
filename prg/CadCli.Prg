@@ -20,7 +20,6 @@ DECLARE WINDOW fNewCadcli
 
 
 
-
 REQUEST HB_LANG_PT
 REQUEST HB_CODEPAGE_PT850
 
@@ -29,14 +28,12 @@ FUNCTION xInitFrm()
 
    Load Window fCadCli
 
-
-
-   
    
 
-
-
+   
    HMG_ChangeWindowStyle(  fCadCli.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
+
+
 
 
    ON KEY F5 OF fCadCli ACTION xPesqCep()
@@ -45,7 +42,7 @@ FUNCTION xInitFrm()
 
    syswait(.2)
 
-   fCadcli.Image_1.Visible := .t. 
+   //fCadcli.Image_1.Visible := .t. 
 
    Center Window fCadCli
 
@@ -60,8 +57,6 @@ FUNCTION xCadCli( lNew, cCodigo1 )
    LOCAL aMx       := {}
 
 
-
-
 // l1 := xrt1()
 
    PRIVATE cDiaName := 'fCadCli'
@@ -71,10 +66,7 @@ FUNCTION xCadCli( lNew, cCodigo1 )
    PRIVATE nZa1 := 0
    PRIVATE nZa2 := 0
 
-
-
-
-   
+  
 
    
    PRIVATE aUf      := {}

@@ -7,17 +7,10 @@ DEFINE WINDOW TEMPLATE AT 185 , 551 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
 
         PAGE "Dados Cliente" IMAGE "img\new.bmp"
 
-            DEFINE IMAGE Image_1
-                ROW    22
-                COL    0
-                WIDTH  498
-                HEIGHT 378
-                PICTURE "Tab.jpg"
-                HELPID Nil
-                VISIBLE .F.
-                STRETCH .F.
-                ACTION Nil
-            END IMAGE
+
+            Box(40,4,856 ,399 - 100, "03" )
+
+        
 
             DEFINE LABEL Label_1
                 ROW    41
@@ -1130,19 +1123,11 @@ DEFINE WINDOW TEMPLATE AT 185 , 551 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
 
         END PAGE 
 
+        
         PAGE "Outros" IMAGE "img\ic_janela.bmp"
 
-            DEFINE IMAGE Image_2
-                ROW    22
-                COL    0
-                WIDTH  498
-                HEIGHT 378
-                PICTURE "Tab.jpg"
-                HELPID Nil
-                VISIBLE .T.
-                STRETCH .F.
-                ACTION Nil
-            END IMAGE
+            Box(40,4,856 ,299, "21" )
+
 
             DEFINE FRAME Frame_3
                 ROW    24
@@ -1603,9 +1588,9 @@ DEFINE WINDOW TEMPLATE AT 185 , 551 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 FONTUNDERLINE .F.
                 FONTSTRIKEOUT .F.
                 CAPTION "Informações Cliente"
-                BACKCOLOR NIL
+                BACKCOLOR XBACK1              
                 FONTCOLOR NIL
-                OPAQUE .F.
+
             END FRAME
 
             DEFINE LABEL Label_22
