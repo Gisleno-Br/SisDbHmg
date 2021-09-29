@@ -20,6 +20,12 @@ DECLARE WINDOW fNewCadcli
 
 
 
+
+
+
+
+
+
 REQUEST HB_LANG_PT
 REQUEST HB_CODEPAGE_PT850
 
@@ -28,7 +34,12 @@ FUNCTION xInitFrm()
 
    Load Window fCadCli
 
+
+
+
+
    
+
 
    
    HMG_ChangeWindowStyle(  fCadCli.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )

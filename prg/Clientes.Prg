@@ -788,9 +788,6 @@ Function InitTela(  lIni1  , nColz1)
 
 	PostMessage(   GetControlHandle( 'br_grid', cActiveJan ) , WM_LBUTTONUP,0,0)
 
-
-
-
 Return
 
 Function xInvalidate()
