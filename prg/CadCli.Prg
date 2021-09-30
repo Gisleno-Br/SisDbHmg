@@ -23,9 +23,6 @@ DECLARE WINDOW fNewCadcli
 
 
 
-
-
-
 REQUEST HB_LANG_PT
 REQUEST HB_CODEPAGE_PT850
 
@@ -33,9 +30,6 @@ REQUEST HB_CODEPAGE_PT850
 FUNCTION xInitFrm()
 
    Load Window fCadCli
-
-
-
 
 
    

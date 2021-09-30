@@ -5,10 +5,8 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
 
     DEFINE TAB Tab_1 AT 40 , 4 WIDTH 856 HEIGHT 339 VALUE 1 FONT "Arial" SIZE 9 TOOLTIP "" BUTTONS HOTTRACK ON CHANGE Nil MULTILINE
 
-        Box( 26 , 4 , 842 ,   199 , "01" )        
-
-
-        Box( 228 , 4 , 842 ,   120 , "02" )        
+        Box(26,4, 842 , 199 , "01" )
+        Box(228,4, 842 , 120 , "02" )
 
 
 
@@ -467,7 +465,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 FONTUNDERLINE .F.
                 FONTSTRIKEOUT .F.
                 CAPTION NIL
-                BACKCOLOR NIL
+                BACKCOLOR XBACK1
                 FONTCOLOR NIL
                 OPAQUE .F.
             END FRAME
@@ -1119,7 +1117,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 FONTUNDERLINE .F.
                 FONTSTRIKEOUT .F.
                 CAPTION NIL
-                BACKCOLOR NIL
+                BACKCOLOR XBACK1
                 FONTCOLOR NIL
                 OPAQUE .F.
             END FRAME
@@ -1127,6 +1125,18 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
         END PAGE 
 
         PAGE "Outros" IMAGE "img\ic_janela.bmp"
+
+            
+            Box(24,4, 519 , 144 , "03" )
+
+            Box(24,525, 313 , 144 , "04" )
+
+
+
+            Box(170,4, 519 , 129 , "05" )
+            Box(170,525, 313 , 129 , "06" )           
+            
+        
 
             DEFINE FRAME Frame_3
                 ROW    24
@@ -1587,10 +1597,11 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 FONTUNDERLINE .F.
                 FONTSTRIKEOUT .F.
                 CAPTION "Informações Cliente"
-                BACKCOLOR NIL
+                BACKCOLOR XBACK1
                 FONTCOLOR NIL
                 OPAQUE .T.
             END FRAME
+            
 
             DEFINE LABEL Label_22
                 ROW    198
@@ -1736,7 +1747,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 FONTUNDERLINE .F.
                 FONTSTRIKEOUT .F.
                 CAPTION "Observação"
-                BACKCOLOR NIL
+                BACKCOLOR XBACK1
                 FONTCOLOR NIL
                 OPAQUE .F.
             END FRAME
