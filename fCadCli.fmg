@@ -9,8 +9,6 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
         Box(228,4, 842 , 120 , "02" )
 
 
-
-
         PAGE "Dados Cliente" IMAGE "img\new.bmp"
 
             DEFINE LABEL Label_1
