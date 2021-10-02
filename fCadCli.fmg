@@ -598,7 +598,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 SORT .F.
                 ONENTER Nil
                 ONDISPLAYCHANGE Nil
-                DISPLAYEDIT .T.
+                DISPLAYEDIT .F.
                 IMAGE Nil
                 DROPPEDWIDTH 200
                 ONDROPDOWN Nil

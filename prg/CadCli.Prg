@@ -872,15 +872,18 @@ FUNCTION xPesqCep()
       oRow := oQry:GetRow( 1 )
       
       
+      
       SetProperty( 'fCadCli', 'CmbUf', 'Value', AScan( aMUf  , AllTrim(GetCampo(oRow, 'Uf' ) ) )  )
 
 
       nindice := Ascan(aMUf , AllTrim(GetCampo(oRow, 'Uf' ) )    )
            
-      aM1 := xChgUf( nIndice   ,   'Cep' )   
-      nCidade := AScan( aM1, AllTrim( GetCampo(oRow, 'Cidade' ) ) )
-
+      
       IF AllTrim( cControl ) = 'CepEnt'
+
+        aM1 := xChgUf( nIndice   ,   'CepEnt' )   
+        nCidade := AScan( aM1, AllTrim( GetCampo(oRow, 'Cidade' ) ) )
+
 
 
          SetProperty( 'fCadCli', 'CmbCidEnt', 'Value',  nCidade )
@@ -893,8 +896,8 @@ FUNCTION xPesqCep()
 
       ELSE
 
-
-
+         aM1 := xChgUf( nIndice   ,   'Cep' )   
+         
          nCidade := AScan( aM1, AllTrim( GetCampo(oRow, 'Cidade' ) ) )
 
          SetProperty( 'fCadCli', 'Endereco', 'Value', AllTrim( GetCampo(oRow, 'Endereco' ) ) )
