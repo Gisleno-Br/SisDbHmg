@@ -32,22 +32,20 @@ FUNCTION xInitFrm()
    Load Window fCadCli
 
 
-   
 
-
-   
    HMG_ChangeWindowStyle(  fCadCli.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
+
 
 
 
 
    ON KEY F5 OF fCadCli ACTION xPesqCep()
 
-   RefreshAll('fCadCli')
+   // RefreshAll('fCadCli')
 
-   syswait(.2)
+   // syswait(.2)
 
-   //fCadcli.Image_1.Visible := .t. 
+   // fCadcli.Image_1.Visible := .t.
 
    Center Window fCadCli
 
@@ -61,8 +59,8 @@ FUNCTION xCadCli( lNew, cCodigo1 )
    LOCAL cSalvaJan := cActiveJan
    LOCAL aMx       := {}
 
-
 // l1 := xrt1()
+
 
 
 
@@ -74,9 +72,11 @@ FUNCTION xCadCli( lNew, cCodigo1 )
    PRIVATE nZa1 := 0
    PRIVATE nZa2 := 0
 
-  
+   Private aMUf  := {}
 
-   
+
+
+
    PRIVATE aUf      := {}
    PRIVATE aCidades := {}
    PRIVATE aBairros := {}
@@ -87,7 +87,8 @@ FUNCTION xCadCli( lNew, cCodigo1 )
    PRIVATE aButCli := {}
 
 
-   
+
+
 
 
 
@@ -130,10 +131,11 @@ FUNCTION xInitCad()
    EncheCmb( 'fCadcli', 'CmbClasse', "select descricao from classes where status = 'Normal' order by 1" )
 
 
+
    EncheCmb( 'fCadcli', 'CmbCategoria', "select descricao from categorias where status = 'Normal' order by 1" )
 
 
-   EncheCmb( 'fCadcli', 'CmbUf', "select distinct uf from ibge order by 1" )
+   aMUf := EncheCmb( 'fCadcli', 'CmbUf', "select distinct uf from ibge order by 1" )
 
    SetProperty( 'fCadcli', 'CmbUf', 'Value', 2 )
 
@@ -343,9 +345,9 @@ FUNCTION LoadCliente(  cCod )
 
 
 
-      
 
-      
+
+
       fCadCli .CmbCidade. Value := AScan( GetCmbItens( 'fCadCli', 'cmbCidade'  ), AllTrim( GetCampo(oRow, 'Cidade' ) ) )
 
       fCadCli .CmbBairros. Value := AScan( GetCmbItens( 'fCadCli', 'cmbBairros'  ), AllTrim( GetCampo(oRow, 'Bairro' ) ) )
@@ -738,7 +740,7 @@ FUNCTION GetCmbItens( cForm1, cCmb  )
 
    LOCAL nCount := 0
    LOCAL aM2    := {}
-   LOCAL nZ1
+   LOCAL nZ1    := 1
 
    IF !_isControlDefined( cCmb, cForm1 )
       RETURN aM2
@@ -747,15 +749,17 @@ FUNCTION GetCmbItens( cForm1, cCmb  )
 
    nCount := Getproperty( cForm1, cCmb, 'ItemCount' )
 
+   // DoMethod( cForm1, cCmb, 'DeleteAllItems' )
+
    FOR nz1 := 1 TO ncount
-// If ValType(Getproperty( cForm1 , cCmb  , 'Item' , nZ1 )) = 'C'
+
       AAdd( aM2, AllTrim( Getproperty( cForm1, cCmb, 'Item', nZ1 ) ) )
-// End If
+
    NEXT
 
 RETURN aM2
 
-// aM2
+
 
 
 
@@ -764,17 +768,30 @@ FUNCTION EncheCmb( cForm1, cCmb, cSqlx1 )
 
    LOCAL oServer := GetConexao()
    LOCAL oQry
+   LOCAL aMatr1 := {}
 
    DoMethod( cForm1, cCmb, 'DeleteAllItems' )
 
    oQry := oServer:Query( cSqlx1 )
 
+   IF oServer:NetErr()
+      MsGInfo( "Error executing Query " + QUEBRA +  " : " + QUEBRA + oServer:Error() )
+
+      oServer:Destroy()
+      oSErver := Nil
+
+
+      oQry:Destroy()
+      oQry := Nil
+      RETURN .F.
+
+   END IF
+
    FOR n1 := 1 TO oQry:LastRec()
       oRow := oQry:GetRow( n1 )
       DoMethod( cForm1, cCmb, 'AddItem', hb_UTF8ToStr( GetCampo(  oRow, oQry:FieldName(1 )  ) )    )
-
+      AAdd( aMatr1, hb_UTF8ToStr( GetCampo(  oRow, oQry:FieldName(1 )  ) )   )
    NEXT
-
 
    oServer:Destroy()
    oSErver := Nil
@@ -783,26 +800,32 @@ FUNCTION EncheCmb( cForm1, cCmb, cSqlx1 )
    oQry:Destroy()
    oQry := Nil
 
-RETURN
+RETURN ( aMatr1 )
 
 
-FUNCTION xChgUf()
+FUNCTION xChgUf( nUf1 , cControl )
+
+   //LOCAL cUf1 := fCadcli .cmbUf. DisplayValue
+   Local aZ1  := {}
+   Local cUf1 := aMUf[nUf1]
 
 
-   LOCAL cUf1 := fCadcli .cmbUf. DisplayValue
 
-   IF !Empty( cUf1 )
-
-      DoMethod( 'fCadcli', 'CmbBairros', 'DeleteAllItems' )
-      DoMethod( 'fCadcli', 'CmbBaiEnt', 'DeleteAllItems' )
-
-
-      EncheCmb( 'fCadcli', 'CmbCidade', "select municipio from ibge where uf = '" + cUf1  + "' order by 1" )
-      EncheCmb( 'fCadcli', 'CmbCidEnt', "select municipio from ibge where uf = '" + cUf1  + "' order by 1" )
+   DEFAULT cControl := ''
+   
+   IF !Empty( cUf1 )     
+      
+      If (cControl != 'CepEnt')
+         DoMethod( 'fCadcli', 'CmbBairros', 'DeleteAllItems' )
+         aZ1 := EncheCmb( 'fCadcli', 'CmbCidade', "select municipio from ibge where uf = '" + cUf1  + "' order by 1" )
+      Else    
+         DoMethod( 'fCadcli', 'CmbBaiEnt', 'DeleteAllItems' )
+         aZ1 := EncheCmb( 'fCadcli', 'CmbCidEnt', "select municipio from ibge where uf = '" + cUf1  + "' order by 1" )
+      End If    
 
    END IF
 
-RETURN
+Return aZ1 
 
 
 FUNCTION xPesqCep()
@@ -814,13 +837,16 @@ FUNCTION xPesqCep()
    LOCAL oServer := GetConexao()
    LOCAL oQry
 
+   Local nindice := 0
+
    LOCAL cControl
    LOCAL cForm
+
 
    LOCAL aM1
    LOCAL oRow
    LOCAL nCidade
-   LOCAL aBairros
+   LOCAL aBairros := {}
    LOCAL cJanx1 := 'fCadCli'
 
    GetControlNameByHandle( GetFocus(), @cControl, @cForm )
@@ -831,7 +857,7 @@ FUNCTION xPesqCep()
       RETURN
    END IF
 
-   SysWait( .1 )
+   // SysWait( .1 )
 
 
    IF AllTrim( cControl ) == 'Cep'
@@ -840,30 +866,27 @@ FUNCTION xPesqCep()
       oQry := oServer:Query( "select * from cep where cep = '" + cCepEnt + "'" )
    END IF
 
+
    IF oQry:LastRec() > 0
 
       oRow := oQry:GetRow( 1 )
-
-      aM1      := GetCmbItens( 'fCadCli', 'CmbUf'  )
-      SetProperty( 'fCadCli', 'CmbUf', 'Value', AScan( aM1, AllTrim(GetCampo(oRow, 'Uf' ) ) )  )
-
-
-      xChgUf()
+      
+      
+      SetProperty( 'fCadCli', 'CmbUf', 'Value', AScan( aMUf  , AllTrim(GetCampo(oRow, 'Uf' ) ) )  )
 
 
-      aM1 := GetCmbItens( 'fCadCli', 'CmbCidade'  )
+      nindice := Ascan(aMUf , AllTrim(GetCampo(oRow, 'Uf' ) )    )
+           
+      aM1 := xChgUf( nIndice   ,   'Cep' )   
       nCidade := AScan( aM1, AllTrim( GetCampo(oRow, 'Cidade' ) ) )
-
-// xChgCidade
-
 
       IF AllTrim( cControl ) = 'CepEnt'
 
 
          SetProperty( 'fCadCli', 'CmbCidEnt', 'Value',  nCidade )
-         xChgCidade(  .T. )
 
-         aBairros := GetCmbItens( 'fCadCli', 'CmbBaiEnt'  )
+         aBairros := xChgCidade(  .T. )
+         
 
          SetProperty( 'fCadCli', 'EndEnt', 'Value', AllTrim( GetCampo(oRow, 'Endereco' ) ) )
          SetProperty( 'fCadCli', 'CmbBaiEnt', 'Value', AScan( aBairros, AllTrim(GetCampo(oRow, 'Bairro' ) ) )  )
@@ -871,14 +894,13 @@ FUNCTION xPesqCep()
       ELSE
 
 
+
          nCidade := AScan( aM1, AllTrim( GetCampo(oRow, 'Cidade' ) ) )
 
          SetProperty( 'fCadCli', 'Endereco', 'Value', AllTrim( GetCampo(oRow, 'Endereco' ) ) )
          SetProperty( 'fCadCli', 'CmbCidade', 'Value',  nCidade )
 
-         xChgCidade( .F. )
-
-         aBairros := GetCmbItens( 'fCadCli', 'CmbBairros'  )
+         aBairros := xChgCidade( .F. )
 
          SetProperty( 'fCadCli', 'CmbBairros', 'Value', AScan( aBairros, AllTrim(GetCampo(oRow, 'Bairro' ) ) )  )
 
@@ -895,7 +917,6 @@ FUNCTION xPesqCep()
    END IF
 
 
-
    oServer:Destroy()
    oSErver := Nil
 
@@ -910,6 +931,7 @@ FUNCTION xChgCidade( lEntrega )
    LOCAL cCid2 := AllTrim( fCadcli .cmbCidEnt. DisplayValue )
    LOCAL cUf1 := fCadcli .cmbUf. DisplayValue
    LOCAL cCidade := ''
+   Local aMtrz1 := {}
 
    IF !Empty( AllTrim( cCid + cCid2 ) )
 
@@ -922,14 +944,14 @@ FUNCTION xChgCidade( lEntrega )
 
 
       IF !lEntrega
-         EncheCmb( 'fCadcli', 'CmbBairros', "select  bairro from bairros where uf = '" + cUf1  + "' and cidade = '"  + cCidade + "' order by 1" )
+         aMtrz1 := EncheCmb( 'fCadcli', 'CmbBairros', "select  bairro from bairros where uf = '" + cUf1  + "' and cidade = '"  + cCidade + "' order by 1" )
       ELSE
-         EncheCmb( 'fCadcli', 'CmbBaiEnt', "select  bairro from bairros where uf = '" + cUf1  + "' and cidade = '"  + cCidade + "' order by 1" )
+         aMtrz1 := EncheCmb( 'fCadcli', 'CmbBaiEnt', "select  bairro from bairros where uf = '" + cUf1  + "' and cidade = '"  + cCidade + "' order by 1" )
       END IF
 
    END IF
 
-RETURN
+RETURN aMtrz1
 
 
 

@@ -5,11 +5,10 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
 
     DEFINE TAB Tab_1 AT 40 , 4 WIDTH 856 HEIGHT 339 VALUE 1 FONT "Arial" SIZE 9 TOOLTIP "" BUTTONS HOTTRACK ON CHANGE Nil MULTILINE
 
-        Box(26,4, 842 , 199 , "01" )
-        Box(228,4, 842 , 120 , "02" )
-
-
         PAGE "Dados Cliente" IMAGE "img\new.bmp"
+
+            Box(26,4, 842 , 199 , "01" )
+            Box(228,4, 842 , 120 , "02" )
 
             DEFINE LABEL Label_1
                 ROW    41
@@ -121,14 +120,12 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 FONTCOLOR NIL
             END LABEL
 
-
-
             DEFINE LABEL Label_3
                 ROW    83
                 COL    28
                 WIDTH  120
                 HEIGHT 24
-                VALUE "Endereço"
+                VALUE "EndereÃ§o"
                 FONTNAME "Arial"
                 FONTSIZE 9
                 TOOLTIP ""
@@ -392,7 +389,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 COL    28
                 WIDTH  120
                 HEIGHT 24
-                VALUE "WhatsAp "
+                VALUE "WhatsAAp "
                 FONTNAME "Arial"
                 FONTSIZE 9
                 TOOLTIP ""
@@ -465,7 +462,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 FONTUNDERLINE .F.
                 FONTSTRIKEOUT .F.
                 CAPTION NIL
-                BACKCOLOR XBACK1
+                BACKCOLOR NIL
                 FONTCOLOR NIL
                 OPAQUE .F.
             END FRAME
@@ -704,7 +701,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 FONTNAME "Arial"
                 FONTSIZE 9
                 TOOLTIP ""
-                ONCHANGE xChgUf( This.Value )
+                ONCHANGE xChgUf( This.Value  , 'Cep'   )
                 ONGOTFOCUS gColor1(Thiswindow.Name , This.Name)
                 ONLOSTFOCUS (gColor2(Thiswindow.Name , This.Name) , HabilGrv() )
                 FONTBOLD .F.
@@ -1117,7 +1114,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 FONTUNDERLINE .F.
                 FONTSTRIKEOUT .F.
                 CAPTION NIL
-                BACKCOLOR XBACK1
+                BACKCOLOR NIL
                 FONTCOLOR NIL
                 OPAQUE .F.
             END FRAME
@@ -1126,17 +1123,14 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
 
         PAGE "Outros" IMAGE "img\ic_janela.bmp"
 
-            
+        
             Box(24,4, 519 , 144 , "03" )
-
             Box(24,525, 313 , 144 , "04" )
-
 
 
             Box(170,4, 519 , 129 , "05" )
             Box(170,525, 313 , 129 , "06" )           
-            
-        
+
 
             DEFINE FRAME Frame_3
                 ROW    24
@@ -1204,7 +1198,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 COL    16
                 WIDTH  120
                 HEIGHT 24
-                VALUE "Endereço :"
+                VALUE "EndereÃ§o"
                 FONTNAME "Arial"
                 FONTSIZE 9
                 TOOLTIP ""
@@ -1596,12 +1590,11 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 FONTITALIC .F.
                 FONTUNDERLINE .F.
                 FONTSTRIKEOUT .F.
-                CAPTION "Informações Cliente"
+                CAPTION "InformaÃ§Ãµes Cliente"
                 BACKCOLOR XBACK1
                 FONTCOLOR NIL
                 OPAQUE .T.
             END FRAME
-            
 
             DEFINE LABEL Label_22
                 ROW    198
@@ -1734,7 +1727,6 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 BACKCOLOR NIL
                 FONTCOLOR NIL
             END LABEL
-            
 
             DEFINE FRAME Frame_6
                 ROW    170
@@ -1747,12 +1739,11 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 FONTITALIC .F.
                 FONTUNDERLINE .F.
                 FONTSTRIKEOUT .F.
-                CAPTION "Observação"
+                CAPTION "ObservaÃ§Ã£o"
                 BACKCOLOR XBACK1
                 FONTCOLOR NIL
                 OPAQUE .F.
             END FRAME
-
 
             DEFINE EDITBOX EdtObs
                 ROW    194
@@ -1787,7 +1778,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 COL    268
                 WIDTH  140
                 HEIGHT 24
-                VALUE "Ult. Atualização Cadastro"
+                VALUE "Ult. Atualizaï¿½ï¿½o Cadastro"
                 FONTNAME "Arial"
                 FONTSIZE 9
                 TOOLTIP ""
@@ -2003,6 +1994,9 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
             END LABEL
 
         END PAGE 
+
+        
+            
 
     END TAB 
 

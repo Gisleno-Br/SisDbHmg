@@ -359,7 +359,7 @@ FUNCTION Main
 
 	//HB_SETCODEPAGE("UTF8")
 
-	Public cAviso1 :=  "Deseja Confirmar essa Operaùùo?"
+	Public cAviso1 :=  "Deseja Confirmar essa OperaÔøΩÔøΩo?"
 	//msginfo(hb_AnsiToOem(cv1))
 
 	//MsgAviso(cv1)
@@ -401,8 +401,6 @@ FUNCTION Main
 		{"1-Categoria Produto",Nil} , {"1-Unidades",Nil} , {"1-Tipo Produtos",Nil} ,;
 		{"1-Tipo Produto1s",Nil},{"1-Tipo Produto2s",Nil},{"1-Tipo Produt3os",Nil},{"1-Tipo Produtos",Nil},{"1-Tipo Produtos",Nil},;
 		{"2-Pedidos",Nil} , {"2-OrÁamento",Nil}  , {"3-Listagem Clientes",Nil} ,    {"4-ConfiguraÁıes",Nil} }
-
-
 
 
 
@@ -1540,7 +1538,7 @@ Function OpMenu(aOpcoes , cJan , nLinha , cTitx , nIndx )
 
 Return nRow
 
-// Realiza a acomodaùùo dos itens do menu abaixo do aberto atualmente.
+// Realiza a acomodaÔøΩÔøΩo dos itens do menu abaixo do aberto atualmente.
 
 Function RestMenu(nOp1 , nLinha , nTam , nOpSel )
 
@@ -2353,7 +2351,35 @@ Function D1Black(cJan,zBitMap)
 	End If
 
 
+
+
+
 Return
+
+Function BoxColor( cJan , cObjFrame , nOsm , cImgTab )
+
+	LOCAL Sclavel01 := Alltrim("ImgxY") + ALLTRIM(nOsm) 
+	
+	DEFAULT cImgTab := "Tab.Jpg"
+
+    DEFINE IMAGE &Sclavel01
+        ROW    GetProperty( cJan , cObjFrame , "Row")
+        COL    GetProperty( cJan, cObjFrame , "Col")
+        WIDTH  GetProperty( cJan, cObjFrame , "Width") - 1
+        HEIGHT GetProperty( cJan , cObjFrame , "Height") - 1
+        PICTURE cImgTab
+        HELPID Nil
+        VISIBLE .T.
+        STRETCH .T.
+        ACTION Nil
+    END IMAGE
+
+	SetProperty(cJan,Sclavel01,"Enabled",.F.)
+	
+	
+RETURN
+
+
 
 
 Function Box(CurSRow, CurSCol, LastSWidth, LastSHeight , NOSm , cImgTab )
@@ -2362,29 +2388,6 @@ Function Box(CurSRow, CurSCol, LastSWidth, LastSHeight , NOSm , cImgTab )
 	
 	DEFAULT cImgTab := "Tab.Jpg"
 
-
-	/*
-    DEFINE label &Sclavel01       
-        ROW    CurSRow
-        COL    CurSCol  
-        WIDTH  LastSWidth 
-        HEIGHT LastSHeight 
-        VALUE ""
-        FONTNAME "Ms Sans Serif"
-        FONTSIZE 11
-        FONTBOLD .F.
-        FONTITALIC .F.
-        VISIBLE  .T.  
-        BACKCOLOR SColorx 
-        FONTCOLOR Nil
-        BORDER .T. 
-        CLIENTEDGE .T. 
-    END LABEL
-	*/
-
-
-
-	
     DEFINE IMAGE &Sclavel01
         ROW    CurSRow
         COL    CurSCol
@@ -2396,9 +2399,6 @@ Function Box(CurSRow, CurSCol, LastSWidth, LastSHeight , NOSm , cImgTab )
         STRETCH .T.
         ACTION Nil
     END IMAGE
-
-
-
 
 	SetProperty("fCadCli",Sclavel01,"Enabled",.F.)
 	
