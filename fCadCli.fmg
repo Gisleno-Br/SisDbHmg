@@ -121,12 +121,14 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 FONTCOLOR NIL
             END LABEL
 
+
+
             DEFINE LABEL Label_3
                 ROW    83
                 COL    28
                 WIDTH  120
                 HEIGHT 24
-                VALUE "EndereÃ§o"
+                VALUE "Endereço"
                 FONTNAME "Arial"
                 FONTSIZE 9
                 TOOLTIP ""
@@ -1202,7 +1204,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 COL    16
                 WIDTH  120
                 HEIGHT 24
-                VALUE "EndereÃ§o :"
+                VALUE "Endereço :"
                 FONTNAME "Arial"
                 FONTSIZE 9
                 TOOLTIP ""
@@ -1594,7 +1596,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 FONTITALIC .F.
                 FONTUNDERLINE .F.
                 FONTSTRIKEOUT .F.
-                CAPTION "InformaÃ§Ãµes Cliente"
+                CAPTION "Informações Cliente"
                 BACKCOLOR XBACK1
                 FONTCOLOR NIL
                 OPAQUE .T.
@@ -1732,6 +1734,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 BACKCOLOR NIL
                 FONTCOLOR NIL
             END LABEL
+            
 
             DEFINE FRAME Frame_6
                 ROW    170
@@ -1744,11 +1747,12 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 FONTITALIC .F.
                 FONTUNDERLINE .F.
                 FONTSTRIKEOUT .F.
-                CAPTION "ObservaÃ§Ã£o"
+                CAPTION "Observação"
                 BACKCOLOR XBACK1
                 FONTCOLOR NIL
                 OPAQUE .F.
             END FRAME
+
 
             DEFINE EDITBOX EdtObs
                 ROW    194
@@ -1783,7 +1787,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 COL    268
                 WIDTH  140
                 HEIGHT 24
-                VALUE "Ult. AtualizaÃ§Ã£o Cadastro"
+                VALUE "Ult. Atualização Cadastro"
                 FONTNAME "Arial"
                 FONTSIZE 9
                 TOOLTIP ""

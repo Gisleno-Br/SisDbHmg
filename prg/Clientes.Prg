@@ -536,6 +536,15 @@ Function xSetOpcao()
 	Local cAuxName  :=  'FTop1' + Right(cActiveJan,5)
 	//Local cLabelx
 
+	Local cCapt := Alltrim(OBTN_Caption(cAuxName   , aButtons[4][5] ))
+
+
+	If (cCapt = 'Limpar Filtro')
+		yAviso("Opção Indisponivel enquanto Houver Filtro Ativo." )
+		Return
+	End If 
+
+
 	If (!lOpcaoAberta)
 
 		lOpcaoAberta := .t.
@@ -666,10 +675,14 @@ Function ProcFiltro( cTab1 , lEfect )
 		OBTN_Caption(cAuxName   , aButtons[4][5]  , "Filtrar" )
 		//EventProcessAllHookMessage(nEven1 := (EventCreate({ || LabelEventBrow() }, GetControlHandle( 'br_grid' , cFormPrin )  ) )  , .T.)
 
-		Bt_Clientareainvalidateall(cActiveJan)
+		//Bt_Clientareainvalidateall(cActiveJan)
 
-		SysWait(.1)
+		
 		BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , Nil , .t. )
+		SysWait(.2)
+
+		//lInvalid := .f.
+		//xInvalidate()
 
 		//Bt_Clientareainvalidateall(cFormPrin)
 
@@ -688,23 +701,43 @@ Function ProcFiltro( cTab1 , lEfect )
 
 	EfectEnd(  cActiveJan ,  aMx)
 
-	cTexto := GetProperty('fSplit2' ,cLblSelected , 'Value')
+	
+	If _IsWindowDefined('fSplit2')	
+		cTexto := GetProperty('fSplit2' ,cLblSelected , 'Value')
 
-	If !Empty(cFiltros)
+		If !Empty(cFiltros)
 
-		nHan1 := aButtons[4][5]
+			nHan1 := aButtons[4][5]
 
-		aLinhas := OpenReg(cFiltros  , ,   1 )
-		OBTN_Caption(cAuxName   , nHan1  , "Limpar Filtro" )
-		//EventProcessAllHookMessage(nEven1 := (EventCreate({ || LabelEventBrow() }, GetControlHandle( 'br_grid' , cFormPrin )  ) )  , .T.)
+			aLinhas := OpenReg(cFiltros  , ,   1 )
+			OBTN_Caption(cAuxName   , nHan1  , "Limpar Filtro" )
+			//EventProcessAllHookMessage(nEven1 := (EventCreate({ || LabelEventBrow() }, GetControlHandle( 'br_grid' , cFormPrin )  ) )  , .T.)
 
-	End If
+		End If
+
+	End If 
 
 
-	ResButSel()
+	If _isControlDefined('br_Grid' , cActiveJan )		
+		BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan  )) , Nil , .t. )
+		SysWait(.1)
+	End If 	
+	
+
+	//ResButSel()
+
+	//SysWait(.2)
+	
+	//ShowButTop( .t. )
+
+	//_ShowWindow('fSplit2')
+
+	//SysWait(.1)
 
 
-	ShowButTop( .t. )
+	
+
+	//Msginfo('ok')
 
 
 
@@ -789,6 +822,7 @@ Function InitTela(  lIni1  , nColz1)
 	PostMessage(   GetControlHandle( 'br_grid', cActiveJan ) , WM_LBUTTONUP,0,0)
 
 Return
+
 
 Function xInvalidate()
 
@@ -1322,7 +1356,7 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 
 
 
-	SetWindowCursor (  GetControlHandle('br_grid' , cActiveJan)    , IDC_WAIT )
+	//SetWindowCursor (  GetControlHandle('br_grid' , cActiveJan)    , IDC_WAIT )
 
 
 //OWNERDRAW
@@ -1953,7 +1987,7 @@ FUNCTION LabelEventH4(aLabel)
 	End If
 
 	If nMsg == WM_MOUSEMOVE
-		CursorHand()
+		//CursorHand()
 
 		SetProperty(cForm, cControl, "BACKCOLOR", CORSEL)
 		SetProperty(cForm, cControl, "BACKCOLOR", {4,66,81})
@@ -2215,7 +2249,7 @@ Function Fx1( cTexto )
 		If (cTexto1 = 'Bloquear')
 			
 
-			SetWaitCursor()
+		//	SetWaitCursor()
 			lBloqx := .t.
 			If xBloquear( aCli[1] , 'Inativo' )
 				nReg1 := Len(OpenReg( ''  , ,   1 ))
@@ -2225,7 +2259,7 @@ Function Fx1( cTexto )
 
 		If (cTexto1 = 'Desbloquear')
 		
-			SetWaitCursor()
+			//SetWaitCursor()
 			lBloqx := .t.
 			If xBloquear( aCli[1] , 'Ativo' )
 				nReg1 := Len(OpenReg( ''  , ,   1 ))
@@ -2290,7 +2324,7 @@ FUNCTION IntCli(  lSoConsulta )
 
 	Default lSoConsulta := .f.
 
-	SetWindowCursor (  GetControlHandle('br_grid' , cActiveJan)    , IDC_WAIT )
+	//SetWindowCursor (  GetControlHandle('br_grid' , cActiveJan)    , IDC_WAIT )
 
 
 	SetProperty( cForm , "Width", nDeskTopWidth - 11)
@@ -2392,7 +2426,7 @@ FUNCTION IntCli(  lSoConsulta )
 	End If
 
 
-	SetWindowCursor (  GetControlHandle('br_grid' , cActiveJan)    , IDC_ARROW )
+	//SetWindowCursor (  GetControlHandle('br_grid' , cActiveJan)    , IDC_ARROW )
 
 	
 
@@ -3092,7 +3126,7 @@ FUNCTION LabelEventH2(aLabel)
 	CASE (WM_MOUSEMOVE)
 
 
-		CursorHand()
+		//CursorHand()
 
 		IF ! lTracking12
 
@@ -3326,7 +3360,6 @@ Function PutImagem(nColx , cTexto , cSeq1 )
 	nOrientation := BT_TEXT_NORMAL_ORIENTATION
 	BT_DrawText (hDC, 8, 4 , alltrim(cTexto) , "arial", 9, WHITE, WHITE, nTypeText, nAlingText, nOrientation)
 
-
 	BT_DeleteDC (BTstruct)
 
 
@@ -3391,8 +3424,13 @@ Function PutImagem(nColx , cTexto , cSeq1 )
 
 	End If
 
+	//SysWait(.1)
+
 	BT_HMGSetImage ("fSplit2", "Image_5",   hBitMap2, .t.)
-	bt_BitMapSaveFile( hBitMap2 , "e1.Bmp" )
+	
+
+
+	//bt_BitMapSaveFile( hBitMap2 , "e1.Bmp" )
 
 
 	// BT_DeleteDC ( hDc )
@@ -3951,6 +3989,15 @@ REturn
 											{
 											hb_retnl( (LONG) SetCursor(LoadCursor(0, IDC_HAND)) );
 												}
+
+
+												
+
+											HB_FUNC( CURSORESPERA )
+											{
+											hb_retnl( (LONG) SetCursor(LoadCursor(0, IDC_WAIT)) );
+												}
+
 
 
 											HB_FUNC( VALIDATERECTX )

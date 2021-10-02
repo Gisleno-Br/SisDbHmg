@@ -33,7 +33,6 @@ FUNCTION xInitFrm()
 
 
    
-   
 
 
    
@@ -64,6 +63,9 @@ FUNCTION xCadCli( lNew, cCodigo1 )
 
 
 // l1 := xrt1()
+
+
+
 
    PRIVATE cDiaName := 'fCadCli'
 
@@ -295,6 +297,8 @@ FUNCTION LoadCliente(  cCod )
       fCadCli .endereco. value := GetCampo( oRow, 'endereco' )
 
 
+
+
       fCadCli .lblSaldo. Value     := AllTrim( Transform(    GetCampo(oRow, 'Saldo' ), "@E 999,999,999.99"  ) )
       fCadCli .lblAcumulado. Value := AllTrim( Transform(    GetCampo(oRow, 'acumulado' ), "@E 999,999,999.99"  ) )
 
@@ -338,6 +342,10 @@ FUNCTION LoadCliente(  cCod )
       END IF
 
 
+
+      
+
+      
       fCadCli .CmbCidade. Value := AScan( GetCmbItens( 'fCadCli', 'cmbCidade'  ), AllTrim( GetCampo(oRow, 'Cidade' ) ) )
 
       fCadCli .CmbBairros. Value := AScan( GetCmbItens( 'fCadCli', 'cmbBairros'  ), AllTrim( GetCampo(oRow, 'Bairro' ) ) )
@@ -695,7 +703,7 @@ FUNCTION InpCadCli()
       IF ( cControl = 'ImgLupa' ) .OR. ( cControl = 'ImgEnd' )
 
          SetHandCursor( GetControlHandle( cControl, 'fCadCli' ), "Finger.cur" )
-         _SetToolTip( cControl, 'fCadCli', hb_ANSIToOEM( "Resgata Endereùo Baseado no CEP Informado." ) )
+         _SetToolTip( cControl, 'fCadCli', hb_ANSIToOEM( "Resgata EndereÁo Baseado no CEP Informado." ) )
 
 
       END IF
