@@ -342,6 +342,7 @@ FUNCTION GetConexao()
 
 RETURN ( oServer )
 
+
 FUNCTION xInit()
 
 
@@ -371,76 +372,63 @@ FUNCTION xInit()
 
 	Begin ini file cInifile
 
-	Get cIp Section "db" ENTRY "Ip"
-	Get cBanc1 Section "Db" ENTRY "Banco"
+		Get cIp Section "db" ENTRY "Ip"
+		Get cBanc1 Section "Db" ENTRY "Banco"
 
-	Get cUser1 Section "Db" ENTRY "User"
-	Get cSen1 Section "Db" ENTRY "Senha"
+		Get cUser1 Section "Db" ENTRY "User"
+		Get cSen1 Section "Db" ENTRY "Senha"
 
-End ini
+	End ini
 
-IF Empty(cIp)
-	MsgInfo( 'Arquivo DataBase.ini Comrropido  , Impossivel Continuar.' )
-	RELEASE Window ALL
-	QUIT
-END IF
+	IF Empty(cIp)
+		MsgInfo( 'Arquivo DataBase.ini Comrropido  , Impossivel Continuar.' )
+		RELEASE Window ALL
+		QUIT
+	END IF
 
-cServer := cIp
-cBanco  := cBanc1
-cUserDb := cUser1
-cPassDb := cSen1
+	cServer := cIp
+	cBanco  := cBanc1
+	cUserDb := cUser1
+	cPassDb := cSen1
 
-SysWait(.2)
-
-
-DO EVENTS
-
-SetProperty("fSplit4","fUserDb","Value",cBanco)
-SetProperty("fSplit4","fServerDb","Value",cServer)
-
-np1 := (nDesktopHeight - 81) - GetProperty("fSplit4","Height" )
-np2 := np1 - GetProperty("fSplit3","Height" )
-
-SetProperty("fSplit3","Row", np2 )
-SetProperty("fSplit4","Row", np1 )
-
-SetProperty("fSplit5","Row",nDesktopHeight - 80 )
-
-SetProperty("fSplit6","Row",61 )
-
-//np2 := np1 - GetProperty("fSplit3","Height" )
-SetProperty("fSplit6","Height", (np2 - 22) - GetProperty( "fSplit6","Row" ) )
-
-SetProperty("fSplit5","Width",nDesktopWidth - nLop)
-
-SetProperty("fSplit2","Width",nDesktopWidth - 50 )
-
-SetProperty("fSplit10","Height", GetProperty("fSplit2","Height" ) )
-
-SetProperty("fSplit10","Width", nDesktopWidth - 1232 )
-
-SetProperty("fSplit10","Col",  nDesktopWidth - 50)
-
-SetProperty('fSplit10', 'Image_1','Transparent', .t. )
+	SysWait(.2)
 
 
-SetProperty("fSplit10","Row", GetProperty("fSplit2","Row" )+23)
+	DO EVENTS
 
-ShowScrollBar( GetFormHandle( 'fSplit2' ), 0, .F. )
-ShowScrollBar( GetFormHandle( 'fSplit2' ), 1, .F. )
+	SetProperty("fSplit4","fUserDb","Value",cBanco)
+	SetProperty("fSplit4","fServerDb","Value",cServer)
+
+	np1 := (nDesktopHeight - 81) - GetProperty("fSplit4","Height" )
+	np2 := np1 - GetProperty("fSplit3","Height" )
+
+	SetProperty("fSplit3","Row", np2 )
+	SetProperty("fSplit4","Row", np1 )
+
+	SetProperty("fSplit5","Row",nDesktopHeight - 80 )
+
+	SetProperty("fSplit6","Row",61 )
+
+	//np2 := np1 - GetProperty("fSplit3","Height" )
+	SetProperty("fSplit6","Height", (np2 - 22) - GetProperty( "fSplit6","Row" ) )
+
+	SetProperty("fSplit5","Width",nDesktopWidth - nLop)
+
+	SetProperty("fSplit2","Width",nDesktopWidth - 50 )
+
+	SetProperty("fSplit10","Height", GetProperty("fSplit2","Height" ) )
+
+	SetProperty("fSplit10","Width", nDesktopWidth - 1232 )
+
+	SetProperty("fSplit10","Col",  nDesktopWidth - 50)
+
+	SetProperty('fSplit10', 'Image_1','Transparent', .t. )
 
 
-// SysWait(10)
+	SetProperty("fSplit10","Row", GetProperty("fSplit2","Row" )+23)
 
-
-//DoMethod('fSplit10','Show')
-
-//SetWindowTheme(  GetFormHandle('Main') , 0,0)
-
-//SendMessage(aOpcoes[1][2] ,WM_MOUSEMOVE , 0,0)
-
-//SysWait(.3)
-//DoMethod('fSplit6' ,  aOpcoes[1][1]  , 'SetFocus')
+	ShowScrollBar( GetFormHandle( 'fSplit2' ), 0, .F. )
+	ShowScrollBar( GetFormHandle( 'fSplit2' ), 1, .F. )
 
 
 
@@ -448,33 +436,30 @@ RETURN
 
 PROCEDURE Proc_ON_P1(wJanela)
 
-LOCAL Width  := BT_ClientAreaWidth  ( ThisWindow.name )
-LOCAL Height := BT_ClientAreaHeight ( ThisWindow.name )
-LOCAL hDC, BTstruct
+	LOCAL Width  := BT_ClientAreaWidth  ( ThisWindow.name )
+	LOCAL Height := BT_ClientAreaHeight ( ThisWindow.name )
+	LOCAL hDC, BTstruct
 
-If hBitMap != 0
+	If hBitMap != 0
+
+		If wJanela = 'fSplit3'
+			DrawTransp(wJanela , hBitMap4)			
+		End If
+
+		If wJanela = 'fSplit4'
+			DrawTransp(wJanela , hBitMap5)
+		End If
 
 
-	If wJanela = 'fSplit3'
-		DrawTransp(wJanela , hBitMap4)
-		//Domethod("Main" , "Release" )
+		Return
+
 	End If
 
-	If wJanela = 'fSplit4'
-		DrawTransp(wJanela , hBitMap5)
-	End If
+	hDC = BT_CreateDC ( ThisWindow.name, BT_HDC_INVALIDCLIENTAREA, @BTstruct )
 
+	BT_DrawGradientFillVertical ( hDC, 0,       0, Width, 15  , { 235, 235, 235 }, {235,235,235}  )
 
-Return
-
-End If
-
-hDC = BT_CreateDC ( ThisWindow.name, BT_HDC_INVALIDCLIENTAREA, @BTstruct )
-
-
-BT_DrawGradientFillVertical ( hDC, 0,       0, Width, 15  , { 235, 235, 235 }, {235,235,235}  )
-
-BT_DeleteDC ( BTstruct )
+	BT_DeleteDC ( BTstruct )
 
 REturn
 

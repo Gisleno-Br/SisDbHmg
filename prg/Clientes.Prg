@@ -82,7 +82,7 @@ ANNOUNCE RDDSYS
 
 STATIC nIndexEvent := 1
 
-//descriÁ„o
+//descriÔøΩÔøΩo
 
 Define Window Main
 
@@ -117,9 +117,6 @@ FUNCTION CadCli()
 		{'3-Geral4' , { || msginfo('ok4') } },;
 		{'3-Geral' , { || msginfo('ok5') } } }
 
-
-
-		
 
 
 	LOCAL aTam    := GetCamposInf( wCad, 'TAM' )
@@ -663,9 +660,8 @@ Function ProcFiltro( cTab1 , lEfect )
 
 	//msginfo(cLblSelected)
 
-	If (lOpcaoAberta)
-		//DoMethod(cAuxName , 'Hide' )
-		yAviso("N„o Sera possivel Executar Filtros com a Tela de opÁıes Ativa." , .f.)
+	If (lOpcaoAberta)		
+		yAviso("N„o Sera possivel Executar Filtros com a Tela de OpÁıes Ativa." , .f.)
 		Return
 	End If
 
@@ -673,19 +669,10 @@ Function ProcFiltro( cTab1 , lEfect )
 	If (cCapt = "Limpar Filtro" )
 		aLinhas := OpenReg( ''  , ,   1 )
 		OBTN_Caption(cAuxName   , aButtons[4][5]  , "Filtrar" )
-		//EventProcessAllHookMessage(nEven1 := (EventCreate({ || LabelEventBrow() }, GetControlHandle( 'br_grid' , cFormPrin )  ) )  , .T.)
-
-		//Bt_Clientareainvalidateall(cActiveJan)
-
+	
 		
 		BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , Nil , .t. )
 		SysWait(.2)
-
-		//lInvalid := .f.
-		//xInvalidate()
-
-		//Bt_Clientareainvalidateall(cFormPrin)
-
 
 		Return
 
@@ -699,7 +686,7 @@ Function ProcFiltro( cTab1 , lEfect )
 
 	cFiltros := LoadFitros(cTab1 )
 
-	EfectEnd(  cActiveJan ,  aMx)
+//	EfectEnd(  cActiveJan ,  aMx)
 
 	
 	If _IsWindowDefined('fSplit2')	
@@ -707,22 +694,88 @@ Function ProcFiltro( cTab1 , lEfect )
 
 		If !Empty(cFiltros)
 
-			nHan1 := aButtons[4][5]
+
+    		nHan1 := aButtons[4][5]
+
+			
+			hBitmap := 0
+			hBitmap2 := 0
+			hBitmap3 := 0
+			hBitmap4 := 0
+			hBitmap5 := 0
+
+			hBitmap6 := 0
+
+			Flag_AlphaBlend_Effect := .f.
+			lAtivaBlack := .f.				
+				
+			If _isWindowDefined( 'fSplit2' )					
+			
+			    ShowButTop( .t. )			
+				SetWindowControlsVisible(  'fSplit2' , .t. )		
+				
+                BT_ClientAreaInvalidateAll ('fSplit2')
+
+						
+
+				
+				If _isWindowDefined( 'fTop1' + Right(cActiveJan,5) )
+					DoMethod( 'fTop1' + Right(cActiveJan,5) , 'Show')			
+				End If
+
+				//SysWait(.1)
+
+			End If		
+
+			
+			//If _isControlDefined('br_Grid' , cActiveJan )		
+			//	BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan  )) , Nil , .t. )
+			//	SysWait(.1)
+			//End If 	//
+	
 
 			aLinhas := OpenReg(cFiltros  , ,   1 )
+
+			
+			/*
+			If _isControlDefined('br_Grid' , cActiveJan )		
+				BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan  )) , Nil , .t. )
+				SysWait(.1)
+			End If 	
+			*/
+
+			
+			Syswait(.1)
+			lInvalid := .f.
+
+
+			
+			If _isControlDefined(    'br_grid', cActiveJan   )
+				PostMessage(   GetControlHandle( 'br_grid', cActiveJan ) , WM_LBUTTONUP,0,0)
+			End If 
+
+
+
+
 			OBTN_Caption(cAuxName   , nHan1  , "Limpar Filtro" )
 			//EventProcessAllHookMessage(nEven1 := (EventCreate({ || LabelEventBrow() }, GetControlHandle( 'br_grid' , cFormPrin )  ) )  , .T.)
+
+		Else 
+			
+			EfectEnd(  cActiveJan ,  aMx) 
+
+			
+			If _isControlDefined('br_Grid' , cActiveJan )		
+				BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan  )) , Nil , .t. )
+				SysWait(.1)
+			End If 	
+	
 
 		End If
 
 	End If 
 
 
-	If _isControlDefined('br_Grid' , cActiveJan )		
-		BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan  )) , Nil , .t. )
-		SysWait(.1)
-	End If 	
-	
 
 	//ResButSel()
 
@@ -998,7 +1051,6 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 	//PRIVATE aCamposDb := aCampos
 
 
-
 	Local cSqlx1 := ''
 	Local n1 := 1
 	Local aCampos := GetCamposDic( cTabela, 'S' , .t. , .t. )
@@ -1120,7 +1172,7 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 
 
 	If (oQuery:Lastrec()  == 0 )
-		yAviso( 'Este Cadastro N„o Possui Registros' , .f. )	    
+		yAviso( 'Este Cadastro NÔøΩo Possui Registros' , .f. )	    
 		//Return 	
 	End If 
 
@@ -2346,8 +2398,6 @@ FUNCTION IntCli(  lSoConsulta )
 			nLargura:= Iif(  nx1  != Len( aButtons ) , 80,110)
 
 			If !(Alltrim(aButtons[ nx1 ][ 1 ]) $ cButVerde)
-				//cFontName := '
-				
 				OBTN_Create( cForm, nB1, hb_OemToansi(aButtons[ nx1 ][ 1 ])  ,  19 , nCol,  nLargura,  24,  .T., .T., .T.,  8 , aBtnColor, aBtnFont )
 			Else
 				OBTN_Create( cForm, nB1, hb_Utf8ToStr(aButtons[ nx1 ][ 1 ])   ,  19, nCol,  nLargura,  24,  .T., .T., .T.,  8 ,  aBtnG1  , aBtnFont )
@@ -2739,14 +2789,14 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 			END IF
 
-			*//Exclusùo
+			*//ExclusÔøΩo
 			IF nId == 5459
 
 
 				//PushButton( cFormPrin  , nid )
 				PushButton( cFormPrin  , nId )
 
-				If Confirmaviso("Confirma Exclus„o dessa Consulta ? " ,cFormPrin )
+				If Confirmaviso("Confirma ExclusÔøΩo dessa Consulta ? " ,cFormPrin )
 
 
 					ExcluiConsulta(nIdConsulta)
@@ -2898,7 +2948,7 @@ Function LimpaLabels( lDest )
 
 Return
 
-  // Cria Sub menu na opÁ„o Consultas.
+  // Cria Sub menu na opÔøΩÔøΩo Consultas.
 
 Function CrieSubMenu(aSub1)
 
@@ -3181,7 +3231,7 @@ Function OrdeneCol( nIndice )
 	nColOrder := nIndice
 
 	If lOpcaoAberta
-		yAviso("OpÁ„o n„oo Disponivel no Momento.")
+		yAviso("OpÔøΩÔøΩo nÔøΩoo Disponivel no Momento.")
 		Return
 	End If
 

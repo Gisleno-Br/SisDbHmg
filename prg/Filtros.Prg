@@ -100,13 +100,8 @@ FUNCTION LoadFitros( cTabela1 )
    HMG_ChangeWindowStyle( fFiltrosCad.Handle, NIL, WS_EX_STATICEDGE, .T., .T. )
 
    ON KEY ESCAPE of fFiltrosCad action fFiltrosCad.Release()
-
-   // EventProcessAllHookMessage(nIndexFiltro   := EventCreate (  { ||   EventConsu()  }  ) , .t.)
-
-   // If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( 'EventConsu'  ) )  )  = 0
    InstallEventHandler(  'EventConsu' )
-   // End If
-
+   
 
    activate Window fFiltrosCad
 
@@ -146,6 +141,7 @@ FUNCTION xExclFiltro()
 
       oServer:Destroy()
       oQuery:Destroy()
+      
 
       // fFiltrosCad.GridFiltro.Delete(a1)
 
