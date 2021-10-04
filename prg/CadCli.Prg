@@ -37,8 +37,6 @@ FUNCTION xInitFrm()
 
 
 
-
-
    ON KEY F5 OF fCadCli ACTION xPesqCep()
 
    // RefreshAll('fCadCli')

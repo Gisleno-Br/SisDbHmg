@@ -641,6 +641,72 @@ Function HideSplits()
 
 Return
 
+
+Function xControls( lFilter , nQReg )
+
+
+
+	Default lFilter := .t. 	
+  //SysWait(.2)	
+	SetProperty(  cActiveJan , 'Lbltitulo', 'Visible' , .t. )
+	SetProperty(  cActiveJan , 'Lbltitulo', 'Enabled' , .t. )
+
+	If !lFilter
+
+		SetProperty(  cActiveJan , 'Label_1', 'Visible' , .t. )
+		SetProperty(  cActiveJan , 'Label_1', 'Enabled' , .t. )
+				
+		DoMethod( cActiveJan , 'Label_1' , 'Show')
+		DoMethod( cActiveJan , 'LblQtReg' , 'Show')		
+		
+		DoMethod( cActiveJan , 'Image_12' , 'Show')  
+
+
+
+	End If 
+
+	DoMethod( cActiveJan , 'lbltitulo' , 'Show')
+	DoMethod( cActiveJan , 'Image_2196' , 'Show')
+	//DoMethod( cActiveJan , 'LblQtReg' , 'Show')
+
+
+	If (lFilter)
+
+
+		If !_IsControlDefined(   'lblTitulo2' , cActiveJan)
+
+				DEFINE LABEL Lbltitulo2
+					PARENT &cActiveJan
+					ROW    GetProperty(  cActiveJan , 'LblQtReg', 'Row') - 5
+					COL    75
+					WIDTH  185
+					HEIGHT 24
+					VALUE "[Filtro Aplicado] " + Alltrim(Str(nQReg)) + " Registros. "
+					FONTNAME "Arial Narrow"
+					FONTSIZE 10
+					TOOLTIP ""
+					FONTBOLD .F.
+					FONTITALIC .F.
+					FONTUNDERLINE .F.
+					FONTSTRIKEOUT .F.
+					HELPID Nil
+					VISIBLE .T.
+					TRANSPARENT .T.
+					ACTION Nil
+					AUTOSIZE .F.
+					BACKCOLOR Nil 
+					FONTCOLOR GetProperty(  cActiveJan , 'LblQtReg', 'BackColor')
+				END LABEL  
+
+		End If 
+
+		DoMethod( cActiveJan , 'Lbltitulo2' , 'Show')
+
+
+	End If 
+
+Return 
+
 Function ProcFiltro( cTab1 , lEfect )
 
 	Local cFiltros := ''
@@ -666,13 +732,22 @@ Function ProcFiltro( cTab1 , lEfect )
 	End If
 
 
+
 	If (cCapt = "Limpar Filtro" )
 		aLinhas := OpenReg( ''  , ,   1 )
 		OBTN_Caption(cAuxName   , aButtons[4][5]  , "Filtrar" )
-	
+
 		
 		BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , Nil , .t. )
-		SysWait(.2)
+		SysWait(.1)
+		
+		xControls(  .f. , 34)
+			
+		If _IsControlDefined(   'lblTitulo2' , cActiveJan)
+			_ReleaseControl(  'lblTitulo2' , cActiveJan )
+		End If 		
+	
+		
 
 		Return
 
@@ -682,14 +757,12 @@ Function ProcFiltro( cTab1 , lEfect )
 
 	
 	aMx := yEfect(  cActiveJan , aMx  )		
-
-
 	cFiltros := LoadFitros(cTab1 )
 
-//	EfectEnd(  cActiveJan ,  aMx)
 
 	
 	If _IsWindowDefined('fSplit2')	
+
 		cTexto := GetProperty('fSplit2' ,cLblSelected , 'Value')
 
 		If !Empty(cFiltros)
@@ -711,59 +784,40 @@ Function ProcFiltro( cTab1 , lEfect )
 				
 			If _isWindowDefined( 'fSplit2' )					
 			
-			    ShowButTop( .t. )			
-				SetWindowControlsVisible(  'fSplit2' , .t. )		
-				
+			    ShowButTop( .t. )											
                 BT_ClientAreaInvalidateAll ('fSplit2')
-
-						
-
 				
 				If _isWindowDefined( 'fTop1' + Right(cActiveJan,5) )
 					DoMethod( 'fTop1' + Right(cActiveJan,5) , 'Show')			
 				End If
 
-				//SysWait(.1)
+				BT_ClientAreaInvalidateAll (cActiveJan)
 
-			End If		
+			End If				
+						
+			
+			lInvalid := .f.
 
 			
-			//If _isControlDefined('br_Grid' , cActiveJan )		
-			//	BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan  )) , Nil , .t. )
-			//	SysWait(.1)
-			//End If 	//
-	
+			xControls( , 34)
 
 			aLinhas := OpenReg(cFiltros  , ,   1 )
 
-			
-			/*
-			If _isControlDefined('br_Grid' , cActiveJan )		
-				BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan  )) , Nil , .t. )
-				SysWait(.1)
-			End If 	
-			*/
-
-			
-			Syswait(.1)
-			lInvalid := .f.
-
-
+			If _IsControlDefined(   'lblTitulo2' , cActiveJan)
+				SetProperty(  cActiveJan , 'LblTitulo2' , 'Value' , "[Filtro Aplicado] " + Alltrim(Str(  Len(aLinhas)  )) + " Registros.")
+			End If 
 			
 			If _isControlDefined(    'br_grid', cActiveJan   )
 				PostMessage(   GetControlHandle( 'br_grid', cActiveJan ) , WM_LBUTTONUP,0,0)
-			End If 
-
-
-
+			End If 			
 
 			OBTN_Caption(cAuxName   , nHan1  , "Limpar Filtro" )
-			//EventProcessAllHookMessage(nEven1 := (EventCreate({ || LabelEventBrow() }, GetControlHandle( 'br_grid' , cFormPrin )  ) )  , .T.)
+
 
 		Else 
 			
+			
 			EfectEnd(  cActiveJan ,  aMx) 
-
 			
 			If _isControlDefined('br_Grid' , cActiveJan )		
 				BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan  )) , Nil , .t. )
@@ -774,23 +828,6 @@ Function ProcFiltro( cTab1 , lEfect )
 		End If
 
 	End If 
-
-
-
-	//ResButSel()
-
-	//SysWait(.2)
-	
-	//ShowButTop( .t. )
-
-	//_ShowWindow('fSplit2')
-
-	//SysWait(.1)
-
-
-	
-
-	//Msginfo('ok')
 
 
 
@@ -877,6 +914,9 @@ Function InitTela(  lIni1  , nColz1)
 Return
 
 
+
+
+
 Function xInvalidate()
 
 		If (_isControlDefined(      'br_grid', cActiveJan  )) .And. (!lInvalid)
@@ -884,7 +924,6 @@ Function xInvalidate()
 			lInvalid := .t.
 			//msginfo('ok')
 		End If 	
-
 
 
 Return 		
@@ -1467,8 +1506,9 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 	End If
 
 
-	SetProperty( cActiveJan , 'Label_1' , 'Row' ,  nGridHeight+61  )
-	SetProperty( cActiveJan , 'LblQtReg' , 'Row' , nGridHeight+61  )
+
+	SetProperty( cActiveJan , 'Label_1' , 'Row' ,  nGridHeight+57  )
+	SetProperty( cActiveJan , 'LblQtReg' , 'Row' , nGridHeight+57  )
 
 
 	SetProperty( cActiveJan , 'Image_12' , 'Row' , nGridHeight+58  )
@@ -1476,11 +1516,14 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 
 
 
-	SetProperty( cActiveJan , 'Lbltitulo' , 'Row' , nGridHeight+61  )
+
+
+	SetProperty( cActiveJan , 'Lbltitulo' , 'Row' , nGridHeight+57  )
+
 
 	SetProperty( cActiveJan , 'Lbltitulo' , 'Value' , Alltrim (cTitle)  )
 
-	SetProperty( cActiveJan , 'LblUser1' , 'Row' , nGridHeight+61  )
+	SetProperty( cActiveJan , 'LblUser1' , 'Row' , nGridHeight+57  )
 	SetProperty( cActiveJan , 'LblUser1' , 'Value' , Alltrim (cUserName)  )
 
 	SetProperty( cActiveJan , 'lblQtReg' , 'Value' , Alltrim( Transform(   Len(aItens) , '@E 999,999,999'   ))         )
@@ -1488,12 +1531,9 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 	If !Empty(cFiltro1)
 		SetProperty( cActiveJan , 'Lbltitulo' , 'Value' , Alltrim(cTabela) + " " + Alltrim(cFiltro1) )
 	End If
-
 	
 
 	SetProperty(cActiveJan , cGridName , "Value" , {  1 ,2} )	
-
-
 
 
 Return aItens

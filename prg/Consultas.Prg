@@ -2539,7 +2539,7 @@ dbGoTop()
 
 If ( RecCount() == 0 )
 
-	Yaviso( "Consulta Nï¿½o Retornou Registros." , .t. )
+	Yaviso( "Consulta Não Retornou Registros." , .t. )
 	lOk1 := .f.
 	//Return .f.
 
