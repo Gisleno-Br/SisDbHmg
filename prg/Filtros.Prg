@@ -7,6 +7,7 @@ REQUEST HB_CODEPAGE_PT850
 
 #define QUEBRA Chr(13)+Chr(10)
 
+DECLARE WINDOW fFiltro
 
 
 
@@ -29,6 +30,8 @@ FUNCTION LoadFitros( cTabela1 )
    PRIVATE aCampos1 := {}
 
    PRIVATE cFiltrox1 := ''
+
+   
 
    SET LANGUAGE TO PORTUGUESE
    SET CODEPAGE TO PORTUGUESE
@@ -66,9 +69,11 @@ FUNCTION LoadFitros( cTabela1 )
    OBTN_Create( cJanx, 1595, "&Excluir", 290, 152,  62,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
    OBTN_Font( cJanx, 1595,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
-   AAdd( aButx1, {  1599,  OBTN_Handle( cJanx, 1599 ),   {||   _FechaJan( cJanx )   },  cJanx   } )
+   AAdd( aButx1, {  1599,  OBTN_Handle( cJanx, 1599 ),   {||    fFechaF()  },  cJanx   } )
 
    AAdd( aButx1, {  1597,  OBTN_Handle( cJanx, 1597 ),   {||  PushButton( cJanx, 1597 ), SysWait( .1 ), iif( xNovoFilt(), xLoadFiltros(cTabx ), )  },  cJanx   } )
+
+   //AAdd( aButx1, {  1597,  OBTN_Handle( cJanx, 1597 ),   {||  Iif( xNovoFilt(), xLoadFiltros(cTabx ), )  } ,  cJanx   } )
 
    AAdd( aButx1, {  1595,  OBTN_Handle( cJanx, 1595 ),   {|| PushButton( cJanx, 1595 ),SysWait( .1 ),  xExclFiltro()   },  cJanx   } )
 
@@ -99,7 +104,7 @@ FUNCTION LoadFitros( cTabela1 )
    HMG_ChangeWindowStyle( fFiltrosCad.Handle, WS_BORDER, NIL, .F., .T. )
    HMG_ChangeWindowStyle( fFiltrosCad.Handle, NIL, WS_EX_STATICEDGE, .T., .T. )
 
-   ON KEY ESCAPE of fFiltrosCad action fFiltrosCad.Release()
+   ON KEY ESCAPE of fFiltrosCad ACTION fFiltrosCad.Release()
    InstallEventHandler(  'EventConsu' )
    
 
@@ -109,6 +114,15 @@ FUNCTION LoadFitros( cTabela1 )
    RemoveHandler( 'EventConsu' )
 
 RETURN cFiltrox1
+
+
+Function fFechaF()
+
+  fFiltrosCad.Release()  
+  //msginfo('omk')   
+
+
+Return 
 
 FUNCTION SetFiltOk()
 
@@ -190,14 +204,18 @@ RETURN
 
 FUNCTION xChgIt()
 
-   IF fFiltrosCad .GridFiltro. Value > 0
+   Local cJanx := 'fFiltrosCad'
+
+   If fFiltrosCad .GridFiltro. Value > 0
       OBTN_Enable( cJanx, 1595, .T. )
       OBTN_Enable( cJanx, 1596, .T. )
 
       OBTN_Enable( cJanx, 1598, .T. )
 
       // msginfo('ok')
-   END IF
+   End If
+
+
 
 RETURN
 
@@ -208,19 +226,26 @@ FUNCTION xLoadFiltros( cTabela1 )
    LOCAL oRow
    LOCAL oQuery  := oServer:Query( cSqlx1 )
 
+   
+	If oServer:NetErr()         
+       oServer:Destroy()
+       oQuery:Destroy()
+       MsGInfo( "Error executing Query !" + QUEBRA + cSqlx1 + " : " + QUEBRA + oServer:Error() )
+       Return .f. 
+   End If 
+
+
    fFiltrosCad .Gridfiltro. Deleteallitems()
 
    FOR n1 := 1 TO oQuery:LastRec()
       oRow := oQuery:GetRow( n1 )
 
-      Domethod( 'fFiltroscad', 'GridFiltro', 'addItem', { AllTrim( Str(GetCampo(oRow,'IdFiltros' ) ) ),   GetCampo( oRow,'descricao' ), GetCampo( oRow,'filtro' ) } )
+      Domethod( 'fFiltroscad', 'GridFiltro', 'addItem', { AllTrim( Str(GetCampo(oRow,'IdFiltros' ) ) ),   GetCampo( oRow,'descricao' )     , GetCampo( oRow,'filtro' ) } )
    NEXT
 
    fFiltrosCad .LblQtFiltro. Value := AllTrim( Str( oQuery:LastRec()    ) )
 
-   IF ( oQuery:LastRec() > 0 )
-      // OBTN_Enable( cJanx , 1595, .t. )
-      // OBTN_Enable( cJanx , 1596, .t. )
+   IF ( oQuery:LastRec() > 0 )     
       Domethod( 'fFiltroscad', 'GridFiltro', 'SetFocus' )
    END IF
 
@@ -245,42 +270,62 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
    LOCAL oQuery
    LOCAL oRow
    LOCAL n1 := 1
-   LOCAL aCabec  := GetCamposDic( cTabela, ' ', .F. )
+   LOCAL aCabec  := GetCamposDic( cTabela, ' ', .F. , .f. )
    LOCAL cSqlx1
 
    LOCAL nIdFlt := nIdFiltro
+
 
    // Local oServer
    // Local oQuery
 
    DEFAULT lNew1 := .T.
 
+
+
    PRIVATE lNovoFilt := lNew1
+
+   
+	Private aButFilt := {}
+
+
+   
 
    Load Window fFiltro
 
    Center Window fFiltro
 
-   // fFiltro.chkOrdem.visible := .f.
+   fFiltro.chkOrdem.visible := .f.
 
    fFiltro .Lbltabela. value := cTabela
 
-   cJanx := cJan
+      
+   //cJanx := cJan
 
-   ON KEY ESCAPE OF fFiltro action ( _FechaJan( cJanx ), cJanx := 'fFiltrosCad',  refreshall( 'fFiltrosCad' ), Domethod( 'fFiltrosCad','SetFocus' ) )
+   
+   ON KEY ESCAPE OF fFiltro Action (SysWait(.2) ,  _FechaJan( 'fFiltro' )  , SysWait(.2) )
+   //, cJanx := 'fFiltrosCad',  refreshall( 'fFiltrosCad' ), Domethod( 'fFiltrosCad','SetFocus' ) )
+
 
    PRIVATE aBtx := {}
+   
+   //HB_SETCODEPAGE("UTF8")
+   //HB_SETCODEPAGE("PT850")
 
-   WHILE n1 <= Len( aCabec )
 
-      IF !Empty( AllTrim( aCabec[ n1 ] ) )
-         fFiltro .cmbCampo. Additem( hb_ANSIToOEM( aCabec[ n1 ] ) )
-         fFiltro .cmbOrdem. Additem( hb_ANSIToOEM( aCabec[ n1 ] ) )
-         AAdd( aCampos1, hb_ANSIToOEM( aCabec[ n1 ] ) )
-      END IF
+   //Hb_AnsiToOem
+
+   While n1 <= Len( aCabec )
+
+      If  !Empty( AllTrim( aCabec[ n1 ] ) )
+         fFiltro .cmbCampo. Additem(  (aCabec[ n1 ]) )
+         fFiltro .cmbOrdem. Additem(  (aCabec[ n1 ])  )
+         AAdd( aCampos1, ( aCabec[ n1 ] ) )
+      End If
+
       n1++
 
-   ENDDO
+   Enddo
 
    IF !lNew1
 
@@ -297,9 +342,9 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
          fFiltro .EdtFiltro. value := GetCampo( oRow, 'filtro' )
 
          IF !Empty( GetCampo( oRow, 'ordem' ) )
-
-            fFiltro .cmbOrdem. value := AScan( aCampos1,  AllTrim( GetCampo(oRow, 'ordem' ) ) )
+             fFiltro .cmbOrdem. value := AScan( aCampos1,  AllTrim( GetCampo(oRow, 'ordem' ) ) )
          END IF
+
 
       END IF
 
@@ -308,7 +353,10 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
       oSErver:Destroy()
 
 
+
    END IF
+
+   //cJan := cFiltroDlg
 
    OBTN_Create( cJan,  9598, "Gravar Filtro", 345, 255,  70,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
    OBTN_Font( cJan, 9598,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
@@ -337,71 +385,126 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
    OBTN_Font( cJan, 9481,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
 
+   AAdd( aButFilt , { 9598,  OBTN_Handle( cJan , 9598 ),   {||  ( PushButton( cJan  , 9598 ) , Iif( lOk := (SaveFiltro( lNew1  , nIdFlt )) , (DoMethod('fFiltro','Release'),DoMethod('fFiltrosCad','Release') ,ProcFiltro( cTabela )   ) ,    ) )  } ,  cJan   } )
+   //AAdd( aButFilt , {  9599, OBTN_Handle( cJan, 9599 ),   {||  ( _ReleaseWindow(cJanx ), cJanx := 'fFiltrosCad',  refreshall('fFiltrosCad' ), Domethod('fFiltrosCad','SetFocus' ) )  },  cJan   } )
+
+   //AAdd( aButx1, { 9598,  OBTN_Handle( cJan, 9598 ),   {||  ( PushButton( cJan, 9598 ), iif( lOk := (SaveFiltro( lNew1, nIdFlt ) ),  (_FechaJan( 'fFiltro' ), _FechaJan('fFiltrosCad' ),ProcFiltro( cTabela, .F. )   ),    ) )  },  cJan   } )
+
+   //AAdd( aButx1, {  9599, OBTN_Handle( cJan, 9599 ),   {||  ( _FechaJan(cJanx ), cJanx := 'fFiltrosCad',  refreshall('fFiltrosCad' ), Domethod('fFiltrosCad','SetFocus' ) )  },  cJan   } )
+
+   AAdd( aButx1, {  9599, OBTN_Handle( cJan, 9599 ),   {||  (  sysWait(.1) ,  _FechaJan( 'fFiltro' )   , sysWait(.1) )   },  cJan   } )
+
+
+   //Release
 
 
 
-   // AAdd( aButx1, { 9598,  OBTN_Handle( cJan , 9598 ),   {||  ( PushButton( cJan  , 9598 ) , Iif( lOk := (SaveFiltro( lNew1  , nIdFlt )) , (DoMethod('fFiltro','Release'),DoMethod('fFiltrosCad','Release') ,ProcFiltro( cTabela )   ) ,    ) )  } ,  cJan   } )
+   
+   AAdd( aButFilt  , {  959,  OBTN_Handle( cJan, 959 ),   {|| ( PushButton( cJan, 959 ), FiltroAdx()   )  },  cJan   } )
+   AAdd( aButFilt  , {  958,  OBTN_Handle( cJan, 958 ),   {||  ( PushButton( cJan, 958 ),  LimpaFilx() )  },  cJan   } )
 
-   AAdd( aButx1, { 9598,  OBTN_Handle( cJan, 9598 ),   {||  ( PushButton( cJan, 9598 ), iif( lOk := (SaveFiltro( lNew1, nIdFlt ) ),  (_FechaJan( 'fFiltro' ), _FechaJan('fFiltrosCad' ),ProcFiltro( cTabela, .F. )   ),    ) )  },  cJan   } )
-   AAdd( aButx1, {  9599, OBTN_Handle( cJan, 9599 ),   {||  ( _FechaJan(cJanx ), cJanx := 'fFiltrosCad',  refreshall('fFiltrosCad' ), Domethod('fFiltrosCad','SetFocus' ) )  },  cJan   } )
-
-   AAdd( aButx1, {  959,  OBTN_Handle( cJan, 959 ),   {|| ( PushButton( cJan, 959 ), FiltroAdx()   )  },  cJan   } )
-   AAdd( aButx1, {  958,  OBTN_Handle( cJan, 958 ),   {||  ( PushButton( cJan, 958 ),  LimpaFilx() )  },  cJan   } )
-
-   AAdd( aButx1, {  9291,  OBTN_Handle( cJan, 9291 ),   {||  PushButton( cJan, 9291 ),  UpdFiltrox( '(' )   },  cJan   } )
-   AAdd( aButx1, {  9281,  OBTN_Handle( cJan, 9281 ),   {||  PushButton( cJan, 9281 ),  UpdFiltrox( ')' )   },  cJan   } )
+   AAdd( aButFilt , {  9291,  OBTN_Handle( cJan, 9291 ),   {||  PushButton( cJan, 9291 ),  UpdFiltrox( '(' )   },  cJan   } )
+   AAdd( aButFilt , {  9281,  OBTN_Handle( cJan, 9281 ),   {||  PushButton( cJan, 9281 ),  UpdFiltrox( ')' )   },  cJan   } )
 
 
-   AAdd( aButx1, {  9541,  OBTN_Handle( cJan, 9541 ),   {||  PushButton( cJan, 9541 ), sysWait( .5 ), UpdFiltrox( 'And' )   },  cJan   } )
-   AAdd( aButx1, {  9481,  OBTN_Handle( cJan, 9481 ),   {||  PushButton( cJan, 9481 ), sysWait( .5 ), UpdFiltrox( 'Or' )   },  cJan   } )
+   AAdd( aButFilt , {  9541,  OBTN_Handle( cJan, 9541 ),   {||  PushButton( cJan, 9541 ), sysWait( .2 ), UpdFiltrox( 'And' )   },  cJan   } )
+   AAdd( aButFilt , {  9481,  OBTN_Handle( cJan, 9481 ),   {||  PushButton( cJan, 9481 ), sysWait( .2 ), UpdFiltrox( 'Or' )   },  cJan   } )
+
+   
+
+    
+   EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButFilt, cJan ) },    OBTN_Handle( cJan, 9598 )   ), .T. )
+   EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButFilt, cJan ) },    OBTN_Handle( cJan, 9599 )   ), .T. )
+
+   EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButFilt, cJan ) },    OBTN_Handle( cJan, 959 )   ), .T. )
+   EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButFilt, cJan ) },    OBTN_Handle( cJan, 958 )   ), .T. )
+
+   EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButFilt, cJan ) },    OBTN_Handle( cJan, 9291 )   ), .T. )
+   EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButFilt, cJan ) },    OBTN_Handle( cJan, 9281 )   ), .T. )
+
+   EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButFilt, cJan ) },    OBTN_Handle( cJan, 9541 )   ), .T. )
+   EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButFilt, cJan ) },    OBTN_Handle( cJan, 9481 )   ), .T. )
 
 
-   EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, cJan ) },    OBTN_Handle( cJan, 9598 )   ), .T. )
-   EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, cJan ) },    OBTN_Handle( cJan, 9599 )   ), .T. )
+   OBTN_Enable( cJan, 9598, .F. )
+   OBTN_Enable( cJan, 959, .F. )
 
-   EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, cJan ) },    OBTN_Handle( cJan, 959 )   ), .T. )
-   EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, cJan ) },    OBTN_Handle( cJan, 958 )   ), .T. )
-
-   EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, cJan ) },    OBTN_Handle( cJan, 9291 )   ), .T. )
-   EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, cJan ) },    OBTN_Handle( cJan, 9281 )   ), .T. )
-
-   EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, cJan ) },    OBTN_Handle( cJan, 9541 )   ), .T. )
-   EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, cJan ) },    OBTN_Handle( cJan, 9481 )   ), .T. )
-
-   OBTN_Enable( cjan, 9598, .F. )
-   OBTN_Enable( cjan, 959, .F. )
-
-   // EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, cJanx ) },    OBTN_Handle( cJanx, 1599 )   ), .T. )
-
+   
    HMG_ChangeWindowStyle( fFiltro.Handle, WS_BORDER, NIL, .F., .T. )
    HMG_ChangeWindowStyle( fFiltro.Handle, NIL, WS_EX_STATICEDGE, .T., .T. )
-   // HMG_ChangeWindowStyle( GetControlHandle( 'Titulo' , 'fFiltro')   , NIL, WS_EX_STATICEDGE , .T., .T.)
 
 
-
+   InstallEventHandler('EvFiltButton')
 
    Activate Window fFiltro
 
-RETURN lOk
+   RemoveHandler('EvFiltButton')
+
+   // DoMethod( cFiltroDlg , 'Show')
+
+
+Return lOk
+
+
+
+
+
+FUNCTION EvFiltButton( nHWnd, nMsg, nWParam, nLParam )
+
+   Local nId := 1
+
+
+   If nMsg == WM_DRAWITEM
+
+
+		nID := LoWord( nWParam )
+
+		If nID == IDOK
+			nID := GetDlgCtrlID( GetFocus() )
+		End If 
+
+		nI1 := AScan( aButFilt   , {| n| n[ 1 ] == nId } )
+
+		If nI1 > 0
+			OBTN_Draw( nHWnd,  nWParam, nLParam )
+		End If
+      
+
+
+	End If
+
+	If nMsg == 273
+
+		nID := LoWord( nWParam )
+
+		If nID == IDOK
+			nID := GetDlgCtrlID( GetFocus() )
+		End If 
+
+      nI1 := AScan( aButFilt, {| n | n[ 1 ] == nId } )
+
+      IF nI1 > 0
+         Eval(   aButFilt[ ni1 ][ 3 ] )
+      End If
+		
+
+	End If
+
+Return    
+
+
 
 
 FUNCTION UpdFiltrox( cCar1 )
 
    LOCAL c1 := AllTrim( GetProperty( "fFiltro","EdtFiltro","Value" ) )
 
-   // msginfo( cCar1 )
-
    RefreshAll( "fFiltro" )
 
    c1 := AllTrim( GetProperty( "fFiltro","EdtFiltro","Value" ) )
-   // msginfo( c1 )
+
 
    fFiltro .EdtFiltro. value := c1 + ' ' + cCar1 + ' '
-   // DoMethod("fFiltro","EdtFiltro","Refresh")
-
-   // SysWait(.2)
-
-   // msginfo( fFiltro.EdtFiltro.value  )
 
 RETURN
 

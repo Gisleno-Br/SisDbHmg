@@ -55,7 +55,8 @@ MEMVAR _HMG_SYSDATA
 
 
 
-DECLARE WINDOW fSplit6
+//DECLARE WINDOW fSplit6
+
 
 REQUEST HB_LANG_PT
 REQUEST HB_CODEPAGE_PT850
@@ -376,6 +377,8 @@ FUNCTION Main
 
 	Load Window Main
 
+
+
 	Main.Center
 
 
@@ -384,6 +387,9 @@ FUNCTION Main
 
 
 	Load Window fSplitSubMenu
+
+	//Load Window fFiltro
+
 
 
 	Private aRotinas := {}

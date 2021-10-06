@@ -141,7 +141,6 @@ FUNCTION CadCli()
 
 	private cButVerde := ".&Filtrar."
 
-	//Private nTotWidth := 0
 
 	Private nRowIni2 := 10
 
@@ -417,9 +416,14 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 		EnchMtrConsul( cTabelax )
 	End If
 
-	
-	
+		
 	//SetCursorOnControls( IDC_WAIT )
+
+	//CursosEspera()
+
+
+
+	Private cFiltroDlg := 'fFiltro' + Left(cActiveJan,5)
 
 	Load Window fClientes as &cFormPrin
 
@@ -595,32 +599,21 @@ Function xSetOpcao()
 		SetProperty(cFormPrin , 'Frame_1' , 'Visible' , .f. )
 		SetProperty(cFormPrin , 'Frame_2' , 'Visible' , .f. )
 
-
-		
 		
 		BT_ClientAreaInvalidateAll (cActiveJan)
 
 		
 		lInvalid := .f.
-		SysWait(.1)
+		//SysWait(.1)
 		xZeraHead()	
 
 
 
 
-		SysWait(.1)	
+
+		//SysWait(.1)	
 
 
-		
-
-		/*
-		
-
-		If _IsControlDefined('br_grid', cActiveJan )
-			SysWait(.1)
-			BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , Nil , .t. )
-		End If 
-		*/
 
 
 	End If
@@ -655,12 +648,26 @@ Function xControls( lFilter , nQReg )
 
 		SetProperty(  cActiveJan , 'Label_1', 'Visible' , .t. )
 		SetProperty(  cActiveJan , 'Label_1', 'Enabled' , .t. )
+
 				
 		DoMethod( cActiveJan , 'Label_1' , 'Show')
 		DoMethod( cActiveJan , 'LblQtReg' , 'Show')		
-		
-		DoMethod( cActiveJan , 'Image_12' , 'Show')  
 
+
+		
+
+		//SetProperty( cActiveJan , 'Image_1' , 'Row' , nGridHeight+58  )		
+
+		SetProperty( cActiveJan , 'Image_1' , 'Visible' , .t.  )		
+
+
+		SetProperty( cActiveJan , 'LblUser1' , 'Visible' , .t.  )		
+		
+		//DoMethod( cActiveJan , 'Image_12' , 'Show')  
+
+
+		DoMethod( cActiveJan , 'Image_1' , 'Show')		
+		DoMethod( cActiveJan , 'LblUser1' , 'Show')		
 
 
 	End If 
@@ -677,15 +684,15 @@ Function xControls( lFilter , nQReg )
 
 				DEFINE LABEL Lbltitulo2
 					PARENT &cActiveJan
-					ROW    GetProperty(  cActiveJan , 'LblQtReg', 'Row') - 5
+					ROW    GetProperty(  cActiveJan , 'LblQtReg', 'Row') 
 					COL    75
 					WIDTH  185
 					HEIGHT 24
 					VALUE "[Filtro Aplicado] " + Alltrim(Str(nQReg)) + " Registros. "
-					FONTNAME "Arial Narrow"
-					FONTSIZE 10
+					FONTNAME "Arial"
+					FONTSIZE 9
 					TOOLTIP ""
-					FONTBOLD .F.
+					FONTBOLD .T.
 					FONTITALIC .F.
 					FONTUNDERLINE .F.
 					FONTSTRIKEOUT .F.
@@ -738,16 +745,16 @@ Function ProcFiltro( cTab1 , lEfect )
 		OBTN_Caption(cAuxName   , aButtons[4][5]  , "Filtrar" )
 
 		
+
 		BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , Nil , .t. )
-		SysWait(.1)
+		//SysWait(.1)
+
 		
 		xControls(  .f. , 34)
 			
 		If _IsControlDefined(   'lblTitulo2' , cActiveJan)
 			_ReleaseControl(  'lblTitulo2' , cActiveJan )
 		End If 		
-	
-		
 
 		Return
 
@@ -758,7 +765,6 @@ Function ProcFiltro( cTab1 , lEfect )
 	
 	aMx := yEfect(  cActiveJan , aMx  )		
 	cFiltros := LoadFitros(cTab1 )
-
 
 	
 	If _IsWindowDefined('fSplit2')	
@@ -793,11 +799,9 @@ Function ProcFiltro( cTab1 , lEfect )
 
 				BT_ClientAreaInvalidateAll (cActiveJan)
 
-			End If				
-						
-			
-			lInvalid := .f.
+			End If			
 
+			lInvalid := .f.
 			
 			xControls( , 34)
 
@@ -1197,6 +1201,7 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 
 	aDynFont := {}
 
+
 	oServer := GetConexao()
 
 	oQuery := oServer:Query(  cSq2 )
@@ -1211,9 +1216,10 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 
 
 	If (oQuery:Lastrec()  == 0 )
-		yAviso( 'Este Cadastro Nï¿½o Possui Registros' , .f. )	    
+		yAviso( 'Este Cadastro Não Possui Registros' , .f. )	    
 		//Return 	
 	End If 
+
 
 	//While !Eof()
 
@@ -1228,7 +1234,6 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 		For nx1 := 1 To Len(oRow[1])		
 			
 			cValor := Hb_AnsiToOem( oRow:FieldGet(nx1)  )			
-
 			
 
 			If Alltrim(aTips[nx1]) == 'C'
@@ -1425,13 +1430,15 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 
 	nGridHeight := GetDeskTopHeight() - 185	
 
+	//FONT 'Arial Narrow' SIZE 9;
+
 	@ 55   , nColy  GRID &cGridName ;
 	OF &cActiveJan ;
 	WIDTH nW1 ;
 	HEIGHT nGridHeight ;
 	NOLINES ;
-	HEADERS aCabec ;
-	FONT 'Arial Narrow' SIZE 9;
+	HEADERS aCabec ;	
+	FONT 'Arial Unicode MS' SIZE 9 ;	
 	ITEMS aItens ;
 	FONTCOLOR { 78, 78, 78 } ;
 	JUSTIFY aJustify ;	
@@ -1443,8 +1450,6 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 	ON DBLCLICK ( Eval(  aButtons[2 ][2] )     ) ; 
 	ON CHANGE ( CheckBloq() ) ; 
 	CELLNAVIGATION 
-
-
 
 
 	//SetWindowCursor (  GetControlHandle('br_grid' , cActiveJan)    , IDC_WAIT )
@@ -1507,14 +1512,14 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 
 
 
-	SetProperty( cActiveJan , 'Label_1' , 'Row' ,  nGridHeight+57  )
-	SetProperty( cActiveJan , 'LblQtReg' , 'Row' , nGridHeight+57  )
 
 
-	SetProperty( cActiveJan , 'Image_12' , 'Row' , nGridHeight+58  )
+	SetProperty( cActiveJan , 'Label_1' , 'Row' ,  nGridHeight+61  )
+	SetProperty( cActiveJan , 'LblQtReg' , 'Row' , nGridHeight+61  )
+
+
+	SetProperty( cActiveJan , 'Image_1' , 'Row' , nGridHeight+58  )
 	SetProperty( cActiveJan , 'Image_2196' , 'Row' , nGridHeight+58  )
-
-
 
 
 
@@ -1523,7 +1528,7 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 
 	SetProperty( cActiveJan , 'Lbltitulo' , 'Value' , Alltrim (cTitle)  )
 
-	SetProperty( cActiveJan , 'LblUser1' , 'Row' , nGridHeight+57  )
+	SetProperty( cActiveJan , 'LblUser1' , 'Row' , nGridHeight+61  )
 	SetProperty( cActiveJan , 'LblUser1' , 'Value' , Alltrim (cUserName)  )
 
 	SetProperty( cActiveJan , 'lblQtReg' , 'Value' , Alltrim( Transform(   Len(aItens) , '@E 999,999,999'   ))         )
@@ -2248,6 +2253,7 @@ FUNCTION LabelEventH4(aLabel)
 Return
 
 
+
 Function xDrawHead()
 
 
@@ -2269,6 +2275,7 @@ Function xDrawHead()
 	ControlBackX( nHWnd , {255,121,12} , aM1 , Len(aMtrHeader)  , aTams1 ,  nColSel  , nColOrder , 'img\setaa.bmp' , 'img\setab.bmp' , lAscendente )
 
 	//SysWait(0.05)
+
 
 
 Return

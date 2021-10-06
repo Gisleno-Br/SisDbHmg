@@ -454,6 +454,10 @@ FUNCTION InputEvButton(aButs ,cJanela)
 
   lTracking := .F.
 
+  If !_isWindowDefined(cJanela)
+     Return 
+  End If 
+
 	nInd1 := AScan( aButs, {| a| a[ 1 ] == nWParam } )
 
 	FOR n1 := 1 TO Len( aButs )

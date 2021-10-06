@@ -1,0 +1,1 @@
+insert into filtros values(99,"e1","clientes","nome =  'JOSE'","S","Código                                                                                             "," ")

@@ -131,10 +131,10 @@ FUNCTION GetCamposDic( cTabela, cBrowse, lCmpTab , lOem )
 	oQuery := oServ:Query( cSql )
 
 
-	HB_SETCODEPAGE("UTF8")
+	//HB_SETCODEPAGE("UTF8")
 
 
-	FOR i := 1 TO oQuery:LastRec()
+	For i := 1 TO oQuery:LastRec()
 
 		oRow := oQuery:GetRow( i )
 
@@ -171,7 +171,8 @@ FUNCTION GetCamposDic( cTabela, cBrowse, lCmpTab , lOem )
 
 		oQuery:Skip( 1 )
 
-	NEXT
+	Next
+	
 
 	oQuery:Destroy()
 	oQuery := Nil

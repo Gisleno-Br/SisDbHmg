@@ -1,0 +1,1 @@
+select * from dicionario where (camposistema = 'Nome') and (tabela = 'Clientes')
