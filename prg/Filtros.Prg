@@ -7,7 +7,8 @@ REQUEST HB_CODEPAGE_PT850
 
 #define QUEBRA Chr(13)+Chr(10)
 
-DECLARE WINDOW fFiltro
+//DECLARE WINDOW fFiltro
+
 
 
 
@@ -39,9 +40,13 @@ FUNCTION LoadFitros( cTabela1 )
    HB_SetCodePage( "PT850" )
    hb_langSelect( "PT" )
 
+   //If !_isWindowDefined('fFiltroCad')
    Load Window fFiltrosCad
+   //End If    
+
 
    Center Window fFiltrosCad
+
 
    HMG_ChangeWindowStyle(  fFiltrosCad.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
 
@@ -49,7 +54,6 @@ FUNCTION LoadFitros( cTabela1 )
    PRIVATE aButx1 := {}
 
    fFiltrosCad .LblTabela. Value := cTabx
-
 
 
 
@@ -71,9 +75,9 @@ FUNCTION LoadFitros( cTabela1 )
 
    AAdd( aButx1, {  1599,  OBTN_Handle( cJanx, 1599 ),   {||    fFechaF()  },  cJanx   } )
 
-   AAdd( aButx1, {  1597,  OBTN_Handle( cJanx, 1597 ),   {||  PushButton( cJanx, 1597 ), SysWait( .1 ), iif( xNovoFilt(), xLoadFiltros(cTabx ), )  },  cJanx   } )
+//   AAdd( aButx1, {  1597,  OBTN_Handle( cJanx, 1597 ),   {||  (PushButton( cJanx, 1597 ), SysWait( .1 ), xNovoFilt() )  },  cJanx   } )
 
-   //AAdd( aButx1, {  1597,  OBTN_Handle( cJanx, 1597 ),   {||  Iif( xNovoFilt(), xLoadFiltros(cTabx ), )  } ,  cJanx   } )
+   AAdd( aButx1, {  1597,  OBTN_Handle( cJanx, 1597 ),   {||  xNovoFilt()  } ,  cJanx   } )
 
    AAdd( aButx1, {  1595,  OBTN_Handle( cJanx, 1595 ),   {|| PushButton( cJanx, 1595 ),SysWait( .1 ),  xExclFiltro()   },  cJanx   } )
 
@@ -94,33 +98,41 @@ FUNCTION LoadFitros( cTabela1 )
    EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, cJanx ) },    OBTN_Handle( cJanx, 1595 )   ), .T. )
 
 
+
    OBTN_Enable( cjanx, 1598, .F. )
    OBTN_Enable( cJanx, 1595, .F. )
    OBTN_Enable( cJanx, 1596, .F. )
    // OBTN_Enable( 'fCriaConsulta', 6595, .F. )
+
 
    HMG_ChangeWindowStyle( fFiltrosCad.Handle, WS_EX_STATICEDGE, NIL, .T., .T. )
 
    HMG_ChangeWindowStyle( fFiltrosCad.Handle, WS_BORDER, NIL, .F., .T. )
    HMG_ChangeWindowStyle( fFiltrosCad.Handle, NIL, WS_EX_STATICEDGE, .T., .T. )
 
-   ON KEY ESCAPE of fFiltrosCad ACTION fFiltrosCad.Release()
-   InstallEventHandler(  'EventConsu' )
+   ON KEY ESCAPE of fFiltrosCad ACTION fFechaF()
+
+   InstallEventHandler(  'EventConsu' )   
+
    
-
-   activate Window fFiltrosCad
-
+   
+   Activate Window fFiltrosCad
 
    RemoveHandler( 'EventConsu' )
+   
+
+
 
 RETURN cFiltrox1
 
 
 Function fFechaF()
 
-  fFiltrosCad.Release()  
-  //msginfo('omk')   
 
+
+  //_FechaJan( 'fFiltrosCad')
+
+  fFiltrosCad.Release()
 
 Return 
 
@@ -145,7 +157,7 @@ FUNCTION xExclFiltro()
    LOCAL oServer
    LOCAL oQuery
 
-   IF Confirmaviso( "Confirma  Exclusão desse Filtro ? ", , , , .F. )
+   If Confirmaviso( "Confirma  Exclusão desse Filtro ? ", , , , .F. )
 
       cSqlx1 := "delete from filtros where tabela = '" + cTabx + "' and idfiltros = " +  AllTrim( aMtr[ 1 ] )
       // msginfo(cSqlx1)
@@ -173,9 +185,9 @@ FUNCTION xExclFiltro()
 
 
 
-   ELSE
+   Else
 
-   END IF
+   End If
 
    // DoMethod('fFiltrosCad','Release')
    // ProcFiltro( cTabx , .f. )
@@ -219,7 +231,7 @@ FUNCTION xChgIt()
 
 RETURN
 
-FUNCTION xLoadFiltros( cTabela1 )
+FUNCTION xLoadFiltros( cTabela1  , lUltimo )
 
    LOCAL cSqlx1 := "select * from filtros where tabela = '" + cTabela1 + "' and ativo = 'S'"
    LOCAL oServer := GetConexao()
@@ -234,6 +246,16 @@ FUNCTION xLoadFiltros( cTabela1 )
        Return .f. 
    End If 
 
+   //MsgInfo('loadf ')
+
+
+   Default lUltimo := .f. 
+
+   If !_isWindowDefined('fFiltrosCad')
+      msginfo( Hb_AnsiToOem(  "Erro Inesperado , Refaça a Operação.") )     
+      Return 
+   End If 
+
 
    fFiltrosCad .Gridfiltro. Deleteallitems()
 
@@ -245,12 +267,31 @@ FUNCTION xLoadFiltros( cTabela1 )
 
    fFiltrosCad .LblQtFiltro. Value := AllTrim( Str( oQuery:LastRec()    ) )
 
-   IF ( oQuery:LastRec() > 0 )     
+   If ( oQuery:LastRec() > 0 )     
       Domethod( 'fFiltroscad', 'GridFiltro', 'SetFocus' )
-   END IF
+   End If
+
+
+
+   If (lUltimo)
+
+      fFiltroscad.GridFiltro.Value := {oQuery:LastRec() ,1 }     
+      Domethod( 'fFiltroscad', 'GridFiltro', 'SetFocus' )
+      PostMessage( GetControlHandle(   'GridFiltro' , 'fFiltroscad' )    , 7  ,0,0)
+    
+
+      _ShowWindow('fFiltrosCad'  )
+
+      SysWait(.1)
+
+   End If 
 
    oServer:Destroy()
+   oSErver := Nil 
+
+
    oQuery:Destroy()
+   oQuery := Nil 
 
    // SysWait(.8)
    // Refreshall('fFiltrosCad')
@@ -270,7 +311,7 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
    LOCAL oQuery
    LOCAL oRow
    LOCAL n1 := 1
-   LOCAL aCabec  := GetCamposDic( cTabela, ' ', .F. , .f. )
+   LOCAL aCabec1  := GetCamposDic( cTabela, ' ', .F. , .f. )
    LOCAL cSqlx1
 
    LOCAL nIdFlt := nIdFiltro
@@ -282,16 +323,16 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
    DEFAULT lNew1 := .T.
 
 
-
-   PRIVATE lNovoFilt := lNew1
-
-   
-	Private aButFilt := {}
-
+   Public lNovoFilt := lNew1
 
    
+	Public aButFilt := {}
 
-   Load Window fFiltro
+
+   
+   If !_IsWindowDefined('fFiltro')
+      Load Window fFiltro
+   End If    
 
    Center Window fFiltro
 
@@ -300,27 +341,25 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
    fFiltro .Lbltabela. value := cTabela
 
       
-   //cJanx := cJan
-
-   
-   ON KEY ESCAPE OF fFiltro Action (SysWait(.2) ,  _FechaJan( 'fFiltro' )  , SysWait(.2) )
-   //, cJanx := 'fFiltrosCad',  refreshall( 'fFiltrosCad' ), Domethod( 'fFiltrosCad','SetFocus' ) )
+      
+   ON KEY ESCAPE OF fFiltro Action xFechay()
 
 
    PRIVATE aBtx := {}
    
-   //HB_SETCODEPAGE("UTF8")
+   HB_SETCODEPAGE("UTF8")
+
    //HB_SETCODEPAGE("PT850")
-
-
    //Hb_AnsiToOem
 
-   While n1 <= Len( aCabec )
 
-      If  !Empty( AllTrim( aCabec[ n1 ] ) )
-         fFiltro .cmbCampo. Additem(  (aCabec[ n1 ]) )
-         fFiltro .cmbOrdem. Additem(  (aCabec[ n1 ])  )
-         AAdd( aCampos1, ( aCabec[ n1 ] ) )
+
+   While n1 <= Len( aCabec1 )
+
+      If  !Empty( AllTrim( aCabec1[ n1 ] ) )
+          fFiltro .cmbCampo. Additem(  Hb_UTf8ToStr(aCabec1[ n1 ] )  )
+          fFiltro .cmbOrdem. Additem(  Hb_UTf8ToStr(aCabec1[ n1 ] ) )
+          AAdd( aCampos1,  Hb_UTf8ToStr(aCabec1[ n1 ])  )
       End If
 
       n1++
@@ -358,6 +397,7 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
 
    //cJan := cFiltroDlg
 
+
    OBTN_Create( cJan,  9598, "Gravar Filtro", 345, 255,  70,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
    OBTN_Font( cJan, 9598,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
@@ -385,18 +425,23 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
    OBTN_Font( cJan, 9481,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
 
-   AAdd( aButFilt , { 9598,  OBTN_Handle( cJan , 9598 ),   {||  ( PushButton( cJan  , 9598 ) , Iif( lOk := (SaveFiltro( lNew1  , nIdFlt )) , (DoMethod('fFiltro','Release'),DoMethod('fFiltrosCad','Release') ,ProcFiltro( cTabela )   ) ,    ) )  } ,  cJan   } )
+
+   //AAdd( aButFilt , { 9598,  OBTN_Handle( cJan , 9598 ),   {||  ( PushButton( cJan  , 9598 ) , Iif( lOk := (SaveFiltro( lNew1  , nIdFlt )) , (xFechay() ,  Domethod('fFiltrosCad','SetFocus' ) ,  xLoadFiltros( cTabela  , .t. )   ) ,    ) )  } ,  cJan   } )
+
+   AAdd( aButFilt , { 9598,  OBTN_Handle( cJan , 9598 ),   {||  ( PushButton( cJan  , 9598 ) ,  lOk := SaveFiltro( lNew1  , nIdFlt )  )  } ,  cJan   } )
+
+
    //AAdd( aButFilt , {  9599, OBTN_Handle( cJan, 9599 ),   {||  ( _ReleaseWindow(cJanx ), cJanx := 'fFiltrosCad',  refreshall('fFiltrosCad' ), Domethod('fFiltrosCad','SetFocus' ) )  },  cJan   } )
 
    //AAdd( aButx1, { 9598,  OBTN_Handle( cJan, 9598 ),   {||  ( PushButton( cJan, 9598 ), iif( lOk := (SaveFiltro( lNew1, nIdFlt ) ),  (_FechaJan( 'fFiltro' ), _FechaJan('fFiltrosCad' ),ProcFiltro( cTabela, .F. )   ),    ) )  },  cJan   } )
 
    //AAdd( aButx1, {  9599, OBTN_Handle( cJan, 9599 ),   {||  ( _FechaJan(cJanx ), cJanx := 'fFiltrosCad',  refreshall('fFiltrosCad' ), Domethod('fFiltrosCad','SetFocus' ) )  },  cJan   } )
 
-   AAdd( aButx1, {  9599, OBTN_Handle( cJan, 9599 ),   {||  (  sysWait(.1) ,  _FechaJan( 'fFiltro' )   , sysWait(.1) )   },  cJan   } )
+   AAdd( aButFilt, {  9599, OBTN_Handle( cJan, 9599 ),   {||   (PushButton( cJan, 9599 ) , xFechay() )  },  cJan   } )
+
 
 
    //Release
-
 
 
    
@@ -436,9 +481,18 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
 
    InstallEventHandler('EvFiltButton')
 
-   Activate Window fFiltro
+   fFiltro.Show()
 
-   RemoveHandler('EvFiltButton')
+   fFiltro.SetFocus()
+
+   //fFiltro.Activate()
+
+   SysWait(.2)
+   
+
+   //Activate Window fFiltro
+
+   //RemoveHandler('EvFiltButton')
 
    // DoMethod( cFiltroDlg , 'Show')
 
@@ -449,13 +503,35 @@ Return lOk
 
 
 
+
+Function xFechay()
+
+   //_FechaJan( 'fFiltro' )     
+    //DoMethod('fFiltrosCad' , 'SetFocus')  
+   // sysWait(.2)
+
+   //PushButton( 'fFiltro', 9599 )
+   //_ReleaseWindow( 'fFiltro' ) 
+
+   fFiltro.Hide()
+
+   //SysWait(.2)
+
+   //DoMethod('fFiltrosCad' , 'GridFiltro'  , 'SetFocus')  
+
+
+
+
+Return 
+
+
+
 FUNCTION EvFiltButton( nHWnd, nMsg, nWParam, nLParam )
 
    Local nId := 1
 
 
    If nMsg == WM_DRAWITEM
-
 
 		nID := LoWord( nWParam )
 
@@ -468,8 +544,6 @@ FUNCTION EvFiltButton( nHWnd, nMsg, nWParam, nLParam )
 		If nI1 > 0
 			OBTN_Draw( nHWnd,  nWParam, nLParam )
 		End If
-      
-
 
 	End If
 
@@ -510,27 +584,27 @@ RETURN
 
 FUNCTION ChgxFltr( cName )
 
-   IF ( Len( AllTrim(fFiltro .titulo. value ) ) > 0 ) .AND. ;
+   If ( Len( AllTrim(fFiltro .titulo. value ) ) > 0 ) .AND. ;
          (  !Empty( AllTrim( fFiltro .CmbCampo. Item(fFiltro .CmbCampo. Value ) ) )    )
       OBTN_Enable( 'fFiltro', 959, .T. )
-   END IF
+   End If
 
 
-   IF lNovoFilt
-      IF  ( Len( AllTrim(fFiltro .Valor. Value ) ) > 0 ) .OR. ( fFiltro .Getdata1. Visible  ) .OR. ;
+   If lNovoFilt
+      If  ( Len( AllTrim(fFiltro .Valor. Value ) ) > 0 ) .OR. ( fFiltro .Getdata1. Visible  ) .OR. ;
             ( fFiltro .DoubleEdit. Value > 0 ) .OR. ( fFiltro .EdtNum. Value > 0 )
          // msginfo('p ' + cName )
 
-         IF ( fFiltro .CmbCampo. value > 0 )
+         If ( fFiltro .CmbCampo. value > 0 )
             // OBTN_Enable( cjanx , 959, .t. )
-         END IF
+         End If
 
-      ELSE
+      Else
          // OBTN_Enable( cjanx , 959 , .f. )
-      END IF
-   ELSE
+      End If
+   Else 
       OBTN_Enable( cjanx, 9598, .T. )
-   END IF
+   End If
 
 RETURN
 
@@ -650,14 +724,16 @@ STATIC FUNCTION SaveFiltro( lNovo, nIdFiltro1 )
 
    // Local cSql
 
+
    DEFAULT lNovo := .T.
 
-   IF Confirmaviso( "Confirma Gravação desse Filtro ? ", , .F. )
-
-      IF lNovo
+   If Confirmaviso( "Confirma Gravação desse Filtro ? ", , .F. )   
+     
+      If lNovo
          lOk := GrvFiltro( cTabx, AllTrim( fFiltro .Titulo. Value ), AllTrim( fFiltro .EdtFiltro. Value ),  fFiltro .CmbOrdem. DisplayValue, ;
             fFiltro .ChkOrdem. Value  )
-      ELSE
+
+      Else 
 
 
          cSQl := "Update filtros set filtro = " + Chr( 34 ) + AllTrim( fFiltro .EdtFiltro. Value ) +  Chr( 34 ) +  " , descricao = '" + AllTrim( fFiltro .Titulo. Value ) + "',"
@@ -669,10 +745,20 @@ STATIC FUNCTION SaveFiltro( lNovo, nIdFiltro1 )
          oQuery := oServer:Query( cSql )
 
 
-         IF oQuery:NetErr()
+         If oQuery:NetErr()
+
             MsgStop( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
-            RETURN .F.
-         END IF
+
+            
+            oServer:Destroy()
+            oServer := Nil
+
+            oQuery:Destroy()
+            oQuery := Nil
+
+            Return .F.
+
+         End If
 
          lOk := .T.
 
@@ -682,13 +768,26 @@ STATIC FUNCTION SaveFiltro( lNovo, nIdFiltro1 )
          oQuery:Destroy()
          oQuery := Nil
 
+
+
       END IF
 
-   ELSE
-      DoMethod( 'fFiltro', 'SetFocus' )
-      SysWait( .2 )
+   Else 
+      DoMethod( 'fFiltro', 'SetFocus' )      
 
-   END IF
+   End If
+
+   //SysWait( .2 )
+
+   If lOk 
+      
+      xFechay()      
+
+      //SysWait( .2 )
+      yAviso('Filtro Gravado com Sucesso!' , .f. )
+      xLoadFiltros( cTabx , .t. )
+
+   End If 
 
 RETURN lOk
 

@@ -447,7 +447,7 @@ RETURN lok2
 Function _FechaJan(   cJanx1 )
 
 
-	EnableWindow ( GetFormHandle(cJanx1) )
+	//EnableWindow ( GetFormHandle(cJanx1) )
 	SendMessage  ( GetFormHandle(cJanx1)  , WM_SYSCOMMAND, SC_CLOSE, 0 )
 	//sysWait(.2)
 
@@ -1087,10 +1087,19 @@ FUNCTION GrvFiltro( cTabela, cDescr, cFiltro, cOrdem, lCresc )
 
 	oQuery := oServer:Query(  cSql )
 
-	IF oServer:NetErr()
+	If oServer:NetErr()
 		yAviso( "Error ao Executar Query " + cSql + ": " + oServer:Error()  , .f. )
+
+		
+		oServer:Destroy()
+		oServer := Nil
+
+		oQuery:Destroy()
+		oQuery := Nil
+
 		RETURN .F.
-	ENDIF
+
+	End If 
 
 	oServer:Destroy()
 	oServer := Nil
@@ -1098,8 +1107,7 @@ FUNCTION GrvFiltro( cTabela, cDescr, cFiltro, cOrdem, lCresc )
 	oQuery:Destroy()
 	oQuery := Nil
 
-
-RETURN .T.
+Return .T.
 
 Function Contey( cChar , cC1)
 

@@ -1,1 +1,1 @@
-insert into filtros values(99,"e1","clientes","nome =  'JOSE'","S","Código                                                                                             "," ")
+insert into filtros values(139,"gfgfg","clientes","codigo =  '000012'","S","Código                                                                                             "," ")

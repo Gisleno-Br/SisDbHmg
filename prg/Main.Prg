@@ -117,6 +117,8 @@ FUNCTION Main
 	PUBLIC cDiaName := 'fDialogo'
 
 	Public XBACK1 := {232,246,239}  
+
+	Public XFONT1  := 'Arial Unicode MS'
  
 
 	Private nSec1 := 0

@@ -501,9 +501,7 @@ Function xHandleEsc()
 		If nHWND = GetControlHandle('br_Grid' , cActiveJan)
 
 			If nWParam = VK_ESCAPE
-				//msginfo('handle esc' )
-
-				//Aadd( aCords  , { cLabelx , nCol ,nCol+110  , "F" + Left(  Alltrim(  aButTop[n1][2] ) , 5)  }  )
+			
 
 				nI1 := Ascan(aCords , { |a| a[4] == cActiveJan})
 
@@ -765,6 +763,7 @@ Function ProcFiltro( cTab1 , lEfect )
 	
 	aMx := yEfect(  cActiveJan , aMx  )		
 	cFiltros := LoadFitros(cTab1 )
+	
 
 	
 	If _IsWindowDefined('fSplit2')	
@@ -1430,6 +1429,9 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 
 	nGridHeight := GetDeskTopHeight() - 185	
 
+
+
+
 	//FONT 'Arial Narrow' SIZE 9;
 
 	@ 55   , nColy  GRID &cGridName ;
@@ -1438,7 +1440,7 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 	HEIGHT nGridHeight ;
 	NOLINES ;
 	HEADERS aCabec ;	
-	FONT 'Arial Unicode MS' SIZE 9 ;	
+	FONT XFONT1 SIZE 9 ;	
 	ITEMS aItens ;
 	FONTCOLOR { 78, 78, 78 } ;
 	JUSTIFY aJustify ;	
@@ -1497,21 +1499,16 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 
 	
 	EventProcessAllHookMessage( nIndexEve1 ,   .T.)
-
-
-
 	cTitFiltro := ''
 
-
 	//DbGotop()
+
+
 
 
 	If !Empty(cFiltro1)
 		cTitFiltro := cFiltro1 + ' (' + cFiltro2 + ')'
 	End If
-
-
-
 
 
 	SetProperty( cActiveJan , 'Label_1' , 'Row' ,  nGridHeight+61  )
