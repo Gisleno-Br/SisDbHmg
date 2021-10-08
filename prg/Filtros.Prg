@@ -77,10 +77,11 @@ FUNCTION LoadFitros( cTabela1 )
 
 //   AAdd( aButx1, {  1597,  OBTN_Handle( cJanx, 1597 ),   {||  (PushButton( cJanx, 1597 ), SysWait( .1 ), xNovoFilt() )  },  cJanx   } )
 
-   AAdd( aButx1, {  1597,  OBTN_Handle( cJanx, 1597 ),   {||  xNovoFilt()  } ,  cJanx   } )
+   AAdd( aButx1, {  1597,  OBTN_Handle( cJanx, 1597 ),   {||   ( PushButton( cjanx  , 1597 ) , xNovoFilt() )  } ,  cJanx   } )
+
+
 
    AAdd( aButx1, {  1595,  OBTN_Handle( cJanx, 1595 ),   {|| PushButton( cJanx, 1595 ),SysWait( .1 ),  xExclFiltro()   },  cJanx   } )
-
 
 
    AAdd( aButx1, {  1596,  OBTN_Handle( cJanx, 1596 ),   {|| PushButton( cJanx, 1596 ),SysWait( .1 ),  xEditFiltro()   },  cJanx   } )
@@ -127,10 +128,6 @@ RETURN cFiltrox1
 
 
 Function fFechaF()
-
-
-
-  //_FechaJan( 'fFiltrosCad')
 
   fFiltrosCad.Release()
 
@@ -327,8 +324,6 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
 
    
 	Public aButFilt := {}
-
-
    
    If !_IsWindowDefined('fFiltro')
       Load Window fFiltro
@@ -340,6 +335,13 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
 
    fFiltro .Lbltabela. value := cTabela
 
+   HB_SETCODEPAGE("UTF8")
+
+//   SetProperty("fFiltro" , "Frame_1" , "Value" , Hb_AnsiToOem(" Criação de Filtros " )  ) 
+   
+
+
+
       
       
    ON KEY ESCAPE OF fFiltro Action xFechay()
@@ -347,7 +349,7 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
 
    PRIVATE aBtx := {}
    
-   HB_SETCODEPAGE("UTF8")
+   
 
    //HB_SETCODEPAGE("PT850")
    //Hb_AnsiToOem
@@ -388,6 +390,7 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
       END IF
 
 
+
       oQuery:Destroy()
       oSErver:Destroy()
 
@@ -396,6 +399,7 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
    END IF
 
    //cJan := cFiltroDlg
+
 
 
    OBTN_Create( cJan,  9598, "Gravar Filtro", 345, 255,  70,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
@@ -428,7 +432,7 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
 
    //AAdd( aButFilt , { 9598,  OBTN_Handle( cJan , 9598 ),   {||  ( PushButton( cJan  , 9598 ) , Iif( lOk := (SaveFiltro( lNew1  , nIdFlt )) , (xFechay() ,  Domethod('fFiltrosCad','SetFocus' ) ,  xLoadFiltros( cTabela  , .t. )   ) ,    ) )  } ,  cJan   } )
 
-   AAdd( aButFilt , { 9598,  OBTN_Handle( cJan , 9598 ),   {||  ( PushButton( cJan  , 9598 ) ,  lOk := SaveFiltro( lNew1  , nIdFlt )  )  } ,  cJan   } )
+   AAdd( aButFilt , { 9598,  OBTN_Handle( cJan , 9598 ),   {||  ( PushButton( cJan  , 9598 ) , SysWait(.1) ,  lOk := SaveFiltro( lNew1  , nIdFlt )  )  } ,  cJan   } )
 
 
    //AAdd( aButFilt , {  9599, OBTN_Handle( cJan, 9599 ),   {||  ( _ReleaseWindow(cJanx ), cJanx := 'fFiltrosCad',  refreshall('fFiltrosCad' ), Domethod('fFiltrosCad','SetFocus' ) )  },  cJan   } )
@@ -455,8 +459,6 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
    AAdd( aButFilt , {  9541,  OBTN_Handle( cJan, 9541 ),   {||  PushButton( cJan, 9541 ), sysWait( .2 ), UpdFiltrox( 'And' )   },  cJan   } )
    AAdd( aButFilt , {  9481,  OBTN_Handle( cJan, 9481 ),   {||  PushButton( cJan, 9481 ), sysWait( .2 ), UpdFiltrox( 'Or' )   },  cJan   } )
 
-   
-
     
    EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButFilt, cJan ) },    OBTN_Handle( cJan, 9598 )   ), .T. )
    EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButFilt, cJan ) },    OBTN_Handle( cJan, 9599 )   ), .T. )
@@ -481,13 +483,23 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
 
    InstallEventHandler('EvFiltButton')
 
+   fFiltro. Titulo. Value := ''
+   fFiltro. Valor.  Value := ''
+
+   fFiltro.CmbOperador.value := 0
+   fFiltro.CmbCampo.value    := 0
+
+   fFiltro.CmbOrdem.value    := 0
+
    fFiltro.Show()
 
    fFiltro.SetFocus()
 
+
+
    //fFiltro.Activate()
 
-   SysWait(.2)
+//   SysWait(.2)
    
 
    //Activate Window fFiltro
@@ -612,7 +624,9 @@ FUNCTION FiltroAdx()
 
    LOCAL cVal   := AllTrim( fFiltro .EdtFiltro. Value )
 
-   LOCAL cTabela := AllTrim( fFiltro .lblTabela. CAPTION )
+
+   LOCAL cTabela := cTabx
+   //AllTrim( fFiltro .lblTabela. CAPTION )
 
    LOCAL cC1    := AllTrim( fFiltro .CmbCampo. Item( fFiltro .CmbCampo. Value ) )
 
@@ -632,44 +646,44 @@ FUNCTION FiltroAdx()
 
 
 
-   IF ( ( cTipo == 'I' ) .OR. ( cTipo == 'B' ) )
+   If  ( ( cTipo == 'I' ) .OR. ( cTipo == 'B' ) )
 
-      IF IsAlpha( cValor )
+      If IsAlpha( cValor )
          Aviso( 'Formato Invalido para Tipo Numerico.' )
          fFiltro .Valor. Value := ''
-         RETURN
-      END IF
+         Return 
+      End If
 
-      IF ( cTipo == 'I' )
+      If ( cTipo == 'I' )
          cValor := AllTrim( Str( fFiltro .EdtNum. Value ) )
-      ELSE
+      Else 
          cValor := AllTrim( Transform( fFiltro .DoubleEdit . Value, cMask ) )
-      END IF
+      End If
 
-   END IF
+   End If
 
-   IF AllTrim( fFiltro .CmbOperador. DisplayValue ) = 'CONTEM'
-      IF ( cTipo != 'C' )
+   If AllTrim( fFiltro .CmbOperador. DisplayValue ) = 'CONTEM'
+      If ( cTipo != 'C' )
          MsgExclamation( "Operador 'CONTEM' funciona apenas com campos Tipo Caracter." )
          RETURN
-      END IF
-   END IF
+      End If
+   End If
 
-   IF ( cTipo == 'C' )
-      IF AllTrim( fFiltro .CmbOperador. DisplayValue ) != 'CONTEM'
+   If ( cTipo == 'C' )
+      If AllTrim( fFiltro .CmbOperador. DisplayValue ) != 'CONTEM'
          cFiltro := AllTrim( cCampo ) + ' ' + coperador + ' ' + Chr( 39 ) + AllTrim( cValor ) + Chr( 39 )
          // msginfo(cFiltro)
-      ELSE
+      Else
          cFiltro := AllTrim( cCampo ) + ' LIKE ' + Chr( 39 ) + AllTrim( cValor ) + '%' + Chr( 39 )
          // msginfo(cFiltro)
-      END IF
-   END IF
+      End If
+   End If
 
-   IF ( cTipo == 'I' ) .OR. ( cTipo == 'B' ) .OR. ( cTipo == 'N' )
+   If ( cTipo == 'I' ) .OR. ( cTipo == 'B' ) .OR. ( cTipo == 'N' )
       cFiltro := AllTrim( cCampo ) + ' ' +  cOperador + ' ' + cValor
-   END IF
+   End If
 
-   IF ( cTipo == 'D' )
+   If ( cTipo == 'D' )
 
       // '2018-01-15
 
@@ -677,7 +691,7 @@ FUNCTION FiltroAdx()
       cValDate := Right( cValor, 4 ) + '-' + SubStr( cValor, 4, 2 ) + '-' + Left( cValor, 2 )
       cFiltro := AllTrim( cCampo ) + ' ' + coperador + ' '  + Chr( 39 ) + cValDate + Chr( 39 )
 
-   END IF
+   End If
 
    SetProperty( 'fFiltro', 'DoubleEdit', 'Value', 0 )
    SetProperty( 'fFiltro', 'EdtNum', 'Value', 0 )
@@ -726,6 +740,8 @@ STATIC FUNCTION SaveFiltro( lNovo, nIdFiltro1 )
 
 
    DEFAULT lNovo := .T.
+
+   xFechay()      
 
    If Confirmaviso( "Confirma Gravação desse Filtro ? ", , .F. )   
      
@@ -781,7 +797,7 @@ STATIC FUNCTION SaveFiltro( lNovo, nIdFiltro1 )
 
    If lOk 
       
-      xFechay()      
+     
 
       //SysWait( .2 )
       yAviso('Filtro Gravado com Sucesso!' , .f. )
@@ -795,15 +811,15 @@ RETURN lOk
 FUNCTION gField()
 
    LOCAL cCampo := fFiltro .CmbCampo. DisplayValue
-   LOCAL cTabela := AllTrim( fFiltro .lblTabela. CAPTION )
+   LOCAL cTabela := AllTrim( cTabx )
    LOCAL cTipo := ''
 
    // Local cTipo
    LOCAL cMask
 
-   IF ( Empty( cCampo ) )
+   If ( Empty( cCampo ) )
       RETURN
-   END IF
+   End If
 
 
 
@@ -817,7 +833,7 @@ FUNCTION gField()
    SetProperty( "fFiltro", "Valor", "Visible", .F. )
    SetProperty( "fFiltro", "EdtNum", "Visible", .F. )
 
-   IF cTipo == 'D'
+   If cTipo == 'D'
 
       SetProperty( "fFiltro", "GetData1", "Visible", .T. )
       SetProperty( "fFiltro", "GetData1", "Col", 150 )
@@ -829,9 +845,10 @@ FUNCTION gField()
 
       DO EVENTS
 
-   END IF
+   End If
 
-   IF ( cTipo == 'B' )
+
+   If ( cTipo == 'B' )
 
       SetProperty( "fFiltro", "DoubleEdit", "Visible", .T. )
       SetProperty( "fFiltro", "DoubleEdit", "Col", 150 )
@@ -844,10 +861,10 @@ FUNCTION gField()
       OBTN_Enable( 'fFiltro', 6600, .T. )
       fFiltro .DoubleEdit. SetFocus()
       // fFiltro .Valor. Refresh()
-   END IF
+   End If
 
 
-   IF ( cTipo == 'N' ) .OR. ( cTipo == 'I' )
+   If ( cTipo == 'N' ) .OR. ( cTipo == 'I' )
 
 
       SetProperty( "fFiltro", "EdtNum", "Visible", .T. )
@@ -859,20 +876,20 @@ FUNCTION gField()
 
       fFiltro .EdtNum. SetFocus()
 
-   END IF
+   End If
 
-   IF cTipo == 'C'
+   If cTipo == 'C'
       SetProperty( "fFiltro", "Valor", "Visible", .T. )
       fFiltro .Valor. Value := ''
       SendMessage( GetControlHandle( "Valor", ThisWindow.Name ), WM_PAINT, 0, 0 )
       OBTN_Enable( 'fFiltro', 6600, .T. )
       fFiltro .Valor. SetFocus()
-   END IF
+   End If
 
 
-   IF ( Len( AllTrim(fFiltro .titulo. value ) ) > 0 )
+   If ( Len( AllTrim(fFiltro .titulo. value ) ) > 0 )
       OBTN_Enable( 'fFiltro', 959, .T. )
-   END IF
+   End If
 
 
    DO EVENTS

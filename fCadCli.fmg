@@ -7,8 +7,10 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
 
         PAGE "Dados Cliente" IMAGE "img\new.bmp"
 
-            Box(26,4, 842 , 199 , "01" )
-            Box(228,4, 842 , 120 , "02" )
+
+            Box(26,4, 842 , 199 , "01", "fCadCli"  )
+            Box(228,4, 842 , 120 , "02", "fCadCli" )
+            
 
             DEFINE LABEL Label_1
                 ROW    41
@@ -1124,12 +1126,12 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
         PAGE "Outros" IMAGE "img\ic_janela.bmp"
 
         
-            Box(24,4, 519 , 144 , "03" )
-            Box(24,525, 313 , 144 , "04" )
+            Box(24,4, 519 , 144 , "03" , "fCadCli" )
+            Box(24,525, 313 , 144 , "04" , "fCadCli" )
 
 
-            Box(170,4, 519 , 129 , "05" )
-            Box(170,525, 313 , 129 , "06" )           
+            Box(170,4, 519 , 129 , "05" , "fCadCli" )
+            Box(170,525, 313 , 129 , "06" , "fCadCli" )           
 
 
             DEFINE FRAME Frame_3

@@ -98,7 +98,7 @@ FUNCTION SvTamCampo( cCampo1, cTab1, nTam1  )
    oQuery := oServer:Query( cSqlUp )
 
    IF oQuery:NetErr()
-      yAviso( 'Erro ao Executar AtualizaÃ§Ã£o -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
+      yAviso( '(SvCampo) Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
       RETURN .F.
    END IF
 
@@ -128,7 +128,7 @@ FUNCTION SaveCampo( cCampo1, cTab1  )
 
    IF oQuery:NetErr()
 
-      yAviso( 'Erro ao Executar AtualizaÃ§Ã£o -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
+      yAviso( '(SaveCampo) Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
 
       oServer:Destroy()
       oServer := Nil

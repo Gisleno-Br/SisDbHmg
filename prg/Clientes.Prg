@@ -747,6 +747,7 @@ Function ProcFiltro( cTab1 , lEfect )
 		BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , Nil , .t. )
 		//SysWait(.1)
 
+
 		
 		xControls(  .f. , 34)
 			

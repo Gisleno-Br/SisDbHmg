@@ -715,7 +715,7 @@ Function GrvForne(lNovo1)
 
 	IF oQuery:NetErr()
 		//CursorArrow()
-		yAviso( 'Erro ao Executar AtualizaÃ§Ã£o -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error() , .f.)
+		yAviso( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error() , .f.)
 		Return .f.
 	END IF
 

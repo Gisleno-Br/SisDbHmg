@@ -54,19 +54,20 @@ Function SetCampoOrdem(cTabela , cCampo , nOrdem1 )
 	Local oRow
 
 	LOCAL cSql  := "update dicionario set ordem = "  + Alltrim(Str(nOrdem1))
-	cSQl += " where tabela = '" + AllTrim( cTabela ) + "' and camposistema = '" + cCampo + "'"
+	cSql += " where tabela = '" + AllTrim( cTabela ) + "' and camposistema = '" + cCampo + "'"
+	
 
-	SetWaitCursor()
+	SetWaitCursor(   GetFocus()      )
+//	GetControlNameByHandle(nHWnd, @cControl2, @cForm2)
 
-
+    //msginfo('ok')
 
 	oServer := GetConexao()
 	oQuery := oServer:Query( cSql)
 
-
 	IF oQuery:NetErr()
-		yAviso( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  ,, .f.  )
-		RETURN .f.
+		yAviso( '(SetOrder) Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  ,, .f.  )
+		Return .f.
 	END IF
 
 	lOk := .t.
@@ -99,7 +100,7 @@ Function SetCampoTam(cTabela , cCampo , nOrdem1 )
 
 	IF oQuery:NetErr()
 		//SetArrwCursor(nHandle)
-		yAviso( 'Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error() ,, .f. )
+		yAviso( '(CAmpoTam) Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error() ,, .f. )
 		RETURN .f.
 	END IF
 
@@ -138,12 +139,12 @@ FUNCTION GetCamposDic( cTabela, cBrowse, lCmpTab , lOem )
 
 		oRow := oQuery:GetRow( i )
 
-		IF cBrowse == 'S'
+		If cBrowse == 'S'
 
-			IF Alltrim(oRow:FieldGet( 6 )) == 'S'
-				IF !Empty( oRow:FieldGet( 5 ) )
+			If Alltrim(oRow:FieldGet( 6 )) == 'S'
+				If !Empty( oRow:FieldGet( 5 ) )
 
-					IF lCmpTab
+					If lCmpTab
 						If (oRow:FieldGet( 4 ) == 'C') .And. (lOem)
 							AAdd( aCampos,   'hb_OemToAnsi(' + AllTrim(oRow:FieldGet(3 )) + ')'    )
 
@@ -152,20 +153,19 @@ FUNCTION GetCamposDic( cTabela, cBrowse, lCmpTab , lOem )
 
 
 						End If
-					ELSE
+					Else
 						AAdd( aCampos,   Hb_UTf8ToStr(oRow:FieldGet( 5 ))  )
 
-					END IF
+					End If
 
-				END IF
-			END IF
+				End If
+			End If
 
-
-		ELSE
-			IF !Empty( oRow:FieldGet( 5 ) )
+		Else 
+			If !Empty( oRow:FieldGet( 5 ) )
 				AAdd( aCampos,  oRow:FieldGet( 5 )  )
-			END IF
-		END IF
+			End If
+		End If
 
 		// msginfo(oRow:FieldGet(2) )
 
@@ -180,9 +180,9 @@ FUNCTION GetCamposDic( cTabela, cBrowse, lCmpTab , lOem )
 	oServ:Destroy( 0 )
 	oServ := Nil
 
-	IF Len( aCampos ) == 0
+	If Len( aCampos ) == 0
 		yAviso( 'Dicionario de dados não Localizado para Tabela ' +  cTabela + QUEBRA + 'Contacte Suporte.' , .f. )
-	END IF
+	End If
 
 RETURN aCampos
 

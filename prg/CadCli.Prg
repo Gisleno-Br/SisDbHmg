@@ -86,10 +86,6 @@ FUNCTION xCadCli( lNew, cCodigo1 )
 
 
 
-
-
-
-
    lOkCad := .F.
 
 

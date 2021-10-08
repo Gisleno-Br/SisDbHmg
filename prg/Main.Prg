@@ -947,18 +947,11 @@ Function PushButton( cjanela  , nIdBut , bBlock )
 	PostMessage(   OBTN_Handle(cJanela ,  nIdBut )   , WM_MOUSELEAVE,0,0)
 
 	EnableButton(cJanela  , nIdBut   , .f.)
-	EnableButton(cJanela  , nIdBut  , .t.)
-	
+	EnableButton(cJanela  , nIdBut  , .t.)	
 
 	If (bBlock != Nil )
 		Eval(bBlock)
 	End If 
-
-	//PostMessage(   OBTN_Handle(cJanela ,  nIdBut )   , WM_MOUSEMOVE ,0,0)
-
-
-	//SysWait(.3)
-	//msginfo(' push ' + cjanela )
 
 Return
 
@@ -2390,7 +2383,8 @@ RETURN
 
 
 
-Function Box(CurSRow, CurSCol, LastSWidth, LastSHeight , NOSm , cImgTab )
+
+Function Box(CurSRow, CurSCol, LastSWidth, LastSHeight , NOSm , cJanela1 , cImgTab )
 
 	LOCAL Sclavel01 :=   ALLTRIM("ImgxY") + ALLTRIM(NoSm) 
 	
@@ -2408,7 +2402,7 @@ Function Box(CurSRow, CurSCol, LastSWidth, LastSHeight , NOSm , cImgTab )
         ACTION Nil
     END IMAGE
 
-	SetProperty("fCadCli",Sclavel01,"Enabled",.F.)
+	SetProperty(cJanela1,Sclavel01,"Enabled",.F.)
 	
 RETURN
 

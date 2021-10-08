@@ -452,6 +452,7 @@ FUNCTION InputEvButton(aButs ,cJanela)
 	LOCAL ButHnd
 
 
+
   lTracking := .F.
 
   If !_isWindowDefined(cJanela)
@@ -460,32 +461,34 @@ FUNCTION InputEvButton(aButs ,cJanela)
 
 	nInd1 := AScan( aButs, {| a| a[ 1 ] == nWParam } )
 
-	FOR n1 := 1 TO Len( aButs )
+	For n1 := 1 TO Len( aButs )
 
-		IF ( OBTN_Handle( cJanela , aButs[ n1 ][ 1 ] ) == nHWnd )
+		If ( OBTN_Handle( cJanela , aButs[ n1 ][ 1 ] ) == nHWnd )
 			nIdBut := aButs[ n1 ][ 1 ]
-		END IF
+		End If
 
-	NEXT
+	Next 
 
 
-	IF ( nIdBut > 0 )
-
+	If ( nIdBut > 0 )
 
 		If (nMsg == WM_KEYDOWN)
 			//msginfo('aqui')
-			IF nWParam == VK_TAB
+			If nWParam == VK_TAB
 
-				If OBTN_Focus('_InputWindow', 6598 )
-					SetFocus(GetDlgItem(GetFormHandle( '_InputWindow'), 6599))
-				End If
+        If _isWindowDefined('_InputWindow')
+          If OBTN_Focus('_InputWindow', 6598 )
+            SetFocus(GetDlgItem(GetFormHandle( '_InputWindow'), 6599))
+          End If
+        End If 
 
 			End If
 
 
 		End If
 
-		IF ( nMsg == WM_MOUSEMOVE ) .And. (!lTracking)
+
+		If ( nMsg == WM_MOUSEMOVE ) .And. (!lTracking)
 
 			lTracking := TrackMouseEvent( nHWnd ) // TME_LEAVE is default flag
 
@@ -498,9 +501,9 @@ FUNCTION InputEvButton(aButs ,cJanela)
 			OBTN_Enable( cFormx, nIdBut, .T. )
 			OBTN_Visible( cFormx, nIdBut, .T. )
 
-		END IF
+		End If
 
-		IF ( nMsg == WM_MOUSELEAVE )
+		If ( nMsg == WM_MOUSELEAVE )
 
 			lOut := .t.
 			OBTN_Color( cFormx,  nIdBut, aBtnColor, .T. )
@@ -509,10 +512,11 @@ FUNCTION InputEvButton(aButs ,cJanela)
 
 			lTracking := .F.
 
-		END IF
-	ELSE
+		End If
 
-	END IF
+	Else
+
+	End If
 
 RETURN
 
