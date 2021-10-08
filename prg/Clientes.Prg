@@ -1094,17 +1094,25 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 	//PRIVATE aCamposDb := aCampos
 
 
+
 	Local cSqlx1 := ''
 	Local n1 := 1
-	Local aCampos := GetCamposDic( cTabela, 'S' , .t. , .t. )
-	Local aCabec  := GetCamposDic( cTabela, 'S' , .f. , .t. )
+	Local aCampos  := GetCamposDic( cTabela, 'S' , .t. , .t. )
+	//Local aCabec  := GetCamposDic( cTabela, 'S' , .f. , .t. )
+
+	LOCAL aCabec  := GetCamposDic( cTabela, 'S', .F. , .f. )
+
 	Local aTams   := GetCamposInf( cTabela, 'TAM' )
+
 	Local aTips   := GetCamposInf( cTabela, 'TIPO' )
-	LOCAL nQReg := GetReg( cTabela )
-	Local qReg1 := 200
-	Local calias := "TMP"
+	LOCAL nQReg   := GetReg( cTabela )
+	Local qReg1   := 200
+	Local calias  := "TMP"
 	local cTab1
 	local aCabex:={}
+	
+
+
 
 	Local nIndx1 := 0
 
@@ -1320,6 +1328,8 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 		//AAdd( aJustify, GRID_JTFY_RIGHT)
 
 		cLabelx := "BtnHeader" + StrZero(n2,3)
+
+
 
 		Aadd(aMtrHeader , {  nColL , aTams[n2]  , Alltrim( Hb_UTf8ToStr(aCabec[n2])    )  } )
 

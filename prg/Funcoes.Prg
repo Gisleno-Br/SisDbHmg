@@ -154,7 +154,11 @@ FUNCTION GetCamposDic( cTabela, cBrowse, lCmpTab , lOem )
 
 						End If
 					Else
-						AAdd( aCampos,   Hb_UTf8ToStr(oRow:FieldGet( 5 ))  )
+
+						//AAdd( aCampos,   Hb_UTf8ToStr(oRow:FieldGet( 5 ))  )
+						AAdd( aCampos,   oRow:FieldGet( 5 )  )
+						
+
 
 					End If
 
