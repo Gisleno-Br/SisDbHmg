@@ -115,8 +115,9 @@ FUNCTION LoadFitros( cTabela1 )
 
    InstallEventHandler(  'EventConsu' )   
 
-   
-   
+      
+   xLoadFiltros(cTabx , .t.  )
+
    Activate Window fFiltrosCad
 
    RemoveHandler( 'EventConsu' )
@@ -267,6 +268,7 @@ FUNCTION xLoadFiltros( cTabela1  , lUltimo )
    If ( oQuery:LastRec() > 0 )     
       Domethod( 'fFiltroscad', 'GridFiltro', 'SetFocus' )
    End If
+
 
 
 
@@ -486,8 +488,12 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
    fFiltro. Titulo. Value := ''
    fFiltro. Valor.  Value := ''
 
+
+
    fFiltro.CmbOperador.value := 0
    fFiltro.CmbCampo.value    := 0
+
+   fFiltro.EdtFiltro.Value := ''
 
    fFiltro.CmbOrdem.value    := 0
 
@@ -525,6 +531,7 @@ Function xFechay()
    //PushButton( 'fFiltro', 9599 )
    //_ReleaseWindow( 'fFiltro' ) 
 
+   RemoveHandler('EvFiltButton')
    fFiltro.Hide()
 
    //SysWait(.2)
@@ -571,6 +578,8 @@ FUNCTION EvFiltButton( nHWnd, nMsg, nWParam, nLParam )
 
       IF nI1 > 0
          Eval(   aButFilt[ ni1 ][ 3 ] )
+         //SysWait(.2)
+
       End If
 		
 
@@ -628,12 +637,13 @@ FUNCTION FiltroAdx()
    LOCAL cTabela := cTabx
    //AllTrim( fFiltro .lblTabela. CAPTION )
 
-   LOCAL cC1    := AllTrim( fFiltro .CmbCampo. Item( fFiltro .CmbCampo. Value ) )
+   LOCAL cC1    := Hb_UTf8ToStr(AllTrim( fFiltro .CmbCampo. Item( fFiltro .CmbCampo. Value ) ))
 
    LOCAL cFiltro := ''
    LOCAL cMask := "999,999,999.99"
 
    // Local cCampo := Left( cc1 , Len(cc1) - 2 )
+
 
    LOCAL cCampo := Lower( GetInfoDic( cC1, cTabela, 'CAMPO' ) )
 
@@ -643,8 +653,6 @@ FUNCTION FiltroAdx()
 
 
    LOCAL cValor := AllTrim( fFiltro .Valor. Value )
-
-
 
    If  ( ( cTipo == 'I' ) .OR. ( cTipo == 'B' ) )
 
@@ -664,13 +672,13 @@ FUNCTION FiltroAdx()
 
    If AllTrim( fFiltro .CmbOperador. DisplayValue ) = 'CONTEM'
       If ( cTipo != 'C' )
-         MsgExclamation( "Operador 'CONTEM' funciona apenas com campos Tipo Caracter." )
+         yAviso( "Operador 'CONTEM' funciona apenas com campos Tipo Caracter." , .f. )
          RETURN
       End If
    End If
 
    If ( cTipo == 'C' )
-      If AllTrim( fFiltro .CmbOperador. DisplayValue ) != 'CONTEM'
+      If AllTrim( fFiltro .CmbOperador. DisplayValue ) != 'Co'
          cFiltro := AllTrim( cCampo ) + ' ' + coperador + ' ' + Chr( 39 ) + AllTrim( cValor ) + Chr( 39 )
          // msginfo(cFiltro)
       Else
@@ -678,6 +686,8 @@ FUNCTION FiltroAdx()
          // msginfo(cFiltro)
       End If
    End If
+
+
 
    If ( cTipo == 'I' ) .OR. ( cTipo == 'B' ) .OR. ( cTipo == 'N' )
       cFiltro := AllTrim( cCampo ) + ' ' +  cOperador + ' ' + cValor
@@ -797,8 +807,6 @@ STATIC FUNCTION SaveFiltro( lNovo, nIdFiltro1 )
 
    If lOk 
       
-     
-
       //SysWait( .2 )
       yAviso('Filtro Gravado com Sucesso!' , .f. )
       xLoadFiltros( cTabx , .t. )
@@ -810,7 +818,7 @@ RETURN lOk
 
 FUNCTION gField()
 
-   LOCAL cCampo := fFiltro .CmbCampo. DisplayValue
+   LOCAL cCampo := HB_UTF8ToStr(fFiltro .CmbCampo. DisplayValue)
    LOCAL cTabela := AllTrim( cTabx )
    LOCAL cTipo := ''
 
@@ -821,6 +829,7 @@ FUNCTION gField()
       RETURN
    End If
 
+   HB_SetCodePage("UTF8")
 
 
    cTipo := AllTrim( GetInfoDic( cCampo, cTabela, 'TIPO' ) )
@@ -895,3 +904,39 @@ FUNCTION gField()
    DO EVENTS
 
 RETURN
+
+FUNCTION GrvFiltro( cTabela, cDescr, cFiltro, cOrdem, lCresc )
+
+	LOCAL nIdFilt := GetReg( "filtros" , "idfiltros")
+	LOCAL oServer := GetConexao()
+
+	LOCAL cSql := "insert into filtros values(" + AllTrim( Str( nIdFilt + 1 ) ) + "," + Chr( 34 ) + cdescr + Chr( 34 ) + "," + Chr( 34 ) + ;
+		cTabela + Chr( 34 ) + "," + Chr( 34 ) + cFiltro + Chr( 34 ) + "," + Chr( 34 ) + "S" + Chr( 34 ) + "," + Chr( 34 ) + cOrdem + Chr( 34 ) + "," + ;
+		Chr( 34 ) + iif( lCresc, " ", "N" ) + Chr( 34 ) + ")"
+
+	hb_MemoWrit( 'SqlInsert.txt', cSql )
+
+	oQuery := oServer:Query(  cSql )
+
+	If oServer:NetErr()
+		yAviso( "Error ao Executar Query " + cSql + " : " + oServer:Error()  , .f. )
+
+		
+		oServer:Destroy()
+		oServer := Nil
+
+		oQuery:Destroy()
+		oQuery := Nil
+
+		RETURN .F.
+
+	End If 
+
+	oServer:Destroy()
+	oServer := Nil
+
+	oQuery:Destroy()
+	oQuery := Nil
+
+Return .T.
+

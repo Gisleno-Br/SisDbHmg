@@ -1074,40 +1074,6 @@ DO EVENTS
 RETURN
 
 
-FUNCTION GrvFiltro( cTabela, cDescr, cFiltro, cOrdem, lCresc )
-
-	LOCAL nIdFilt := GetReg( "filtros" , "idfiltros")
-	LOCAL oServer := GetConexao()
-
-	LOCAL cSql := "insert into filtros values(" + AllTrim( Str( nIdFilt + 1 ) ) + "," + Chr( 34 ) + cdescr + Chr( 34 ) + "," + Chr( 34 ) + ;
-		cTabela + Chr( 34 ) + "," + Chr( 34 ) + cFiltro + Chr( 34 ) + "," + Chr( 34 ) + "S" + Chr( 34 ) + "," + Chr( 34 ) + cOrdem + Chr( 34 ) + "," + ;
-		Chr( 34 ) + iif( lCresc, " ", "N" ) + Chr( 34 ) + ")"
-
-	hb_MemoWrit( 'SqlInsert.txt', cSql )
-
-	oQuery := oServer:Query(  cSql )
-
-	If oServer:NetErr()
-		yAviso( "Error ao Executar Query " + cSql + ": " + oServer:Error()  , .f. )
-
-		
-		oServer:Destroy()
-		oServer := Nil
-
-		oQuery:Destroy()
-		oQuery := Nil
-
-		RETURN .F.
-
-	End If 
-
-	oServer:Destroy()
-	oServer := Nil
-
-	oQuery:Destroy()
-	oQuery := Nil
-
-Return .T.
 
 Function Contey( cChar , cC1)
 
@@ -1344,15 +1310,15 @@ FUNCTION GetInfoDic( cCampo1, cTabela, cInfo )
 
 	hb_MemoWrit( 'SqlinfoDic.txt', cSql )
 
+	HB_SetCodePage("UTF8")
+
 	oQuery := oServ:Query( cSql )
 
 
-
 	IF oQuery:Eof()
-		yAviso(  'Houve um Erro ao tenta recuperar Informações do Campo : ' + cCampo1  + "." + QUEBRA + ;
+		yAviso(  Hb_UTF8ToStr('Houve um Erro ao tentar recuperar InformaÃ§Ãµes do Campo : ' + cCampo1  + ".") + ;
 			"Tabela : " + cTabela + "/" + cInfo + QUEBRA + ;
 			'Contactar Suporte!' , .f. )
-
 	ELSE
 
 		oRow := oQuery:GetRow( 1 )
@@ -1486,7 +1452,7 @@ FUNCTION FiltroAdd()
 		If Empty(alltrim(fFiltro.EdtFiltro.value)) .And. ;
 				(Alltrim(fFiltro.EdtFiltro.value) != "And") .And. ;
 				(Alltrim(fFiltro.EdtFiltro.value) != "Or")
-			yaviso("Quando existe mais de um Parametro para a Consulta,a Segunda em diante Deve Começar com um op.Logico(And ou Or)." , .f.)
+			yaviso("Quando existe mais de um Parametro para a Consulta,a Segunda em diante Deve Comeï¿½ar com um op.Logico(And ou Or)." , .f.)
 			BT_ClientAreaInvalidateAll ('fFiltro')
 			Return
 		Else
@@ -1670,7 +1636,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 	IF Len( fCriaConsulta .LstOrdem. Value ) > 1
 		FOR nx := 1 TO  Len( fCriaConsulta .LstOrdem. Value )
 			IF AllTrim( fCriaConsulta .LstOrdem. Item(  fCriaConsulta .LstOrdem. Value[ nx ] ) )  = 'Nenhum'
-				yaviso(  "Em Ordenação dos Campos nÃ£o pode estar Marcado 'Nenhum',Caso haja Campos Selecionados para OrdenaÃ§Ã£o."  , .f. )
+				yaviso(  "Em Ordenaï¿½ï¿½o dos Campos nÃ£o pode estar Marcado 'Nenhum',Caso haja Campos Selecionados para OrdenaÃ§Ã£o."  , .f. )
 				RETURN
 			ELSE
 				cCampoORd += ( AllTrim( fCriaConsulta .LstOrdem. Item(  fCriaConsulta .LstOrdem. Value[ nx ] ) ) + "." )
@@ -1728,7 +1694,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 	hb_MemoWrit( 'Cons1.txt', cSql )
 
 	IF oQuery == Nil
-		yaviso( "Execução da Rotina sera Interrompida(Cons  Cab). " + QUEBRA + "Contacte Suporte." , .f. )
+		yaviso( "Execuï¿½ï¿½o da Rotina sera Interrompida(Cons  Cab). " + QUEBRA + "Contacte Suporte." , .f. )
 		RETURN .F.
 	END IF
 
@@ -1746,7 +1712,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 
 
 	If !GravaDic( nId  , cTabelax )
-		yAviso( "Houve Falha no processo de Gravação no Dicionario de Dados." ,, .f.  )
+		yAviso( "Houve Falha no processo de Gravaï¿½ï¿½o no Dicionario de Dados." ,, .f.  )
 		Return
 	End If
 
@@ -1788,7 +1754,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 		oQuery := ExecSql( @oServer, cSqlx1 )
 
 		IF oQuery == Nil
-			yAviso( hb_UTF8TOSTR("Execução da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." , .f. )
+			yAviso( hb_UTF8TOSTR("Execuï¿½ï¿½o da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." , .f. )
 			RETURN
 		END IF
 
@@ -1818,7 +1784,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 		hb_MemoWrit( 'ConsParam.txt', cSqlx1 )
 
 		IF oQuery == Nil
-			yAviso( hb_UTF8TOSTR("Execução da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." ,  .f. )
+			yAviso( hb_UTF8TOSTR("Execuï¿½ï¿½o da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." ,  .f. )
 			RETURN .F.
 		END IF
 
@@ -1890,7 +1856,7 @@ Function GravaDic( nIdConsul  ,cTabOri)
 		hb_MemoWrit( 'ConsInsert.txt', cSql )
 
 		If oQuery == Nil
-			yAviso( "Execução da Rotina sera Interrompida(Cons  item)." + QUEBRA + "Contacte Suporte." , .f. )
+			yAviso( "Execuï¿½ï¿½o da Rotina sera Interrompida(Cons  item)." + QUEBRA + "Contacte Suporte." , .f. )
 
 			oServer:Destroy()
 			oServer := Nil
@@ -2547,7 +2513,7 @@ dbGoTop()
 
 If ( RecCount() == 0 )
 
-	Yaviso( "Consulta Não Retornou Registros." , .t. )
+	Yaviso( "Consulta Nï¿½o Retornou Registros." , .t. )
 	lOk1 := .f.
 	//Return .f.
 

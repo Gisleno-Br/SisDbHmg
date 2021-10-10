@@ -123,7 +123,7 @@ FUNCTION CadCli()
 	LOCAL aCabec  := GetCamposInf( wCad, 'CABEC' )
 	LOCAL aCampos := GetCamposDic( wCad, 'S', .T. )
 
-	HB_SETCODEPAGE("UTF8")
+	HB_SetCodePage("UTF8")
 
 
 
