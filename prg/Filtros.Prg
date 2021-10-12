@@ -22,9 +22,14 @@ FUNCTION LoadFitros( cTabela1 )
    LOCAL nIndexFiltro := 0
    LOCAL oQuery
    LOCAL oRo
-   LOCAL cCab1 := hb_ANSIToOEM( 'Expressão' )
+   LOCAL cCab1 :=  ''
 
-   PRIVATE aHed1 := { 'Id', 'Filtro', cCab1 }
+
+   HB_SETCODEPAGE("PT850")
+
+
+
+   PRIVATE aHed1 := { 'Id', 'Filtro', Hb_AnsiToOem('Expressão') }
 
 
    PRIVATE cTabx := cTabela1
@@ -32,17 +37,13 @@ FUNCTION LoadFitros( cTabela1 )
 
    PRIVATE cFiltrox1 := ''
 
-   
+   Private lNextOp := .f. 
 
+   
    SET LANGUAGE TO PORTUGUESE
    SET CODEPAGE TO PORTUGUESE
 
-   HB_SetCodePage( "PT850" )
-   hb_langSelect( "PT" )
-
-   //If !_isWindowDefined('fFiltroCad')
    Load Window fFiltrosCad
-   //End If    
 
 
    Center Window fFiltrosCad
@@ -155,7 +156,9 @@ FUNCTION xExclFiltro()
    LOCAL oServer
    LOCAL oQuery
 
-   If Confirmaviso( "Confirma  Exclusão desse Filtro ? ", , , , .F. )
+   If Confirmaviso( hb_ANSIToOEM("Confirma  Exclusão desse Filtro ? ") , , .F. )
+
+
 
       cSqlx1 := "delete from filtros where tabela = '" + cTabx + "' and idfiltros = " +  AllTrim( aMtr[ 1 ] )
       // msginfo(cSqlx1)
@@ -167,11 +170,10 @@ FUNCTION xExclFiltro()
       oQuery:Destroy()
       
 
+
       // fFiltrosCad.GridFiltro.Delete(a1)
 
       Domethod( 'fFiltrosCad', 'GridFiltro', "DeleteItem", a1 )
-
-
 
       fFiltrosCad .GridFiltro. Value := -1
       Domethod( 'fFiltrosCad', 'GridFiltro', 'Refresh' )
@@ -311,7 +313,7 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
    LOCAL oRow
    LOCAL n1 := 1
    LOCAL aCabec1  := GetCamposDic( cTabela, ' ', .F. , .f. )
-   LOCAL cSqlx1
+   LOCAL cSqlx1 := ''
 
    LOCAL nIdFlt := nIdFiltro
 
@@ -337,15 +339,14 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
 
    fFiltro .Lbltabela. value := cTabela
 
-   HB_SETCODEPAGE("UTF8")
+   //HB_SETCODEPAGE("UTF8")
 
-//   SetProperty("fFiltro" , "Frame_1" , "Value" , Hb_AnsiToOem(" Criação de Filtros " )  ) 
+   HB_SETCODEPAGE("PT850")
+
+   SetProperty("fFiltro" , "Frame_1" , "Caption" , hb_ANSIToOEM("Criação de Filtros" )  ) 
    
 
-
-
-      
-      
+         
    ON KEY ESCAPE OF fFiltro Action xFechay()
 
 
@@ -361,36 +362,42 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
    While n1 <= Len( aCabec1 )
 
       If  !Empty( AllTrim( aCabec1[ n1 ] ) )
-          fFiltro .cmbCampo. Additem(  Hb_UTf8ToStr(aCabec1[ n1 ] )  )
-          fFiltro .cmbOrdem. Additem(  Hb_UTf8ToStr(aCabec1[ n1 ] ) )
-          AAdd( aCampos1,  Hb_UTf8ToStr(aCabec1[ n1 ])  )
+          fFiltro .cmbCampo. Additem(  hb_UTF8ToStr(aCabec1[ n1 ] )  )
+          fFiltro .cmbOrdem. Additem(  hb_UTF8ToStr(aCabec1[ n1 ] ) )
+          AAdd( aCampos1,  hb_UTF8ToStr(aCabec1[ n1 ])  )
       End If
 
       n1++
 
    Enddo
 
-   IF !lNew1
+
+   If !lNew1
 
       cSqlx1 := "select * from filtros where tabela = '" + cTabela + "' and idFiltros = " + AllTrim( Str( nIdFiltro ) )
       oServer := GetConexao()
+
+      //msginfo( cSqlx1 )
+
       // oRow
       oQuery  := oServer:Query( cSqlx1 )
 
-      IF !oQuery:Eof()
+      If  !oQuery:Eof()
 
          oRow := oQuery:GetRow( 1 )
 
          fFiltro .titulo. value    := GetCampo( oRow, 'descricao' )
          fFiltro .EdtFiltro. value := GetCampo( oRow, 'filtro' )
 
+         //msginfo(   GetCampo( oRow, 'descricao' ) )
+
          IF !Empty( GetCampo( oRow, 'ordem' ) )
              fFiltro .cmbOrdem. value := AScan( aCampos1,  AllTrim( GetCampo(oRow, 'ordem' ) ) )
          END IF
 
+         lNextOp := .t.
 
-      END IF
-
+      End If 
 
 
       oQuery:Destroy()
@@ -398,7 +405,7 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
 
 
 
-   END IF
+   End If
 
    //cJan := cFiltroDlg
 
@@ -458,8 +465,8 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
    AAdd( aButFilt , {  9281,  OBTN_Handle( cJan, 9281 ),   {||  PushButton( cJan, 9281 ),  UpdFiltrox( ')' )   },  cJan   } )
 
 
-   AAdd( aButFilt , {  9541,  OBTN_Handle( cJan, 9541 ),   {||  PushButton( cJan, 9541 ), sysWait( .2 ), UpdFiltrox( 'And' )   },  cJan   } )
-   AAdd( aButFilt , {  9481,  OBTN_Handle( cJan, 9481 ),   {||  PushButton( cJan, 9481 ), sysWait( .2 ), UpdFiltrox( 'Or' )   },  cJan   } )
+   AAdd( aButFilt , {  9541,  OBTN_Handle( cJan, 9541 ),   {||  PushButton( cJan, 9541 ),  UpdFiltrox( 'And' )   },  cJan   } )
+   AAdd( aButFilt , {  9481,  OBTN_Handle( cJan, 9481 ),   {||  PushButton( cJan, 9481 ),  UpdFiltrox( 'Or' )   },  cJan   } )
 
     
    EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButFilt, cJan ) },    OBTN_Handle( cJan, 9598 )   ), .T. )
@@ -485,35 +492,28 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
 
    InstallEventHandler('EvFiltButton')
 
-   fFiltro. Titulo. Value := ''
-   fFiltro. Valor.  Value := ''
+   If lNew1
+
+      fFiltro. Titulo. Value := ''
+      fFiltro. Valor.  Value := ''
+
+
+      fFiltro.CmbOperador.value := 0
+      fFiltro.CmbCampo.value    := 0
+
+      fFiltro.EdtFiltro.Value := ''
+
+      fFiltro.CmbOrdem.value    := 0
+
+   End If 
 
 
 
-   fFiltro.CmbOperador.value := 0
-   fFiltro.CmbCampo.value    := 0
-
-   fFiltro.EdtFiltro.Value := ''
-
-   fFiltro.CmbOrdem.value    := 0
+   lNextOp := .f. 
 
    fFiltro.Show()
 
    fFiltro.SetFocus()
-
-
-
-   //fFiltro.Activate()
-
-//   SysWait(.2)
-   
-
-   //Activate Window fFiltro
-
-   //RemoveHandler('EvFiltButton')
-
-   // DoMethod( cFiltroDlg , 'Show')
-
 
 Return lOk
 
@@ -524,22 +524,9 @@ Return lOk
 
 Function xFechay()
 
-   //_FechaJan( 'fFiltro' )     
-    //DoMethod('fFiltrosCad' , 'SetFocus')  
-   // sysWait(.2)
-
-   //PushButton( 'fFiltro', 9599 )
-   //_ReleaseWindow( 'fFiltro' ) 
-
+  
    RemoveHandler('EvFiltButton')
    fFiltro.Hide()
-
-   //SysWait(.2)
-
-   //DoMethod('fFiltrosCad' , 'GridFiltro'  , 'SetFocus')  
-
-
-
 
 Return 
 
@@ -576,10 +563,8 @@ FUNCTION EvFiltButton( nHWnd, nMsg, nWParam, nLParam )
 
       nI1 := AScan( aButFilt, {| n | n[ 1 ] == nId } )
 
-      IF nI1 > 0
-         Eval(   aButFilt[ ni1 ][ 3 ] )
-         //SysWait(.2)
-
+      If nI1 > 0
+         Eval(   aButFilt[ ni1 ][ 3 ] )       
       End If
 		
 
@@ -590,18 +575,68 @@ Return
 
 
 
+
 FUNCTION UpdFiltrox( cCar1 )
 
    LOCAL c1 := AllTrim( GetProperty( "fFiltro","EdtFiltro","Value" ) )
+
+   If (cCar1 = 'And') .or. (cCar1 = 'Or')
+      If !lNextOp
+         yAviso(  hb_ANSIToOEM("Proximo Elemento do Filtro deve ser Uma Expressão. EX: (Codigo = '0000').") , .f. )  
+         //Hb_AnsiToOem
+         Return 
+      End If 
+   End If 
+
 
    RefreshAll( "fFiltro" )
 
    c1 := AllTrim( GetProperty( "fFiltro","EdtFiltro","Value" ) )
 
+   fFiltro .EdtFiltro. value := c1 + ' ' + cCar1 
 
-   fFiltro .EdtFiltro. value := c1 + ' ' + cCar1 + ' '
+   If (cCar1 = 'And') .or. (cCar1 = 'Or')
+      lNextOp := .f. 
+   End If    
 
 RETURN
+
+Function xValidaFlt()
+
+      Local lOk := .t. 
+      Local n1  := 0 
+      Local n2  := 0 
+      Local n3  := 0 
+      Local cTexto := Alltrim(fFiltro .EdtFiltro. value)
+
+      For n1 := 1 To Len(Alltrim(    cTexto     ))
+
+           If Substr(  Alltrim(    cTexto      ) , n1, 1 ) = '('
+
+               If Substr(  Alltrim(   cTexto    ) , n1+1, 2 ) = ' )'
+                  lOk := .f.       
+               End If    
+
+
+               n2++
+           End If 
+
+           If Substr(  Alltrim(   cTexto      ) , n1, 1 ) = ')'
+               n3++
+
+               If Substr(  Alltrim(   cTexto      ) , n1+1, 2 ) = '( '
+                  lOk := .f.       
+               End If    
+
+           End If 
+
+           
+      Next    
+
+Return ((n3 = n2) .And. (lOk))
+
+
+
 
 FUNCTION ChgxFltr( cName )
 
@@ -614,14 +649,13 @@ FUNCTION ChgxFltr( cName )
    If lNovoFilt
       If  ( Len( AllTrim(fFiltro .Valor. Value ) ) > 0 ) .OR. ( fFiltro .Getdata1. Visible  ) .OR. ;
             ( fFiltro .DoubleEdit. Value > 0 ) .OR. ( fFiltro .EdtNum. Value > 0 )
-         // msginfo('p ' + cName )
-
+         
          If ( fFiltro .CmbCampo. value > 0 )
-            // OBTN_Enable( cjanx , 959, .t. )
+         
          End If
 
       Else
-         // OBTN_Enable( cjanx , 959 , .f. )
+         
       End If
    Else 
       OBTN_Enable( cjanx, 9598, .T. )
@@ -637,22 +671,40 @@ FUNCTION FiltroAdx()
    LOCAL cTabela := cTabx
    //AllTrim( fFiltro .lblTabela. CAPTION )
 
-   LOCAL cC1    := Hb_UTf8ToStr(AllTrim( fFiltro .CmbCampo. Item( fFiltro .CmbCampo. Value ) ))
+   LOCAL cC1    := AllTrim( fFiltro .CmbCampo. Item( fFiltro .CmbCampo. Value ) )
+   
 
    LOCAL cFiltro := ''
    LOCAL cMask := "999,999,999.99"
 
-   // Local cCampo := Left( cc1 , Len(cc1) - 2 )
+   Local cCampo
+   Local cTipo 
+   Local cOperador
+   
+   
+   If Empty(Alltrim(cC1))
+      yAviso("Necessario Informar o Campo para o Filtro." , .f. )  
+      REturn 
+   End If    
 
 
-   LOCAL cCampo := Lower( GetInfoDic( cC1, cTabela, 'CAMPO' ) )
+   HB_SetCodePage('UTF8')
 
-   LOCAL cTipo  := AllTrim( GetInfoDic( cC1, cTabela, 'TIPO' ) )
+   cCampo := Lower( GetInfoDic(    cC1, cTabela, 'CAMPO' ) )
 
-   LOCAL cOperador := Left( AllTrim( fFiltro .CmbOperador. DisplayValue ), 2 )
+   cTipo  := AllTrim( GetInfoDic(    cC1, cTabela, 'TIPO' ) )
+
+   cOperador := Left( AllTrim( fFiltro .CmbOperador. DisplayValue ), 2 )
+
+    cValor := AllTrim( fFiltro .Valor. Value )
 
 
-   LOCAL cValor := AllTrim( fFiltro .Valor. Value )
+   If (lNextOp)
+      yAviso("Proximo Elemento do Filtro deve ser Um Operador Relacional. EX: ( And , Or )." , .f. )  
+      Return 
+   End If 
+
+
 
    If  ( ( cTipo == 'I' ) .OR. ( cTipo == 'B' ) )
 
@@ -680,11 +732,11 @@ FUNCTION FiltroAdx()
    If ( cTipo == 'C' )
       If AllTrim( fFiltro .CmbOperador. DisplayValue ) != 'Co'
          cFiltro := AllTrim( cCampo ) + ' ' + coperador + ' ' + Chr( 39 ) + AllTrim( cValor ) + Chr( 39 )
-         // msginfo(cFiltro)
+         
       Else
-         cFiltro := AllTrim( cCampo ) + ' LIKE ' + Chr( 39 ) + AllTrim( cValor ) + '%' + Chr( 39 )
-         // msginfo(cFiltro)
+         cFiltro := AllTrim( cCampo ) + ' LIKE ' + Chr( 39 ) + AllTrim( cValor ) + '%' + Chr( 39 )         
       End If
+
    End If
 
 
@@ -710,16 +762,16 @@ FUNCTION FiltroAdx()
    fFiltro .CmbCampo. Value := 1
    fFiltro .CmbOrdem. Value := 1
 
-   // msginfo(cFiltro)
-
+   
    fFiltro .EdtFiltro. Value := cVal +  ' ' + cFiltro
 
-// OBTN_Enable( 'fFiltro', 9598, .t. )
 
    OBTN_Enable( 'fFiltro', 9598, .T. )
    OBTN_Enable( 'fFiltro', 959, .F. )
 
    DoMethod( 'fFiltro', 'cmbCampo', 'SetFocus' )
+
+   lNextOp := .t.
 
 RETURN
 
@@ -737,6 +789,8 @@ STATIC FUNCTION LimpaFilx()
    fFiltro .CmbCampo. Value := 1
    fFiltro .CmbOrdem. Value := 1
 
+   lNextOp := .f. 
+
 RETURN
 
 STATIC FUNCTION SaveFiltro( lNovo, nIdFiltro1 )
@@ -748,12 +802,31 @@ STATIC FUNCTION SaveFiltro( lNovo, nIdFiltro1 )
 
    // Local cSql
 
+   DEFAULT lNovo := .T.   
+     
 
-   DEFAULT lNovo := .T.
+   /*
+   If At("()", Alltrim(fFiltro.EdtFiltro.Value)) > 0
+      yAviso("Elemento Invalido () para o Filtro." , .f. )  
+      Return .f. 
+   End If    
+   */     
+
+   If !xValidaFlt()
+       yAviso( hb_ANSIToOEM("Inconsistencias Detectadas no Filtro com Relação aos Parenteses ( ) .)" ) , .f. )  
+       Return .f. 
+   End If    
+
+   If Empty(  Alltrim(fFiltro .Titulo. Value)   )
+      yAviso( hb_ANSIToOEM("O Titulo do Filtro deve estar Informado para Realizar Gravação. ") , .f. )  
+      Return .f. 
+   End If 
+
 
    xFechay()      
 
-   If Confirmaviso( "Confirma Gravação desse Filtro ? ", , .F. )   
+
+   If Confirmaviso( hb_AnsiToOem("Confirma Gravação desse Filtro ? ") , , .F. )   
      
       If lNovo
          lOk := GrvFiltro( cTabx, AllTrim( fFiltro .Titulo. Value ), AllTrim( fFiltro .EdtFiltro. Value ),  fFiltro .CmbOrdem. DisplayValue, ;
@@ -818,19 +891,28 @@ RETURN lOk
 
 FUNCTION gField()
 
-   LOCAL cCampo := HB_UTF8ToStr(fFiltro .CmbCampo. DisplayValue)
+   LOCAL cCampo := hb_ANSIToOEM(fFiltro .CmbCampo. DisplayValue)
    LOCAL cTabela := AllTrim( cTabx )
    LOCAL cTipo := ''
 
-   // Local cTipo
+   
    LOCAL cMask
 
-   If ( Empty( cCampo ) )
-      RETURN
+   If ( Empty( Alltrim(cCampo) ) )
+         Return 
    End If
+
+   //msginfo(cCampo)
+
 
    HB_SetCodePage("UTF8")
 
+   //HB_SetCodePage("PT850")
+
+
+   cCampo := fFiltro .CmbCampo. item(   fFiltro .CmbCampo.Value  )
+
+   //msginfo(cCampo)
 
    cTipo := AllTrim( GetInfoDic( cCampo, cTabela, 'TIPO' ) )
    cMask := AllTrim( GetInfoDic( cCampo, cTabela, 'MASCARA' ) )
@@ -939,4 +1021,5 @@ FUNCTION GrvFiltro( cTabela, cDescr, cFiltro, cOrdem, lCresc )
 	oQuery := Nil
 
 Return .T.
+
 

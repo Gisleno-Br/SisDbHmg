@@ -29,8 +29,12 @@ REQUEST HB_CODEPAGE_PT850
 
 FUNCTION xInitFrm()
 
-   Load Window fCadCli
 
+   
+   HB_SETCODEPAGE("PT850")   
+
+
+   Load Window fCadCli
 
 
    HMG_ChangeWindowStyle(  fCadCli.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
@@ -689,6 +693,9 @@ FUNCTION InpCadCli()
    LOCAL  nLParam := EventLPARAM()
    LOCAL cControl
    LOCAL cForm
+
+
+   
 
    IF ( nMsg == WM_MOUSEMOVE ) .AND. ( !lTracking45 )
 

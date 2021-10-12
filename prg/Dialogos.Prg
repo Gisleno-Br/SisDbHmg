@@ -116,7 +116,10 @@ FUNCTION MsgAviso( cMsg1, nTipo )
 
 
 
+
+
 //	msginfo('232')
+
 	Load Window fDialogo
 
 
@@ -126,10 +129,21 @@ FUNCTION MsgAviso( cMsg1, nTipo )
 
 	Center Window fDialogo
 
-	HB_SETCODEPAGE("UTF8")
+	//HB_SETCODEPAGE("UTF8")
+
 	HB_SETCODEPAGE("PT850")
 
-	SetProperty( "fDialogo", "lblMsg", "Value",  HB_AnsiToOem(    AllTrim( cMsg1 )  )     )
+	
+	
+	SetProperty( "fDialogo", "lblMsg", "Value",   cMsg1     )
+
+
+	SetProperty( "fDialogo", "Label_1", "Value",   Hb_AnsiToOem("Aviso\Informação")     )
+
+	If nTipo == 2
+		SetProperty( "fDialogo", "Label_1", "Value",   "Confirme"     )
+	End If 
+
 
 	//cActiveJan := 'fDialogo'
 
@@ -145,11 +159,8 @@ FUNCTION MsgAviso( cMsg1, nTipo )
 	cActiveJan := cSaveJan
 
 	If nIndexDlg22 > 0
-		EventRemove(nIndexDlg22)
-		//msginfo('removioo')
+		EventRemove(nIndexDlg22)		
 	End If
-
-
 
 	If n20 > 0
 		EventRemove(n20)
@@ -158,8 +169,6 @@ FUNCTION MsgAviso( cMsg1, nTipo )
 	If n21 > 0
 		EventRemove(n21)
 	End If
-
-
 
 
 RETURN lRet
@@ -265,46 +274,13 @@ FUNCTION EventDlg()
 
 				If (nIe1 > 0)
 
-					//msginfo('k33')
-					//PushButton( aRotHnd[nIe1][3]  , nId )
-					//	SysWait(.2)
-
-					//OBTN_Visible( cMenuName, nId , .T. )
-					//msginfo('k33')
-
-					//		SysWait(.2)
+			
 
 					PushButton( aRotHnd[nIe1][3]  , nId  )
-
-//
-					//BT_ClientAreaInvalidateAll ( cMenuName )
-
-					//m
-					//	SysWait(.3)
-
-					//	OBTN_Visible( cMenuName, nId , .T. )
-					//	SysWait(.2)
 
 					Eval( aRotHnd[nIe1][2]  )
 
 
-					//BT_ClientAreaInvalidateAll ( 'fCadCli' )
-					//	SysWait(.2)
-
-					//_showwindow('fCadCli')
-
-					//PostMessage(  GetFormHandle('fCadCli') , WM_PAINT ,0,0)
-
-
-					//SysWait(.1)
-
-					//msginfo('k33 444')
-
-					//OBTN_Focus( cMenuName, nId , .f. )
-
-					//SysWait(.3)
-
-					//sginfo('k33 44  777 4')
 
 
 
@@ -604,7 +580,7 @@ FUNCTION xIniProgress( nTp )
 
 
 			OBTN_Create( cJanx, 6653, "Sim", 185, 375,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-			OBTN_Create( cJanx, 6654, hb_ANSIToOEM( "Não" ), 185, 435,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+			OBTN_Create( cJanx, 6654, hb_ANSIToOEM( "Nï¿½o" ), 185, 435,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 
 			OBTN_Font( cJanx, 6653,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 			OBTN_Font( cJanx, 6654,  { cFontName, nFontSize, .F., .F., .F., .F. } )

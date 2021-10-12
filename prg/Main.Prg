@@ -417,6 +417,7 @@ FUNCTION Main
 	HB_SETCODEPAGE("UTF8")
 	n := 1
  
+	//yAviso(  Hb_AnsiToOem("Proximo Elemento do Filtro deve ser Uma Expressão. EX: (Codigo = '0000').") , .f. )  
 
 	
 

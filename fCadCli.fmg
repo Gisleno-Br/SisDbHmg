@@ -11,6 +11,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
             Box(26,4, 842 , 199 , "01", "fCadCli"  )
             Box(228,4, 842 , 120 , "02", "fCadCli" )
             
+            
 
             DEFINE LABEL Label_1
                 ROW    41
@@ -127,7 +128,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 COL    28
                 WIDTH  120
                 HEIGHT 24
-                VALUE "EndereÃ§o"
+                VALUE hb_AnsiToOEm("Endereço")
                 FONTNAME "Arial"
                 FONTSIZE 9
                 TOOLTIP ""
@@ -215,7 +216,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 COL    28
                 WIDTH  120
                 HEIGHT 24
-                VALUE "Referencia"
+                VALUE hb_AnsiToOEm("Referência")
                 FONTNAME "Arial"
                 FONTSIZE 9
                 TOOLTIP ""
@@ -1200,7 +1201,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 COL    16
                 WIDTH  120
                 HEIGHT 24
-                VALUE "EndereÃ§o"
+                VALUE hb_AnsiToOEm("Endereço")
                 FONTNAME "Arial"
                 FONTSIZE 9
                 TOOLTIP ""
@@ -1592,7 +1593,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 FONTITALIC .F.
                 FONTUNDERLINE .F.
                 FONTSTRIKEOUT .F.
-                CAPTION "InformaÃ§Ãµes Cliente"
+                CAPTION hb_AnsiToOEm("Informações Cliente")
                 BACKCOLOR XBACK1
                 FONTCOLOR NIL
                 OPAQUE .T.
@@ -1741,7 +1742,7 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 FONTITALIC .F.
                 FONTUNDERLINE .F.
                 FONTSTRIKEOUT .F.
-                CAPTION "ObservaÃ§Ã£o"
+                CAPTION hb_AnsiToOEm("Observação")
                 BACKCOLOR XBACK1
                 FONTCOLOR NIL
                 OPAQUE .F.
@@ -1775,12 +1776,14 @@ DEFINE WINDOW TEMPLATE AT 227 , 597 WIDTH 870 HEIGHT 479 VIRTUAL WIDTH Nil VIRTU
                 FONTCOLOR NIL
             END EDITBOX
 
+            
+
             DEFINE LABEL Label_28
                 ROW    244
                 COL    268
                 WIDTH  140
                 HEIGHT 24
-                VALUE "Ult. Atualizaï¿½ï¿½o Cadastro"
+                VALUE hb_AnsiToOEm("Ult. Atualização Cadastro")
                 FONTNAME "Arial"
                 FONTSIZE 9
                 TOOLTIP ""

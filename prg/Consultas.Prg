@@ -343,8 +343,8 @@ FUNCTION NovaConsulta( cTabela, lMovTable )
 	SET LANGUAGE TO PORTUGUESE
 	SET CODEPAGE TO PORTUGUESE
 
-	HB_SetCodePage( "PT850" )
-	hb_langSelect( "PT" )
+	HB_SetCodePage( "UTF8" )
+	//hb_langSelect( "PT" )
 
 	PRIVATE aButx1 := {}
 
@@ -1303,20 +1303,31 @@ RETURN aRet
 
 FUNCTION GetInfoDic( cCampo1, cTabela, cInfo )
 
-	LOCAL cSql    := "select * from dicionario where (camposistema = '" + AllTrim( Hb_UTf8ToStr( cCampo1 ) ) + "') and (tabela = '" + cTabela + "')"
+	LOCAL cSql    := "select * from dicionario where (camposistema = '" + AllTrim( cCampo1 ) + "') and (tabela = '" + cTabela + "')"
 	LOCAL oServ   := GetConexao()
 	LOCAL oRow
 	LOCAL cRet    := ''
 
-	hb_MemoWrit( 'SqlinfoDic.txt', cSql )
+	//HB_SetCodePage("PT850")
+	//msginfo( cCampo1 )
 
-	HB_SetCodePage("UTF8")
+	//msginfo(cSQl )
+
+	//cSql    := "select * from dicionario where (camposistema = '" + Hb_ansiTooem( cCampo1  ) + "') and (tabela = '" + cTabela + "')"
+
+	//msginfo(cSQl )
+
+	hb_MemoWrit( 'SqlinfoDic123.txt', cSql )
+	
+
+
+	//HB_SetCodePage("UTF8")
 
 	oQuery := oServ:Query( cSql )
 
 
 	IF oQuery:Eof()
-		yAviso(  Hb_UTF8ToStr('Houve um Erro ao tentar recuperar InformaÃ§Ãµes do Campo : ' + cCampo1  + ".") + ;
+		yAviso(  HB_AnsiToOem('Houve um Erro ao tentar recuperar Informações do Campo : ' + cCampo1  + ".") + ;
 			"Tabela : " + cTabela + "/" + cInfo + QUEBRA + ;
 			'Contactar Suporte!' , .f. )
 	ELSE
