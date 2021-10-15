@@ -57,7 +57,7 @@ FUNCTION AltTamCampo( cTabx, cCampo, cForm )
       AAdd( aButx1, {  6798,  OBTN_Handle( 'fEditTam', 6798 )    } )
       AAdd( aButx1, {  6799,  OBTN_Handle( 'fEditTam', 6799 )    } )
 
-      SetProperty( 'fEditTam', "Label_5", "Value",  hb_ANSIToOEM( 'Propriedades Visualizaï¿½ï¿½o Campo' ) )
+      SetProperty( 'fEditTam', "Label_5", "Value",  hb_ANSIToOEM( 'Propriedades Visualização Campo' ) )
 
       EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, 'fEditTam'  ) },   OBTN_Handle( 'fEditTam', 6798 )   ), .T. )
       EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, 'fEditTam' ) },     OBTN_Handle( 'fEditTam', 6799 )   ), .T. )

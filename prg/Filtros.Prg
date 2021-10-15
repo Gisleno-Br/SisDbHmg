@@ -328,6 +328,8 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
 
    
 	Public aButFilt := {}
+
+   
    
    If !_IsWindowDefined('fFiltro')
       Load Window fFiltro
@@ -410,7 +412,7 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
    //cJan := cFiltroDlg
 
 
-
+    //9598 9599 959 958 9291 9281 9541 9481
    OBTN_Create( cJan,  9598, "Gravar Filtro", 345, 255,  70,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
    OBTN_Font( cJan, 9598,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
@@ -439,17 +441,9 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
 
 
 
-   //AAdd( aButFilt , { 9598,  OBTN_Handle( cJan , 9598 ),   {||  ( PushButton( cJan  , 9598 ) , Iif( lOk := (SaveFiltro( lNew1  , nIdFlt )) , (xFechay() ,  Domethod('fFiltrosCad','SetFocus' ) ,  xLoadFiltros( cTabela  , .t. )   ) ,    ) )  } ,  cJan   } )
+   
 
    AAdd( aButFilt , { 9598,  OBTN_Handle( cJan , 9598 ),   {||  ( PushButton( cJan  , 9598 ) , SysWait(.1) ,  lOk := SaveFiltro( lNew1  , nIdFlt )  )  } ,  cJan   } )
-
-
-   //AAdd( aButFilt , {  9599, OBTN_Handle( cJan, 9599 ),   {||  ( _ReleaseWindow(cJanx ), cJanx := 'fFiltrosCad',  refreshall('fFiltrosCad' ), Domethod('fFiltrosCad','SetFocus' ) )  },  cJan   } )
-
-   //AAdd( aButx1, { 9598,  OBTN_Handle( cJan, 9598 ),   {||  ( PushButton( cJan, 9598 ), iif( lOk := (SaveFiltro( lNew1, nIdFlt ) ),  (_FechaJan( 'fFiltro' ), _FechaJan('fFiltrosCad' ),ProcFiltro( cTabela, .F. )   ),    ) )  },  cJan   } )
-
-   //AAdd( aButx1, {  9599, OBTN_Handle( cJan, 9599 ),   {||  ( _FechaJan(cJanx ), cJanx := 'fFiltrosCad',  refreshall('fFiltrosCad' ), Domethod('fFiltrosCad','SetFocus' ) )  },  cJan   } )
-
    AAdd( aButFilt, {  9599, OBTN_Handle( cJan, 9599 ),   {||   (PushButton( cJan, 9599 ) , xFechay() )  },  cJan   } )
 
 
@@ -525,8 +519,31 @@ Return lOk
 Function xFechay()
 
   
+   Local i := 0
    RemoveHandler('EvFiltButton')
+
+   i := OBTN_Handle('fFiltro' , 959) 
+
+
+   DestroyWindow(   OBTN_Handle('fFiltro' , 9598)    )
+   DestroyWindow(   OBTN_Handle('fFiltro' , 9599)    )
+   DestroyWindow(   OBTN_Handle('fFiltro' , 959)    )
+
+
+   DestroyWindow(   OBTN_Handle('fFiltro' , 958)    )
+   DestroyWindow(   OBTN_Handle('fFiltro' , 9291)    )
+
+   DestroyWindow(   OBTN_Handle('fFiltro' , 9281)    )
+
+
+   DestroyWindow(   OBTN_Handle('fFiltro' , 9541)    )
+   DestroyWindow(   OBTN_Handle('fFiltro' , 9481)    )
+
+
    fFiltro.Hide()
+
+
+   
 
 Return 
 
@@ -643,6 +660,10 @@ FUNCTION ChgxFltr( cName )
    If ( Len( AllTrim(fFiltro .titulo. value ) ) > 0 ) .AND. ;
          (  !Empty( AllTrim( fFiltro .CmbCampo. Item(fFiltro .CmbCampo. Value ) ) )    )
       OBTN_Enable( 'fFiltro', 959, .T. )
+
+      OBTN_Enable( 'fFiltro', 6600, .T. )
+
+      //6600
    End If
 
 
@@ -659,6 +680,7 @@ FUNCTION ChgxFltr( cName )
       End If
    Else 
       OBTN_Enable( cjanx, 9598, .T. )
+      OBTN_Enable( 'fFiltro', 9598, .T. )
    End If
 
 RETURN

@@ -140,7 +140,7 @@ FUNCTION Main
 	REQUEST HB_CODEPAGE_PT850
 
 
-
+	Private cFormJan := ''
 
 	/*
 

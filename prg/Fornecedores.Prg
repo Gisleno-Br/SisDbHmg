@@ -583,7 +583,7 @@ Function GrvForne(lNovo1)
 
 
 	If !lNovo1
-		cMsg := 'Confirma Alteraï¿½ï¿½o no Cadastro deste Fornecedor?'
+		cMsg := 'Confirma Alteração no Cadastro deste Fornecedor?'
 	End If
 
 

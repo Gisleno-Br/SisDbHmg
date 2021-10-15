@@ -3,6 +3,10 @@
 
 DEFINE WINDOW TEMPLATE AT 140 , 262 WIDTH 705 HEIGHT 376 VIRTUAL WIDTH Nil VIRTUAL HEIGHT Nil TITLE "CriaÂ‡Ã†o de Consultas" ICON NIL MODAL NOSIZE NOSYSMENU NOCAPTION CURSOR NIL ON INIT InitCons() ON RELEASE Nil ON INTERACTIVECLOSE Nil ON MOUSECLICK Nil ON MOUSEDRAG Nil ON MOUSEMOVE Nil ON SIZE Nil ON PAINT Proc_Paint("Consulta Personalizada" , , hBit20 , ThisWindow.Name) BACKCOLOR {232,232,232} ON GOTFOCUS Nil ON LOSTFOCUS Nil ON SCROLLUP Nil ON SCROLLDOWN Nil ON SCROLLLEFT Nil ON SCROLLRIGHT Nil ON HSCROLLBOX Nil ON VSCROLLBOX Nil
 
+    
+    
+
+
     DEFINE FRAME Frame_1
         ROW    1
         COL    1
@@ -15,7 +19,7 @@ DEFINE WINDOW TEMPLATE AT 140 , 262 WIDTH 705 HEIGHT 376 VIRTUAL WIDTH Nil VIRTU
         FONTUNDERLINE .F.
         FONTSTRIKEOUT .F.
         CAPTION NIL
-        BACKCOLOR NIL
+        BACKCOLOR XBACK1
         FONTCOLOR NIL
         OPAQUE .F.
     END FRAME
@@ -26,7 +30,7 @@ DEFINE WINDOW TEMPLATE AT 140 , 262 WIDTH 705 HEIGHT 376 VIRTUAL WIDTH Nil VIRTU
         WIDTH  690
         HEIGHT 35
         VALUE "test"
-        FONTNAME "Verdana"
+        FONTNAME XFONT1
         FONTSIZE 8
         TOOLTIP ""
         FONTBOLD .T.
@@ -45,7 +49,14 @@ DEFINE WINDOW TEMPLATE AT 140 , 262 WIDTH 705 HEIGHT 376 VIRTUAL WIDTH Nil VIRTU
 
     DEFINE TAB Tab_1 AT 40 , 7 WIDTH 686 HEIGHT 282 VALUE 1 FONT "Arial" SIZE 9 TOOLTIP "" BUTTONS ON CHANGE TabChg()
 
+
+       
+
+
         PAGE "Campos" IMAGE "img\new.bmp"
+
+            Box(32  ,1,  685  ,  250 ,'02' , 'fCriaConsulta')
+
 
             DEFINE LABEL Label_1
                 ROW    39
@@ -167,12 +178,13 @@ DEFINE WINDOW TEMPLATE AT 140 , 262 WIDTH 705 HEIGHT 376 VIRTUAL WIDTH Nil VIRTU
                 VALUE ""
             END TEXTBOX
 
+
             DEFINE LABEL Label_4
                 ROW    99
                 COL    18
                 WIDTH  120
                 HEIGHT 24
-                VALUE "Obs"
+                VALUE Hb_AnsiToOem("Observação")
                 FONTNAME "Arial"
                 FONTSIZE 9
                 TOOLTIP ""
@@ -249,6 +261,8 @@ DEFINE WINDOW TEMPLATE AT 140 , 262 WIDTH 705 HEIGHT 376 VIRTUAL WIDTH Nil VIRTU
 
         PAGE "Filtros/Parametros" IMAGE "img\ic_janela.bmp"
 
+
+
             DEFINE GRID GridPar
                 ROW    25
                 COL    1
@@ -302,6 +316,9 @@ DEFINE WINDOW TEMPLATE AT 140 , 262 WIDTH 705 HEIGHT 376 VIRTUAL WIDTH Nil VIRTU
         END PAGE 
 
         PAGE "Ordem" IMAGE "img\ic_20_editar.bmp"
+
+            Box(32  ,1,  685  ,  250 ,'102' , 'fCriaConsulta')
+
 
             DEFINE LISTBOX LstOrdem
                 ROW    61
@@ -375,12 +392,17 @@ DEFINE WINDOW TEMPLATE AT 140 , 262 WIDTH 705 HEIGHT 376 VIRTUAL WIDTH Nil VIRTU
                 HELPID Nil
                 TABSTOP .T.
                 VISIBLE .T.
-                TRANSPARENT .F.
+                TRANSPARENT .T.
             END CHECKBOX
 
         END PAGE 
 
         PAGE "Sql" IMAGE ""
+
+            
+            Box(32  ,1,  685  ,  250 ,'4102' , 'fCriaConsulta')
+            
+
 
         END PAGE 
 

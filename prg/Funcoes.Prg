@@ -1523,7 +1523,6 @@ Function EfectEnd(cFname1 , aMtr1 )
 
 		Syswait(.1)
 		lInvalid := .f.
-
 		
 
 		If _isWindowDefined( cMenuName)
@@ -1538,16 +1537,78 @@ Function EfectEnd(cFname1 , aMtr1 )
 
 	End If
 
-
 	lAtivaBlack := .f.
-
-
 
 Return
 
 
 
+Procedure RefreshBrowseLine( cForm, cBrowse, p_cUpDtCol )
 
+	Local i
+	Local nRow
+	Local xValue
+	Local aStruct	//  array of FIELD names
+
+	p_cUpDtCol := iif( p_cUpDtCol == NIL, NIL, upper( p_cUpDtCol ) )
+
+	h		:= GetControlHandle ( cBrowse, cForm )
+	nRow	:= ListView_GetFirstItem ( h )	// Returns the BROWSE's current row number
+	aStruct := DBStruct()
+
+	For  i := 1 to  len( aStruct )	// The number of fields in this record
+		If ( p_cUpDtCol != Nil ) .AND. ( ! ( p_cUpDtCol == aStruct[ i,1 ] ) )
+			loop	//	If not NIL then only field p_cUpDtCol
+		End If
+		xValue := &( aStruct[ i,1 ] )
+		If ( valtype( xValue ) == "N" )
+			xValue := hb_ntos( xValue )
+		End If
+		SetProperty( cForm, cBrowse, "CELL", nRow, i, xValue )
+	Next i
+
+Return 
+
+**********************************************************
+Function SetAndDoEvent( cWindow, cControl, cEventName, bNewProc, lDoEvent )
+
+	LOCAL nIndex:=GetControlIndex( cControl, cWindow )
+	LOCAL nEvent:= 0	
+
+	Default lDoEvent := .F.
+
+	If  !hb_IsLogical ( lDoEvent )
+		lDoEvent := .F.
+	End If 
+
+	If nIndex =0
+		RETURN Nil
+	End If 
+
+	DO CASE
+		CASE Upper(cEventName) = "ONCHANGE"
+			nEvent := 12
+		CASE Upper(cEventName) = "ONLOSTFOCUS"
+			nEvent := 10
+		CASE Upper(cEventName) = "ONGOTFOCUS"
+			nEvent := 11
+		CASE Upper(cEventName) = "ONENTER" .AND. ( _HMG_SYSDATA [ 1 ][ nIndex ] == "NUMTEXT" .OR. _HMG_SYSDATA [ 1 ][ nIndex ] == "TEXT") 	//textbox
+			nEvent := 16
+		CASE Upper(cEventName) = "ONENTER" .OR. Upper(cEventName) = "ACTION" .OR. Upper(cEventName) = "ONDISPLAYCHANGE"		//other controls
+			nEvent := 6
+	ENDCASE
+
+	If nEvent > 0
+		If bNewProc <> Nil .AND. hb_IsBlock ( bNewProc )
+			_HMG_SYSDATA [ nEvent ][nIndex] := bNewProc		//set new event procedure
+		End If 
+		If lDoEvent
+			_DoControlEventProcedure( _HMG_SYSDATA [ nEvent ][nIndex], nIndex )	//do event procedure
+		End If 
+	End If 
+
+
+Return Nil
 
 
 

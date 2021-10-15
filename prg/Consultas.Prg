@@ -71,25 +71,41 @@ Function EditConsulta( cTabela , nIdConsu , lMovTable )
 	Local aOrdem     := {}
 	Local cTpOrdem   := ''
 
-
 	Local cSql := "select mascara,tipo,tamdisp,camposistema,campo,conscampos.* from conscampos,dicionario  "
 	cSql += " where conscampos.idconsulta = " + alltrim(Str(nIdConsu)) +" and iddicionario = idcampo "
 
 	SaveLog(  "c26712.txt" , cSql  )
 
-	HB_SETCODEPAGE("UTF8")
+	
+	Private nIndexFiltro := 0
+	
+	
+	Private n11
+	Private n12
+	Private n13
+	Private n14
+	Private n15
+	Private n16
+	Private n17
+	Private n18
 
+
+
+//	HB_SETCODEPAGE("UTF8")
 
 
 	oServer := GetConexao()
 	oQuery  := oServer:Query( cSql )
 	// oRow
 
+	HB_SetCodePage( "UTF8" )
+
+
 	For n1 := 1 To oQuery:LastRec()
 		oRow := oQuery:GetRow(n1)
 		cCampo := GetCampo(oRow,'camposistema')
 
-		aadd(aCampos,Hb_ansiTooem(cCampo) )
+		aadd(aCampos,hb_Utf8ToStr(cCampo) )				
 
 		If (GetCampo(oRow,'ordenado') == 'S')
 			aadd(aOrdem , n1)
@@ -107,18 +123,9 @@ Function EditConsulta( cTabela , nIdConsu , lMovTable )
 
 	DEFAULT lMovTable := .F.
 
-	SET LANGUAGE TO PORTUGUESE
-	SET CODEPAGE TO PORTUGUESE
-
-	HB_SetCodePage( "PT850" )
-	hb_langSelect( "PT" )
 
 	PRIVATE aButx1 := {}
 
-
-	//msginfo('nvconsulta')
-
-	//cActiveJan := 'fCriaConsulta'
 
 	Load Window fCriaConsulta
 
@@ -137,10 +144,10 @@ Function EditConsulta( cTabela , nIdConsu , lMovTable )
 	nind1     := 0
 	n1        := 1
 
-	WHILE n1 <= Len( aCabec )
+	While n1 <= Len( aCabec )
 
-		IF !Empty( AllTrim( aCabec[ n1 ] ) )
-			fCriaConsulta .LstCampos. Additem( hb_ANSIToOEM( aCabec[ n1 ] ) )
+		If !Empty( AllTrim( aCabec[ n1 ] ) )
+			fCriaConsulta .LstCampos. Additem( Hb_UTf8ToStr( aCabec[ n1 ] ) )
 
 			//msginfo('achou ' + hb_ANSIToOEM( aCabec[ n1 ] ) )
 
@@ -149,176 +156,157 @@ Function EditConsulta( cTabela , nIdConsu , lMovTable )
 			If ascan(aCampos,hb_ANSIToOEM( aCabec[ n1 ] ) ) > 0
 				aadd(aSelected,nind1)
 
-			DoMethod('fCriaConsulta','LstOrdem', 'additem' , hb_ANSIToOEM( aCabec[ n1 ] )  )
+				DoMethod('fCriaConsulta','LstOrdem', 'additem' , Hb_UTf8ToStr( aCabec[ n1 ] )  )
+
+			End If
 
 		End If
 
-	END IF
+		n1++
 
-	n1++
+	Enddo
 
-ENDDO
 
 
+	fCriaConsulta .LstCampos.Value := aSelected
+	fCriaConsulta .LstOrdem.Value  := aORdem
 
+	fCriaConsulta.ChkOrd1.Value := (cTpordem = 'Asc' )
 
 
 
-fCriaConsulta .LstCampos.Value := aSelected
-fCriaConsulta .LstOrdem.Value  := aORdem
 
-fCriaConsulta.ChkOrd1.Value := (cTpordem = 'Asc' )
+	oquery:Destroy()
+	oServer:Destroy()
 
 
+	//MsgInfo('lp')
 
 
-oquery:Destroy()
-oServer:Destroy()
 
+	cTit1 := 'Edição de Consultas - Id : ' + alltrim(str(nIdConsu))
 
-//MsgInfo('lp')
+	SetProperty( 'fCriaConsulta', 'Tab_1', "Captions", { "Campos", "Filtros/Parametros", hb_ANSIToOEM( "Ordenação" ), "Sql"  } )
 
+	cSql := "select * from consultas where tabela = " + Quotedstr(cTabela) + " and id = " + alltrim(str(nidconsu))
 
-cTit1 := 'Ediï¿½ï¿½o de Consultas - Id : ' + alltrim(str(nIdConsu))
-// Aviso(Hb_ansiToOem( cTit1 ))
 
-// fCriaConsulta .BtnOk. Enabled := .F.
+	oServer := GetConexao()
+	oQuery  := oServer:Query( cSql )
+	// oRow
 
-SetProperty( 'fCriaConsulta', 'Title', hb_ANSIToOEM( cTit1 ) )
-SetProperty( 'fCriaConsulta', 'Label_4', "Value", hb_ANSIToOEM( "Observaï¿½ï¿½o" ) )
+	If oQuery:lastRec() > 0
 
-SetProperty( 'fCriaConsulta', 'Tab_1', "Captions", { "Campos", "Filtros/Parametros", hb_ANSIToOEM( "Ordenaï¿½ï¿½o" ), "Sql"  } )
+		oRow := oQuery:GetRow(1)
+		SetProperty( 'fCriaConsulta', 'TituloCons', 'Value' , Hb_AnsiToOem( GetCampo(oRow , 'descricao') ) )
+		SetProperty( 'fCriaConsulta', 'Obs', 'Value' , Hb_AnsiToOem( GetCampo(oRow , 'observacao') )  )
 
-cSql := "select * from consultas where tabela = " + Quotedstr(cTabela) + " and id = " + alltrim(str(nidconsu))
 
-oServer := GetConexao()
-oQuery  := oServer:Query( cSql )
-// oRow
+	Else
+		yAviso("Erro ao procurar por Consulta Id.", .f.)
+	End If
 
-If oQuery:lastRec() > 0
 
-	oRow := oQuery:GetRow(1)
-	SetProperty( 'fCriaConsulta', 'TituloCons', 'Value' , hb_ANSIToOEM( GetCampo(oRow , 'descricao') ) )
-	SetProperty( 'fCriaConsulta', 'Obs', 'Value' , hb_ANSIToOEM( GetCampo(oRow , 'observacao') )  )
 
+	oquery:Destroy()
+	oServer:Destroy()
 
-Else
-	yaviso("Erro ao procurar por Consulta Id.",, .f.)
-End If
+	PRIVATE cJanx := 'fCriaConsulta'
 
+	OBTN_Create( cJanx,  6598, "Ok", 330, 500,  65,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
+	OBTN_Font( cJanx, 6598,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
+	OBTN_Create( cJanx, 6599, "Cancelar", 330, 565,  65,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
+	OBTN_Font( cJanx, 6599,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
-oquery:Destroy()
-oServer:Destroy()
+	OBTN_Create( cJanx, 6597, "Novo Parametro", 322, 10,  85,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
+	OBTN_Font( cJanx, 6597,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
-PRIVATE cJanx := 'fCriaConsulta'
+	OBTN_Create( cJanx, 6596, "Modificar", 322, 102 ,  62,  24 ,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
+	OBTN_Font( cJanx, 6596,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
-OBTN_Create( cJanx,  6598, "Ok", 330, 500,  65,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
-OBTN_Font( cJanx, 6598,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
+	OBTN_Create( cJanx, 6595, "Excluir", 322, 165 ,  62,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
+	OBTN_Font( cJanx, 6595,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
-OBTN_Create( cJanx, 6599, "Cancelar", 330, 565,  65,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
-OBTN_Font( cJanx, 6599,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
+	
 
-OBTN_Create( cJanx, 6597, "Novo Parametro", 322, 10,  85,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
-OBTN_Font( cJanx, 6597,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
-OBTN_Create( cJanx, 6596, "Modificar", 322, 102 ,  62,  24 ,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
-OBTN_Font( cJanx, 6596,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
+	AAdd( aButx1, {  6598,  OBTN_Handle( cJanx, 6598 ),   {|| Iif(lOk2 := GrvConsul( cTabela ,nIdConsu) ,  _FechaJan('fCriaConsulta' ),  ) },  cJanx   } )
 
-OBTN_Create( cJanx, 6595, "Excluir", 322, 165 ,  62,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
-OBTN_Font( cJanx, 6595,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
+	AAdd( aButx1, {  6599,  OBTN_Handle( cJanx, 6599 ),   {||   _FechaJan('fCriaConsulta' ) },  cJanx   } )
 
-		/*   
-		
-		
-		OBTN_Create( cJanx, 6597, "Novo Parametro", 322, 10,  85,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
-		OBTN_Font( cJanx, 6597,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
+	AAdd( aButx1, {  6597,  OBTN_Handle( cJanx, 6597 ),   {|| AddPar1( .T., cTabela    ) },  cJanx   } )
 
-		OBTN_Create( cJanx, 6596, "Modificar", 322, 100,  62,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
-		OBTN_Font( cJanx, 6596,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
+	AAdd( aButx1, {  6596,  OBTN_Handle( cJanx, 6596 ),   {|| AddPar1( .F., cTabela ) },  cJanx   } )
+	AAdd( aButx1, {  6595,  OBTN_Handle( cJanx, 6595 ),   {|| DelParam() },  cJanx   } )
 
-		OBTN_Create( cJanx, 6595, "Excluir", 322, 165 ,  62,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
-		OBTN_Font( cJanx, 6595,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
-		*/
+	EventProcessAllHookMessage( n1 := EventCreate( {||  InputEvButton( aButx1, cJanx ) },    OBTN_Handle( cJanx, 6598 )   ), .T. )
+	EventProcessAllHookMessage( n2 := EventCreate( {||  InputEvButton( aButx1, cJanx ) },    OBTN_Handle( cJanx, 6599 )   ), .T. )
+	EventProcessAllHookMessage( n3 := EventCreate( {|| InputEvButton( aButx1, cJanx ) },    OBTN_Handle( cJanx, 6597 )   ), .T. )
 
+	EventProcessAllHookMessage( n4 := EventCreate( {|| InputEvButton( aButx1, cJanx ) },    OBTN_Handle( cJanx, 6596 )   ), .T. )
+	EventProcessAllHookMessage( n5 := EventCreate( {|| InputEvButton( aButx1, cJanx ) },    OBTN_Handle( cJanx, 6595 )   ), .T. )
 
 
+	OBTN_Enable( 'fCriaConsulta', 6598, .F. )
+	OBTN_Enable( 'fCriaConsulta', 6597, .F. )
+	OBTN_Enable( 'fCriaConsulta', 6596, .F. )
+	OBTN_Enable( 'fCriaConsulta', 6595, .F. )
 
-AAdd( aButx1, {  6598,  OBTN_Handle( cJanx, 6598 ),   {|| Iif(lOk2 := GrvConsul( cTabela ,nIdConsu) ,  _FechaJan('fCriaConsulta' ),  ) },  cJanx   } )
+	
+	InstallEventHandler('EventConsu')
+	
 
-AAdd( aButx1, {  6599,  OBTN_Handle( cJanx, 6599 ),   {||   _FechaJan('fCriaConsulta' ) },  cJanx   } )
+	cSqlFiltro := "select relacao,camposistema,tipo,campo,mascara,tamdisp,consparametros.* from consparametros"
+	cSQlFiltro += ",dicionario,consultas where idconsul = " + alltrim(Str(nIdConsu)) + " and consultas.id = dicionario.idconsulta and iddicionario = idcampo and consultas.tabela = '" + cTabela + "' order by itemOrdem"
 
-AAdd( aButx1, {  6597,  OBTN_Handle( cJanx, 6597 ),   {|| AddPar1( .T., cTabela    ) },  cJanx   } )
+	oServer := GetConexao()
+	oQuery  := oServer:Query( cSqlFiltro )
 
-AAdd( aButx1, {  6596,  OBTN_Handle( cJanx, 6596 ),   {|| AddPar1( .F., cTabela ) },  cJanx   } )
-AAdd( aButx1, {  6595,  OBTN_Handle( cJanx, 6595 ),   {|| DelParam() },  cJanx   } )
 
-EventProcessAllHookMessage( n1 := EventCreate( {||  InputEvButton( aButx1, cJanx ) },    OBTN_Handle( cJanx, 6598 )   ), .T. )
-EventProcessAllHookMessage( n2 := EventCreate( {||  InputEvButton( aButx1, cJanx ) },    OBTN_Handle( cJanx, 6599 )   ), .T. )
-EventProcessAllHookMessage( n3 := EventCreate( {|| InputEvButton( aButx1, cJanx ) },    OBTN_Handle( cJanx, 6597 )   ), .T. )
 
-EventProcessAllHookMessage( n4 := EventCreate( {|| InputEvButton( aButx1, cJanx ) },    OBTN_Handle( cJanx, 6596 )   ), .T. )
-EventProcessAllHookMessage( n5 := EventCreate( {|| InputEvButton( aButx1, cJanx ) },    OBTN_Handle( cJanx, 6595 )   ), .T. )
+	If (oQuery:LastRec() = 0)
+		yAviso("Erro de integridade em A678." , .f. )
+	End If
 
+	// oRow
 
-OBTN_Enable( 'fCriaConsulta', 6598, .F. )
-OBTN_Enable( 'fCriaConsulta', 6597, .F. )
-OBTN_Enable( 'fCriaConsulta', 6596, .F. )
-OBTN_Enable( 'fCriaConsulta', 6595, .F. )
 
-//If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( 'EventConsu'  ) )  ) = 0
-InstallEventHandler('EventConsu')
-//End If
+	HB_SETCODEPAGE("PT850")
 
+	For n1 := 1 To oQuery:LastRec()
+		oRow := oQuery:GetRow(n1)
 
+		cCampo   := GetCampo(oRow,'camposistema')
+		cOperador := alltrim(GetCampo(oRow,'Operador'))
+		cValor := GetCampo(oRow,'Valor')
+		coplogico := alltrim(GetCampo(oRow,'OpLogico'))
 
-cSqlFiltro := "select relacao,camposistema,tipo,campo,mascara,tamdisp,consparametros.* from consparametros"
-cSQlFiltro += ",dicionario,consultas where idconsul = " + alltrim(Str(nIdConsu)) + " and consultas.id = dicionario.idconsulta and iddicionario = idcampo and consultas.tabela = '" + cTabela + "' order by itemOrdem"
+		cEditavel  := Iif(GetCampo(oRow,'Editavel') == 'S','Sim', hb_AnsiToOem('Não')  )
+		cRequerido := Iif(GetCampo(oRow,'Requerido')  == 'S','Sim', Hb_AnsiToOem('Não') )
+		cPar1      := GetCampo(oRow,'Parentese')
+		cPar2      := GetCampo(oRow,'Parentese2')
 
-oServer := GetConexao()
-oQuery  := oServer:Query( cSqlFiltro )
+		fCriaConsulta.gridPar.addItem( {cCampo,cOperador,cValor,cOplOgico,cEditavel,cRequerido,cPar1,cPar2})
 
+	Next
 
+	oquery:Destroy()
+	oServer:Destroy()
 
-If (oQuery:LastRec() = 0)
-	yAviso("Erro de integridade em A678." ,, .f. )
-End If
+	Activate Window fCriaConsulta
 
-// oRow
+	If n1 > 0
+		EventRemove(n1)
+		EventRemove(n2)
+		EventRemove(n3)
+		EventRemove(n4)
+		EventRemove(n5)
+	End If
 
-For n1 := 1 To oQuery:LastRec()
-	oRow := oQuery:GetRow(n1)
-	//{'Campo','Operador','Valor','Op. Logico' ,'Editavel','Requerido' , 'P1' }
-	cCampo   := GetCampo(oRow,'camposistema')
-	cOperador := alltrim(GetCampo(oRow,'Operador'))
-	cValor := GetCampo(oRow,'Valor')
-	coplogico := alltrim(GetCampo(oRow,'OpLogico'))
 
-	cEditavel  := Iif(GetCampo(oRow,'Editavel') == 'S','Sim','Nï¿½o')
-	cRequerido := Iif(GetCampo(oRow,'Requerido')  == 'S','Sim','Nï¿½o' )
-	cPar1      := GetCampo(oRow,'Parentese')
-	cPar2      := GetCampo(oRow,'Parentese2')
 
-	fCriaConsulta.gridPar.addItem( {cCampo,cOperador,cValor,cOplOgico,cEditavel,cRequerido,cPar1,cPar2})
-
-Next
-
-oquery:Destroy()
-oServer:Destroy()
-
-Activate Window fCriaConsulta
-
-If n1 > 0
-	EventRemove(n1)
-	EventRemove(n2)
-	EventRemove(n3)
-	EventRemove(n4)
-	EventRemove(n5)
-End If
-
-
-
-RemoveHandler('EventConsu')
+	RemoveHandler('EventConsu')
 
 
 
@@ -339,6 +327,25 @@ FUNCTION NovaConsulta( cTabela, lMovTable )
 	Private lOk2 := .f.
 
 	DEFAULT lMovTable := .F.
+
+	Private lNovoFilt := .t.
+
+	Private lFadd := .f.
+
+
+	Private nIndexFiltro := 0
+	
+
+	
+	Private n11
+	Private n12
+	Private n13
+	Private n14
+	Private n15
+	Private n16
+	Private n17
+	Private n18
+
 
 	SET LANGUAGE TO PORTUGUESE
 	SET CODEPAGE TO PORTUGUESE
@@ -367,25 +374,30 @@ FUNCTION NovaConsulta( cTabela, lMovTable )
 
 	WHILE n1 <= Len( aCabec )
 
-		IF !Empty( AllTrim( aCabec[ n1 ] ) )
-			fCriaConsulta .LstCampos. Additem( hb_UTF8TOSTR( aCabec[ n1 ] ) )
-		END IF
+			If !Empty( AllTrim( aCabec[ n1 ] ) )
+				fCriaConsulta .LstCampos. Additem( hb_Utf8ToStr( aCabec[ n1 ] ) )
+			End If
 
-		n1++
+			n1++
 
 	ENDDO
 
-	cTit1 := 'Criaï¿½ï¿½o de Consultas'
+	cTit1 := 'Criação de Consultas'
 	// Aviso(Hb_ansiToOem( cTit1 ))
+
+
 
 	// fCriaConsulta .BtnOk. Enabled := .F.
 
-	SetProperty( 'fCriaConsulta', 'Title', hb_ANSIToOEM( cTit1 ) )
-	SetProperty( 'fCriaConsulta', 'Label_4', "Value", hb_ANSIToOEM( "Observaï¿½ï¿½o" ) )
+	HB_SETCODEPAGE("PT850")
 
-	SetProperty( 'fCriaConsulta', 'Tab_1', "Captions", { "Campos", "Filtros/Parametros", hb_ANSIToOEM( "Ordenaï¿½ï¿½o" ), "Sql"  } )
+	SetProperty( 'fCriaConsulta', 'Title', hb_ANSIToOEM( cTit1 ) )
+	SetProperty( 'fCriaConsulta', 'Label_4', "Value", Hb_Ansitooem( "Observação" ) )
+
+	SetProperty( 'fCriaConsulta', 'Tab_1', "Captions", { "Campos", "Filtros/Parametros", hb_ANSIToOEM( "Ordenação" ), "Sql"  } )
 
 	PRIVATE cJanx := 'fCriaConsulta'
+
 
 	OBTN_Create( cJanx,  6598, "Ok", 330, 500,  65,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 	OBTN_Font( cJanx, 6598,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
@@ -418,7 +430,6 @@ FUNCTION NovaConsulta( cTabela, lMovTable )
 	EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, cJanx ) },    OBTN_Handle( cJanx, 6595 )   ), .T. )
 
 
-
 	OBTN_Enable( 'fCriaConsulta', 6598, .F. )
 
 	OBTN_Enable( 'fCriaConsulta', 6597, .F. )
@@ -426,14 +437,7 @@ FUNCTION NovaConsulta( cTabela, lMovTable )
 	OBTN_Enable( 'fCriaConsulta', 6595, .F. )
 
 
-
-	//If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( 'EventConsu'  ) )  ) = 0
 	InstallEventHandler('EventConsu')
-	//End If
-
-	HB_SETCODEPAGE("UTF8")
-
-	//cActiveJan := 'fCriaConsulta'
 
 	Activate Window fCriaConsulta
 
@@ -466,48 +470,48 @@ FUNCTION EventConsu( nHWnd, nMsg, nWParam, nLParam )
 	LOCAL cform := ''
 
 
-	IF nMsg == WM_DRAWITEM
+	If nMsg == WM_DRAWITEM
 
 
 		nID := LoWord( nWParam )
 
-		IF nID == IDOK
+		If nID == IDOK
 			nID := GetDlgCtrlID( GetFocus() )
-		ENDIF
+		End If 
 
 		nI1 := AScan( aButx1, {| n| n[ 1 ] == nId } )
 
-		IF nI1 > 0
+		If nI1 > 0
 			OBTN_Draw( nHWnd,  nWParam, nLParam )
-		END IF
+		End If
 
 
-	END IF
+	End If
 
-	IF nMsg == 273
+	If nMsg == 273
 
 		nID := LoWord( nWParam )
 
-		IF nID == IDOK
+		If nID == IDOK
 			nID := GetDlgCtrlID( GetFocus() )
-		ENDIF
+		End If 
 
 		nI1 := AScan( aButx1, {| n| n[ 1 ] == nId } )
 
-		IF nI1 > 0
+		If nI1 > 0
 			Eval(   aButX1[ ni1 ][ 3 ] )
-		END IF
+		End If 
 
 
-		IF nId == 6598
+		If nId == 6598
 
-		END IF
+		End If
 
-		IF nId == 6599
+		If nId == 6599
 
-		END IF
+		End If
 
-	END IF
+	End If 
 
 	//END IF
 
@@ -522,20 +526,11 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 	LOCAL cJany := 'fFiltro'
 	Local cVal
 
-	Local n11
-	Local n12
-	Local n13
-	Local n14
-	Local n15
-	Local n16
-	Local n17
-	Local n18
-
 
 	Local nItem1 := GetProperty('fCriaConsulta','Gridpar','itemCount')
 
 
-	Local nIndexFiltro := 0
+	//Local nIndexFiltro := 0
 	LOCAL aMoper := {}
 	LOCAL aMLogico := {}
 
@@ -546,6 +541,12 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 	LOCAL lUnderline := .F.
 	LOCAL lStrikeOut := .F.
 
+	Private cTabx := cTabelaX
+
+
+
+
+
 	DEFAULT lNovo    := .T.
 	DEFAULT lEnable1 := .f.
 
@@ -555,24 +556,31 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 		PushButton( cJanx, 6596 )
 	END IF
 
-	//msginfo('filtro')
-
 	Private aCampos1 := {}
 
-	// msginfo(Str(nItem1))
-
-	Load Window fFiltro
+	If !_isWindowDefined('fFiltro')
+		Load Window fFiltro
+	End If 	
 
 	HMG_ChangeWindowStyle(  fFiltro.Handle , WS_EX_DLGMODALFRAME, NIL, .T., .T. )
 
 
 	PRIVATE lNovoFilt := lNovo
 
-	Private lFadd := .f.
+	
 
 	Center Window fFiltro
 
-	ON KEY ESCAPE Of fFiltro ACTION fFiltro.Release()
+	//ON KEY ESCAPE Of fFiltro ACTION fFiltro.Release()
+
+	HB_SETCODEPAGE("PT850")
+
+   	SetProperty("fFiltro" , "Frame_1" , "Caption" , hb_ANSIToOEM("Criação de Parametros Consulta" )  )   
+
+         
+    ON KEY ESCAPE OF fFiltro Action xFechay()
+
+
 
 	fFiltro .cmbCampo. DeleteAllItems()
 	fFiltro .cmbOrdem. DeleteAllItems()
@@ -591,29 +599,25 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 
 	fFiltro .cmbCampo. value := 1
 
-	// fFiltro .BtnAdd. Visible := .F.
-	// fFiltro .BtnLimpa. Visible := .F.
-
-
 	fFiltro .cmbOrdem. enabled := .F.
-
 	fFiltro .Titulo. enabled := .F.
 
 	fFiltro .ChkRequerido. visible := .T.
 	fFiltro .ChkRequerido. value   := .T.
 
+
+
 	fFiltro .chkOrdem. caption := 'Editavel'
+	
 
-	// fFiltro .Btnok. Enabled := .F.
-
-	IF !lNovo
+	If !lNovo
 
 		fFiltro .Titulo. enabled := .F.
 
 		nIt1 := fCriaconsulta .gridPar. Value
 		aIt1 := fCriaconsulta .gridPar. Item( nIt1 )
 
-		IF nIt1 > 0
+		If nIt1 > 0
 
 			// fFiltro .Btnok. Enabled := .T.
 
@@ -629,13 +633,13 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 			aMoper := {}
 			aMLogico := {}
 
-			FOR n1 := 1 TO fFiltro .cmbOperador. itemCount
+			For n1 := 1 TO fFiltro .cmbOperador. itemCount
 				AAdd( aMOper,    fFiltro .cmbOperador. item( n1 ) )
-			NEXT
+			Next
 
-			FOR n1 := 1 TO fFiltro .cmbLogico. itemCount
+			For n1 := 1 TO fFiltro .cmbLogico. itemCount
 				AAdd( aMLogico,    fFiltro .cmbLogico. item( n1 ) )
-			NEXT
+			Next
 
 			fFiltro .cmbOperador. value := AScan( aMoper, ait1[ 2 ] )
 
@@ -650,65 +654,80 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 			SetProperty( "fFiltro", "Valor", "Visible", .F. )
 			SetProperty( "fFiltro", "EdtNum", "Visible", .F. )
 
-			IF cTipo1 == "B"
+			If cTipo1 == "B"
 				fFiltro .DoubleEdit. Visible := .T.
 				fFiltro .DoubleEdit. Value   := Val( ait1[ 3 ] )
 				cVal := alltrim(Str( Val( ait1[ 3 ] ),10,2 ))
-			END IF
+			End If
 
-			IF (cTipo1 $ "IN")
+			If (cTipo1 $ "IN")
 				fFiltro .EdtNum. Visible := .T.
 				fFiltro .EdtNum. Value   := Val( ait1[ 3 ] )
 				cVal := alltrim(Str( Val( ait1[ 3 ] ) ))
 				// msginfo('num ' + ' ' +  ait1[ 3 ])
-			END IF
+			End If
 
-			IF cTipo1 == "D"
+			If cTipo1 == "D"
 				fFiltro .GetData1. Visible := .T.
 				fFiltro .GetData1. Value   := CToD( ait1[ 3 ] )
 
 				//cValor   := ait1[ 3 ]
 				cVal     := Chr(39) + Right( ait1[ 3 ]  , 4 ) + '-' + SubStr( ait1[ 3 ]   , 4, 2 ) + '-' + Left( ait1[ 3 ]   , 2 ) + Chr(39)
 
-			END IF
+			End If
 
-			IF cTipo1 == "C"
+			If cTipo1 == "C"
 				fFiltro .Valor. Visible := .T.
 				fFiltro .valor. value := ait1[ 3 ]
 				cVal :=  Chr(39) + ait1[ 3 ]  + chr(39)
-			END IF
+			End If
 
 
 			fFiltro.EdtFiltro.value :=  Iif( alltrim(aIt1[ 4 ]) != "Nenhum", aIt1[ 4 ] , '' )   + ' ' + alltrim(aIt1[ 7 ]) + alltrim(ait1[ 1 ]) +' '+ alltrim(left(ait1[ 2 ],2))  +' '+ cVal + alltrim(aIt1[ 8 ])
 
 
-		END IF
+		End If
 
-	END IF
+	End If
 
 
+    
 	OBTN_Create( cJany,  6600, "Ok", 333, 300,  65,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
-	OBTN_Font( cJany, 6600,  { cFontName, nFontSize, .F., .F., .F., .F. } )
+	OBTN_Font( cJany, 6600 ,  { cFontName, nFontSize, .F., .F., .F., .F. } )
+	
 
 
+	//OBTN_Release( cJany  , 6601 )
 	OBTN_Create( cJany, 6601, "Cancelar", 333, 365,  65,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 	OBTN_Font( cJany, 6601,  { cFontName, nFontSize, .F., .F., .F., .F. } )
+
+
+
 
 	OBTN_Create( cJany, 6602, "Adicionar", 297, 15,  65,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 	OBTN_Font( cJany, 6602,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 
+
+	//OBTN_Release( cJany  , 6603 )
 	OBTN_Create( cJany, 6603, "Limpar Filtro", 297, 87,  65,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 	OBTN_Font( cJany, 6603,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 
+	//OBTN_Release( cJany  , 9591 )
 	OBTN_Create( cJany  ,  9591 , "(", 300 , 180 ,  45,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 	OBTN_Font( cJany    , 9591  ,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
+
+	//OBTN_Release( cJany  , 9581 )
 	OBTN_Create( cJany  ,  9581 , ")", 300 , 232 ,  45,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 	OBTN_Font(  cJany    , 9581  ,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
+
+	//OBTN_Release( cJany  , 3541 )
 	OBTN_Create( cJany  ,  3541 , "And", 300 , 280 ,  45,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 	OBTN_Font( cJany    ,  3541  ,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
+
+	//OBTN_Release( cJany  , 3581 )	
 	OBTN_Create( cJany  ,  3581 , "Or", 300 , 325 ,  45,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 	OBTN_Font( cJany    ,  3581  ,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
@@ -723,12 +742,8 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 	OBTN_Enable( cJany  , 3581,  (nItem1 >= 1) )
 
 
-	//OBTN_Enable( cJany, 9591 , .t. )
 
-	If (nItem1 >= 1)
-		// OBTN_Enable( cJany, 9591 , .F. )
-		// OBTN_Enable( cJany, 9581 , .F. )
-	End If
+
 
 	EventProcessAllHookMessage( n11 := EventCreate( {|| InputEvFilt() },    OBTN_Handle( cJany, 6600 )   ), .T. )
 	EventProcessAllHookMessage( n12 := EventCreate( {|| InputEvFilt() },    OBTN_Handle( cJany, 6601 )   ), .T. )
@@ -746,15 +761,30 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 
 	EventProcessAllHookMessage(nIndexFiltro   := EventCreate (  { ||   EventHndFlt( )} , fFiltro.Handle  ) , .t.)
 
-	fFiltro.cmbCampo.SetFocus()
+	
 
-    *//Adicionar
-	//OBTN_Enable( cJany, 6602, .t. )
+   lNextOp := .f. 
 
-	Activate Window fFiltro
+   fFiltro.Show()
+   fFiltro.SetFocus()
+
+   fFiltro.cmbCampo.SetFocus()
+
+
+
+
+   
+RETURN
+
+
+
+Static Function xFechay()
+
+
+
 
 	If nIndexFiltro > 0
-		//msginfo('removido')
+
 		EventRemove(nIndexFiltro)
 		EventRemove(n11)
 		EventRemove(n12)
@@ -767,33 +797,32 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 		EventRemove(n17)
 		EventRemove(n18)
 
-
 	End If
+   
+    fFiltro.Hide()
 
-RETURN
-
-
+Return 
 
 Static Function ChgxFltr( cName )
 
 	Local cJanp := 'fFiltro'
 	Local n1 := GetProperty('fCriaConsulta','GridPar','ItemCount')
 
-	IF lNovoFilt
-		IF  ( Len( AllTrim(fFiltro .Valor. Value ) ) > 0 ) .OR. ( fFiltro .Getdata1. Visible  ) .or. ;
+	If lNovoFilt
+		If  ( Len( AllTrim(fFiltro .Valor. Value ) ) > 0 ) .OR. ( fFiltro .Getdata1. Visible  ) .or. ;
 				(fFiltro .DoubleEdit. Value > 0) .or. ( fFiltro.EdtNum.Value > 0)
 			//  msginfo('pa ' + cName )
 
 			IF (fFiltro .CmbCampo. value > 0 )
 				// OBTN_Enable( cjanp , 6602, .t. )
-			END IF
+			End fF
 
-		ELSE
+		Else
 			//OBTN_Enable( cjanp , 6602 , .f. )
-		END IF
-	ELSE
+		End If 
+	Else
 		OBTN_Enable( cjanp , 6602 , .t. )
-	END IF
+	End If 
 
 	OBTN_Enable( cjanp , 6600 , .t. )
 	OBTN_Enable( cjanp , 6603 , .t. )
@@ -929,7 +958,8 @@ FUNCTION EventHndFlt()
 			IF nId == 6601
 				// msginfo('2')
 				//fFiltro.Release()
-				_FechaJan('fFiltro')
+				//_FechaJan('fFiltro')
+				xFechay()
 			END IF
 
 			IF nId == 9591
@@ -1110,8 +1140,8 @@ STATIC FUNCTION RetFiltro()
 	LOCAL aM1 := { ( fFiltro .cmbCampo. DisplayValue ), fFiltro .cmbOperador. DisplayValue, ;
 		iif( !fFiltro .Getdata1. Visible, iif( Val(nValor ) >= 0, nValor, AllTrim( fFiltro .Valor. Value ) ),  DToC( fFiltro .Getdata1. Value )   ),  ;
 		cOpLogic , ;
-		iif( fFiltro .ChkOrdem. Value, hb_ANSIToOEM( 'Sim' ), hb_ANSIToOEM( 'Nï¿½o' )  ), ;
-		iif( fFiltro .ChkRequerido. Value, hb_ANSIToOEM( 'Sim' ), hb_ANSIToOEM( 'Nï¿½o' ) ),  Replicate('(',nX1) ,  Replicate(')',nX2)     }
+		iif( fFiltro .ChkOrdem. Value, hb_ANSIToOEM( 'Sim' ), hb_ANSIToOEM( 'N???o' )  ), ;
+		iif( fFiltro .ChkRequerido. Value, hb_ANSIToOEM( 'Sim' ), hb_ANSIToOEM( 'N???o' ) ),  Replicate('(',nX1) ,  Replicate(')',nX2)     }
 
 
 	IF lNovoFilt
@@ -1327,7 +1357,7 @@ FUNCTION GetInfoDic( cCampo1, cTabela, cInfo )
 
 
 	IF oQuery:Eof()
-		yAviso(  HB_AnsiToOem('Houve um Erro ao tentar recuperar Informações do Campo : ' + cCampo1  + ".") + ;
+		yAviso(  HB_AnsiToOem('Houve um Erro ao tentar recuperar Informa??es do Campo : ' + cCampo1  + ".") + ;
 			"Tabela : " + cTabela + "/" + cInfo + QUEBRA + ;
 			'Contactar Suporte!' , .f. )
 	ELSE
@@ -1372,7 +1402,7 @@ FUNCTION InitCons()
 
 	HMG_ChangeWindowStyle( fCriaConsulta .LblTabela1. Handle, WS_EX_STATICEDGE, NIL, .T., .T. )
 
-	fCriaConsulta .LblTabela1. Value := Chr( 13 ) + Chr( 10 ) + hb_ANSIToOEM( "Criaï¿½ï¿½o de Consultas" )
+	fCriaConsulta .LblTabela1. Value := Chr( 13 ) + Chr( 10 ) + hb_ANSIToOEM( "Cria??????o de Consultas" )
 	// {'Campo','Operador','Valor','Operador Logico' ,'Editavel','Requerido' , 'P1' , 'Titulo Filtro'}
 
 	FOR n1 := 1 TO 7
@@ -1412,25 +1442,25 @@ FUNCTION TabChg()
 	OBTN_Enable( 'fCriaConsulta', 6596, ( fCriaConsulta .Tab_1. Value = 2 ) .AND. ( (GetProperty( 'fCriaConsulta', 'GridPar', 'ItemCount' )  > 0  )   ) )
 	OBTN_Enable( 'fCriaConsulta', 6595, ( fCriaConsulta .Tab_1. Value = 2 ) .AND. ( (GetProperty( 'fCriaConsulta', 'GridPar', 'ItemCount' )  > 0  )   ) )
 
-	IF ( fCriaConsulta .Tab_1. Value = 3 ) .AND. ( fCriaConsulta .LstOrdem. ItemCount == 1 )
+	If ( fCriaConsulta .Tab_1. Value = 3 ) .AND. ( fCriaConsulta .LstOrdem. ItemCount == 1 )
 
-		SetProperty( "fCriaConsulta", "LblOrdem", "Value", hb_ANSIToOEM( 'Selecione a Ordenaï¿½ï¿½o da Consulta' ) )
+		SetProperty( "fCriaConsulta", "LblOrdem", "Value", Hb_AnsiToOem( 'Selecione a Ordenação da Consulta' ) )
 
 		fCriaConsulta .LstOrdem. DeleteAllitems()
 		fCriaConsulta .LstOrdem. AddItem( 'Nenhum' )
 
-		IF fCriaConsulta .LstOrdem. ItemCount == 1
-			IF Len( fCriaConsulta .LstCampos. Value ) > 0
-				FOR n1 := 1 TO Len( fCriaConsulta .LstCampos. Value )
+		If fCriaConsulta .LstOrdem. ItemCount == 1
+			If Len( fCriaConsulta .LstCampos. Value ) > 0
+				For n1 := 1 TO Len( fCriaConsulta .LstCampos. Value )
 					// Aviso(  aCmps[fCriaConsulta.LstCampos.Value[n1]]    )
 					fCriaConsulta .LstOrdem. AddItem(  fCriaConsulta .LstCampos. item( fCriaConsulta .LstCampos. Value[ n1 ] )      )
-				NEXT
-			END IF
-		END IF
+				Next 
+			End If
+		End If
 
 		fCriaConsulta .LstOrdem. Value := 1
 
-	END IF
+	End If
 
 RETURN
 
@@ -1463,7 +1493,7 @@ FUNCTION FiltroAdd()
 		If Empty(alltrim(fFiltro.EdtFiltro.value)) .And. ;
 				(Alltrim(fFiltro.EdtFiltro.value) != "And") .And. ;
 				(Alltrim(fFiltro.EdtFiltro.value) != "Or")
-			yaviso("Quando existe mais de um Parametro para a Consulta,a Segunda em diante Deve Comeï¿½ar com um op.Logico(And ou Or)." , .f.)
+			yaviso("Quando existe mais de um Parametro para a Consulta,a Segunda em diante Deve Come???ar com um op.Logico(And ou Or)." , .f.)
 			BT_ClientAreaInvalidateAll ('fFiltro')
 			Return
 		Else
@@ -1477,20 +1507,7 @@ FUNCTION FiltroAdd()
 
 		End If
 	Else
-		//msginfo( Str(Len(alltrim(fFiltro.EdtFiltro.value))) )
-         /* 
-		If (lFadd) .And. (!Empty(alltrim(fFiltro.EdtFiltro.value)) ) .And. ;
-            (Alltrim(fFiltro.EdtFiltro.value) != "And") .And. ;
-                (Alltrim(fFiltro.EdtFiltro.value) != "Or")  .And. ;
-                (Alltrim(fFiltro.EdtFiltro.value) != "(") .And. ;
-                (Alltrim(fFiltro.EdtFiltro.value) != ")")
-             yaviso("Parametro Ja Informado , Caso queira adicionar outro parametro , confirme Esse no 'Ok' e 'Novo Parametro'",.f.) 
-             BT_ClientAreaInvalidateAll ('fFiltro')           
-             Return
-
-			End If
-         */
-
+		
 
 		If (lFadd)
 			yaviso("Parametro Ja Informado , Caso queira adicionar outro parametro , confirme Esse no 'Ok' e 'Novo Parametro'",.f.)
@@ -1502,35 +1519,35 @@ FUNCTION FiltroAdd()
 
 	End If
 
-	IF ( ( cTipo == 'I' ) .OR. ( cTipo == 'B' ) )
+	If ( ( cTipo == 'I' ) .OR. ( cTipo == 'B' ) )
 
-		IF IsAlpha( cValor )
+		If IsAlpha( cValor )
 			yAviso( 'Formato Invalido para Tipo Numerico.' , .f. )
 			BT_ClientAreaInvalidateAll ('fFiltro')
 			fFiltro .Valor. Value := ''
-			RETURN
-		END IF
+			Return 
+		End If
 
-	END IF
+	End If
 
-	IF AllTrim( fFiltro .CmbOperador. DisplayValue ) = 'CONTEM'
-		IF ( cTipo != 'C' )
+	If AllTrim( fFiltro .CmbOperador. DisplayValue ) = 'CONTEM'
+		If ( cTipo != 'C' )
 			yAviso( "Operador 'CONTEM' funciona apenas com campos Tipo Caracter." , .f. )
 			BT_ClientAreaInvalidateAll ('fFiltro')
-			RETURN
-		END IF
-	END IF
+			Return 
+		End If
+	End If
 
-	IF ( cTipo == 'C' )
-		IF AllTrim( fFiltro .CmbOperador. DisplayValue ) != 'CONTEM'
+	If ( cTipo == 'C' )
+		If AllTrim( fFiltro .CmbOperador. DisplayValue ) != 'CONTEM'
 			cFiltro := AllTrim( cCampo ) + ' ' + coperador + ' ' + Chr( 39 ) + AllTrim( cValor ) + Chr( 39 )
-		ELSE
+		Else 
 			cFiltro := AllTrim( cCampo ) + ' LIKE ' + Chr( 39 ) + AllTrim( cValor ) + '%' + Chr( 39 )
-		END IF
+		End If
 		//msginfo(cFiltro + '  m ' + cValor)
-	END IF
+	End If
 
-	IF ( cTipo == 'I' ) .OR. ( cTipo == 'B' ) .OR. ( cTipo == 'N' )
+	If ( cTipo == 'I' ) .OR. ( cTipo == 'B' ) .OR. ( cTipo == 'N' )
 		cValor := fFiltro.EdtNum.Value
 
 		If ( cTipo != 'B' )
@@ -1540,9 +1557,9 @@ FUNCTION FiltroAdd()
 		End If
 
 		// msginfo(cFiltro + '  m ' + cValor)
-	END IF
+	End If
 
-	IF ( cTipo == 'D' )
+	If ( cTipo == 'D' )
 
 		// '2018-01-15
 
@@ -1550,7 +1567,7 @@ FUNCTION FiltroAdd()
 		cValDate := Right( cValor, 4 ) + '-' + SubStr( cValor, 4, 2 ) + '-' + Left( cValor, 2 )
 		cFiltro := AllTrim( cCampo ) + ' ' + coperador + ' '  + Chr( 39 ) + cValDate + Chr( 39 )
 
-	END IF
+	End If 
 
 
 
@@ -1572,10 +1589,6 @@ FUNCTION LimpaFilt()
 	fFiltro .EdtFiltro. Value := ''
 
 	lFadd := .f.
-
-//   OBTN_Enable( 'fFiltro', 6600, .F. )
-	// OBTN_Enable( 'fFiltro', 6602, .F. )
-
 RETURN
 
 
@@ -1647,7 +1660,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 	IF Len( fCriaConsulta .LstOrdem. Value ) > 1
 		FOR nx := 1 TO  Len( fCriaConsulta .LstOrdem. Value )
 			IF AllTrim( fCriaConsulta .LstOrdem. Item(  fCriaConsulta .LstOrdem. Value[ nx ] ) )  = 'Nenhum'
-				yaviso(  "Em Ordenaï¿½ï¿½o dos Campos nÃ£o pode estar Marcado 'Nenhum',Caso haja Campos Selecionados para OrdenaÃ§Ã£o."  , .f. )
+				yaviso(  "Em Ordena??????o dos Campos n??o pode estar Marcado 'Nenhum',Caso haja Campos Selecionados para Ordena????o."  , .f. )
 				RETURN
 			ELSE
 				cCampoORd += ( AllTrim( fCriaConsulta .LstOrdem. Item(  fCriaConsulta .LstOrdem. Value[ nx ] ) ) + "." )
@@ -1705,7 +1718,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 	hb_MemoWrit( 'Cons1.txt', cSql )
 
 	IF oQuery == Nil
-		yaviso( "Execuï¿½ï¿½o da Rotina sera Interrompida(Cons  Cab). " + QUEBRA + "Contacte Suporte." , .f. )
+		yaviso( "Execu??????o da Rotina sera Interrompida(Cons  Cab). " + QUEBRA + "Contacte Suporte." , .f. )
 		RETURN .F.
 	END IF
 
@@ -1719,11 +1732,11 @@ FUNCTION GrvConsul( cTab  , nId1)
 
 	//msginfo( cTabelaX )
 
-	//yAviso( "Houve Falha no processo de Gravaï¿½ï¿½o no Dicionario de Dados."  )
+	//yAviso( "Houve Falha no processo de Grava??????o no Dicionario de Dados."  )
 
 
 	If !GravaDic( nId  , cTabelax )
-		yAviso( "Houve Falha no processo de Gravaï¿½ï¿½o no Dicionario de Dados." ,, .f.  )
+		yAviso( "Houve Falha no processo de Grava??????o no Dicionario de Dados." ,, .f.  )
 		Return
 	End If
 
@@ -1765,7 +1778,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 		oQuery := ExecSql( @oServer, cSqlx1 )
 
 		IF oQuery == Nil
-			yAviso( hb_UTF8TOSTR("Execuï¿½ï¿½o da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." , .f. )
+			yAviso( hb_UTF8TOSTR("Execu??????o da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." , .f. )
 			RETURN
 		END IF
 
@@ -1795,7 +1808,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 		hb_MemoWrit( 'ConsParam.txt', cSqlx1 )
 
 		IF oQuery == Nil
-			yAviso( hb_UTF8TOSTR("Execuï¿½ï¿½o da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." ,  .f. )
+			yAviso( hb_UTF8TOSTR("Execu??????o da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." ,  .f. )
 			RETURN .F.
 		END IF
 
@@ -1835,7 +1848,7 @@ Function GravaDic( nIdConsul  ,cTabOri)
 	Local oServer
 
 
-	//yAviso( "Execuï¿½ï¿½o da Rotina sera Interrompida(Cons  item)." + QUEBRA + "Contacte Suporte." , .f. )
+	//yAviso( "Execu??????o da Rotina sera Interrompida(Cons  item)." + QUEBRA + "Contacte Suporte." , .f. )
 
 	oSErver := GetConexao()
 
@@ -1867,7 +1880,7 @@ Function GravaDic( nIdConsul  ,cTabOri)
 		hb_MemoWrit( 'ConsInsert.txt', cSql )
 
 		If oQuery == Nil
-			yAviso( "Execuï¿½ï¿½o da Rotina sera Interrompida(Cons  item)." + QUEBRA + "Contacte Suporte." , .f. )
+			yAviso( "Execu??????o da Rotina sera Interrompida(Cons  item)." + QUEBRA + "Contacte Suporte." , .f. )
 
 			oServer:Destroy()
 			oServer := Nil
@@ -2225,7 +2238,7 @@ FUNCTION xInitMov(  nIdc1, nTpVnd9, cTabelax, lMvTable, cJanName )
 		END IF
 	Else
 
-		yAviso( Hb_AnsiToOem('Parametros Não Localizados, Recrie a Consulta.') , .f.)
+		yAviso( Hb_AnsiToOem('Parametros N?o Localizados, Recrie a Consulta.') , .f.)
 		Return .f.
 
 	End If
@@ -2496,7 +2509,7 @@ FUNCTION BrowConsulta( cSqlp, aCabecario, aTamanhos, aCampos, cJanx1  , aTps , c
 
 
 	If nConnection = 0
-		hb_alert("Unable connect to the server!"+Chr(13)+Chr(10)+Str(RDDINFO( RDDI_ERRORNO ))+Chr(13)+Chr(10)+RDDINFO( RDDI_ERROR ))
+		yAviso("Unable connect to the server!"+Chr(13)+Chr(10)+Str(RDDINFO( RDDI_ERRORNO ))+Chr(13)+Chr(10)+RDDINFO( RDDI_ERROR  , .f. ))
 		Return nConnectionInfo := 1 // 0 in nLogin means Mediator is sucessfully logged
 	End If
 
@@ -2506,220 +2519,199 @@ FUNCTION BrowConsulta( cSqlp, aCabecario, aTamanhos, aCampos, cJanx1  , aTps , c
 	dbGoTop()
 
 	If _IsControlDefined( "br_Main",  cForm )
-	DoMethod( cForm, "br_Main", "Release" )
-End If
+		DoMethod( cForm, "br_Main", "Release" )
+	End If
 
 
-cAlias := "tmp"
+	cAlias := "tmp"
+
+	If (Select(calias) > 0)
+		dbSelectArea( cAlias )
+		Use
+	End If
 
 
 
-If (Select(calias) > 0)
+
+	dbUseArea( .T.,,  cSqlp, cAlias )
 	dbSelectArea( cAlias )
-	Use
-End If
+	dbGoTop()
 
-//msginfo(cSqlp)
+	If ( RecCount() == 0 )
 
-dbUseArea( .T.,,  cSqlp, cAlias )
-dbSelectArea( cAlias )
-dbGoTop()
-
-If ( RecCount() == 0 )
-
-	Yaviso( "Consulta Nï¿½o Retornou Registros." , .t. )
-	lOk1 := .f.
-	//Return .f.
-
-Else
-	//PrepareGrid()
-End If
-
-//Msginfo(  Str(fCount()) + '   ' +   Str( len( aTps))  + '   ' +  Str( len( aCabecario))  + '  ' + Str( len( aTamanhos))    )
-
-aItens := {}
-
-While !Eof()
-
-	aM1 := {}
-
-	For n1 := 1 TO FCount()
-
-		cType := aTps[n1]
-
-		//msginfo( fieldname(n1) +'   ' + str(aTamanhos[n1]) )
-
-		If aTamanhos[n1] <= 1
-			aTamanhos[n1] := 120
-		End If
-
-		If (cType $ 'B.N')
+		Yaviso( Hb_AnsiToOem("Consulta Não Retornou Registros.") , .f. )
+		lOk1 := .f.
+		
+	Else
+		
+	End If
 
 
-			nTam1 := 120
+	
+	aItens := {}
 
-			cValor := PadL(alltrim(Transform( FieldGet(n1) , "@E 999,999,999.99" )),19)
+	While !Eof()
 
-			If cTYpe = 'N'
-				cValor :=  Alltrim(Str( FieldGet(n1) )  )
+		aM1 := {}
+
+		For n1 := 1 TO FCount()
+
+			cType := aTps[n1]
+
+			//msginfo( fieldname(n1) +'   ' + str(aTamanhos[n1]) )
+
+			If aTamanhos[n1] <= 1
+				aTamanhos[n1] := 120
 			End If
 
-			Aadd(aM1 , cValor )
+			If (cType $ 'B.N')
 
-		Else
-			AAdd( aM1, alltrim(hb_ANSIToOEM( &(FieldName(n1 ))  ))   )
-		End If
+
+				nTam1 := 120
+
+				cValor := PadL(alltrim(Transform( FieldGet(n1) , "@E 999,999,999.99" )),19)
+
+				If cTYpe = 'N'
+					cValor :=  Alltrim(Str( FieldGet(n1) )  )
+				End If
+
+				Aadd(aM1 , cValor )
+
+			Else
+				AAdd( aM1, alltrim(hb_ANSIToOEM( &(FieldName(n1 ))  ))   )
+			End If
+
+		Next
+
+
+		AAdd( aItens, aM1 )
+		dbSkip()
+
+	Enddo
+
+
+	//SysWait(.4)
+
+	If _IsControlDefined(cGridname , cFormPrin )
+		_ReleaseControl( cGridname , cFormPrin )
+	End If
+
+	bGrid1 := {}
+	bGrid2 := {}
+
+
+	nColl   := 5
+	//10
+	nSeqx   := 345
+
+	nTotw1 := 0
+
+	aM2 := {}
+
+	For n2 := 1 TO Len(aTps)
+
+		Aadd(aM2 , {  nColL , aTamanhos[n2]  , Alltrim(aCabecario[n2])  } )
+		nColL  += aTamanhos[n2]
+		nTotW1 += aTamanhos[n2]
 
 	Next
 
+	aMtrHeader := Aclone(aM2)
 
-	AAdd( aItens, aM1 )
-	dbSkip()
+	nTotWidth  := nTotW1
 
-Enddo
+	For nx2 := 1 TO Len(aCabecario)
+		AAdd( bGrid1, bColorGrid  )
+		AAdd( bGrid2, fColorGrid )
+	Next
 
+	DbGotop()
 
-//SysWait(.4)
+	Private aZCol := {}
 
-If _IsControlDefined(cGridname , cFormPrin )
-	_ReleaseControl( cGridname , cFormPrin )
-End If
+	//Private n2 := 1
 
-bGrid1 := {}
-bGrid2 := {}
+	nI := 0
+	n2:=1
+	
 
+	_HMG_SYSDATA [ 348 ] := {255,255,255}
+	_HMG_SYSDATA [ 349 ] := {28,157,189}
+	_HMG_SYSDATA [ 350 ] := {255,255,255}
+	_HMG_SYSDATA [ 351 ] := {28,157,189}
 
-nColl   := 5
-//10
-nSeqx   := 345
+	//EventRemove(nIndexEve1)
 
-nTotw1 := 0
-
-aM2 := {}
-
-For n2 := 1 TO Len(aTps)
-
-	Aadd(aM2 , {  nColL , aTamanhos[n2]  , Alltrim(aCabecario[n2])  } )
-	nColL  += aTamanhos[n2]
-	nTotW1 += aTamanhos[n2]
-
-Next
-
-aMtrHeader := Aclone(aM2)
-
-nTotWidth  := nTotW1
-
-For nx2 := 1 TO Len(aCabecario)
-	AAdd( bGrid1, bColorGrid  )
-	AAdd( bGrid2, fColorGrid )
-Next
-
-DbGotop()
-
-Private aZCol := {}
-
-//Private n2 := 1
-
-nI := 0
-n2:=1
-	/*
-FOR n2 := 1 TO Len(aCabec)
-
-			nI++
-
-			b := Str(nI)
-			a := " { || OrdeneCol(  "  + alltrim(b)  + " )  } "
-
-			Aadd(aZcol ,  &a  )
-
-			//msginfo(aCabec[n2] + ' ' + Str( aTams[n2]) )
-
-Next
-	*/
-
-_HMG_SYSDATA [ 348 ] := {255,255,255}
-_HMG_SYSDATA [ 349 ] := {28,157,189}
-_HMG_SYSDATA [ 350 ] := {255,255,255}
-_HMG_SYSDATA [ 351 ] := {28,157,189}
-
-//EventRemove(nIndexEve1)
-
-//msginfo('pl')
+	//msginfo('pl')
 
 
 
-//270
-@ 54 , 184 GRID &cGridName ;
-	OF &cJanx1 ;
-	WIDTH GetDeskTopWidth() ;
-	HEIGHT GetDeskTopHeight() - 195 ;
-	NOLINES ;
-	HEADERS aCabecario ;
-	FONT 'Arial' SIZE 9;
-	ITEMS aItens ;
-	FONTCOLOR { 78, 78, 78 } ;
-	JUSTIFY aJustify ;
-	CELLNAVIGATION ;
-	WIDTHS aTamanhos ;
-	BACKCOLOR {255,255,255} ;
-	DYNAMICBACKCOLOR bGrid1
+	//270
+	@ 54 , 184 GRID &cGridName ;
+		OF &cJanx1 ;
+		WIDTH GetDeskTopWidth() ;
+		HEIGHT GetDeskTopHeight() - 195 ;
+		NOLINES ;
+		HEADERS aCabecario ;
+		FONT 'Arial' SIZE 9;
+		ITEMS aItens ;
+		FONTCOLOR { 78, 78, 78 } ;
+		JUSTIFY aJustify ;
+		CELLNAVIGATION ;
+		WIDTHS aTamanhos ;
+		BACKCOLOR {255,255,255} ;
+		DYNAMICBACKCOLOR bGrid1
 
 
 
+	SetProperty( cJanx1  , cGridName , "PaintDoubleBuffer" , .t.)
 
-
-SetProperty( cJanx1  , cGridName , "PaintDoubleBuffer" , .t.)
-
-If aTps[1] $ "BN"
-	SetProperty(cJanx1, cGridName , "COLUMNDYNAMICFONT" ,  1 , {|| ARRAY FONT "Arial" SIZE 8 BOLD   } )
-End If
-
-For nz1 := 2 to Len(aTps)
-
-	If (aTps[nz1] $ "BN")
-		SetProperty(cJanx1, cGridName , "COLUMNDYNAMICFONT" ,  nZ1 , {|| ARRAY FONT "Courier New" SIZE 9 BOLD   } )
+	If aTps[1] $ "BN"
+		SetProperty(cJanx1, cGridName , "COLUMNDYNAMICFONT" ,  1 , {|| ARRAY FONT "Arial" SIZE 8 BOLD   } )
 	End If
 
-	If aCabecario[nz1 - 1] = 'Codigo'
-		SetProperty(cJanx1, cGridName , "COLUMNDYNAMICFONT" ,  nZ1 - 1 , {|| ARRAY FONT "Arial" SIZE 9 BOLD   } )
-	End If
+	For nz1 := 2 to Len(aTps)
+
+		If (aTps[nz1] $ "BN")
+			SetProperty(cJanx1, cGridName , "COLUMNDYNAMICFONT" ,  nZ1 , {|| ARRAY FONT "Courier New" SIZE 9 BOLD   } )
+		End If
+
+		If aCabecario[nz1 - 1] = 'Codigo'
+			SetProperty(cJanx1, cGridName , "COLUMNDYNAMICFONT" ,  nZ1 - 1 , {|| ARRAY FONT "Arial" SIZE 9 BOLD   } )
+		End If
 
 
-Next
+	Next
 
-//nTotWidth := 0
-l1        := 0
-
-
-
-nQRegx     := TMP->(Reccount())
-//Bt_ClientAreaInvalidateAll( cJanx1 )
-
-
-DoMethod('main','SetFocus')
-
-DoMethod(cjanx1,'SetFocus')
-DoMethod(cjanx1, cgridname, 'Refresh')
-
-//SetProperty( cFormPrin , 'br_grid' , 'Visible' , .f. )
-
-
-//SetProperty( cFormPrin , 'Lblb01x'  , 'Value' , Space(135) + cTitle + ' ' + Alltrim(Str(nQRegx)) + ' Registros ' )
-
-EventProcessAllHookMessage(EventCreate({ || LabelEventH4() },   ListView_GetHeader(GetControlHandle( 'br_grid', cJanx1  ))   ), .T.)
-
-SetProperty(cjanx1, cgridname, "Value" , 1)
-HMG_ChangeWindowStyle(GetControlHandle( cgridname  , cJanx1 )   , NIL, WS_BORDER  ,  .F., .T.)
-
-SetProperty( cFormPrin , 'lblQtReg' , 'Value' , Alltrim( Transform(   Len(aItens) , '@E 999,999,999'   ))         )
-
-cTitulo := GetProperty( cFormPrin , 'LblTitulo' , 'Value' )
+	//nTotWidth := 0
+	l1        := 0
 
 
 
-SetProperty( cFormPrin , 'LblTitulo' , 'Value' ,  Alltrim(cTitulo) + " " + Alltrim(cTitle)  )
+	nQRegx     := TMP->(Reccount())
+	//Bt_ClientAreaInvalidateAll( cJanx1 )
 
-xRefresh()
+
+	DoMethod('main','SetFocus')
+
+	DoMethod(cjanx1,'SetFocus')
+	DoMethod(cjanx1, cgridname, 'Refresh')
+
+
+	EventProcessAllHookMessage(EventCreate({ || LabelEventH4() },   ListView_GetHeader(GetControlHandle( 'br_grid', cJanx1  ))   ), .T.)
+
+	SetProperty(cjanx1, cgridname, "Value" , 1)
+	HMG_ChangeWindowStyle(GetControlHandle( cgridname  , cJanx1 )   , NIL, WS_BORDER  ,  .F., .T.)
+
+	SetProperty( cFormPrin , 'lblQtReg' , 'Value' , Alltrim( Transform(   Len(aItens) , '@E 999,999,999'   ))         )
+
+	cTitulo := GetProperty( cFormPrin , 'LblTitulo' , 'Value' )
+
+
+
+	SetProperty( cFormPrin , 'LblTitulo' , 'Value' ,  Alltrim(cTitulo) + " " + Alltrim(cTitle)  )
+
+	xRefresh()
 
 
 
@@ -2765,7 +2757,7 @@ Function xConsBmp( aM12 , nWidth1)
 			//+10
 		End If
 
-		BT_DrawText ( hDC, 2 ,nColx+40 ,  alltrim(aM12[n1][3])   , "Arial Narrow", 9 , WHITE,  BLACK, nTypeText, nAlingText, nOrientation )
+		BT_DrawText ( hDC, 2 ,nColx+40 ,  alltrim(aM12[n1][3])   , XFONT1, 9 , WHITE,  BLACK, nTypeText, nAlingText, nOrientation )
 
 		nCol1 += aM12[n1][2]
 
@@ -2814,7 +2806,7 @@ Function xValid( aMtr1 , aLabelx )
 	Local vValor
 	Local cType
 
-	FOR n2 := 1 TO Len( aMtr1 )
+	For n2 := 1 TO Len( aMtr1 )
 
 		If aMtr1[ n2 ][ 2 ]
 
@@ -2864,7 +2856,7 @@ Function xStop( cObj ,cCampo )
 
 	SetProperty( '_InputWindow', cObj  , 'BackColor', WHITE )
 
-DoMethod( '_InputWindow', cObj ,'SetFocus' )
+	DoMethod( '_InputWindow', cObj ,'SetFocus' )
 
 Return
 
@@ -2875,7 +2867,7 @@ FUNCTION CdBlock( aMe1, aRe1 )
 	LOCAL n2
 	Local lok := .f.
 
-	FOR n2 := 1 TO Len( aMe1 )
+	For n2 := 1 TO Len( aMe1 )
 
 		SetProperty( '_InputWindow', aMe1[ n2 ][ 1 ], 'Enabled', aMe1[ n2 ][ 2 ]   )
 
@@ -2930,13 +2922,13 @@ STATIC FUNCTION xIfEmpty()
 		PlayBeep()
 		// SysWait( .5 )
 		yAviso( 'Este campo deve estar Preenchido,' + QUEBRA + 'Para que a consulta possa ser executada. ' + This.name , .f. )
-	DoMethod( '_InputWindow', This.Name, 'SetFocus' )
+		DoMethod( '_InputWindow', This.Name, 'SetFocus' )
 
-	SetProperty( '_InputWindow', This.Name, 'BackColor', WHITE )
+		SetProperty( '_InputWindow', This.Name, 'BackColor', WHITE )
 
+		Return .f.
 
-Return .f.
-ENDIF
+	ENDIF
 
 RETURN .t.
 
@@ -2967,8 +2959,6 @@ FUNCTION FormateSql( cSql1, aCabec  )
 	oServer:Query( cSql )
 
 	cSql := "insert into "  + cTabela + " values(-5," + cCabec + ");" + Chr( 13 ) + Chr( 10 )
-	// cSql += "select * from " + cTabela  + " order by row_number;"
-	//msginfo(cSql)
 	oServer:Query( cSql )
 
 	hb_MemoWrit( 'saida1.txt', cSql )
