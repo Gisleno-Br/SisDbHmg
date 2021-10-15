@@ -2008,9 +2008,12 @@ FUNCTION Proc_Paint( cTexto, cBitmap  , z1Bitmap , cJanela)
 	nOrientation := BT_TEXT_NORMAL_ORIENTATION
 
 
-	If cActiveJan != 'fDialog'
-		BT_DrawText ( hDC, 07  , 195 ,  hb_ANSIToOEM( Alltrim(cTexto) ), "Arial", 9, WHITE,  BLACK, nTypeText, nAlingText, nOrientation )
+	If Alltrim(cTexto) != "Aviso"
+		BT_DrawText ( hDC, 07  , 195 ,  hb_ANSIToOEM( Alltrim(cTexto) ), XFONT1, 9, WHITE,  BLACK, nTypeText, nAlingText, nOrientation )
+		//msginfo('ok')
 	End If
+
+
 
 
 	BT_DeleteDC ( BTstruct )
@@ -2217,16 +2220,16 @@ FUNCTION xInitMov(  nIdc1, nTpVnd9, cTabelax, lMvTable, cJanName )
 
 	If Len(aRes1) > 0
 		IF ( aRes1[ 1 ] == Nil )
-			yaviso2( 'Sera Necessario Preencher os Parametros para Prosseguir.' , .f. )
+			yaviso( 'Sera Necessario Preencher os Parametros para Prosseguir.' , .f. )
 			Return .f.
 		END IF
 	Else
 
-
-		yAviso2( 'Parametros NÃ£o Localizados, Recrie a Consulta.' , .f.)
+		yAviso( Hb_AnsiToOem('Parametros Não Localizados, Recrie a Consulta.') , .f.)
 		Return .f.
 
 	End If
+
 
 	FOR nx1 := 1 TO Len( aFiltro )
 

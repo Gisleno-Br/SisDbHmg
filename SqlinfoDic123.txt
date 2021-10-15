@@ -1,1 +1,1 @@
-select * from dicionario where (camposistema = 'Código') and (tabela = 'clientes')
+select * from dicionario where (camposistema = 'Nome') and (tabela = 'clientes')

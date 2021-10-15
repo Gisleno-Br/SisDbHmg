@@ -35,7 +35,8 @@ Function yAviso2( cMensagem , lEfect  )
 		aMx := yEfect(  cActiveJan  )	
 	End If 	
 
-	MsgAviso( cMensagem + '  ['  + cActiveJan)	
+	MsgAviso( cMensagem )	
+	
 
 
 	If lEfect	

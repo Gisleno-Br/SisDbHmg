@@ -554,7 +554,7 @@ Static Function xPesqCep()
 	Else
 
 		SetProperty( 'fCadForne','Endereco','Value' , '' )
-		yAviso('Cep nï¿½o Localizado.' ,, 'fCadForne' )
+		yAviso('Cep não Localizado.' , .f. )
 
 	End If
 
