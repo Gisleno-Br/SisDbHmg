@@ -78,6 +78,11 @@ Function EditConsulta( cTabela , nIdConsu , lMovTable )
 
 	
 	Private nIndexFiltro := 0
+
+	
+	Private aButFilt := {}
+
+	Private cTabx := cTabelaX	
 	
 	
 	Private n11
@@ -294,6 +299,13 @@ Function EditConsulta( cTabela , nIdConsu , lMovTable )
 	oquery:Destroy()
 	oServer:Destroy()
 
+	
+
+	//HMG_ChangeWindowStyle( fCriaConsulta.Handle, WS_EX_STATICEDGE, NIL, .T., .T. )
+
+	HMG_ChangeWindowStyle( fCriaConsulta.Handle, WS_BORDER, NIL, .F., .T. )
+	HMG_ChangeWindowStyle( fCriaConsulta.Handle, NIL, WS_EX_STATICEDGE, .T., .T. )
+
 	Activate Window fCriaConsulta
 
 	If n1 > 0
@@ -334,6 +346,10 @@ FUNCTION NovaConsulta( cTabela, lMovTable )
 
 
 	Private nIndexFiltro := 0
+
+	Private aButFilt := {}
+
+	Private cTabx := cTabela
 	
 
 	
@@ -439,6 +455,9 @@ FUNCTION NovaConsulta( cTabela, lMovTable )
 
 	InstallEventHandler('EventConsu')
 
+	HMG_ChangeWindowStyle( fCriaConsulta.Handle, WS_BORDER, NIL, .F., .T. )
+	HMG_ChangeWindowStyle( fCriaConsulta.Handle, NIL, WS_EX_STATICEDGE, .T., .T. )
+
 	Activate Window fCriaConsulta
 
 	//SysWait(.5)
@@ -457,6 +476,7 @@ Function _FechaJan(   cJanx1 )
 
 
 REturn
+
 
 FUNCTION EventConsu( nHWnd, nMsg, nWParam, nLParam )
 //FUNCTION EventConsu()
@@ -499,8 +519,13 @@ FUNCTION EventConsu( nHWnd, nMsg, nWParam, nLParam )
 		nI1 := AScan( aButx1, {| n| n[ 1 ] == nId } )
 
 		If nI1 > 0
+			SysWait(.3)
 			Eval(   aButX1[ ni1 ][ 3 ] )
+
+			//SysWait(.3)
+
 		End If 
+		
 
 
 		If nId == 6598
@@ -541,10 +566,7 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 	LOCAL lUnderline := .F.
 	LOCAL lStrikeOut := .F.
 
-	Private cTabx := cTabelaX
-
-
-
+		
 
 
 	DEFAULT lNovo    := .T.
@@ -565,9 +587,8 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 	HMG_ChangeWindowStyle(  fFiltro.Handle , WS_EX_DLGMODALFRAME, NIL, .T., .T. )
 
 
-	PRIVATE lNovoFilt := lNovo
-
-	
+	lNovoFilt := lNovo
+		
 
 	Center Window fFiltro
 
@@ -697,7 +718,6 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 	
 
 
-	//OBTN_Release( cJany  , 6601 )
 	OBTN_Create( cJany, 6601, "Cancelar", 333, 365,  65,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 	OBTN_Font( cJany, 6601,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 
@@ -708,16 +728,15 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 	OBTN_Font( cJany, 6602,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 
 
-	//OBTN_Release( cJany  , 6603 )
+
 	OBTN_Create( cJany, 6603, "Limpar Filtro", 297, 87,  65,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 	OBTN_Font( cJany, 6603,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 
-	//OBTN_Release( cJany  , 9591 )
+
 	OBTN_Create( cJany  ,  9591 , "(", 300 , 180 ,  45,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 	OBTN_Font( cJany    , 9591  ,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
 
-	//OBTN_Release( cJany  , 9581 )
 	OBTN_Create( cJany  ,  9581 , ")", 300 , 232 ,  45,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 	OBTN_Font(  cJany    , 9581  ,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
@@ -727,49 +746,80 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 	OBTN_Font( cJany    ,  3541  ,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
 
+
 	//OBTN_Release( cJany  , 3581 )	
 	OBTN_Create( cJany  ,  3581 , "Or", 300 , 325 ,  45,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 	OBTN_Font( cJany    ,  3581  ,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
 
 
-	If (lNovo)
-		// OBTN_Enable( cJany, 6600, .F. )
-		//  OBTN_Enable( cJany, 6603, .F. )
-	End If
+	AAdd( aButFilt , { 6600,  OBTN_Handle( cJany , 6600 ),   {|| RetFiltro()   } ,  cJany   } )
 
+	AAdd( aButFilt, {  6601, OBTN_Handle( cJany  , 6601 ),   {||   (PushButton( cJany, 6601 ) , xFechay() )  },  cJany   } )
+
+	AAdd( aButFilt, {  6602, OBTN_Handle( cJany  , 6602 ),   {||  PushButton( 'fFiltro' , 6602 ),	FiltroAdd()    },  cJany    } )
+ 
+   
+	AAdd( aButFilt  , {  6603,  OBTN_Handle( cJany  , 6603 ),   {|| OBTN_Enable( 'fFiltro' , 6600 , .f. ) ,   PushButton( 'fFiltro' , 6603 ),	LimpaFilt()  },  cJany   } )
+
+
+	AAdd( aButFilt  , {  9591,  OBTN_Handle( cJany  , 9591 ),   {|| PushButton( cJany , 9591 ),	UpdFiltro('(')   },  cJany   } )
+ 
+	AAdd( aButFilt , {  9581,  OBTN_Handle( cJany  , 9581 ),   {||  PushButton( cJany, 9581 ),  UpdFiltro( ')' )   },  cJany   } )
+
+
+	AAdd( aButFilt , {  3541,  OBTN_Handle( cJany  , 3541 ),   {||  PushButton( 'fFiltro' , 3541 ) ,OBTN_Enable( 'fFiltro' , 9591 , .t. ),OBTN_Enable( 'fFiltro' , 9581,  .t. ), UpdFiltro('And')  },  cJany   } )
+ 
+ 
+	AAdd( aButFilt , {  3581,  OBTN_Handle( cJany  , 3581 ),   {|| PushButton( 'fFiltro' , 3581 ),OBTN_Enable( 'fFiltro' , 9591 , .t. ),OBTN_Enable( 'fFiltro' , 9581,  .t. ),	UpdFiltro('Or') },  cJany   } )
+	//AAdd( aButFilt , {  9481,  OBTN_Handle( cJany  , 9481 ),   {||  PushButton( cJan, 9481 ),  UpdFiltrox( 'Or' )   },  cJan   } )
+ 
+		
+	
+	
 	OBTN_Enable( cJany  , 3541,  (nItem1 >= 1) )
 	OBTN_Enable( cJany  , 3581,  (nItem1 >= 1) )
 
+	//InputEvButton
+	//InputEvFilt
 
 
+	EventProcessAllHookMessage( n11 := EventCreate( {|| InputEvButton( aButFilt, cJany ) },    OBTN_Handle( cJany, 6600 )   ), .T. )
+	EventProcessAllHookMessage( n12 := EventCreate( {|| InputEvButton( aButFilt, cJany ) },    OBTN_Handle( cJany, 6601 )   ), .T. )
 
+	EventProcessAllHookMessage( n13 := EventCreate( {|| InputEvButton( aButFilt, cJany ) },    OBTN_Handle( cJany, 6602 )   ), .T. )
+	EventProcessAllHookMessage( n14 := EventCreate( {|| InputEvButton( aButFilt, cJany ) },    OBTN_Handle( cJany, 6603 )   ), .T. )
 
-	EventProcessAllHookMessage( n11 := EventCreate( {|| InputEvFilt() },    OBTN_Handle( cJany, 6600 )   ), .T. )
-	EventProcessAllHookMessage( n12 := EventCreate( {|| InputEvFilt() },    OBTN_Handle( cJany, 6601 )   ), .T. )
+	EventProcessAllHookMessage( n15 := EventCreate( {|| InputEvButton( aButFilt, cJany ) },    OBTN_Handle( cJany, 9591 )   ), .T. )
+	EventProcessAllHookMessage( n16  := EventCreate( {|| InputEvButton( aButFilt, cJany ) },    OBTN_Handle( cJany, 9581 )   ), .T. )
 
-	EventProcessAllHookMessage( n13 := EventCreate( {|| InputEvFilt() },    OBTN_Handle( cJany, 6602 )   ), .T. )
-	EventProcessAllHookMessage( n14 := EventCreate( {|| InputEvFilt() },    OBTN_Handle( cJany, 6603 )   ), .T. )
+	EventProcessAllHookMessage( n17  := EventCreate( {|| InputEvButton( aButFilt, cJany ) },    OBTN_Handle( cJany, 3541 )   ), .T. )
+	EventProcessAllHookMessage( n18  := EventCreate( {|| InputEvButton( aButFilt, cJany ) },     OBTN_Handle( cJany,  3581 )   ), .T. )
 
-	EventProcessAllHookMessage( n15 := EventCreate( {|| InputEvFilt() },    OBTN_Handle( cJany, 9591 )   ), .T. )
-	EventProcessAllHookMessage( n16  := EventCreate( {|| InputEvFilt() },    OBTN_Handle( cJany, 9581 )   ), .T. )
+	
+	
+	HMG_ChangeWindowStyle( fFiltro.Handle, WS_BORDER, NIL, .F., .T. )
+	HMG_ChangeWindowStyle( fFiltro.Handle, NIL, WS_EX_STATICEDGE, .T., .T. )
+ 
+ 
+	InstallEventHandler('EvFiltButton')
 
-	EventProcessAllHookMessage( n17  := EventCreate( {|| InputEvFilt() },    OBTN_Handle( cJany, 3541 )   ), .T. )
-	EventProcessAllHookMessage( n18  := EventCreate( {|| InputEvFilt() },     OBTN_Handle( cJany,  3581 )   ), .T. )
+		
 
-	// InstallEventHandler( "EventHndFlt" )
+	lNextOp := .f. 
 
-	EventProcessAllHookMessage(nIndexFiltro   := EventCreate (  { ||   EventHndFlt( )} , fFiltro.Handle  ) , .t.)
+	lFadd := .f. 
 
 	
 
-   lNextOp := .f. 
+	If (lNovoFilt)
+		fFiltro.EdtFiltro.value := ' '	
+	End If 	
 
-   fFiltro.Show()
-   fFiltro.SetFocus()
+	fFiltro.cmbCampo.SetFocus()
 
-   fFiltro.cmbCampo.SetFocus()
-
+	//fFiltro.Activate()
+	fFiltro.Show()
 
 
 
@@ -781,25 +831,39 @@ RETURN
 Static Function xFechay()
 
 
+//	If IsWindowVisible( fFiltro.Handle )   
 
 
-	If nIndexFiltro > 0
 
-		EventRemove(nIndexFiltro)
-		EventRemove(n11)
-		EventRemove(n12)
-		EventRemove(n13)
+		RemoveHandler('EvFiltButton')
+		//RemoveHandler( 'EventConsu' )  
+
+		
+	
+		DestroyWindow(   OBTN_Handle('fFiltro' , 6600)    )
+		DestroyWindow(   OBTN_Handle('fFiltro' , 6601)    )
+		DestroyWindow(   OBTN_Handle('fFiltro' , 6602)    )
+	 
+	 
+		DestroyWindow(   OBTN_Handle('fFiltro' , 6603)    )
 
 
-		EventRemove(n14)
-		EventRemove(n15)
-		EventRemove(n16)
-		EventRemove(n17)
-		EventRemove(n18)
+		DestroyWindow(   OBTN_Handle('fFiltro' , 9591)    )
+	 
+		DestroyWindow(   OBTN_Handle('fFiltro' , 9581)    )
+	 
+	 
+		DestroyWindow(   OBTN_Handle('fFiltro' , 3541)    )
+		DestroyWindow(   OBTN_Handle('fFiltro' , 3581)    )
 
-	End If
-   
-    fFiltro.Hide()
+
+//	End If
+
+
+   	   fFiltro.Hide()
+
+	//SysWait(.2)
+
 
 Return 
 
@@ -907,7 +971,7 @@ FUNCTION InputEvFilt()
 RETURN
 
 //FUNCTION EventHndFlt( nHWnd, nMsg, nWParam, nLParam )
-
+/*
 FUNCTION EventHndFlt()
 
 	LOCAL nID
@@ -955,12 +1019,12 @@ FUNCTION EventHndFlt()
 				RetFiltro()
 			END IF
 
-			IF nId == 6601
-				// msginfo('2')
-				//fFiltro.Release()
-				//_FechaJan('fFiltro')
-				xFechay()
+			IF nId == 6601			
+				If IsWindowVisible( fFiltro.Handle)	
+					xFechay()
+				End If 	
 			END IF
+
 
 			IF nId == 9591
 				// msginfo('2')
@@ -1023,10 +1087,35 @@ FUNCTION EventHndFlt()
 
 RETURN
 
+*/
+
 
 Static Function UpdFiltro(cCar1)
 
 	Local c1 := alltrim(GetProperty("fFiltro","EdtFiltro","Value"))
+	Local nCount1 := GetProperty('fCriaConsulta','GridPar','ItemCount')
+
+
+	If (cCar1 = 'And') .or. (cCar1 = 'Or')
+
+	    If !lNovoFilt
+			If !Empty(Alltrim(c1))
+				yAviso( "Operadores 'And' ou 'Or' so podem ser Utilizados no Inicio Dos Filtros." , .f. )
+				Return 
+			End If 
+
+		Else
+
+			If (nCount1 >= 1)
+				If !Empty(Alltrim(c1))
+					yAviso( "Operadores 'And' ou 'Or' so podem ser Utilizados no Inicio Dos Filtros." , .f. )
+					Return 
+				End If 
+			End If	
+			  	
+		End If 	
+		
+	End If 	
 
 	fFiltro.EdtFiltro.value := c1+' ' + cCar1 + ' '
 
@@ -1042,24 +1131,13 @@ REturn
 
 STATIC FUNCTION ChgFiltro()
 
-	// Aviso( 'ok' )
-	// ProcessMessages()
-
-	IF lNovoFilt
-		IF  ( Len( AllTrim(fFiltro .Valor. Value ) ) > 0 ) .OR. ( fFiltro .Getdata1. Visible  )
-
-			IF ( ( fFiltro .CmbCampo. value > 0 )  .AND. ( fFiltro .CmbOperador. value > 0 )  )
-				//OBTN_Enable( 'fFiltro', 6600, .T. )
-			END IF
-
-		ELSE
-			//OBTN_Enable( 'fFiltro', 6600, .T. )
-		END IF
-	ELSE
-		// Aviso('ok2')
-		// fFiltro .BtnOk. Enabled :=  ( Len( AllTrim(fFiltro .Valor. Value ) ) > 0 )
+	
+	If lNovoFilt
+		
+	Else 
+		
 		OBTN_Enable( 'fFiltro', 6600, Len( AllTrim(fFiltro .Valor. Value ) ) > 0 )
-	END IF
+	End If 
 
 RETURN
 
@@ -1099,7 +1177,7 @@ FUNCTION DelParam()
 	GFocus()
 
 	// ProcessMessages()
-DO EVENTS
+	DO EVENTS
 
 RETURN
 
@@ -1122,6 +1200,8 @@ Return nQ1
 
 STATIC FUNCTION RetFiltro()
 
+
+
 	LOCAL nItem := 0
 	Local nCount1 := GetProperty('fCriaConsulta','Gridpar','ItemCount')
 
@@ -1140,19 +1220,23 @@ STATIC FUNCTION RetFiltro()
 	LOCAL aM1 := { ( fFiltro .cmbCampo. DisplayValue ), fFiltro .cmbOperador. DisplayValue, ;
 		iif( !fFiltro .Getdata1. Visible, iif( Val(nValor ) >= 0, nValor, AllTrim( fFiltro .Valor. Value ) ),  DToC( fFiltro .Getdata1. Value )   ),  ;
 		cOpLogic , ;
-		iif( fFiltro .ChkOrdem. Value, hb_ANSIToOEM( 'Sim' ), hb_ANSIToOEM( 'N???o' )  ), ;
-		iif( fFiltro .ChkRequerido. Value, hb_ANSIToOEM( 'Sim' ), hb_ANSIToOEM( 'N???o' ) ),  Replicate('(',nX1) ,  Replicate(')',nX2)     }
+		iif( fFiltro .ChkOrdem. Value, hb_ANSIToOEM( 'Sim' ), hb_ANSIToOEM( 'Nãoo' )  ), ;
+		iif( fFiltro .ChkRequerido. Value, hb_ANSIToOEM( 'Sim' ), hb_ANSIToOEM( 'Nãoo' ) ),  Replicate('(',nX1) ,  Replicate(')',nX2)     }
 
 
-	IF lNovoFilt
-	DoMethod( "fCriaConsulta", "GridPar", "AddItem", aM1 )
-ELSE
-	nItem := fCriaConsulta .GridPar. value
-	fCriaConsulta .GridPar. Item( nItem ) := aM1
-END IF
+	If lNovoFilt
+		DoMethod( "fCriaConsulta", "GridPar", "AddItem", aM1 )
+	Else
+		nItem := fCriaConsulta .GridPar. value
+		fCriaConsulta .GridPar. Item( nItem ) := aM1
+	End If 
 
-CheckOk()
-_FechaJan( 'fFiltro' )
+	CheckOk()
+
+	//msginfo('1')
+	xFechay()
+	//msginfo('2')
+	//_FechaJan( 'fFiltro' )
 
 
 RETURN
@@ -1176,44 +1260,39 @@ FUNCTION CheckOk( lOk9, lAviso )
 
 	OBTN_Enable( 'fCriaConsulta', 6598, .f. )
 
-	IF !lOk9
-		// SetProperty( 'fCriaConsulta', 'BtnOk', 'Enabled', .F. )
-		// OBTN_Enable( 'fCriaConsulta', 6598, .T. )
-	END IF
-
-
-	IF Len( fCriaConsulta .LstCampos. Value ) > 0
-		FOR n1 := 1 TO Len( fCriaConsulta .LstCampos. Value )
+	
+	If Len( fCriaConsulta .LstCampos. Value ) > 0
+		For n1 := 1 TO Len( fCriaConsulta .LstCampos. Value )
 			lOk1 := .T.
-		NEXT
-	END IF
+		Next
+	End If
 
 	lOk2 := ( GetProperty( 'fCriaConsulta', 'GridPar', "ItemCount" ) > 0 )
 
-	// msginfo('ckeck ok ')
+	
 
-	IF !lOk1
+	If !lOk1
 		// msginfo('ckeck ok1 ')
-	ELSE
+	Else
 
-		IF lOk2
+		If lOk2
 
-			//  msginfo('ckeck ok2 ')
-			IF ( Len( AllTrim( GetProperty( 'fCriaConsulta', 'TituloCons', 'Value' ) )   ) > 0 ) .AND. ;
+	
+			If ( Len( AllTrim( GetProperty( 'fCriaConsulta', 'TituloCons', 'Value' ) )   ) > 0 ) .AND. ;
 					( fCriaConsulta .GridPar. ItemCount > 0 ) .AND. ;
 					( Len( fCriaConsulta .LstCampos. Value ) > 0 )
 				OBTN_Enable( 'fCriaConsulta', 6598, .T. )
-			ELSE
+			Else
 
-			END IF
+			End If
 
-		ELSE
+		Else
 
-		END IF
+		End If
 
-	END IF
+	End If
 
-RETURN .F.
+Return .F.
 
 FUNCTION ChgField()
 
@@ -1338,53 +1417,46 @@ FUNCTION GetInfoDic( cCampo1, cTabela, cInfo )
 	LOCAL oRow
 	LOCAL cRet    := ''
 
-	//HB_SetCodePage("PT850")
-	//msginfo( cCampo1 )
+	HB_SetCodePage("PT850")
 
-	//msginfo(cSQl )
-
-	//cSql    := "select * from dicionario where (camposistema = '" + Hb_ansiTooem( cCampo1  ) + "') and (tabela = '" + cTabela + "')"
-
-	//msginfo(cSQl )
 
 	hb_MemoWrit( 'SqlinfoDic123.txt', cSql )
 	
-
-
-	//HB_SetCodePage("UTF8")
+	HB_SetCodePage("UTF8")
 
 	oQuery := oServ:Query( cSql )
 
 
-	IF oQuery:Eof()
-		yAviso(  HB_AnsiToOem('Houve um Erro ao tentar recuperar Informa??es do Campo : ' + cCampo1  + ".") + ;
+
+	If oQuery:Eof()
+		yAviso(  HB_AnsiToOem( hb_ANSIToOEM('Houve um Erro ao tentar recuperar Informações do Campo : ' + cCampo1  + ".") + ;
 			"Tabela : " + cTabela + "/" + cInfo + QUEBRA + ;
-			'Contactar Suporte!' , .f. )
-	ELSE
+			'Contactar Suporte!') , .f. )
+	Else
 
 		oRow := oQuery:GetRow( 1 )
 
-		IF cInfo == 'CAMPO'
+		If cInfo == 'CAMPO'
 			cRet := oRow:FieldGet( 3 )
-		END IF
+		End If 
 
-		IF cInfo == 'ID'
+		If cInfo == 'ID'
 			cRet := AllTrim( Str( oRow:FieldGet( 1 ) ) )
-		END IF
+		End If
 
-		IF cInfo == 'TAM'
+		If cInfo == 'TAM'
 			cRet := oRow:FieldGet( 7 )
-		END IF
+		End If 
 
-		IF cInfo == 'TIPO'
+		If cInfo == 'TIPO'
 			cRet := oRow:FieldGet( 4 )
-		END IF
+		End If 
 
-		IF cInfo == 'MASCARA'
+		If cInfo == 'MASCARA'
 			cRet := oRow:FieldGet( 8 )
-		END IF
+		End If 
 
-	END IF
+	End If 
 
 	oQuery:Destroy()
 	oQuery := Nil
@@ -1415,7 +1487,7 @@ FUNCTION InitCons()
 
 	BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin )) , Nil , .t. )
 
-	BT_ClientAreaInvalidateAll ( 'fCriaConsulta'	 )
+	//BT_ClientAreaInvalidateAll ( 'fCriaConsulta'	 )
 
 
 	SysWait(.1)
@@ -1469,15 +1541,15 @@ FUNCTION FiltroAdd()
 	LOCAL cVal   := AllTrim( fFiltro.EdtFiltro.Value )
 
 	LOCAL cTabela := AllTrim( fFiltro.lblTabela.Caption )
-
-	LOCAL cC1    := AllTrim( fFiltro.CmbCampo.DisplayValue )
+	
+	Local cc1 := ''
 
 	LOCAL cFiltro := ''
-	// Local cCampo := Left( cc1 , Len(cc1) - 2 )
+	
 
-	LOCAL cCampo := Alltrim(Lower( GetInfoDic( cC1, cTabela, 'CAMPO' ) ))
+	LOCAL cCampo := ''
 
-	LOCAL cTipo  := Alltrim(GetInfoDic( cC1, cTabela, 'TIPO' ))
+	LOCAL cTipo  := ''
 
 	LOCAL cOperador := Left( AllTrim( fFiltro.CmbOperador.DisplayValue ), 2 )
 
@@ -1487,34 +1559,45 @@ FUNCTION FiltroAdd()
 
 	Local nCount1 := GetProperty('fCriaConsulta','GridPar','ItemCount')
 
+    HB_SetCodePage("UTF8")
+
+	cc1 := fFiltro .CmbCampo. item(   fFiltro .CmbCampo.Value  )
+
+	If !lNovoFilt
+		If !Empty(alltrim(fFiltro.EdtFiltro.value))
+			yAviso(hb_ANSIToOEM("Limpe o Filtro antes , Já Existe um Conteudo Presente no Filtro.") , .f.)
+			Return 
+	    End If 
+    End If 		
 
 
-	If (nCount1 >= 1)
+	cCampo := Alltrim(Lower( GetInfoDic( cC1, cTabela, 'CAMPO' ) ))
+	cTipo  := Alltrim(GetInfoDic( cC1, cTabela, 'TIPO' ))
+
+	If (nCount1 >= 1) .And. (lNovoFilt)
 		If Empty(alltrim(fFiltro.EdtFiltro.value)) .And. ;
 				(Alltrim(fFiltro.EdtFiltro.value) != "And") .And. ;
 				(Alltrim(fFiltro.EdtFiltro.value) != "Or")
-			yaviso("Quando existe mais de um Parametro para a Consulta,a Segunda em diante Deve Come???ar com um op.Logico(And ou Or)." , .f.)
-			BT_ClientAreaInvalidateAll ('fFiltro')
+			yAviso(hb_ANSIToOEM("Quando existe mais de um Parametro para a Mesma Consulta." + QUEBRA + "O Segundo Parametro em diante Deve Começaar com um op.Logico(And ou Or).") , .f.)
+			//BT_ClientAreaInvalidateAll ('fFiltro')
 			Return
 		Else
 
 			//msginfo( Str(Len(alltrim(fFiltro.EdtFiltro.value))) )
 			If (lFadd)
-				yaviso("Parametro Ja Informado , Caso queira adicionar outro parametro , confirme Esse no 'Ok' e 'Novo Parametro'",.f.)
-				BT_ClientAreaInvalidateAll ('fFiltro')
+				yAviso(hb_ANSIToOEM("Parametro Ja Informado ,Limpe o Filtro ou então Caso queira adicionar outro parametro , " + QUEBRA + "Confirme Esse no 'Ok' e 'Novo Parametro'"),.f.)
+				//BT_ClientAreaInvalidateAll ('fFiltro')
 				Return
 			End If
 
 		End If
-	Else
-		
+	Else		
 
 		If (lFadd)
-			yaviso("Parametro Ja Informado , Caso queira adicionar outro parametro , confirme Esse no 'Ok' e 'Novo Parametro'",.f.)
-			BT_ClientAreaInvalidateAll ('fFiltro')
+			yAviso(hb_ANSIToOEM("Parametro Ja Informado ,Limpe o Filtro ou então Caso queira adicione outro parametro , " + QUEBRA + "Confirme Esse no 'Ok' e 'Novo Parametro'"),.f.)
+			//BT_ClientAreaInvalidateAll ('fFiltro')
 			Return
 		End If
-
 
 
 	End If
@@ -1523,7 +1606,7 @@ FUNCTION FiltroAdd()
 
 		If IsAlpha( cValor )
 			yAviso( 'Formato Invalido para Tipo Numerico.' , .f. )
-			BT_ClientAreaInvalidateAll ('fFiltro')
+			//BT_ClientAreaInvalidateAll ('fFiltro')
 			fFiltro .Valor. Value := ''
 			Return 
 		End If
@@ -1533,7 +1616,7 @@ FUNCTION FiltroAdd()
 	If AllTrim( fFiltro .CmbOperador. DisplayValue ) = 'CONTEM'
 		If ( cTipo != 'C' )
 			yAviso( "Operador 'CONTEM' funciona apenas com campos Tipo Caracter." , .f. )
-			BT_ClientAreaInvalidateAll ('fFiltro')
+			//BT_ClientAreaInvalidateAll ('fFiltro')
 			Return 
 		End If
 	End If
@@ -1579,16 +1662,16 @@ FUNCTION FiltroAdd()
 
 	lFadd := .t.
 
+	//msginfo('ok')
 
 
-
-RETURN
+Return 
 
 FUNCTION LimpaFilt()
 
 	fFiltro .EdtFiltro. Value := ''
-
 	lFadd := .f.
+
 RETURN
 
 

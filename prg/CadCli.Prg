@@ -43,11 +43,7 @@ FUNCTION xInitFrm()
 
    ON KEY F5 OF fCadCli ACTION xPesqCep()
 
-   // RefreshAll('fCadCli')
-
-   // syswait(.2)
-
-   // fCadcli.Image_1.Visible := .t.
+ 
 
    Center Window fCadCli
 

@@ -1,0 +1,1 @@
+Insert into Consultas Values(26,1,1,'Consulta Z45','adfadasd','2021-10-16','Ativo','Clientes')

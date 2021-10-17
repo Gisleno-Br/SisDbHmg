@@ -930,6 +930,8 @@ Function xInvalidate()
 		End If 	
 
 
+
+
 Return 		
 
 Function Check_Grid_Events()

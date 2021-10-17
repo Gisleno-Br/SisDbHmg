@@ -1,0 +1,1 @@
+Insert into Dicionario Values(233,'Consulta Z45','fone1','C   ','Telefone 1                                                                                          ','S',100,'                                                                                ','fone1',5,'                                                                                ',26)

@@ -121,8 +121,7 @@ FUNCTION LoadFitros( cTabela1 )
 
    Activate Window fFiltrosCad
 
-   RemoveHandler( 'EventConsu' )
-   
+   RemoveHandler( 'EventConsu' )  
 
 
 
@@ -446,12 +445,7 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
    AAdd( aButFilt , { 9598,  OBTN_Handle( cJan , 9598 ),   {||  ( PushButton( cJan  , 9598 ) , SysWait(.1) ,  lOk := SaveFiltro( lNew1  , nIdFlt )  )  } ,  cJan   } )
    AAdd( aButFilt, {  9599, OBTN_Handle( cJan, 9599 ),   {||   (PushButton( cJan, 9599 ) , xFechay() )  },  cJan   } )
 
-
-
-   //Release
-
-
-   
+  
    AAdd( aButFilt  , {  959,  OBTN_Handle( cJan, 959 ),   {|| ( PushButton( cJan, 959 ), FiltroAdx()   )  },  cJan   } )
    AAdd( aButFilt  , {  958,  OBTN_Handle( cJan, 958 ),   {||  ( PushButton( cJan, 958 ),  LimpaFilx() )  },  cJan   } )
 
@@ -538,6 +532,7 @@ Function xFechay()
 
    DestroyWindow(   OBTN_Handle('fFiltro' , 9541)    )
    DestroyWindow(   OBTN_Handle('fFiltro' , 9481)    )
+
 
 
    fFiltro.Hide()
