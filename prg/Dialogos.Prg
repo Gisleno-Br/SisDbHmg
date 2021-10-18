@@ -292,13 +292,18 @@ FUNCTION EventDlg()
 
 
 
+
+
 			IF nID == IDOK
 				nID := GetDlgCtrlID( GetFocus() )
 			ENDIF
 
 			IF nId == 6652
 
-				_ReleaseWindow("fDialogo")
+
+
+				//_ReleaseWindow("fDialogo")
+				_FechaJan('fDialogo')
 				// Do Events
 			END IF
 

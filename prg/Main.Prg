@@ -55,6 +55,8 @@ MEMVAR _HMG_SYSDATA
 
 
 
+
+
 //DECLARE WINDOW fSplit6
 
 
@@ -119,11 +121,11 @@ FUNCTION Main
 	Public XBACK1 := {232,246,239}  
 
 	Public XFONT1  := 'Arial Unicode MS'
- 
+
+	Public BACKVERDE1 := {233,246,237} 
 
 	Private nSec1 := 0
 	PRIVATE nDEsk1 := 975
-
 
 
 	Private nacumz := 0
@@ -949,6 +951,8 @@ Function PushButton( cjanela  , nIdBut , bBlock )
 
 	EnableButton(cJanela  , nIdBut   , .f.)
 	EnableButton(cJanela  , nIdBut  , .t.)	
+	
+	//SysWait(.1)
 
 	If (bBlock != Nil )
 		Eval(bBlock)
@@ -2354,35 +2358,7 @@ Function D1Black(cJan,zBitMap)
 
 
 
-
-
 Return
-
-Function BoxColor( cJan , cObjFrame , nOsm , cImgTab )
-
-	LOCAL Sclavel01 := Alltrim("ImgxY") + ALLTRIM(nOsm) 
-	
-	DEFAULT cImgTab := "Tab.Jpg"
-
-    DEFINE IMAGE &Sclavel01
-        ROW    GetProperty( cJan , cObjFrame , "Row")
-        COL    GetProperty( cJan, cObjFrame , "Col")
-        WIDTH  GetProperty( cJan, cObjFrame , "Width") - 1
-        HEIGHT GetProperty( cJan , cObjFrame , "Height") - 1
-        PICTURE cImgTab
-        HELPID Nil
-        VISIBLE .T.
-        STRETCH .T.
-        ACTION Nil
-    END IMAGE
-
-	SetProperty(cJan,Sclavel01,"Enabled",.F.)
-	
-	
-RETURN
-
-
-
 
 
 Function Box(CurSRow, CurSCol, LastSWidth, LastSHeight , NOSm , cJanela1 , cImgTab )

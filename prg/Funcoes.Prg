@@ -1307,6 +1307,7 @@ REturn cSql1
 
 
 
+
 Function xSqlInsert(cTabela , aValores ,aCamposF )
 
 	//   Local cSql := "select * from " + alltrim(cTabela)

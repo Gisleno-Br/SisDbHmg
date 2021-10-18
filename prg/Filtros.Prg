@@ -507,16 +507,14 @@ Return lOk
 
 
 
-
-
-
 Function xFechay()
 
-  
+   
    Local i := 0
    RemoveHandler('EvFiltButton')
 
    i := OBTN_Handle('fFiltro' , 959) 
+
 
 
    DestroyWindow(   OBTN_Handle('fFiltro' , 9598)    )
@@ -532,12 +530,9 @@ Function xFechay()
 
    DestroyWindow(   OBTN_Handle('fFiltro' , 9541)    )
    DestroyWindow(   OBTN_Handle('fFiltro' , 9481)    )
-
-
+   
 
    fFiltro.Hide()
-
-
    
 
 Return 
@@ -562,6 +557,7 @@ FUNCTION EvFiltButton( nHWnd, nMsg, nWParam, nLParam )
 		If nI1 > 0
 			OBTN_Draw( nHWnd,  nWParam, nLParam )
 		End If
+
 
 	End If
 

@@ -1,8 +1,9 @@
 #include <hmg.ch>
+#include "dll.ch"
+
+//#include "Dll.ch"
 
 //25-09
-
-
 
 
 #include <minigui.ch>
@@ -277,7 +278,11 @@ Function EditConsulta( cTabela , nIdConsu , lMovTable )
 	// oRow
 
 
-	HB_SETCODEPAGE("PT850")
+	//HB_SETCODEPAGE("PT850")
+
+
+	HB_SETCODEPAGE("UTF8")
+
 
 	For n1 := 1 To oQuery:LastRec()
 		oRow := oQuery:GetRow(n1)
@@ -287,8 +292,8 @@ Function EditConsulta( cTabela , nIdConsu , lMovTable )
 		cValor := GetCampo(oRow,'Valor')
 		coplogico := alltrim(GetCampo(oRow,'OpLogico'))
 
-		cEditavel  := Iif(GetCampo(oRow,'Editavel') == 'S','Sim', hb_AnsiToOem('Não')  )
-		cRequerido := Iif(GetCampo(oRow,'Requerido')  == 'S','Sim', Hb_AnsiToOem('Não') )
+		cEditavel  := Iif(GetCampo(oRow,'Editavel') == 'S','Sim', Hb_Utf8ToStr('Não')  )
+		cRequerido := Iif(GetCampo(oRow,'Requerido')  == 'S','Sim', Hb_Utf8ToStr('Não') )
 		cPar1      := GetCampo(oRow,'Parentese')
 		cPar2      := GetCampo(oRow,'Parentese2')
 
@@ -299,21 +304,23 @@ Function EditConsulta( cTabela , nIdConsu , lMovTable )
 	oquery:Destroy()
 	oServer:Destroy()
 
-	
 
 	//HMG_ChangeWindowStyle( fCriaConsulta.Handle, WS_EX_STATICEDGE, NIL, .T., .T. )
 
 	HMG_ChangeWindowStyle( fCriaConsulta.Handle, WS_BORDER, NIL, .F., .T. )
 	HMG_ChangeWindowStyle( fCriaConsulta.Handle, NIL, WS_EX_STATICEDGE, .T., .T. )
 
+
 	Activate Window fCriaConsulta
 
 	If n1 > 0
+	  /*
 		EventRemove(n1)
 		EventRemove(n2)
 		EventRemove(n3)
 		EventRemove(n4)
 		EventRemove(n5)
+		*/
 	End If
 
 
@@ -446,6 +453,7 @@ FUNCTION NovaConsulta( cTabela, lMovTable )
 	EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, cJanx ) },    OBTN_Handle( cJanx, 6595 )   ), .T. )
 
 
+
 	OBTN_Enable( 'fCriaConsulta', 6598, .F. )
 
 	OBTN_Enable( 'fCriaConsulta', 6597, .F. )
@@ -519,13 +527,13 @@ FUNCTION EventConsu( nHWnd, nMsg, nWParam, nLParam )
 		nI1 := AScan( aButx1, {| n| n[ 1 ] == nId } )
 
 		If nI1 > 0
-			SysWait(.3)
-			Eval(   aButX1[ ni1 ][ 3 ] )
-
 			//SysWait(.3)
-
+			If nI1 <= Len(aButx1)
+				Eval(   aButX1[ ni1 ][ 3 ] )		
+			End If 	
 		End If 
 		
+
 
 
 		If nId == 6598
@@ -596,10 +604,11 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 
 	HB_SETCODEPAGE("PT850")
 
-   	SetProperty("fFiltro" , "Frame_1" , "Caption" , hb_ANSIToOEM("Criação de Parametros Consulta" )  )   
+   	SetProperty("fFiltro" , "Frame_1" , "Caption" , Hb_AnsiToOem("Criação de Parametros Consulta" )  )   
 
          
     ON KEY ESCAPE OF fFiltro Action xFechay()
+
 
 
 
@@ -712,6 +721,7 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 	End If
 
 
+
     
 	OBTN_Create( cJany,  6600, "Ok", 333, 300,  65,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 	OBTN_Font( cJany, 6600 ,  { cFontName, nFontSize, .F., .F., .F., .F. } )
@@ -726,6 +736,8 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 
 	OBTN_Create( cJany, 6602, "Adicionar", 297, 15,  65,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 	OBTN_Font( cJany, 6602,  { cFontName, nFontSize, .F., .F., .F., .F. } )
+
+
 
 
 
@@ -747,9 +759,13 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 
 
 
+
 	//OBTN_Release( cJany  , 3581 )	
 	OBTN_Create( cJany  ,  3581 , "Or", 300 , 325 ,  45,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 	OBTN_Font( cJany    ,  3581  ,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
+
+
+
 
 
 
@@ -774,14 +790,10 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 	AAdd( aButFilt , {  3581,  OBTN_Handle( cJany  , 3581 ),   {|| PushButton( 'fFiltro' , 3581 ),OBTN_Enable( 'fFiltro' , 9591 , .t. ),OBTN_Enable( 'fFiltro' , 9581,  .t. ),	UpdFiltro('Or') },  cJany   } )
 	//AAdd( aButFilt , {  9481,  OBTN_Handle( cJany  , 9481 ),   {||  PushButton( cJan, 9481 ),  UpdFiltrox( 'Or' )   },  cJan   } )
  
-		
-	
 	
 	OBTN_Enable( cJany  , 3541,  (nItem1 >= 1) )
 	OBTN_Enable( cJany  , 3581,  (nItem1 >= 1) )
 
-	//InputEvButton
-	//InputEvFilt
 
 
 	EventProcessAllHookMessage( n11 := EventCreate( {|| InputEvButton( aButFilt, cJany ) },    OBTN_Handle( cJany, 6600 )   ), .T. )
@@ -797,49 +809,46 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 	EventProcessAllHookMessage( n18  := EventCreate( {|| InputEvButton( aButFilt, cJany ) },     OBTN_Handle( cJany,  3581 )   ), .T. )
 
 	
+
 	
 	HMG_ChangeWindowStyle( fFiltro.Handle, WS_BORDER, NIL, .F., .T. )
 	HMG_ChangeWindowStyle( fFiltro.Handle, NIL, WS_EX_STATICEDGE, .T., .T. )
  
  
-	InstallEventHandler('EvFiltButton')
+	InstallEventHandler('EvFiltButton')	
 
-		
 
 	lNextOp := .f. 
-
 	lFadd := .f. 
-
 	
 
 	If (lNovoFilt)
 		fFiltro.EdtFiltro.value := ' '	
 	End If 	
 
-	fFiltro.cmbCampo.SetFocus()
 
-	//fFiltro.Activate()
-	fFiltro.Show()
+ 	fFiltro.Show()
+
+    fFiltro.EdtFiltro.SetFocus()
+
+	//DoFindWin("Filtros")
 
 
+//	_ShowWindow('fFiltro')
 
-   
+    
+
 RETURN
+
+
+
 
 
 
 Static Function xFechay()
 
-
-//	If IsWindowVisible( fFiltro.Handle )   
-
-
-
 		RemoveHandler('EvFiltButton')
-		//RemoveHandler( 'EventConsu' )  
-
-		
-	
+			
 		DestroyWindow(   OBTN_Handle('fFiltro' , 6600)    )
 		DestroyWindow(   OBTN_Handle('fFiltro' , 6601)    )
 		DestroyWindow(   OBTN_Handle('fFiltro' , 6602)    )
@@ -856,13 +865,9 @@ Static Function xFechay()
 		DestroyWindow(   OBTN_Handle('fFiltro' , 3541)    )
 		DestroyWindow(   OBTN_Handle('fFiltro' , 3581)    )
 
-
-//	End If
-
-
    	   fFiltro.Hide()
 
-	//SysWait(.2)
+
 
 
 Return 
@@ -1217,11 +1222,17 @@ STATIC FUNCTION RetFiltro()
 	LOCAL nCount := fCriaConsulta .GridPar. ItemCount
 
 
-	LOCAL aM1 := { ( fFiltro .cmbCampo. DisplayValue ), fFiltro .cmbOperador. DisplayValue, ;
-		iif( !fFiltro .Getdata1. Visible, iif( Val(nValor ) >= 0, nValor, AllTrim( fFiltro .Valor. Value ) ),  DToC( fFiltro .Getdata1. Value )   ),  ;
-		cOpLogic , ;
-		iif( fFiltro .ChkOrdem. Value, hb_ANSIToOEM( 'Sim' ), hb_ANSIToOEM( 'Nãoo' )  ), ;
-		iif( fFiltro .ChkRequerido. Value, hb_ANSIToOEM( 'Sim' ), hb_ANSIToOEM( 'Nãoo' ) ),  Replicate('(',nX1) ,  Replicate(')',nX2)     }
+	LOCAL aM1 
+	
+
+
+	HB_SETCODEPAGE("PT850")
+	
+	aM1 := { ( fFiltro .cmbCampo. DisplayValue ), fFiltro .cmbOperador. DisplayValue, ;
+	Iif( !fFiltro .Getdata1. Visible, iif( Val(nValor ) >= 0, nValor, AllTrim( fFiltro .Valor. Value ) ),  DToC( fFiltro .Getdata1. Value )   ),  ;
+	cOpLogic , ;
+	Iif( fFiltro .ChkOrdem. Value, hb_ANSIToOEM( 'Sim' ), Hb_ansiToOem( 'Não' )  ), ;
+	Iif( fFiltro .ChkRequerido. Value, hb_ANSIToOEM( 'Sim' ), Hb_AnsiToOem( 'Não' ) ),  Replicate('(',nX1) ,  Replicate(')',nX2)     }
 
 
 	If lNovoFilt
@@ -1565,10 +1576,14 @@ FUNCTION FiltroAdd()
 
 	If !lNovoFilt
 		If !Empty(alltrim(fFiltro.EdtFiltro.value))
+			xFechay()			
 			yAviso(hb_ANSIToOEM("Limpe o Filtro antes , Já Existe um Conteudo Presente no Filtro.") , .f.)
+			
+			
 			Return 
 	    End If 
     End If 		
+
 
 
 	cCampo := Alltrim(Lower( GetInfoDic( cC1, cTabela, 'CAMPO' ) ))
@@ -1578,15 +1593,21 @@ FUNCTION FiltroAdd()
 		If Empty(alltrim(fFiltro.EdtFiltro.value)) .And. ;
 				(Alltrim(fFiltro.EdtFiltro.value) != "And") .And. ;
 				(Alltrim(fFiltro.EdtFiltro.value) != "Or")
-			yAviso(hb_ANSIToOEM("Quando existe mais de um Parametro para a Mesma Consulta." + QUEBRA + "O Segundo Parametro em diante Deve Começaar com um op.Logico(And ou Or).") , .f.)
-			//BT_ClientAreaInvalidateAll ('fFiltro')
+			
+			
+			yAviso(Hb_ansiToOem("Quando existe mais de um Parametro para a Mesma Consulta." + QUEBRA + "O Segundo Parametro em diante Deve Começar com um op.Logico(And ou Or).") , .f.)					
+			xFechay()	
+			//msginfo('Erro')
+			
 			Return
 		Else
+		
 
 			//msginfo( Str(Len(alltrim(fFiltro.EdtFiltro.value))) )
 			If (lFadd)
-				yAviso(hb_ANSIToOEM("Parametro Ja Informado ,Limpe o Filtro ou então Caso queira adicionar outro parametro , " + QUEBRA + "Confirme Esse no 'Ok' e 'Novo Parametro'"),.f.)
-				//BT_ClientAreaInvalidateAll ('fFiltro')
+				xFechay()
+				yAviso(hb_ANSIToOEM("Parametro Ja Informado ,Limpe o Filtro ou então Caso queira adicionar outro parametro , " + QUEBRA + "Confirme Esse no 'Ok' e 'Novo Parametro'"),.f.)								
+				SysWait(.2)
 				Return
 			End If
 
@@ -1594,8 +1615,9 @@ FUNCTION FiltroAdd()
 	Else		
 
 		If (lFadd)
-			yAviso(hb_ANSIToOEM("Parametro Ja Informado ,Limpe o Filtro ou então Caso queira adicione outro parametro , " + QUEBRA + "Confirme Esse no 'Ok' e 'Novo Parametro'"),.f.)
-			//BT_ClientAreaInvalidateAll ('fFiltro')
+			xFechay()
+			yAviso(hb_ANSIToOEM("Parametro Ja Informado ,Limpe o Filtro ou então Caso queira adicione outro parametro , " + QUEBRA + "Confirme Esse no 'Ok' e 'Novo Parametro'"),.f.)						
+			
 			Return
 		End If
 
@@ -1605,9 +1627,9 @@ FUNCTION FiltroAdd()
 	If ( ( cTipo == 'I' ) .OR. ( cTipo == 'B' ) )
 
 		If IsAlpha( cValor )
-			yAviso( 'Formato Invalido para Tipo Numerico.' , .f. )
-			//BT_ClientAreaInvalidateAll ('fFiltro')
-			fFiltro .Valor. Value := ''
+			xFechay()
+			yAviso( 'Formato Invalido para Tipo Numerico.' , .f. )			
+			fFiltro .Valor. Value := ''			
 			Return 
 		End If
 
@@ -1615,8 +1637,8 @@ FUNCTION FiltroAdd()
 
 	If AllTrim( fFiltro .CmbOperador. DisplayValue ) = 'CONTEM'
 		If ( cTipo != 'C' )
+			xFechay()
 			yAviso( "Operador 'CONTEM' funciona apenas com campos Tipo Caracter." , .f. )
-			//BT_ClientAreaInvalidateAll ('fFiltro')
 			Return 
 		End If
 	End If
@@ -1662,8 +1684,7 @@ FUNCTION FiltroAdd()
 
 	lFadd := .t.
 
-	//msginfo('ok')
-
+	
 
 Return 
 
@@ -1743,7 +1764,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 	IF Len( fCriaConsulta .LstOrdem. Value ) > 1
 		FOR nx := 1 TO  Len( fCriaConsulta .LstOrdem. Value )
 			IF AllTrim( fCriaConsulta .LstOrdem. Item(  fCriaConsulta .LstOrdem. Value[ nx ] ) )  = 'Nenhum'
-				yaviso(  "Em Ordena??????o dos Campos n??o pode estar Marcado 'Nenhum',Caso haja Campos Selecionados para Ordena????o."  , .f. )
+				yaviso(  Hb_AnsiToOem("Em Ordenação dos Campos não pode estar Marcado 'Nenhum',Caso haja Campos Selecionados para Ordenação." ) , .f. )
 				RETURN
 			ELSE
 				cCampoORd += ( AllTrim( fCriaConsulta .LstOrdem. Item(  fCriaConsulta .LstOrdem. Value[ nx ] ) ) + "." )
@@ -1801,7 +1822,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 	hb_MemoWrit( 'Cons1.txt', cSql )
 
 	IF oQuery == Nil
-		yaviso( "Execu??????o da Rotina sera Interrompida(Cons  Cab). " + QUEBRA + "Contacte Suporte." , .f. )
+		yaviso( Hb_AnsiToOem("Execução da Rotina sera Interrompida(Cons  Cab). " + QUEBRA + "Contacte Suporte.") , .f. )
 		RETURN .F.
 	END IF
 
@@ -1819,7 +1840,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 
 
 	If !GravaDic( nId  , cTabelax )
-		yAviso( "Houve Falha no processo de Grava??????o no Dicionario de Dados." ,, .f.  )
+		yAviso( Hb_AnsiToOem("Houve Falha no processo de Gravação no Dicionario de Dados." ) , .f.  )
 		Return
 	End If
 
@@ -1861,7 +1882,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 		oQuery := ExecSql( @oServer, cSqlx1 )
 
 		IF oQuery == Nil
-			yAviso( hb_UTF8TOSTR("Execu??????o da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." , .f. )
+			yAviso( Hb_AnsiToOem("Execuçãoo da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." , .f. )
 			RETURN
 		END IF
 
@@ -1891,7 +1912,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 		hb_MemoWrit( 'ConsParam.txt', cSqlx1 )
 
 		IF oQuery == Nil
-			yAviso( hb_UTF8TOSTR("Execu??????o da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." ,  .f. )
+			yAviso( hb_ANSIToOEM("Execução da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." ,  .f. )
 			RETURN .F.
 		END IF
 
@@ -3029,6 +3050,7 @@ FUNCTION FormateSql( cSql1, aCabec  )
 		cCabec += "'" + hb_OemToansi(alltrim(aCabec[ n1 ])) + "',"
 	NEXT
 
+
 	cCabec := Left( cCabec, Len( cCabec ) -1 )
 
 	cSql := "drop table if exists " + cTabela + ";"
@@ -3047,4 +3069,18 @@ FUNCTION FormateSql( cSql1, aCabec  )
 	hb_MemoWrit( 'saida1.txt', cSql )
 
 RETURN ( cTabela )
+
+
+PROCEDURE DoFindWin(cTitle)
+LOCAL nWin := HMG_CallDLL( "User32.dll", DLL_OSAPI, "FindWindow", 0, cTitle)
+
+   If !EMPTY(nWin)
+      HMG_CallDLL( "User32.dll", DLL_OSAPI, "SetForegroundWindow", nWin )
+      HMG_CallDLL( "User32.dll", DLL_OSAPI, "BringWindowToTop", nWin )
+      HMG_CallDLL( "User32.dll", DLL_OSAPI, "ShowWindow", nWin, 1 )
+      HMG_CallDLL( "User32.dll", DLL_OSAPI, "UpdateWindow", nWin )
+	  msginfo('ok')
+   End If 
+
+RETURN
 
