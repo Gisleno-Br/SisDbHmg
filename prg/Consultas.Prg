@@ -843,10 +843,6 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 Return 
 
 
-
-
-
-
 Static Function xFechay()
 
 		RemoveHandler('EvFiltButton')
