@@ -732,7 +732,7 @@ Function ProcFiltro( cTab1 , lEfect )
 	//msginfo(cLblSelected)
 
 	If (lOpcaoAberta)		
-		yAviso("Não Sera possivel Executar Filtros com a Tela de Opções Ativa." , .f.)
+		yAviso(  Hb_AnsiToOem("Não Sera possivel Executar Filtros com a Tela de Opções Ativa.")  , .f.)
 		Return
 	End If
 
@@ -2266,7 +2266,6 @@ Return
 
 Function xDrawHead()
 
-
 	//Local nHWnd     := ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin ))
 	Local aMtrHeader    := xGetHeader()
 	Local nHWnd         := ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan ))	
@@ -2284,9 +2283,7 @@ Function xDrawHead()
 
 	ControlBackX( nHWnd , {255,121,12} , aM1 , Len(aMtrHeader)  , aTams1 ,  nColSel  , nColOrder , 'img\setaa.bmp' , 'img\setab.bmp' , lAscendente )
 
-	//SysWait(0.05)
-
-
+	
 
 Return
 

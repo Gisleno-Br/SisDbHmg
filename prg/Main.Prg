@@ -2150,7 +2150,6 @@ Function OpenOpcao( cCadastro , cTitulo , nHandle1 )
 
 		If ( FindWindowEx( ,, , cTitulo  ) > 0 )
 			yAviso( 'Este Cadastro ja esta Ativo.' ,, .f. )
-			//yAviso( 'Este Cadastro ja esta Ativo.' )
 			RefreshAll('fSplitSubMenu')
 		Else
 

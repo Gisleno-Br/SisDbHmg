@@ -262,12 +262,11 @@ DEFINE WINDOW TEMPLATE AT 140 , 262 WIDTH 705 HEIGHT 376 VIRTUAL WIDTH Nil VIRTU
         PAGE "Filtros/Parametros" IMAGE "img\ic_janela.bmp"
 
 
-
             DEFINE GRID GridPar
                 ROW    25
                 COL    1
                 WIDTH  679
-                HEIGHT 210
+                HEIGHT 254
                 ITEMS NIL
                 VALUE 0
                 WIDTHS {100,85,115,85,75,85,45,45}

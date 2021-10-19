@@ -632,6 +632,9 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 	fFiltro .cmbOrdem. enabled := .F.
 	fFiltro .Titulo. enabled := .F.
 
+	fFiltro .EdtFiltro. enabled := .F.
+
+
 	fFiltro .ChkRequerido. visible := .T.
 	fFiltro .ChkRequerido. value   := .T.
 
@@ -802,11 +805,11 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 	EventProcessAllHookMessage( n13 := EventCreate( {|| InputEvButton( aButFilt, cJany ) },    OBTN_Handle( cJany, 6602 )   ), .T. )
 	EventProcessAllHookMessage( n14 := EventCreate( {|| InputEvButton( aButFilt, cJany ) },    OBTN_Handle( cJany, 6603 )   ), .T. )
 
-	EventProcessAllHookMessage( n15 := EventCreate( {|| InputEvButton( aButFilt, cJany ) },    OBTN_Handle( cJany, 9591 )   ), .T. )
+	EventProcessAllHookMessage( n15 := EventCreate( {|| InputEvButton( aButFilt, cJany ) },     OBTN_Handle( cJany, 9591 )   ), .T. )
 	EventProcessAllHookMessage( n16  := EventCreate( {|| InputEvButton( aButFilt, cJany ) },    OBTN_Handle( cJany, 9581 )   ), .T. )
 
 	EventProcessAllHookMessage( n17  := EventCreate( {|| InputEvButton( aButFilt, cJany ) },    OBTN_Handle( cJany, 3541 )   ), .T. )
-	EventProcessAllHookMessage( n18  := EventCreate( {|| InputEvButton( aButFilt, cJany ) },     OBTN_Handle( cJany,  3581 )   ), .T. )
+	EventProcessAllHookMessage( n18  := EventCreate( {|| InputEvButton( aButFilt, cJany ) },    OBTN_Handle( cJany,  3581 )   ), .T. )
 
 	
 
@@ -829,16 +832,15 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 
  	fFiltro.Show()
 
-    fFiltro.EdtFiltro.SetFocus()
+	fFiltro.SetFocus()  
 
-	//DoFindWin("Filtros")
+	//fFiltro.Activate()  
 
-
-//	_ShowWindow('fFiltro')
+	//SysWait(.5)
 
     
 
-RETURN
+Return 
 
 
 
@@ -865,10 +867,7 @@ Static Function xFechay()
 		DestroyWindow(   OBTN_Handle('fFiltro' , 3541)    )
 		DestroyWindow(   OBTN_Handle('fFiltro' , 3581)    )
 
-   	   fFiltro.Hide()
-
-
-
+   	    fFiltro.Hide()
 
 Return 
 
@@ -1594,13 +1593,17 @@ FUNCTION FiltroAdd()
 				(Alltrim(fFiltro.EdtFiltro.value) != "And") .And. ;
 				(Alltrim(fFiltro.EdtFiltro.value) != "Or")
 			
-			
-			yAviso(Hb_ansiToOem("Quando existe mais de um Parametro para a Mesma Consulta." + QUEBRA + "O Segundo Parametro em diante Deve Começar com um op.Logico(And ou Or).") , .f.)					
 			xFechay()	
+			yAviso(Hb_AnsiToOem("Quando existe mais de um Parametro para a Mesma Consulta." + QUEBRA + "O Segundo Parametro em diante Deve Começar com um op.Logico(And ou Or)." ) , .f. )					
+			
+			//sysWait(.4)
+						
+			//Return 
 			//msginfo('Erro')
 			
 			Return
 		Else
+
 		
 
 			//msginfo( Str(Len(alltrim(fFiltro.EdtFiltro.value))) )
@@ -2118,8 +2121,6 @@ FUNCTION Proc_Paint( cTexto, cBitmap  , z1Bitmap , cJanela)
 
 
 
-	// BT_DrawGradientFillVertical ( hDC,  120,  0 ,  Width  , 50 ,  aRGBcolor, { 7, 101, 125 } )
-
 	nTypeText    := BT_TEXT_TRANSPARENT + BT_TEXT_BOLD
 	nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
 	nOrientation := BT_TEXT_NORMAL_ORIENTATION
@@ -2127,7 +2128,6 @@ FUNCTION Proc_Paint( cTexto, cBitmap  , z1Bitmap , cJanela)
 
 	If Alltrim(cTexto) != "Aviso"
 		BT_DrawText ( hDC, 07  , 195 ,  hb_ANSIToOEM( Alltrim(cTexto) ), XFONT1, 9, WHITE,  BLACK, nTypeText, nAlingText, nOrientation )
-		//msginfo('ok')
 	End If
 
 
@@ -2169,6 +2169,8 @@ FUNCTION Proc_Paint( cTexto, cBitmap  , z1Bitmap , cJanela)
 	BT_DeleteDC ( BTstruct2 )
 
 RETURN
+
+
 
 FUNCTION xInitMov(  nIdc1, nTpVnd9, cTabelax, lMvTable, cJanName )
 
