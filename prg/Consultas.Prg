@@ -498,7 +498,7 @@ FUNCTION EventConsu( nHWnd, nMsg, nWParam, nLParam )
 	LOCAL cform := ''
 
 
-	If nMsg == WM_DRAWITEM
+	If (nMsg == WM_DRAWITEM)
 
 
 		nID := LoWord( nWParam )
@@ -516,7 +516,7 @@ FUNCTION EventConsu( nHWnd, nMsg, nWParam, nLParam )
 
 	End If
 
-	If nMsg == 273
+	If (nMsg == 273)
 
 		nID := LoWord( nWParam )
 
@@ -532,9 +532,6 @@ FUNCTION EventConsu( nHWnd, nMsg, nWParam, nLParam )
 				Eval(   aButX1[ ni1 ][ 3 ] )		
 			End If 	
 		End If 
-		
-
-
 
 		If nId == 6598
 
