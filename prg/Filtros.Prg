@@ -7,7 +7,8 @@ REQUEST HB_CODEPAGE_PT850
 
 #define QUEBRA Chr(13)+Chr(10)
 
-//DECLARE WINDOW fFiltro
+DECLARE WINDOW fFiltro
+
 
 
 
@@ -132,6 +133,12 @@ Function fFechaF()
 
   fFiltrosCad.Release()
 
+  
+   if _IsWindowDefined('fFiltro')
+		DestroyWindow( fFiltro.HANDLE	)
+	End If	   
+
+
 Return 
 
 FUNCTION SetFiltOk()
@@ -141,9 +148,12 @@ FUNCTION SetFiltOk()
 
    // msginfo( am1[3] )
 
-   IF !Empty( am1[ 3 ] )
-      Domethod( 'fFiltrosCad', 'Release' )
-   END IF
+
+   If !Empty( am1[ 3 ] )
+       Domethod( 'fFiltrosCad', 'Release' )
+   End If
+
+
 
 RETURN am1[ 3 ]
 
@@ -514,6 +524,7 @@ Function xFechay()
    RemoveHandler('EvFiltButton')
 
    i := OBTN_Handle('fFiltro' , 959) 
+
 
 
 

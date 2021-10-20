@@ -40,6 +40,7 @@ REQUEST SDDMY, SQLMIX
 #include "error.ch"
 
 
+DECLARE WINDOW fFiltro
 
 
 Function EditConsulta( cTabela , nIdConsu , lMovTable )
@@ -395,7 +396,7 @@ FUNCTION NovaConsulta( cTabela, lMovTable )
 
 	PRIVATE lMvTable := lMovTable
 
-	WHILE n1 <= Len( aCabec )
+	While n1 <= Len( aCabec )
 
 			If !Empty( AllTrim( aCabec[ n1 ] ) )
 				fCriaConsulta .LstCampos. Additem( hb_Utf8ToStr( aCabec[ n1 ] ) )
@@ -403,14 +404,10 @@ FUNCTION NovaConsulta( cTabela, lMovTable )
 
 			n1++
 
-	ENDDO
+	Enddo
 
 	cTit1 := 'Criação de Consultas'
-	// Aviso(Hb_ansiToOem( cTit1 ))
-
-
-
-	// fCriaConsulta .BtnOk. Enabled := .F.
+	
 
 	HB_SETCODEPAGE("PT850")
 
@@ -437,9 +434,9 @@ FUNCTION NovaConsulta( cTabela, lMovTable )
 	OBTN_Create( cJanx, 6595, "Excluir", 322, 165 ,  62,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 	OBTN_Font( cJanx, 6595,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
-	AAdd( aButx1, {  6598,  OBTN_Handle( cJanx, 6598 ),   {|| Iif(lOk2 := GrvConsul( cTabela  ) ,  _FechaJan('fCriaConsulta' ) , ) },  cJanx   } )
+	AAdd( aButx1, {  6598,  OBTN_Handle( cJanx, 6598 ),   {|| Iif(lOk2 := GrvConsul( cTabela  ) , xFechaCon()  , ) },  cJanx   } )
 
-	AAdd( aButx1, {  6599,  OBTN_Handle( cJanx, 6599 ),   {||   _FechaJan('fCriaConsulta' ) },  cJanx   } )
+	AAdd( aButx1, {  6599,  OBTN_Handle( cJanx, 6599 ),   {||   xFechaCon()   },  cJanx   } )
 
 	AAdd( aButx1, {  6597,  OBTN_Handle( cJanx, 6597 ),   {|| AddPar1( .T., cTabela ) },  cJanx   } )
 	AAdd( aButx1, {  6596,  OBTN_Handle( cJanx, 6596 ),   {|| AddPar1( .F., cTabela ) },  cJanx   } )
@@ -475,14 +472,22 @@ FUNCTION NovaConsulta( cTabela, lMovTable )
 
 RETURN lok2
 
+
+Function xFechaCon()
+
+	_FechaJan('fCriaConsulta' )
+
+	if _IsWindowDefined('fFiltro')
+		DestroyWindow( fFiltro.HANDLE	)
+	End If	
+
+Return 
+
 Function _FechaJan(   cJanx1 )
 
 
-	//EnableWindow ( GetFormHandle(cJanx1) )
 	SendMessage  ( GetFormHandle(cJanx1)  , WM_SYSCOMMAND, SC_CLOSE, 0 )
-	//sysWait(.2)
-
-
+	
 REturn
 
 
@@ -768,9 +773,7 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 
 
 
-
 	AAdd( aButFilt , { 6600,  OBTN_Handle( cJany , 6600 ),   {|| RetFiltro()   } ,  cJany   } )
-
 	AAdd( aButFilt, {  6601, OBTN_Handle( cJany  , 6601 ),   {||   (PushButton( cJany, 6601 ) , xFechay() )  },  cJany   } )
 
 	AAdd( aButFilt, {  6602, OBTN_Handle( cJany  , 6602 ),   {||  PushButton( 'fFiltro' , 6602 ),	FiltroAdd()    },  cJany    } )
@@ -831,16 +834,12 @@ FUNCTION AddPar1( lNovo, cTabelax , lEnable1 )
 
 	fFiltro.SetFocus()  
 
-	//fFiltro.Activate()  
-
-	//SysWait(.5)
-
     
 
 Return 
 
 
-Static Function xFechay()
+Static Function xFechaz()
 
 		RemoveHandler('EvFiltButton')
 			
@@ -861,6 +860,10 @@ Static Function xFechay()
 		DestroyWindow(   OBTN_Handle('fFiltro' , 3581)    )
 
    	    fFiltro.Hide()
+
+//		DestroyWindow(   fFiltro.Handle  )
+
+
 
 Return 
 
