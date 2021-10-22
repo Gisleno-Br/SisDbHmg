@@ -165,8 +165,7 @@ FUNCTION xExclFiltro()
    LOCAL oServer
    LOCAL oQuery
 
-   If Confirmaviso( hb_ANSIToOEM("Confirma  Exclusão desse Filtro ? ") , , .F. )
-
+   If Confirmaviso( hb_ANSIToOEM("Confirma Exclusão desse Filtro? ") , , .F. )
 
 
       cSqlx1 := "delete from filtros where tabela = '" + cTabx + "' and idfiltros = " +  AllTrim( aMtr[ 1 ] )
@@ -178,7 +177,6 @@ FUNCTION xExclFiltro()
       oServer:Destroy()
       oQuery:Destroy()
       
-
 
       // fFiltrosCad.GridFiltro.Delete(a1)
 

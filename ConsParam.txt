@@ -1,1 +1,1 @@
-Insert Into ConsParametros values(26,230,2,'= Igual','wdfwqwew','And','S','S','(',')')
+Insert Into ConsParametros values(30,245,1,'= Igual','34343','','S','S','','')

@@ -1,1 +1,1 @@
-Insert into conscampos values(26,233,'','')
+Insert into conscampos values(30,182,'S','Asc')

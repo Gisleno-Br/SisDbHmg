@@ -236,7 +236,7 @@ FUNCTION Main
 
 	PUBLIC nIdEmp        := 1
 
-	PUBLIC cSqlLog       := "c:\temp\Logs\Sqlx1_Log_" + DToS( Date() ) + ".Log"
+	PUBLIC cSqlLog       := "Logs\Sqlx1_Log_" + DToS( Date() ) + ".Log"
 
 
 	SET LANGUAGE TO PORTUGUESE
@@ -431,7 +431,7 @@ FUNCTION Main
 			ROW       nRowIni
 			COL       21
 			WIDTH     fSplit6.Width
-			FONTNAME  'Arial'
+			FONTNAME  XFONT1
 			FONTSIZE  10
 			HEIGHT    16
 			VALUE     Alltrim( hb_UTF8ToStr(aOpcoes[n][LABEL_NAME] )    )
@@ -631,8 +631,6 @@ Function xMainHandle( xMainJan )
 			lEventx := .f.
 		End If 
 	End If	
-
-
 	
 
 	If nMsg == WM_KEYDOWN
@@ -1511,7 +1509,7 @@ Function OpMenu(aOpcoes , cJan , nLinha , cTitx , nIndx )
 				COL       3
 				WIDTH     fsplit6.Width - 5
 				HEIGHT    nItemHeight
-				FONTNAME  'Arial'
+				FONTNAME  XFONT1
 				FONTSIZE  10
 				//VALUE     '         '  + Padr(Alltrim(aOpcoes[n1]),70) + '                  '
 				VALUE     '         '  + Padr(Alltrim(Hb_AnsiToOem(aOpcoes[n1])),70) + '                  '
@@ -1526,8 +1524,9 @@ Function OpMenu(aOpcoes , cJan , nLinha , cTitx , nIndx )
 
 		nHnd1 := GetProperty(cJan , cLbl  , "HANDLE")
 
+		
 		EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, nHnd1  ), .T.)
-		SetHandCursor( nHnd1, "Finger.cur" )
+		
 
 
 	Else
@@ -1709,7 +1708,6 @@ FUNCTION LabelEventHandler(aLabel)
 
 		End If
 
-
 		If (Alltrim(cOpcao) $ "Cadastros.Movimentos.Relatorios.Parametros")
 
 			SetWindowControlsVisible( 'fSplitSubMenu' , .f. )
@@ -1738,90 +1736,7 @@ FUNCTION LabelEventHandler(aLabel)
 				nTop1   := GetProperty(cForm, cControl, "Row")
 				xDropDown(  cOpcao  , nTop1  )
 
-			// msginfo(Str(nindice))
-
-			    /*
-
-				nIndAnt := nIndice
-				nIndice := Ascan(aOpcoes , { |a|  Alltrim(a[1]) == Alltrim(cDesc) } )
-
-				nOpSel := nIndice
-
-				If nIndice <= 0
-					msginfo('Falha em System 0')
-					Return
-				End If
-
-				OffSeta()
-				SetProperty('fSplit6',"Image4","Visible",.f.)
-
-				nContItens := 0
-				Aeval(aItens , { | a | Iif( Left(a[1],1) == Alltrim(Str(nindice)) , nContItens++ , Nil ) } )
-
-
-				//msginfo(Str(nContItens))
-
-				If nContItens > nItemMax
-					SetProperty('fSplitSubMenu' , 'Height',nAlturaJan)
-					If (nItemSel == 0 )
-						nItemSel := nItemMax
-					End If
-				Else
-					SetProperty('fSplitSubMenu' , 'Height', (17 * nContItens)+7 )
-					_HMG_PRINTER_SETVSCROLLVALUE( fSplitSubMenu.Handle, 0 )
-				End If
-
-				nLinRow := nTop + 15 +  GetProperty('fSplit6' , 'Row') + 28
-				nLinRow :=  60 + ((nIndice + 1)  * nItemHeight)
-
-				//msginfo(str(nLinRow) + '   ' + str(nContItens) )
-
-
-				If (nIndice <= Len(aOpcoes))
-
-					nLinex1 := aOpcoes[nIndice][4] + GetProperty('fSplitSubMenu' , 'Height')
-
-					nIncremento := 0
-
-					If (nContItens > nItemMax)
-						nIncremento := 32
-					End If
-
-					RestMenu(1 , nLinex1 , GetProperty('fSplitSubMenu' , 'Height')+nIncremento , nIndice )
-
-				End If
-
-				Do Events
-				DoMethod('fSplitSubMenu' ,'Hide' )
-
-				cOpAberto := Alltrim(cDesc)
-
-				aOpx1 := {}
-
-				Aeval(aItens , { | a | Iif( Left(a[1],1) == Alltrim(Str(nindice)) , Aadd(aOpx1,Right(a[1],Len(a[1]) - 2) ) , Nil ) } )
-
-				If (nContItens > nItemMax)
-					PutSeta(    nTop+17 ,  (nTop+17 ) +  GetProperty('fSplitSubMenu' , 'Height')+17 )
-					SetProperty( 'fSplitSubMenu' , 'Row', (nLinRow - 2)+18  )
-				Else
-					SetProperty( 'fSplitSubMenu' , 'Row', nLinRow - 2 )
-				End If
-
-				SetProperty( 'fSplitSubMenu' , 'Col', 1)
-				SetProperty( 'fSplitSubMenu' , 'Width', fSplit6.Width - 4 )
-
-				ShowScrollBar( GetFormHandle( 'fSplitSubMenu' ), 0, .F. )
-
-				ShowScrollBar( GetFormHandle( 'fSplitSubMenu' ), 1, .F. )
-
-				DoMethod('fSplitSubMenu' ,'Show' )
-
-				Do Events
-
-				nLinhax := OpMenu( aOpx1 , 'fSplitSubMenu' , 0  , '' )
-
-				*/
-
+			
 
 			End If
 
@@ -1830,17 +1745,9 @@ FUNCTION LabelEventHandler(aLabel)
 	
 		nindice := Ascan(aItens , { |a| Right( a[1] , Len(a[1]) - 2 ) =  Alltrim(cOpcao)  })
 
-		if nIndice > 0
-			//msginfo('Achou')					
-			//PostMessage( nHanSelected , WM_MOUSELEAVE ,0,0  )
- 			//SysWait(.5)
-
-			//RefreshAll('fSplitSubMenu')
-			//msginfo('Achou')
-     		OpenOpcao( Right(aItens[ nIndice ][1] , Len(aItens[ nIndice ][1])  - 2) , aItens[ nIndice ][2]  , nHWnd )			
-
-			//PostMessage( nHanSelected , WM_MOUSELEAVE ,0,0  )
- 			//SysWait(.5)
+		If (nIndice > 0)
+		
+     		OpenOpcao( Right(aItens[ nIndice ][1] , Len(aItens[ nIndice ][1])  - 2) , aItens[ nIndice ][2]  , nHWnd )						
 			 Return 
 			
 		End If 
@@ -1855,6 +1762,11 @@ FUNCTION LabelEventHandler(aLabel)
 	CASE WM_MOUSEMOVE
 
 		CursorHand()
+
+		//CURSORESPERA()
+
+		//SetHandCursor( GetControlHandle( cImgName , 'fSplit2' ) , "HourGlass.cur" )		    
+
 
 		If (cForm = 'fSplit2')
 			//msginfo('ok')
@@ -1976,12 +1888,7 @@ FUNCTION LabelEventHandler(aLabel)
 
 	lTracking27  := .f.
 
-	//msginfo(Alltrim(cControl))
-
-
-
-	//PostMessage( fSplit2.LblTitmenu.Handle , WM_MOUSELEAVE, 0, 0)
-	//Msginfo('x0101')
+	
 
 	lTracking27 := .F.
 	EXIT

@@ -126,9 +126,12 @@ FUNCTION ConfirmAviso( cMsgx1,  cJanPadrao ,  lEfect )
 
 	n := 0
 
+	
+
 	While isWindowVisible( fDiaLogo.Handle )
 		  n++	
 		  Do Events 
+		  //fDialogo.SetFocus()
 	Enddo 
 
 
@@ -204,19 +207,6 @@ FUNCTION MsgAviso( cMsg1, nTipo )
 
 
 	
-	//HMG_ChangeWindowStyle( fDialogo.Handle, WS_BORDER, NIL, .F., .T. )
-	//HMG_ChangeWindowStyle( fDialogo.Handle, NIL, WS_EX_STATICEDGE, .T., .T. )
-
-
-	//Activate Window fDialogo
-
-	//xIniDialog( nTipo )
-
-//	InitDlg( fDialogo.Handle , nTipo )
-
-	
-
-
 
 
 	If nTipo == 1
@@ -228,7 +218,7 @@ FUNCTION MsgAviso( cMsg1, nTipo )
 		EventProcessAllHookMessage( n20 := EventCreate( {|| InputEv2(cJanxDialog ) },    OBTN_Handle( cJanxDialog, 6652 )   ), .T. )
 
 
-		//OBTN_Focus( cJanxDialog, 6652, .t. )
+		OBTN_Focus( cJanxDialog, 6652, .t. )
 
 	Else
 
@@ -244,23 +234,23 @@ FUNCTION MsgAviso( cMsg1, nTipo )
 		EventProcessAllHookMessage( n21 := EventCreate( {|| InputEv2(cJanxDialog ) },    OBTN_Handle( cJanxDialog, 6654 )   ), .T. )
 
 
-		//OBTN_Focus( cJanxDialog, 6653, .t. )
+		OBTN_Focus( cJanxDialog, 6653, .t. )
+
 
 	End If 
 
-	//SysWait(.3)
+//	SysWait(.2)
 
 
 	fDialogo.Show()
-
+	
+ 
 	If nTipo == 1
 		PushButton(   'fDialogo'  , 6652 )
 	Else 
 		PushButton(   'fDialogo'  , 6653 )
 		PushButton(   'fDialogo'  , 6654 )
 	End If 	
-
-
 
 	
 	HMG_ChangeWindowStyle( fDialogo.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
@@ -270,21 +260,12 @@ FUNCTION MsgAviso( cMsg1, nTipo )
 
 	fDialogo.SetFocus()
 
+
 /*
-	cActiveJan := cSaveJan
-
-
-	If nIndexDlg22 > 0
-		EventRemove(nIndexDlg22)		
-	End If
-
-	If n20 > 0
-		EventRemove(n20)
-	End If
-
-	If n21 > 0
-		EventRemove(n21)
-	End If
+	If nTipo > 1
+		sysWait(.2)
+		PostMessage( OBTN_Handle( cJanxDialog, 6653 ) ,0,0,WM_MOUSEMOVE )		
+	End If 	
 
 	*/
 

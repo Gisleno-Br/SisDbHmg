@@ -708,10 +708,11 @@ FUNCTION ExecSql( oSrv1, cSql )
 	LOCAL cText := hb_MemoRead( cSqlLog )
 
 	IF  oSrv1:NetErr()
-		//  SetCursorOnControls( IDC_ARROW )
+		//SetCursorOnControls( IDC_ARROW )
 		MsgStop( 'Erro ao Executar Consulta -> ' + Chr( 13 ) + Chr( 10 ) + oQry:Error() )
-		hb_MemoWrit( cSqlLog, cText + Chr( 13 ) + Chr( 10 ) + cUserName +  ' ' + DToC( Date() ) + ' ' + Time() + '  ' + oQry:Error() )
+		hb_MemoWrit( cSqlLog, cUserName + '  ' + Time() + ' --> ' + cText + Chr( 13 ) + Chr( 10 ) + cUserName +  ' ' + DToC( Date() ) + ' ' + Time() + '  ' + oQry:Error() )
 		oQry := Nil
+		oQry:Destroy()
 	END IF
 
 RETURN oQry

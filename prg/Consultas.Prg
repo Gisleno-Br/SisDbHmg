@@ -470,6 +470,8 @@ FUNCTION NovaConsulta( cTabela, lMovTable )
 	RemoveHandler('EventConsu')
 
 
+
+
 RETURN lok2
 
 
@@ -1727,7 +1729,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 
 	PushButton( cJanx, 6598 )
 
-	FOR nx5 := 1 TO fCriaConsulta .gridpar. ItemCount
+	For nx5 := 1 TO fCriaConsulta .gridpar. ItemCount
 
 		ait1 := fCriaConsulta .gridpar. Item( nx5 )
 
@@ -1748,19 +1750,19 @@ FUNCTION GrvConsul( cTab  , nId1)
 			END IF
 		END IF
 
-	NEXT
+	Next
 
-	IF l2
+	If l2
 		yaviso( "Parenteses nos Parametros da Consulta devem comecar com ( " , .f.)
 		RETURN .F.
-	END IF
+	End If
 
-	IF ( nQ1 != nQ2 )
+	If ( nQ1 != nQ2 )
 		yaviso( "Qtde.de Parenteses '(' e ')' diferem , devem ser o mesmo." , .f. )
 		RETURN .F.
-	END IF
+	End If
 
-	IF Len( fCriaConsulta .LstOrdem. Value ) > 1
+	If Len( fCriaConsulta .LstOrdem. Value ) > 1
 		FOR nx := 1 TO  Len( fCriaConsulta .LstOrdem. Value )
 			IF AllTrim( fCriaConsulta .LstOrdem. Item(  fCriaConsulta .LstOrdem. Value[ nx ] ) )  = 'Nenhum'
 				yaviso(  Hb_AnsiToOem("Em Ordenação dos Campos não pode estar Marcado 'Nenhum',Caso haja Campos Selecionados para Ordenação." ) , .f. )
@@ -1769,7 +1771,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 				cCampoORd += ( AllTrim( fCriaConsulta .LstOrdem. Item(  fCriaConsulta .LstOrdem. Value[ nx ] ) ) + "." )
 			END IF
 		NEXT
-	ELSE
+	Else
 
 		IF Len( fCriaConsulta .LstOrdem. Value ) > 0
 			IF ( fCriaConsulta .LstOrdem. Value[ 1 ] != 1 )
@@ -1777,30 +1779,20 @@ FUNCTION GrvConsul( cTab  , nId1)
 			END IF
 		END IF
 
-	END IF
+	End If
 
 
 
-	SaveBmpDialog('fCriaConsulta' )
+	//SaveBmpDialog('fCriaConsulta' )
 
 	IF !Confirmaviso( 'Confirma Cadastro dessa Consulta?' , cActiveJan , .f. )
-		_FechaJan('fCriaConsulta' )
+		//_FechaJan('fCriaConsulta' )
 		Return .F.
 	END IF
 
-
-
-	//  If !msgyesno('confirma')
-	//    return .f.
-	// End If
-
-	// SetCursorOnControls( IDC_WAIT )
-
-	//msginfo(cActiveJan + ' ' + cformPrin)
-
 	SetWaitCursor(  GetformHandle(cActiveJan) )
 
-	SysWait(.1)
+//	SysWait(.1)
 
 	nTpVend := 1
 
@@ -1820,10 +1812,10 @@ FUNCTION GrvConsul( cTab  , nId1)
 
 	hb_MemoWrit( 'Cons1.txt', cSql )
 
-	IF oQuery == Nil
+	If oQuery == Nil
 		yaviso( Hb_AnsiToOem("Execução da Rotina sera Interrompida(Cons  Cab). " + QUEBRA + "Contacte Suporte.") , .f. )
 		RETURN .F.
-	END IF
+	End If
 
 	oQuery:Destroy()
 	oQuery := Nil
@@ -1843,7 +1835,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 		Return
 	End If
 
-	FOR nX1 :=  1 TO Len( fCriaConsulta .LstCampos. Value )
+	For nX1 :=  1 TO Len( fCriaConsulta .LstCampos. Value )
 
 		cCampo := fCriaConsulta .LstCampos. item( fCriaConsulta .LstCampos. Value[ nx1 ] )
 
@@ -1852,25 +1844,20 @@ FUNCTION GrvConsul( cTab  , nId1)
 
 
 
-		IF ( AllTrim( cCampo ) $ cCampoOrd ) .OR. ;
+		If ( AllTrim( cCampo ) $ cCampoOrd ) .OR. ;
 				( AllTrim( cCampo ) = AllTrim( cCampoOrd ) )
 
 			cOrdem := "S"
 			cTpOrdem := "Asc"
 
-			IF lAScend
+			If lAScend
 				cTpOrdem := "Desc"
-			END IF
+			End If
 
-		END IF
+		End If
 
-		//msginfo( AllTrim( cCampo ) + '  ' + cTabelax)
+		nIdCampo :=  Val( GetInfoDic( AllTrim( cCampo ),  Alltrim(cTabX)  , 'ID' ) )
 
-
-		//nIdCampo :=  Val( GetInfoDic( AllTrim( cCampo ), cTabelax  , 'ID' ) )
-
-		//cTabDest
-		nIdCampo :=  Val( GetInfoDic( AllTrim( cCampo ),  Alltrim(cTabDest)  , 'ID' ) )
 
 		cSqlx1 := "Insert into conscampos values(" + AllTrim( Str(  nId  ) ) + "," + AllTrim( Str(  nIdCampo  ) )  + "," + QuotedStr( cOrdem ) + ","
 		cSqlx1 +=  QuotedStr( cTpOrdem )  + ")"
@@ -1901,6 +1888,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 
 		// cTipo  := GetInfoDic( aIt1[1], cTabela, 'TIPO' )
 		cIdCampo := GetInfoDic( alltrim(aIt1[ 1 ]), cTabDest  , 'ID' )
+
 
 		cSqlx1 := "Insert Into ConsParametros values(" + AllTrim( Str( nId ) ) + "," + AllTrim(  cIdCampo  ) + "," +  AllTrim( Str( nX1 ) ) + "," +   Quotedstr( aIt1[ 2 ] ) + ","
 		cSqlx1 +=  Quotedstr( aIt1[ 3 ] ) + "," + Quotedstr( aIt1[ 4 ] )  + "," + Quotedstr( Left( aIt1[ 5 ],1 ) ) + "," +  Quotedstr( Left( aIt1[ 6 ],1 ) ) + "," + Quotedstr( aIt1[ 7 ] ) + "," + Quotedstr( aIt1[ 8 ] ) +  ")"
@@ -2340,7 +2328,7 @@ FUNCTION xInitMov(  nIdc1, nTpVnd9, cTabelax, lMvTable, cJanName )
 		END IF
 	Else
 
-		yAviso( Hb_AnsiToOem('Parametros N?o Localizados, Recrie a Consulta.') , .f.)
+		yAviso( Hb_AnsiToOem('Parametros Não Localizados, Recrie a Consulta.') , .f.)
 		Return .f.
 
 	End If

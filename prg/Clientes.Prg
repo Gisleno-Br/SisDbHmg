@@ -160,9 +160,13 @@ FUNCTION CadCli()
 	Private nEven1 := 0
 	Private nEven2 := 0
 
+	Private nIndx1 := 0
+	Private nIndx2 := 0
+
+
 	
-	 Private aFont2 := ARRAY FONT "Arial" SIZE 9 BOLD ITALIC
-	 Private aFont1 := ARRAY FONT "Arial" SIZE 9 
+	Private aFont2 := ARRAY FONT "Arial" SIZE 9 BOLD ITALIC
+	Private aFont1 := ARRAY FONT "Arial" SIZE 9 
 	 //BOLD ITALIC
 
 	 
@@ -393,6 +397,7 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 
 
 
+
 	Private fScrName := 'fScrx' + cAlias
 
 	Private cBrowName := 'fBrow' + cAlias
@@ -452,7 +457,8 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 	SetProperty( cFormPrin, "Height", nDeskTopHeight - 90 )
 	SetProperty( cFormPrin, "Width", nDeskTopWidth )
 
-	RefreshCli()
+//	RefreshCli()//
+	
 
 	nIndexEvent++
 
@@ -485,14 +491,21 @@ Return
 
 Function xHandleEsc()
 
+
 	LOCAL  nHWnd   := EventHWND()
 	LOCAL  nMsg    := EventMSG()
 	LOCAL  nWParam := EventWPARAM()
 	Local cIndJan
 	Local nI1 
+	Local cControl
+
+	Local cForm
+	
 
 
 	Local MOD_VK := LoWord ( EventLPARAM() )
+
+	GetControlNameByHandle(nHWnd, @cControl, @cForm)
 
 	//If nHWnd = GetFormHandle(cFormPrin)
 
@@ -509,9 +522,19 @@ Function xHandleEsc()
 
 				If (!lOpcaoAberta) .And. ;
 				(_IsControlDefined( 'Img' + cIndJan , 'fSplit2' ))
-				//RetIndJan()				
+				
 					xPosBrow()
 					FechaJan('Img' + cIndJan  , , )
+
+
+					If nIndx1 > 0
+						EventRemove(nIndx1)
+					End If 
+
+					If nIndx2 > 0
+						EventRemove(nIndx2)
+					End If 
+
 				Else
 					xSetOpcao()
 				End If
@@ -521,7 +544,6 @@ Function xHandleEsc()
 		End If
 
 	End If
-
 
 
 Return
@@ -551,6 +573,8 @@ Function xSetOpcao()
 
 		OBTN_Caption(cAuxName   , aButtons[5][5]  , "Sair Consultas" )
 
+		//SetProperty( cMenuName , 'Visible' , .t. )
+		
 
 		SetProperty( cFormPrin , 'br_grid' , 'Col' , 183 )
 		SetProperty( cFormPrin , 'br_grid' , 'Row' , 53 )
@@ -588,6 +612,9 @@ Function xSetOpcao()
 
 		Next
 
+		SetProperty( cMenuName , 'Visible' , .f. )
+		Setproperty( cFormPrin , 'Frame_1' , 'Visible' , .f.)
+
 		lOpcaoAberta := .f.
 		InitTela(  .f.  ,  1 )
 
@@ -599,20 +626,11 @@ Function xSetOpcao()
 
 		
 		BT_ClientAreaInvalidateAll (cActiveJan)
-
 		
 		lInvalid := .f.
-		//SysWait(.1)
+		
 		xZeraHead()	
-
-
-
-
-
 		//SysWait(.1)	
-
-
-
 
 	End If
 
@@ -651,19 +669,12 @@ Function xControls( lFilter , nQReg )
 		DoMethod( cActiveJan , 'Label_1' , 'Show')
 		DoMethod( cActiveJan , 'LblQtReg' , 'Show')		
 
-
-		
-
-		//SetProperty( cActiveJan , 'Image_1' , 'Row' , nGridHeight+58  )		
-
 		SetProperty( cActiveJan , 'Image_1' , 'Visible' , .t.  )		
 
 
 		SetProperty( cActiveJan , 'LblUser1' , 'Visible' , .t.  )		
 		
-		//DoMethod( cActiveJan , 'Image_12' , 'Show')  
-
-
+		
 		DoMethod( cActiveJan , 'Image_1' , 'Show')		
 		DoMethod( cActiveJan , 'LblUser1' , 'Show')		
 
@@ -672,8 +683,7 @@ Function xControls( lFilter , nQReg )
 
 	DoMethod( cActiveJan , 'lbltitulo' , 'Show')
 	DoMethod( cActiveJan , 'Image_2196' , 'Show')
-	//DoMethod( cActiveJan , 'LblQtReg' , 'Show')
-
+	
 
 	If (lFilter)
 
@@ -1629,7 +1639,7 @@ Function RedrawMenu( aopcoes  , nindice , nLinha1  )
 
 Return
 
-
+  // Sub Menu
 Function CrieMenuLabel(aOpcoes , nInd1 , nHeight1 )
 
 	Local n1 := 1
@@ -1652,7 +1662,7 @@ Function CrieMenuLabel(aOpcoes , nInd1 , nHeight1 )
 
 
 	If !_IsWindowDefined(cMenuName)
-		yAviso("Janela nao Localizada.")
+		yAviso("Janela Não Localizada." , .f. )
 		Return 
 	End If 
 
@@ -1684,7 +1694,7 @@ Function CrieMenuLabel(aOpcoes , nInd1 , nHeight1 )
 				HEIGHT    20
 				VALUE     Hb_AnsiToOem( alltrim(aOpcoes[n1]) )
 				ALIGNMENT CENTER
-				FONTNAME "Arial"
+				FONTNAME XFONT1
 				FONTSIZE 9
 				BACKCOLOR {7,101,125}
 				FONTCOLOR {255,255,255}
@@ -1722,7 +1732,9 @@ Function CrieMenuLabel(aOpcoes , nInd1 , nHeight1 )
 
 	Next
 
-//msginfo('lp')
+
+	PostMessage(GetControlHandle( 'Image_baixo', cFormPrin ) ,WM_MOUSELEAVE,0,0)
+	PostMessage(GetControlHandle( 'Image_cima', cFormPrin ) ,WM_MOUSELEAVE,0,0)
 
 
 Return
@@ -2110,7 +2122,8 @@ FUNCTION LabelEventH4(aLabel)
 
 	If nMsg == WM_LBUTTONDOWN
 
-			//msginfo('lp')
+	    // Menu Consulta Ativado Aqui.
+
 
 		cOpcao  := alltrim(GetProperty(	 cForm, cControl, "Value" ))
 		cName  := alltrim(GetProperty(	 cForm, cControl, "Name" ))
@@ -2126,6 +2139,7 @@ FUNCTION LabelEventH4(aLabel)
 			SetProperty(cFormPrin  , 'Image_baixo' , 'Visible', .f. )
 			SetProperty(cFormPrin  , 'Image_cima' , 'Visible', .f. )
 			ShowButConsu(.f.)
+			SysWait(.1)
 			Return 
 		End If 	
 
@@ -2204,6 +2218,8 @@ FUNCTION LabelEventH4(aLabel)
 		End If
 
 
+
+
 		LimpaLabels(.t.)
 		LimpaLabels(.f.)
 
@@ -2215,36 +2231,40 @@ FUNCTION LabelEventH4(aLabel)
 		SetProperty(cMenuName , "Height" , nHeight  )
 
 
-
 		SetProperty(cMenuName , "row" , nLine1)
 		SetProperty(cMenuName , "col" , 5)
 
-	    Syswait(.2)
+	    //Syswait(.2)
+
+
 
 		If GetProperty(cFormPrin ,"Image_baixo","Visible")
 
 			SetProperty(cFormPrin  , 'Image_baixo' , 'Row', nLinha +  GetProperty(cMenuName , "Height" )+25   )
 			SetProperty(cFormPrin  , 'Image_cima' , 'Row', nLinha +  GetProperty(cMenuName , "Height" )+43   )
 
-
+              /*
 			nHandle1 := GetControlHandle( 'Image_baixo', cFormPrin )
 			SetHandCursor( nHandle1  , "Finger.cur" )
 
 
 			
-			nHandle1 := GetControlHandle( 'Image_cima', cFormPrin )
-			SetHandCursor( nHandle1  , "Finger.cur" )
-
-
-
-		//	SendMessage( GetControlHandle('Image_baixo' , cFormPrin  ), WM_PAINT,0,0)
-		//	SendMessage( GetControlHandle('Image_cima' , cFormPrin ), WM_PAINT ,0,0)
-
-			//Refreshall(cFormPrin)
-
-				//SysWait(.2)
+			nHandle2 := GetControlHandle( 'Image_cima', cFormPrin )
+			SetHandCursor( nHandle2  , "Finger.cur" )
+			*/
 
 		End If
+
+
+		If (nIndx1 = 0)
+			RefreshCli()
+		End If 	
+
+
+		SetProperty( cMenuName , 'Visible' , .t. )
+		Setproperty( cFormPrin , 'Frame_1' , 'Visible' , .t.)
+
+
 
 		If nInd < Len(aOpz1)
 			nQtElem := Len(aSubOp)
@@ -2252,12 +2272,9 @@ FUNCTION LabelEventH4(aLabel)
 		Else
 			CrieMenuLabel(aOpz1)
 		End If
-
-		//SysWait(.2)
-	
-
-	End If 	
 		
+
+	End If 			
 
 
 Return
@@ -2824,11 +2841,14 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 					//SysWait(.2)
 
+
+					_ReleaseControl('br_grid' , cActiveJan)
+
 					BrowConsulta( cSqlConsulta , GetCamposInf( cTituloCon , 'CABEC'  ) , ;
 						GetCamposInf( cTituloCon , 'TAM'  ), ;
 						GetCamposInf( cTituloCon , 'CAMPOS'  )  , cFormPrin  , GetCamposInf( cTituloCon , 'TIPO'  ) )
 
-					yAviso("Consulta Modificada com sucesso!" , .t.)
+					yAviso("Consulta Modificada com sucesso!" , .f.)
 
 
 				End If
@@ -2850,7 +2870,7 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 				//PushButton( cFormPrin  , nid )
 				PushButton( cFormPrin  , nId )
 
-				If Confirmaviso("Confirma Exclusï¿½o dessa Consulta ? " ,cFormPrin )
+				If Confirmaviso( Hb_AnsiToOem("Confirma Exclusão dessa Consulta ? ")  ,cFormPrin )
 
 
 					ExcluiConsulta(nIdConsulta)
@@ -2868,7 +2888,7 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 						PostMessage( nHxn1 ,WM_LBUTTONDOWN ,0,0)
 
 						// SysWait(.2)
-						yaviso("Consulta Excluida com sucesso!" , .t.)
+						yaviso("Consulta Excluida com sucesso!" , .f.)
 
 						//Refreshall(cMenuName)
 						//Refreshall(cFormPrin)
@@ -2956,10 +2976,17 @@ Function zTabela(cTabela1)
 
 
 	If NovaConsulta(cTabela1)
+
+		/*
 		PostMessage( nHnx1 ,WM_LBUTTONDOWN ,0,0)
 		SysWait(.2)
 		PostMessage( nHnx1 ,WM_LBUTTONDOWN ,0,0)
 		SysWait(.2)
+		*/
+
+		PostMessage( nHnx1 ,WM_LBUTTONDOWN ,0,0)
+		SysWait(.1)
+
 
 	End If
 
@@ -3041,11 +3068,6 @@ Function CrieSubMenu(aSub1)
 
 				nHandle1 := GetControlHandle( cLabelx, cMenuName )
 
-
-				SetHandCursor( nHandle1  , "Finger.cur" )
-
-
-				//msginfo('criado ')
 				EventProcessAllHookMessage(EventCreate({ || LabelEventH2() }, nHandle1  ), .T.)
 
 				nRow += 16
@@ -3069,8 +3091,11 @@ Return
 
 Function RefreshCli()
 
-	EventProcessAllHookMessage(EventCreate({ || LabelEventH3() }, GetControlHandle( "Image_cima" , cFormPrin )) , .T.)
-	EventProcessAllHookMessage(EventCreate({ || LabelEventH3() }, GetControlHandle( "Image_baixo" , cFormPrin ))  , .T.)
+	EventProcessAllHookMessage( nIndx1 := EventCreate({ || LabelEventH3() }, GetControlHandle( "Image_cima" , cFormPrin )) , .T.)
+	EventProcessAllHookMessage( nIndx2 := EventCreate({ || LabelEventH3() }, GetControlHandle( "Image_baixo" , cFormPrin ))  , .T.)
+
+	//InstallEventHandler( 'LabelEventH3' )
+
 
 Return
 
@@ -3096,21 +3121,35 @@ FUNCTION LabelEventH3(aLabel)
 
 
 
-
 	If nMsg == WM_MOUSEMOVE
 
 		if !lTracking5
 			If (cControl == 'Image_cima') .or. (cControl == 'Image_baixo')
 
-				If alltrim(Upper(GetProperty(cForm , cControl , 'picture' ))) = Upper("img\setab2.png")
-					SetProperty(cForm , cControl , 'picture' , 'img\Setab22.Png' )
+				//SetHandCursor( nHWnd  , "Finger.cur" )
+
+				
+				//sysWait(.1)
+
+				If alltrim(Upper(GetProperty(cForm , cControl , 'picture' ))) = Upper("img\setab22.png")
+					SetProperty(cForm , cControl , 'picture' , 'img\Setab2.Png' )
 					lTracking5 := TrackMouseEvent(nHWnd)
+				
 				End If
 
-				If alltrim(Upper(GetProperty(cForm , cControl , 'picture' ))) = Upper("img\setac2.png")
-					SetProperty(cForm , cControl , 'picture' , 'img\Setac22.Png' )
-					lTracking5 := TrackMouseEvent(nHWnd)
+				If alltrim(Upper(GetProperty(cForm , cControl , 'picture' ))) = Upper("img\setac22.png")
+					SetProperty(cForm , cControl , 'picture' , 'img\Setac2.Png' )
+					lTracking5 := TrackMouseEvent(nHWnd)				
 				End If
+
+				
+
+				CursorHand()
+				//SetHandCursor( nHWnd  , "Finger.cur" )
+
+				SysWait(.1)
+
+				//SysWait(.2)
 
 			End If
 
@@ -3119,15 +3158,16 @@ FUNCTION LabelEventH3(aLabel)
 
 	End If
 
+
 	If nMsg == WM_MOUSELEAVE
 
 		If (cControl == 'Image_cima') .or. (cControl == 'Image_baixo')
-			If alltrim(Upper(GetProperty(cForm , cControl , 'picture' ))) = Upper("img\setab22.png")
-				SetProperty(cForm , cControl , 'picture' , 'img\Setab2.Png' )
+			If alltrim(Upper(GetProperty(cForm , cControl , 'picture' ))) = Upper("img\setab2.png")
+				SetProperty(cForm , cControl , 'picture' , 'img\Setab22.Png' )
 			End If
 
-			If alltrim(Upper(GetProperty(cForm , cControl , 'picture' ))) = Upper("img\setac22.png")
-				SetProperty(cForm , cControl , 'picture' , 'img\Setac2.Png' )
+			If alltrim(Upper(GetProperty(cForm , cControl , 'picture' ))) = Upper("img\setac2.png")
+				SetProperty(cForm , cControl , 'picture' , 'img\Setac22.Png' )
 			End If
 
 			lTracking5 := .f.
@@ -3190,8 +3230,7 @@ FUNCTION LabelEventH2(aLabel)
 			nIdConsulta := GetId(  'consultas' , Alltrim(cOpcao) )
 
 			cTituloCon := Alltrim(cOpcao)
-			//msginfo(cTituloCon )
-
+			
 
 			If (nIdConsulta > 0)
 				If xInitMov(  nIdConsulta, , cTabela, .f. ,  cFormPrin )
@@ -3208,7 +3247,6 @@ FUNCTION LabelEventH2(aLabel)
 				End If
 
 				EnableButConsu(  .t.  )
-
 
 			End If
 
@@ -3230,9 +3268,10 @@ FUNCTION LabelEventH2(aLabel)
 	CASE (WM_MOUSEMOVE)
 
 
-		//CursorHand()
+		CursorHand()
 
-		IF ! lTracking12
+
+		If !lTracking12
 
 
 			SetProperty(cForm, cControl, "BACKCOLOR", CORSEL)
@@ -3243,15 +3282,11 @@ FUNCTION LabelEventH2(aLabel)
 			cTp1 := RetSql( "select observacao from consultas where descricao = " + QuotedStr( GetProperty(cForm, cControl, "VALUE" )  )  +  " and tabela = " + QuotedStr(cTabela) )
 
 			If !Empty(cTp1)
-
-				_SetToolTip(cControl,cForm,hb_AnsiToOem(cTp1 ) )
-				
-
+				_SetToolTip(cControl,cForm,hb_AnsiToOem(cTp1 ) )			
 			End If
+	
 
-	//		msginfo(cControl)
-
-		ENDIF
+		End If 
 
 		EXIT
 
@@ -3285,7 +3320,7 @@ Function OrdeneCol( nIndice )
 	nColOrder := nIndice
 
 	If lOpcaoAberta
-		yAviso("Opï¿½ï¿½o nï¿½oo Disponivel no Momento.")
+		yAviso( Hb_AnsiToOem("Opção Não Disponivel no Momento.") , .f. )
 		Return
 	End If
 
@@ -3549,14 +3584,9 @@ Function TimerRed()
 
 	If _isControlDefined(   'br_Grid'  , cFormPrin )
 
-		//SysWait(.1)
+
 		BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin )) , Nil , .t. )
 
-		//SysWait(.1)
-
-
-		//VALIDATERECTX(     ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan ))    )
-		
 		
 	Else
 
@@ -3706,7 +3736,6 @@ REturn
 	//SetRect(&rect2, 0 , 0 , (INT) hb_parvni(5, 1) ,  GetDeviceCaps( hDC , VERTRES)    );
 
 	for ( i=1; i <= Tam1; i++ )
-
 
 	{
 
@@ -4110,6 +4139,8 @@ REturn
 
 											}
 
+											/*
+
 											HB_FUNC(XDRAWVIEW)
 											{
 
@@ -4137,14 +4168,6 @@ REturn
 												rcText.bottom = pDIS->rcItem.bottom;
 
 
-											//DrawText(pDIS->hDC, Text, -1, &rcText, DT_CALCRECT | DT_NOCLIP);
-
-											//PAINTSTRUCT ps;
-
-
-											//hHWnd   = (HWND) HMG_parnl (1);
-
-											//hDC = BeginPaint (hWnd, &ps);
 
 											hbrush2 = CreateSolidBrush( (COLORREF) RGB(139,139,139) );
 
@@ -4155,6 +4178,8 @@ REturn
 
 
 											}
+
+											*/
 
 											HB_FUNC (BT_SCR_VALIDATERECT)
 											{
@@ -4179,13 +4204,6 @@ REturn
 													hb_retl (FALSE);
 														}
 													}
-
-
-
-
-
-
-
 
 
 

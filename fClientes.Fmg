@@ -13,7 +13,7 @@ DEFINE WINDOW TEMPLATE AT 4 , 262 WIDTH 1362 HEIGHT 851 VIRTUAL WIDTH Nil VIRTUA
         COL    2
         WIDTH  177
         HEIGHT 17
-        PICTURE "img\setac2d.png"
+        PICTURE "img\setac22.png"
         HELPID Nil
         VISIBLE .F.
         STRETCH .F.
@@ -25,7 +25,7 @@ DEFINE WINDOW TEMPLATE AT 4 , 262 WIDTH 1362 HEIGHT 851 VIRTUAL WIDTH Nil VIRTUA
         COL    2
         WIDTH  177
         HEIGHT 17
-        PICTURE "img\setab2d.png"
+        PICTURE "img\setab22.png"
         HELPID Nil
         VISIBLE .F.
         STRETCH .F.
@@ -240,6 +240,7 @@ DEFINE WINDOW TEMPLATE AT 4 , 262 WIDTH 1362 HEIGHT 851 VIRTUAL WIDTH Nil VIRTUA
         FONTSTRIKEOUT .F.
         CAPTION NIL
         BACKCOLOR NIL
+        VISIBLE .F.
         FONTCOLOR NIL
         OPAQUE .T.
     END FRAME
