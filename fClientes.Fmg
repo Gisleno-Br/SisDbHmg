@@ -17,7 +17,7 @@ DEFINE WINDOW TEMPLATE AT 4 , 262 WIDTH 1362 HEIGHT 851 VIRTUAL WIDTH Nil VIRTUA
         HELPID Nil
         VISIBLE .F.
         STRETCH .F.
-        ACTION Nil
+        ACTION Nil        
     END IMAGE
 
     DEFINE IMAGE Image_baixo
@@ -29,7 +29,7 @@ DEFINE WINDOW TEMPLATE AT 4 , 262 WIDTH 1362 HEIGHT 851 VIRTUAL WIDTH Nil VIRTUA
         HELPID Nil
         VISIBLE .F.
         STRETCH .F.
-        ACTION Nil
+        ACTION Nil        
     END IMAGE
 
     DEFINE LABEL Label1

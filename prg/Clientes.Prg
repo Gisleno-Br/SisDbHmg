@@ -590,13 +590,17 @@ Function xSetOpcao()
 		IntCli( .t. )
 
 		lInvalid := .f.
-		SysWait(.1)
+		//SysWait(.1)
 		xZeraHead()	
 
 		//TimerRed()
 
 		SetProperty(cFormPrin , 'Frame_1' , 'Visible' , .t. )
 		SetProperty(cFormPrin , 'Frame_2' , 'Visible' , .t. )
+
+		//SetProperty(cFormPrin , 'Image_cima' , 'Enabled' , .f. )
+		//SetProperty(cFormPrin , 'Image_baixo' , 'Enabled' , .f. )
+
 
 
 
@@ -978,6 +982,7 @@ Function Check_Grid_Events()
 
 	If (wHandle = GetControlHandle( 'br_Grid', cActiveJan ))
 
+		//lTracking5 := .f. 
 
 		if nMsg == WM_KEYDOWN
 
@@ -1674,6 +1679,8 @@ Function CrieMenuLabel(aOpcoes , nInd1 , nHeight1 )
 		Next
 	End If
 
+	CursorEspera()
+
 	For n1 := 1 To Len(aOpcoes)
 
 		cLabelx := Right(cActiveJan,3) + StrZero(n1,3)
@@ -1682,6 +1689,7 @@ Function CrieMenuLabel(aOpcoes , nInd1 , nHeight1 )
 			cLblConsu := cLabelX
 			//msginfo(cLblConsu)
 		End If
+
 
 		IF !_IsControlDefined( cLabelx, cMenuName )
 
@@ -1709,7 +1717,8 @@ Function CrieMenuLabel(aOpcoes , nInd1 , nHeight1 )
 			SetProperty(cParent, cLabelx  , "BACKCOLOR", {7,101,125})
 
 			nHandle1 := GetControlHandle( cLabelx, cParent )
-			SetHandCursor( nHandle1  , "Finger.cur" )
+
+			//SetHandCursor( nHandle1  , "Finger.cur" )
 
 			If (aOpcoes[n1] == 'Consultas') .and. (nHanConsu == 0)
 				nHanConsu := GetControlHandle( cLabelx, cParent )
@@ -1735,6 +1744,8 @@ Function CrieMenuLabel(aOpcoes , nInd1 , nHeight1 )
 
 	PostMessage(GetControlHandle( 'Image_baixo', cFormPrin ) ,WM_MOUSELEAVE,0,0)
 	PostMessage(GetControlHandle( 'Image_cima', cFormPrin ) ,WM_MOUSELEAVE,0,0)
+
+	CursorNormal()
 
 
 Return
@@ -1935,7 +1946,7 @@ RETURN Data
 
 
 
-
+  // Handler do menu principal - Consultas
 
 FUNCTION LabelEventH4(aLabel)
 
@@ -1980,6 +1991,7 @@ FUNCTION LabelEventH4(aLabel)
 	If (nMsg == WM_LBUTTONUP)
 		lSoltou := .t.
 	End If
+
 
 	If (nMsg == WM_MOUSEMOVE) .And. (lSoltou) .and. (!lOpcaoAberta)
 
@@ -2073,14 +2085,14 @@ FUNCTION LabelEventH4(aLabel)
 
 		nColSel := 0
 
+
 		If !(Empty(Alltrim(cControl)))
 
 			If !Empty(cLblSelected )
 
 				If (alltrim(cControl) != alltrim(cLblSelected))
 					SetProperty(cForm, cControl, "BACKCOLOR", {7,101,125}  )
-					SetProperty(cForm, cControl, "FONTBOLD", .f.)
-						//lTracking6 := .f.
+					SetProperty(cForm, cControl, "FONTBOLD", .f.)					
 				Else
 					lTracking6 := .t.
 				End If
@@ -2089,15 +2101,14 @@ FUNCTION LabelEventH4(aLabel)
 			Else
 				SetProperty(cForm, cControl, "BACKCOLOR", {7,101,125}  )
 				SetProperty(cForm, cControl, "FONTBOLD", .f.)
-					//lTracking6 := .f.
+					
 			End If
 				lTracking6 := .f.
-				//lTracking6 := TrackMouseEvent(nHWnd)
+				
 
 		End If
 
-			//msginfo('leave')
-
+			
 	End If
 
 
@@ -2106,7 +2117,11 @@ FUNCTION LabelEventH4(aLabel)
 	End If
 
 	If nMsg == WM_MOUSEMOVE
-		//CursorHand()
+
+
+		CursorHand()
+
+
 
 		SetProperty(cForm, cControl, "BACKCOLOR", CORSEL)
 		SetProperty(cForm, cControl, "BACKCOLOR", {4,66,81})
@@ -2115,15 +2130,22 @@ FUNCTION LabelEventH4(aLabel)
 
 
 		lTracking6 := TrackMouseEvent(nHWnd)
+
+		
+		PostMessage(GetControlHandle( 'Image_baixo', cFormPrin ) ,WM_MOUSELEAVE,0,0)
+		PostMessage(GetControlHandle( 'Image_cima', cFormPrin ) ,WM_MOUSELEAVE,0,0)
+
+		lTracking5 := .f. 
+
 		Return
 			//lTracking6 := .f.
 
 	End If
 
+
 	If nMsg == WM_LBUTTONDOWN
 
 	    // Menu Consulta Ativado Aqui.
-
 
 		cOpcao  := alltrim(GetProperty(	 cForm, cControl, "Value" ))
 		cName  := alltrim(GetProperty(	 cForm, cControl, "Name" ))
@@ -2318,12 +2340,12 @@ Function UpScrool( nDir , nTamanho )
 		nLinRow := nLinRow + nIncre
 		nItx1++
 
-		SetProperty( cFormPrin , 'Image_cima' , 'picture' , 'img\Setac2.Png' )
+		SetProperty( cFormPrin , 'Image_cima' , 'picture' , 'img\Setac22.Png' )
 
 		//msginfo( Str(nitx1) + ' ' + str(nTamanho) )
 
 		If nItx1 = nTamanho
-			SetProperty(cFormPrin , 'Image_baixo' , 'picture' , 'img\setab2d.Png' )
+			SetProperty(cFormPrin , 'Image_baixo' , 'picture' , 'img\setab22d.Png' )
 			//msginfo('Topo')
 		End If
 
@@ -2331,18 +2353,18 @@ Function UpScrool( nDir , nTamanho )
 
 		If nItx1 > nItMax
 
-			SetProperty(cFormPrin, 'Image_baixo' , 'picture' , 'img\Setab2.Png' )
+			SetProperty(cFormPrin, 'Image_baixo' , 'picture' , 'img\Setab22.Png' )
 
 			nLinRow := nLinRow - nIncre
 			nItx1--
 
 			If nItx1 = nItMax
-				SetProperty( cFormPrin, 'Image_cima' , 'picture' , 'img\setac2d.Png' )
+				SetProperty( cFormPrin, 'Image_cima' , 'picture' , 'img\setac22d.Png' )
 			End If
 
 		Else
-			//msginfo('Topo atingido!')
-			SetProperty(cFormPrin, 'Image_cima' , 'picture' , 'img\setac2d.Png' )
+			
+			SetProperty(cFormPrin, 'Image_cima' , 'picture' , 'img\setac22d.Png' )
 		End If
 
 	End If
@@ -3100,7 +3122,7 @@ Function RefreshCli()
 Return
 
 
-
+ *// Handler das Setas baixo e cima(Sub Menu) - Consultas.
 
 FUNCTION LabelEventH3(aLabel)
 
@@ -3120,36 +3142,55 @@ FUNCTION LabelEventH3(aLabel)
 	End If
 
 
-
 	If nMsg == WM_MOUSEMOVE
 
 		if !lTracking5
 			If (cControl == 'Image_cima') .or. (cControl == 'Image_baixo')
 
-				//SetHandCursor( nHWnd  , "Finger.cur" )
+//                CursorHand()
 
-				
-				//sysWait(.1)
+				//SysWait(.2)
 
+				//msginfo('ok')
+
+              
+			
 				If alltrim(Upper(GetProperty(cForm , cControl , 'picture' ))) = Upper("img\setab22.png")
+				//	msginfo('3')
 					SetProperty(cForm , cControl , 'picture' , 'img\Setab2.Png' )
 					lTracking5 := TrackMouseEvent(nHWnd)
 				
 				End If
 
 				If alltrim(Upper(GetProperty(cForm , cControl , 'picture' ))) = Upper("img\setac22.png")
+				//	msginfo('2')
 					SetProperty(cForm , cControl , 'picture' , 'img\Setac2.Png' )
 					lTracking5 := TrackMouseEvent(nHWnd)				
-				End If
-
-				
-
-				CursorHand()
-				//SetHandCursor( nHWnd  , "Finger.cur" )
-
-				SysWait(.1)
+				End If				
 
 				//SysWait(.2)
+
+				//CursorHand()
+
+				//Return 
+
+
+				//SysWait(.2)
+
+				//msginfo('ok')
+				//
+
+				
+				SetHandCursor( GetControlHandle('Image_cima' , cFormPrin )  , "Finger.cur" )
+				SetHandCursor( GetControlHandle('Image_baixo' , cFormPrin )  , "Finger.cur" )
+
+
+				//tProperty(cForm , "Cursor" , "Finger.Cur" )
+				//SysWait(.2)
+
+
+			//	SysWait(.2)
+
 
 			End If
 
@@ -3159,7 +3200,7 @@ FUNCTION LabelEventH3(aLabel)
 	End If
 
 
-	If nMsg == WM_MOUSELEAVE
+	If (nMsg == WM_MOUSELEAVE) 
 
 		If (cControl == 'Image_cima') .or. (cControl == 'Image_baixo')
 			If alltrim(Upper(GetProperty(cForm , cControl , 'picture' ))) = Upper("img\setab2.png")
@@ -3170,23 +3211,37 @@ FUNCTION LabelEventH3(aLabel)
 				SetProperty(cForm , cControl , 'picture' , 'img\Setac22.Png' )
 			End If
 
+			
+			//CursorHand()
+
+
 			lTracking5 := .f.
+
 		End If
 
 	End If
 
-	If nMsg == WM_LBUTTONDOWN
 
-		//msginfo('ok')
+	
+
+	If nMsg == WM_LBUTTONDOWN
 
 
 		If (cControl == 'Image_baixo')
+			PostMessage(GetControlHandle( 'Image_cima', cFormPrin ) ,WM_MOUSELEAVE,0,0)	
 			UpScrool( 1 , nQtElem )
 		End If
 
 		If (cControl == 'Image_cima')
+			PostMessage(GetControlHandle( 'Image_baixo', cFormPrin ) ,WM_MOUSELEAVE,0,0)
 			UpScrool( 2 , nQtElem )
 		End If
+
+		//lTracking5 := TrackMouseEvent(nHWnd)
+
+		
+		//PostMessage(GetControlHandle( 'Image_baixo', cFormPrin ) ,WM_MOUSELEAVE,0,0)
+		//PostMessage(GetControlHandle( 'Image_cima', cFormPrin ) ,WM_MOUSELEAVE,0,0)
 
 	End If
 
@@ -3208,7 +3263,7 @@ FUNCTION LabelEventH2(aLabel)
 	GetControlNameByHandle(nHWnd, @cControl, @cForm)
 
 	
-
+	//lTracking5 := .f. 
 	SWITCH nMsg
 	
 
@@ -3268,6 +3323,7 @@ FUNCTION LabelEventH2(aLabel)
 	CASE (WM_MOUSEMOVE)
 
 
+
 		CursorHand()
 
 
@@ -3287,6 +3343,13 @@ FUNCTION LabelEventH2(aLabel)
 	
 
 		End If 
+
+				
+
+		PostMessage(GetControlHandle( 'Image_baixo', cFormPrin ) ,WM_MOUSELEAVE,0,0)
+		PostMessage(GetControlHandle( 'Image_cima', cFormPrin ) ,WM_MOUSELEAVE,0,0)
+
+		lTracking5 := .f. 
 
 		EXIT
 
@@ -4122,6 +4185,11 @@ REturn
 											{
 											hb_retnl( (LONG) SetCursor(LoadCursor(0, IDC_HAND)) );
 												}
+
+												HB_FUNC( CURSORNORMAL )
+											{
+											hb_retnl( (LONG) SetCursor(LoadCursor(0, IDC_ARROW)) );
+												}	
 
 
 												
