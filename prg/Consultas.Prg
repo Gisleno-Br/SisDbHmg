@@ -1790,9 +1790,6 @@ FUNCTION GrvConsul( cTab  , nId1)
 		Return .F.
 	END IF
 
-	SetWaitCursor(  GetformHandle(cActiveJan) )
-
-//	SysWait(.1)
 
 	nTpVend := 1
 

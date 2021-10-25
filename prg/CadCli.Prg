@@ -1,4 +1,6 @@
 #include <hmg.ch>
+#include <minigui.ch>
+
 
 // DECLARE WINDOW fCliCad
 // 25/09
@@ -679,59 +681,6 @@ RETURN aM1
 
 
 
-FUNCTION InpCadCli()
-
-   STATIC lTracking45 := .F.
-
-   LOCAL  nHWnd   := EventHWND()
-   LOCAL  nMsg    := EventMSG()
-   LOCAL  nWParam := EventWPARAM()
-   LOCAL  nLParam := EventLPARAM()
-   LOCAL cControl
-   LOCAL cForm
-
-
-   
-
-   IF ( nMsg == WM_MOUSEMOVE ) .AND. ( !lTracking45 )
-
-      lTracking45 := TrackMouseEvent( nHWnd ) // TME_LEAVE is default flag
-      GetControlNameByHandle( nHWnd, @cControl, @cForm )
-// msginfo(cControl)
-
-      IF ( cControl = 'ImgLupa' ) .OR. ( cControl = 'ImgEnd' )
-
-         SetHandCursor( GetControlHandle( cControl, 'fCadCli' ), "Finger.cur" )
-         _SetToolTip( cControl, 'fCadCli', hb_ANSIToOEM( "Resgata Endereço Baseado no CEP Informado." ) )
-
-
-      END IF
-
-   END IF
-
-   IF ( nMsg == WM_MOUSELEAVE )
-
-
-      lTracking45 := .F.
-
-   END IF
-
-   IF ( nMsg == WM_LBUTTONDOWN )
-
-      GetControlNameByHandle( nHWnd, @cControl, @cForm )
-
-      IF cControl = 'ImgLupa'
-         xPesqCep()
-      END IF
-
-      IF cControl = 'ImgEnd'
-         xPesqEnt()
-      END IF
-
-   END IF
-
-RETURN
-
 
 FUNCTION GetCmbItens( cForm1, cCmb  )
 
@@ -961,9 +910,11 @@ FUNCTION xCidEnt()
    LOCAL cUf1 := fCadcli .cmbUf. DisplayValue
    LOCAL cCid := fCadcli .cmbCidEnt. DisplayValue
 
-   SetHandCursor( GetFormHandle( 'fCadCli' ), "Finger.cur" )
+   SetWindowCursor( GetFormHandle( 'fCadCli' ) , "img\HourGlass.Cur"  )
 
    EncheCmb( 'fCadcli', 'CmbBaiEnt', "select  bairro from bairros where uf = '" + cUf1  + "' and cidade = '"  + cCid + "' order by 1" )
+
+   SetWindowCursor( GetFormHandle( 'fCadCli' ) , IDC_ARROW  )
 
 RETURN
 
@@ -1085,9 +1036,9 @@ FUNCTION xPesqEnt()
 
    LOCAL cJanx := 'fCadCli'
 
-   SetWaitCursor( GetControlHandle( 'imgEnd', cJanx ) )
-
    oQry := oServer:Query( "select * from cep where cep = '" + cCep + "'" )
+
+   
 
 
    IF oQry:LastRec() > 0
@@ -1163,9 +1114,8 @@ FUNCTION xBloquear(  cCodCli, cStatus )
       cSql  := "update " + AllTrim( cTabela ) + " set status = '" + cStatus + "' , dtbloqueio = null where codigo = '" + cCodCli + "'"
    END IF
 
-   SetWaitCursor()
-
-
+   SetWindowCursor( GetFormHandle(  cActiveJan ) , "img\HourGlass.Cur"  )   
+ 
    oServer := GetConexao()
    oQuery := oServer:Query( cSql )
 
@@ -1182,6 +1132,9 @@ FUNCTION xBloquear(  cCodCli, cStatus )
 
    oQuery:Destroy()
    oQuery := Nil
+
+   SetWindowCursor( GetFormHandle(  cActiveJan ) , IDC_ARROW  )   
+
 
 RETURN .T.
 

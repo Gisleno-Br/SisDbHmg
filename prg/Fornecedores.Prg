@@ -475,10 +475,8 @@ Static Function xChgCidade()
 	Local cCid := Alltrim(fCadForne.cmbCidade.DisplayValue)
 	Local cUf1 := fCadForne.cmbUf.DisplayValue
 
-	If !Empty(cCid)
-		SetHandCursor(GetControlHandle( 'Frame_1' , 'fCadForne' )   , "Finger.cur" )
-		EncheCmb( 'fCadForne' , 'CmbBairros' , "select  bairro from bairros where uf = '" + cUf1  + "' and cidade = '"  + cCid + "' order by 1" )
-		//EncheCmb( 'fCadcli2' , 'CmbBaiEnt' , "select  bairro from bairros where uf = '" + cUf1  + "' and cidade = '"  + cCid + "' order by 1" )
+	If !Empty(cCid)		
+		EncheCmb( 'fCadForne' , 'CmbBairros' , "select  bairro from bairros where uf = '" + cUf1  + "' and cidade = '"  + cCid + "' order by 1" )		
 	End If
 
 Return
@@ -511,12 +509,8 @@ Static Function xPesqCep()
 
 	Local cJanx1 := 'fCadCli1'
 
-	//SetWaitCursor(GetControlHandle( 'imgLupa' , cJanx1 ) )
-
-	SetWaitCursor( fCadForne.Handle  )
-
-
-	SetWaitCursor( fCadForne.Handle   , "Finger.cur" )
+	
+	
 
 	oQry := oServer:Query("select * from cep where cep = '" + cCep + "'")
 

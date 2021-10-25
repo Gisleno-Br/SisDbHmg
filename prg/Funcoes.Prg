@@ -57,11 +57,7 @@ Function SetCampoOrdem(cTabela , cCampo , nOrdem1 )
 	cSql += " where tabela = '" + AllTrim( cTabela ) + "' and camposistema = '" + cCampo + "'"
 	
 
-	SetWaitCursor(   GetFocus()      )
-//	GetControlNameByHandle(nHWnd, @cControl2, @cForm2)
-
-    //msginfo('ok')
-
+	
 	oServer := GetConexao()
 	oQuery := oServer:Query( cSql)
 
@@ -98,8 +94,7 @@ Function SetCampoTam(cTabela , cCampo , nOrdem1 )
 	oServer := GetConexao()
 	oQuery := oServer:Query( cSql)
 
-	IF oQuery:NetErr()
-		//SetArrwCursor(nHandle)
+	IF oQuery:NetErr()		
 		yAviso( '(CAmpoTam) Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error() ,, .f. )
 		RETURN .f.
 	END IF
@@ -396,7 +391,11 @@ FUNCTION xInit()
 	cUserDb := cUser1
 	cPassDb := cSen1
 
-	SysWait(.2)
+	//SysWait(.2)
+
+	
+	SetWindowCursor( GetFormHandle( 'Main'  ) , 'IMG\HourGlass.Cur')  
+
 
 
 	DO EVENTS
@@ -434,6 +433,13 @@ FUNCTION xInit()
 
 	ShowScrollBar( GetFormHandle( 'fSplit2' ), 0, .F. )
 	ShowScrollBar( GetFormHandle( 'fSplit2' ), 1, .F. )
+
+
+
+	SetWindowCursor( GetFormHandle( 'Main'  ) , IDC_ARROW)  
+
+
+	
 
 
 
@@ -716,14 +722,6 @@ FUNCTION ExecSql( oSrv1, cSql )
 	END IF
 
 RETURN oQry
-
-
-FUNCTION SetCursorOnControls( xCursor )
-
-	SetWindowCursor ( ThisWindow.Handle, xCursor )
-	SetWindowCursor ( This.Handle, xCursor )    // All Controls associated with the class
-
-RETURN NIL
 
 
 FUNCTION ConvDt( dDt1 )

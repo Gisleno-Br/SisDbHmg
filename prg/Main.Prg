@@ -55,6 +55,13 @@ MEMVAR _HMG_SYSDATA
 
 
 
+#define SM_CXFRAME	32
+#define SM_CYFRAME	33
+
+
+
+
+
 
 
 //DECLARE WINDOW fSplit6
@@ -85,7 +92,10 @@ FUNCTION Main
 	SET NAVIGATION EXTENDED
 
 
+
 	Public cJanx
+
+	Public CURSORHAND := "img\Hand_Cursor.cur"
 
 	Private aCords := {}
 
@@ -330,6 +340,7 @@ FUNCTION Main
 
 	Private nColScrool := 0
 
+
 	Private lScrool := .t.
 
 	Private aBtnFont  := { "Arial", 8, .F., .F., .F., .F. }
@@ -347,6 +358,16 @@ FUNCTION Main
 	Public lMainJan := .t.
 
 
+
+	
+	Public nXSizeFrame := GetSystemMetrics( SM_CXFRAME )
+	Public nYSizeFrame := GetSystemMetrics( SM_CYFRAME )
+
+	
+	Public nMaximizedWindowCol    := 0 - nXSizeFrame
+	Public nMaximizedWindowRow    := 0 - nYSizeFrame
+	Public nMaximizedWindowWidth  := GetDesktopRealWidth()  + nXSizeFrame * 2
+	Public nMaximizedWindowHeight := GetDesktopRealHeight() + nYSizeFrame * 2
 	
 	
 
@@ -357,38 +378,22 @@ FUNCTION Main
 
 	SET NAVIGATION EXTENDED
 
-	//HB_LANGSELECT( 'PT' )
-
-	//HB_SetCodePage("PT850")
-
-
-	//HB_SETCODEPAGE("UTF8")
-
-	Public cAviso1 :=  "Deseja Confirmar essa Opera��o?"
-	//msginfo(hb_AnsiToOem(cv1))
-
-	//MsgAviso(cv1)
-
+	
 
 	Set AutoScroll On
 
 	Aadd(aJanelas , { 'Main' , 'Main'  , 0}  )
 
-	//HMG_ActivateMainWindowFirst(.t.)
-
-	//msginfo('l')
 
 
 	Load Window Main
 
 
-
-	Main.Center
+	//Main.Center
 
 
 	Main.Maximize()
-	
-
+		
 
 	Load Window fSplitSubMenu
 
@@ -447,7 +452,7 @@ FUNCTION Main
 		nRowIni += 15
 
 		aOpcoes[n][LABEL_HWND] := GetProperty("fSplit6", aOpcoes[n][LABEL_NAME] , "HANDLE")
-		SetHandCursor( GetControlHandle(aOpcoes[n][LABEL_NAME] , "fSplit6"), "Finger.cur" )
+		SetHandCursor( GetControlHandle(aOpcoes[n][LABEL_NAME] , "fSplit6"), CURSORHAND )
 
 		EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, aOpcoes[n][LABEL_HWND]), .T.)
 
@@ -1088,8 +1093,8 @@ Function ButtonsTop( lCria )
 
 				nHandle1 := GetControlHandle( cLabelx , 'fSplit2'  )
 
-				SetHandCursor( nHandle1, "Finger.cur" )
-				SetHandCursor( GetControlHandle( cImagex , 'fSplit2' ) , "Finger.cur" )
+				SetHandCursor( nHandle1, CURSORHAND )
+				SetHandCursor( GetControlHandle( cImagex , 'fSplit2' ) , CURSORHAND )
 
 				nAcum += nPulo
 
@@ -1270,9 +1275,6 @@ Function xRealocButs( nId , nColx )
 	End If
 
 	laJuste := .f.
-
-	SetWaitCursor()
-
 
 	For n1 := 1 to 300
 
@@ -1761,12 +1763,12 @@ FUNCTION LabelEventHandler(aLabel)
 
 	CASE WM_MOUSEMOVE
 
-		CursorHand()
+		//CursorHand()
 
-		//CURSORESPERA()
+		SetWindowCursor( GetControlHandle( cControl , cForm  ),  CURSORHAND )  
 
-		//SetHandCursor( GetControlHandle( cImgName , 'fSplit2' ) , "HourGlass.cur" )		    
 
+		
 
 		If (cForm = 'fSplit2')
 			//msginfo('ok')
@@ -2403,7 +2405,7 @@ Return
 
 	HB_FUNC( SETARROWCURSOR )
 	{
-//SetClassLong( ( HWND ) hb_parnl( 1 ), GCLP_HCURSOR, ( LONG ) LoadCursor( NULL, IDC_ARROW ) );
+		SetClassLong( ( HWND ) hb_parnl( 1 ), GCLP_HCURSOR, ( LONG ) LoadCursor( NULL, IDC_ARROW ) );
 	}
 
 	HB_FUNC( SETHANDCURSOR )
