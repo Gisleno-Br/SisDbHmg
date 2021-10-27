@@ -113,7 +113,7 @@ FUNCTION Main
 	PUBLIC fColor := {|| iif( ( LastRec() > 0 ) .AND. ( AllTrim(Status ) == 'Ativo' ), { 78,78,78 },  { 255, 0, 0 } )  }
 
 
-	
+
 
 	Public bColorGrid := {|| iif( ( LastRec() > 0 ) .AND. ( RecNo() / 2 == Int(RecNo() / 2 ) ), { 235,243,242 }, {211,231,230} ) }
 
@@ -478,10 +478,6 @@ FUNCTION Main
 	HMG_ChangeWindowStyle(fSplitSubMenu.Handle  ,WS_EX_TOOLWINDOW  , NIL, .t., .t.)
 
 
-   //EventProcessAllHookMessage(EventCreate({ || xMainHandle(Main.Handle) },  Main.Handle ) , .T.)
-   //EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) },   Main.Handle ) , .T.)
-
-
 	DEFINE LABEL fLabel1Dt
 		PARENT    fSplit3
 		ROW       18
@@ -544,7 +540,7 @@ FUNCTION Main
 
 	Private aButTop := {}	
 
-	nIndexEvent := EventCreate (  { ||   xMainHandle( )   }  )  		
+	Public nIndexEventY := EventCreate (  { ||   xMainHandle( )   }  )  		
 
 	Main.Activate
     
@@ -2291,83 +2287,6 @@ Function Box(CurSRow, CurSCol, LastSWidth, LastSHeight , NOSm , cJanela1 , cImgT
 	
 RETURN
 
-fUNCTION DrawTransp(cJan , zBitMap , cTitulo , nQreg , cTitConsu , cTitFltr )
-
-	Local hDc
-	LOCAL Width  := BT_ClientAreaWidth  (cJan)
-	LOCAL Height := BT_ClientAreaHeight (cJan)
-
-	Local nRow := 0
-	Local nCol := 0
-
-	Local nRx1 := 0
-
-	LOCAL BTstruct
-
-	Local cGrid := 'Br_Grid'
-
-	LOCAL cFormName := ''
-
-	Local nTypeText    := BT_TEXT_TRANSPARENT
-	//+ BT_TEXT_BOLD
-	Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
-	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
-
-	Default nQreg := 0
-
-	Default cTitulo := ''
-	Default CtitConsu := ''
-
-	Default cTitFltr := ''
-
-	GetFormNameByHandle ( GetActiveWindow(), @cFormName )
-
-	hDC    = BT_CreateDC ( cJan  , BT_HDC_INVALIDCLIENTAREA, @BTstruct)
-
-	If lDrawMain
-		//hb_memowrit('cli221ok.txt', 'Transp : ' + cJan + ' ' + Str(Width) + ' ' + Str(Height) + ' rrow : ' + Str(nRow) )
-		nRow := 0
-	End if
-
-
-	If Flag_AlphaBlend_Effect
-
-		
-		BT_DrawGradientFillVertical (hDC,  nRow  ,  nCol  ,  Width,  Height , BLACK , BLACK)              //
-
-		
-		If !lTelaToda
-			BT_DrawBitmapAlphaBlend (hDC, 0 ,  nCol  , nil, nil, 120 , BT_COPY  , zBitmap)
-		Else
-			BT_DrawBitmapAlphaBlend (hDC, GetProperty("fSplit2","Height" ) ,  nCol  , nil, nil, 120 , BT_COPY  , zBitmap)
-		End If 	
-
-		
-
-		BT_DeleteDC (BTstruct )
-
-
-	Else
-
-
-		If (_isControlDefined( cGrid , cJan)) .And. (cJan = cactivejan)
-
-			nZ2   := GetDeskTopHeight() - (GetProperty(cJan , cGrid ,'Row') + GetProperty(cJan , cGrid,'Height') )
-
-			nRx1 := GetProperty(cJan , cGrid ,'Row') + GetProperty(cJan , cGrid,'Height')
-			nC1  := GetProperty(cJan , cGrid,'Col')
-
-			//BT_DrawGradientFillHorizontal (hDC,  nRx1  ,  nC1  ,  GetProperty(cJan , cGrid,'Width'),   30   , {255,255,255} , {117,124,131} )              //
-
-			BT_DrawGradientFillHorizontal (hDC,  nRx1  ,  0  ,  GetProperty(cJan , cGrid,'Width'),   50   , {255,255,255} , {117,124,131} )              //
-		
-		End If
-
-	End If
-
-	BT_DeleteDC (BTstruct)
-
-REturn
 
 Function SaveLog(cArqLog,cTexto)
 

@@ -79,7 +79,7 @@ REQUEST SDDMY, SQLMIX
 
 // ANNOUNCE RDDSYS
 
-STATIC nIndexEvent := 1
+//STATIC nIndexEvent := 1
 
 // STATIC aButtons := {}
 
