@@ -151,13 +151,19 @@ FUNCTION CadCli()
 
 	Private nRowIni2 := 10
 
+	Private lInitCompleto := .f.
+
 	Private cTituloJan := ''
 	Private nQRegx     := 0
 
 	Private nLineImg  := 0
 
+	Private nEveButton := 0
+
 
 	Private nColOrder  := 0
+
+	Private nDirAnt := 444
 
 
 	Private lAumentou := .f.
@@ -449,7 +455,7 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 
 	Load Window fClientes as &cFormPrin
 
-	SetWindowCursor( GetFormHandle( cFormPrin )  , 'IMG\hourGlass.Cur'  )
+	SetWindowCursor( GetFormHandle( cFormPrin )  , HOURGLASS  )
 
 
 
@@ -462,12 +468,10 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 	SetProperty(cFormPrin , 'Image_cima' ,  'Visible'  , .f. )
 
 
-
+  
 	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventHndCli"  ) )  ) = 0
 		InstallEventHandler( "EventHndCli" )
 	End If
-
-
 
 
 	cActiveJan := cFormPrin
@@ -494,7 +498,7 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 	//nIndexEvent3++
 
 
-	CREATE EVENT PROCNAME xHandleEsc() STOREINDEX nIndexEvent3
+	//CREATE EVENT PROCNAME xHandleEsc() STOREINDEX nIndexEvent3
 
 
 	Activate Window &cFormPrin
@@ -516,7 +520,7 @@ Function RemoveHandler( cProcName )
 //		InstallEventHandler( "EventHndCli" )
 //	End If	
 
-Return
+Return (nInd > 0)
 
 
 
@@ -545,7 +549,6 @@ Function xHandleEsc()
 		If nHWND = GetControlHandle('br_Grid' , cActiveJan)
 
 			If nWParam = VK_ESCAPE
-
 
 				nI1 := Ascan(aCords , { |a| a[4] == cActiveJan})
 
@@ -599,7 +602,7 @@ Function xSetOpcao()
 
 	If (!lOpcaoAberta)
 
-		lOpcaoAberta := .t.
+		//lOpcaoAberta := .t.
 		nLineImg := 0
 		//InitTela(  .f.  ,  183 )
 
@@ -619,7 +622,7 @@ Function xSetOpcao()
 		*//Critico
 		RefreshAll(cFormPrin)
 
-		IntCli( .t. )
+
 
 		lInvalid := .f.
 		//SysWait(.1)
@@ -632,6 +635,10 @@ Function xSetOpcao()
 
 
 		SetProperty(cFormPrin, 'Image_cima' , 'picture' , 'img\setac2d.Png' )
+
+
+		lOpcaoAberta := .t.
+		IntCli( .t. )
 
 
         /*
@@ -716,9 +723,8 @@ Return
 Function xControls( lFilter , nQReg )
 
 
-
 	Default lFilter := .t.
-	//SysWait(.2)
+
 	SetProperty(  cActiveJan , 'Lbltitulo', 'Visible' , .t. )
 	SetProperty(  cActiveJan , 'Lbltitulo', 'Enabled' , .t. )
 
@@ -748,7 +754,6 @@ DoMethod( cActiveJan , 'Image_2196' , 'Show')
 
 
 If (lFilter)
-
 
 	If !_IsControlDefined(   'lblTitulo2' , cActiveJan)
 
@@ -940,60 +945,52 @@ Function InitTela(  lIni1  , nColz1)
 	Default nColz1 := 1
 
 
-DoMethod(cMenuName,"Hide")
+	DoMethod(cMenuName,"Hide")
 
 
-SetProperty( cAuxName , 'Width' , GetDeskTopWidth() )
-SetProperty( cAuxName , 'Height' , 52)
-
-//SetWindowCursor (  GetControlHandle('br_grid' , cActiveJan)    , IDC_WAIT )
+	SetProperty( cAuxName , 'Width' , GetDeskTopWidth() )
+	SetProperty( cAuxName , 'Height' , 52)
 
 
-aLinhas := OpenReg( , ,   nColz1 )
+	aLinhas := OpenReg( , ,   nColz1 )
 
-//RefreshAll(cMenuName)
 
-//SysWait(.1)
+	If (!lIni1) .And. (nColz1 > 1)
+		CrieMenuLabel(aOpz1)
+	End If
 
-If (!lIni1) .And. (nColz1 > 1)
-	CrieMenuLabel(aOpz1)
-End If
-
-				*//Critico
+					*//Critico
 
 //RefreshAll(cFormPrin)
 
-nIndexEvent4 := 0
+	nIndexEvent4 := 0
 
-CREATE EVENT PROCNAME Check_Grid_Events() STOREINDEX nIndexEvent4
-
-
-//InstallEventHandler(    'Check_Grid_Events'   )
-// HWND GetFormHandle(cFormPrin)
-
-SetProperty(cFormPrin , 'Frame_1' , 'Visible' , .f. )
-SetProperty(cFormPrin , 'Frame_2' , 'Visible' , .f. )
+	//CREATE EVENT PROCNAME Check_Grid_Events() STOREINDEX nIndexEvent4
 
 
-IntCli()
+	SetProperty(cFormPrin , 'Frame_1' , 'Visible' , .f. )
+	SetProperty(cFormPrin , 'Frame_2' , 'Visible' , .f. )
+
+	IntCli()
 
 
+	lInvalid := .f.
 
-//BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , Nil , .t. )
-//xZeraHead()
-
-//Syswait(.1)
-lInvalid := .f.
-
-PostMessage(   GetControlHandle( 'br_grid', cActiveJan ) , WM_LBUTTONUP,0,0)
-
-SetWindowCursor( GetControlHandle( 'br_grid', cActiveJan ) , IDC_ARROW)
-
-//Syswait(.2)
+	PostMessage(   GetControlHandle( 'br_grid', cActiveJan ) , WM_LBUTTONUP,0,0)
+	SetWindowCursor( GetControlHandle( 'br_grid', cActiveJan ) , IDC_ARROW)
 
 
+	If (nEveButton = 0)
+		CREATE EVENT PROCNAME EventButton() STOREINDEX nEveButton
+		EventProcessAllHookMessage ( nEveButton, .t. )
+	End If
+
+	lInitCompleto := .t.
+
+	SysWait(.2)
+
+	
 Return
-
 
 
 
@@ -1048,7 +1045,7 @@ Function Check_Grid_Events()
 
 		//lTracking5 := .f.
 
-		if nMsg == WM_KEYDOWN
+		If nMsg == WM_KEYDOWN
 
 
 
@@ -1236,7 +1233,7 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 	Default cFiltro2 := ''
 
 
-	SetWindowCursor( GetFormHandle(  cActiveJan ) , "img\HourGlass.Cur"  )
+	SetWindowCursor( GetFormHandle(  cActiveJan ) , HOURGLASS )
 
 	aCampos  := GetCamposDic( cTabela, 'S' , .t. , .t. )
 	//Local aCabec  := GetCamposDic( cTabela, 'S' , .f. , .t. )
@@ -1294,7 +1291,6 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 	oQuery := oServer:Query(  cSq2 )
 
 	If oServer:NetErr()
-		SetWindowCursor( GetFormHandle(  cActiveJan ) , "img\HourGlass.Cur"  )
 		MsGInfo( "Error executing Query " + QUEBRA + cSq2 + " : " + QUEBRA + oServer:Error() )
 		Return .f.
 	End If
@@ -1304,7 +1300,6 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 
 
 	If (oQuery:Lastrec()  == 0 )
-		SetWindowCursor( GetFormHandle(  cActiveJan ) , "img\HourGlass.Cur"  )
 		yAviso( 'Este Cadastro Não Possui Registros' , .f. )
 	End If
 
@@ -1493,9 +1488,6 @@ aM6 := {}
 aadd(aM6 , aCabec )
 
 
-
-
-
 _HMG_SYSDATA [ 348 ] := {255,255,255}
 _HMG_SYSDATA [ 349 ] := {28,157,189}
 _HMG_SYSDATA [ 350 ] := {255,255,255}
@@ -1573,9 +1565,9 @@ nQRegx     := Len(aItens)
 
 
 nIndexEve1 := EventCreate( { || LabelEventH4()  }  , ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) )
-
-
 EventProcessAllHookMessage( nIndexEve1 ,   .T.)
+
+
 cTitFiltro := ''
 
 //DbGotop()
@@ -1626,8 +1618,6 @@ Function xZeraHead()
 	Local cFname    := ''
 
 
-
-
 	If (lDrawHead)
 		nSec11 := hb_MilliSeconds()
 		lDrawHead := .f.
@@ -1675,18 +1665,16 @@ Function RedrawMenu( aopcoes  , nindice , nLinha1  )
 
 		cLabelx := Right(cFormPrin,3) + StrZero(n1,3)
 
-		IF _IsControlDefined( cLabelx, cFormPrin )
+		If _IsControlDefined( cLabelx, cFormPrin )
 
 			SetProperty( cFormPrin , cLabelx , "row" , nRow )
 		DoMethod(cFormPrin , cLabelx , "Refresh" )
 
 		If nIndice = n1
-			//msginfo('lp')
 			nRow += nLinha1
 		Else
 			nRow += 20
 		End If
-
 
 	End If
 
@@ -1846,10 +1834,6 @@ lMudou := .f.
 End If
 
 
-//_ShowWindow( 'Main'   )
-//_ShowWindow( cFormPrin   )
-
-
 Return lMudou
 
 Function xGetHeader()
@@ -1922,7 +1906,7 @@ Function xPosBrow()
 	Local n1 := 0
 	Local nSize
 	Local aHandle   := GetControlHandle( 'br_grid', cActiveJan )
-	Local aHeaders1 := GetProperty(  cActiveJan  , "br_grid" ,  "Headers" , 1 )
+	Local aHeaders1 := GetProperty(cActiveJan  , "br_grid" ,  "Headers" , 1 )
 	Local cTabx := GetTabelaX()
 	Local aMtrHeader := xGetHeader()
 
@@ -1996,7 +1980,7 @@ RETURN Data
 
 FUNCTION LabelEventH4(aLabel)
 
-	//STATIC lTracking6 := .F.
+	STATIC lTracking6 := .F.
 	LOCAL  nHWnd   := EventHWND()
 	LOCAL  nMsg    := EventMSG()
 	LOCAL  nWParam := EventWPARAM()
@@ -2014,6 +1998,7 @@ FUNCTION LabelEventH4(aLabel)
 	Local nCol
 	Local aR1
 	Local lSalto := .f.
+	Local nSalvai
 
 
 	GetControlNameByHandle(nHWnd, @cControl, @cForm)
@@ -2046,7 +2031,6 @@ FUNCTION LabelEventH4(aLabel)
 		//TimerRed()
 
 
-
 		If xPosMtrHead() .or. xMudouTam()
 			//msginfo('ok')
 			nColSel := 0
@@ -2069,7 +2053,6 @@ FUNCTION LabelEventH4(aLabel)
 		xZeraHead()
 	End If
 
-
 End If
 
 End If
@@ -2087,12 +2070,11 @@ If (nMsg == WM_MOUSEMOVE) .And. (!lSoltou) .and. (!lOpcaoAberta)
 	//	lInvalid := .f.
 	//	xZeraHead()
 
-
 End If
 
 
 
-If (nMsg == WM_MOUSEMOVE) .And. (!lSoltou)
+If (nMsg == WM_MOUSEMOVE) .And. (!lSoltou) .And. (!lOpcaoAberta)
 
 	lInvalid := .f.
 	xZeraHead()
@@ -2101,7 +2083,7 @@ End If
 
 
 
-If (nMsg = WM_LBUTTONDBLCLK)
+If (nMsg = WM_LBUTTONDBLCLK) .And. (!lOpcaoAberta)
 
 	OrdeneCol(  nColSel )
 
@@ -2128,7 +2110,7 @@ End If
 //End If
 
 
-If (nMsg == WM_MOUSELEAVE)
+If (nMsg == WM_MOUSELEAVE) .And. ( Left(cControl,3) = 'ien') .And. (lOpcaoAberta)
 
 	nColSel := 0
 
@@ -2153,22 +2135,25 @@ If (nMsg == WM_MOUSELEAVE)
 		lTracking6 := .f.
 
 
+
 	End If
 
 
 End If
 
 
+
+
 If Empty(Alltrim(cControl))
 Return
 End If
 
-If nMsg == WM_MOUSEMOVE
+	*// Handle das Consultas.
 
+If (nMsg == WM_MOUSEMOVE) .And. ( Left(cControl,3) = 'ien') .And. (lOpcaoAberta) .And. (!lTracking6)
 
 
 	SetWindowCursor( GetControlHandle( cControl , cForm  ) , CURSORHAND)
-
 
 
 	SetProperty(cForm, cControl, "BACKCOLOR", CORSEL)
@@ -2176,12 +2161,9 @@ If nMsg == WM_MOUSEMOVE
 	SetProperty(cForm, cControl, "FONTBOLD", .T.)
 
 	lTracking6 := TrackMouseEvent(nHWnd)
-
-
-	PostMessage(GetControlHandle( 'Image_baixo', cFormPrin ) ,WM_MOUSELEAVE,0,0)
-	PostMessage(GetControlHandle( 'Image_cima', cFormPrin ) ,WM_MOUSELEAVE,0,0)
-
 	lTracking5 := .f.
+
+	//SysWait(.1)
 
 Return
 	//lTracking6 := .f.
@@ -2201,16 +2183,30 @@ If nMsg == WM_LBUTTONDOWN
 
 	If (cOpcao == alltrim(cOpSel))
 		cOpsel := ''
+
+		nSalvai := nLineImg
 		nLineImg := 0
-		RedrawMenu( aOpz1  )
+
+		BT_ClientAreaInvalidateRect ( cFormPrin , nSalvai, 0,  nSalvai+35 , 178 , .t. )
+
+
+
 		Refreshall( cFormPrin )
+
 	DoMethod(cMenuName , "Hide")
-	SetProperty(cFormPrin  , 'Image_baixo' , 'Visible', .f. )
-	SetProperty(cFormPrin  , 'Image_cima' , 'Visible', .f. )
+	//SetProperty(cFormPrin  , 'Image_baixo' , 'Visible', .f. )
+	//SetProperty(cFormPrin  , 'Image_cima' , 'Visible', .f. )
 	ShowButConsu(.f.)
-	SysWait(.1)
+
+	RedrawMenu( aOpz1  )
+	//SysWait(.1)
 Return
+
 End If
+
+
+SetWindowCursor( GetFormHandle( cActiveJan ) , HOURGLASS)
+
 
 
 nLinha  := GetProperty(cForm, cControl, "Row" )
@@ -2227,6 +2223,7 @@ End If
 aSubOp := {}
 aSubRot := {}
 ShowButConsu(.f.)
+
 
 If (cOpcao <> 'Consultas')
 
@@ -2261,9 +2258,6 @@ If Len(aSubOp) < nItMax
 
 	nPulo  := nHeight+22
 
-	SetProperty(cFormPrin  , 'Image_baixo' , 'Visible', .f. )
-	SetProperty(cFormPrin  , 'Image_cima' , 'Visible', .f. )
-
 	nLineImg := 0
 
 Else
@@ -2276,15 +2270,8 @@ Else
 		nQtElem := Len(aSubOp)
 		lSalto  := .t.
 
-		//	SetProperty(cFormPrin  , 'Image_baixo' , 'Visible', .t. )
-		//	SetProperty(cFormPrin  , 'Image_cima' , 'Visible', .t. )
-
-		//SetProperty(cFormPrin  , 'Image_baixo' , 'Picture' , 'img\setab2.png' )
-
 
 	Else
-		SetProperty(cFormPrin  , 'Image_baixo' , 'Visible', .f. )
-		SetProperty(cFormPrin  , 'Image_cima' , 'Visible', .f. )
 
 	End If
 
@@ -2317,21 +2304,6 @@ End If
 BT_ClientAreaInvalidateRect ( cFormPrin , 0, 0,  200, GetDesktopHeight() - 200 , .t. )
 
 
-//Syswait(.2)
-
-
-       /*
-If GetProperty(cFormPrin ,"Image_baixo","Visible")
-
-			SetProperty(cFormPrin  , 'Image_baixo' , 'Row', nLinha +  GetProperty(cMenuName , "Height" )+25   )
-			SetProperty(cFormPrin  , 'Image_cima' , 'Row', nLinha +  GetProperty(cMenuName , "Height" )+43   )
-
-       
-
-End If
-		*/
-
-
 If (nIndx1 = 0)
 	RefreshCli()
 End If
@@ -2340,14 +2312,15 @@ End If
 SetProperty( cMenuName , 'Visible' , .t. )
 Setproperty( cFormPrin , 'Frame_1' , 'Visible' , .t.)
 
-
-
 If nInd < Len(aOpz1)
 	nQtElem := Len(aSubOp)
 	CrieMenuLabel(aOpz1 , nind , nPulo   )
 Else
 	CrieMenuLabel(aOpz1)
 End If
+
+
+SetWindowCursor( GetControlHandle( 'br_grid', cActiveJan ) , IDC_ARROW)
 
 
 End If
@@ -2389,7 +2362,7 @@ Function UpScrool( nDir , nTamanho )
 //	lHitBottom := .f.
 //	lHitTop    := .f.
 
-	lUpdMenu := .f. 
+	lUpdMenu := .f.
 
 	If (nDir == 1) .And. (!lHitBottom)
 
@@ -2402,20 +2375,15 @@ Function UpScrool( nDir , nTamanho )
 		nLinRow := nLinRow + nIncre
 		nItx1++
 
-		
+
 
 		lHitTop := .f.
-
-		IF nDirAnt != nDir 
-
-		End If
-		
 
 
 		lOk := .t.
 		If nItx1 = nTamanho
 			lHitBottom := .t.
-			lUpdMenu := .t.
+			//lUpdMenu := .t.
 		End If
 
 
@@ -2424,17 +2392,13 @@ Function UpScrool( nDir , nTamanho )
 		If (!lHitTop) .And. (nDir == 2)
 
 			If nItx1 > nItMax
-
-				//SetProperty(cFormPrin, 'Image_baixo' , 'picture' , 'img\Setab22.Png' )
-
-
 				nLinRow := nLinRow - nIncre
 				nItx1--
 				lOk := .t.
 
 
 				If nItx1 = nItMax
-					//SetProperty( cFormPrin, 'Image_cima' , 'picture' , 'img\setac22d.Png' )
+
 
 					lHitBottom := .f.
 					lHitTop    := .f.
@@ -2447,7 +2411,6 @@ Function UpScrool( nDir , nTamanho )
 
 			Else
 
-				///SetProperty(cFormPrin, 'Image_cima' , 'picture' , 'img\setac2d.Png' )
 
 				lHitBottom := .f.
 				lHitTop := .t.
@@ -2456,16 +2419,24 @@ Function UpScrool( nDir , nTamanho )
 
 
 			End If
+
 		End If
 
 	End If
+
+
+	IF (nDirAnt != nDir)
+		nDirAnt := nDir
+		lUpdMenu := .t.
+	End If
+
 
 
 	//SysWait(.1)
 
 	If (lOk)
 		_HMG_PRINTER_SETVSCROLLVALUE( GetFormHandle(  cMenuName  )  , nLinRow)
-	End If 	
+	End If
 
 	//SysWait(.1)
 
@@ -2598,6 +2569,8 @@ FUNCTION IntCli(  lSoConsulta )
 
 	cFontName := 'Arial'
 
+	
+
 
 	If !lSoConsulta
 
@@ -2617,13 +2590,14 @@ FUNCTION IntCli(  lSoConsulta )
 			End If
 
 
+
 			//lBold := .t.
 			nFontSize := 8
 			OBTN_Font( cForm, nB1,  { cFontName, nFontSize, .t. , lItalic, lUnderline, lStrikeOut } )
 
 
 			aButtons[ nx1 ][ 5 ] := nB1
-			EventProcessAllHookMessage( EventCreate( {|| EventButton() },    OBTN_Handle( cForm, nB1 )   ), .T. )
+			//EventProcessAllHookMessage( EventCreate( {|| EventButton() },    OBTN_Handle( cForm, nB1 )   ), .T. )
 
 			//SysWait(.1)
 			nCol += 88
@@ -2632,6 +2606,13 @@ FUNCTION IntCli(  lSoConsulta )
 		NEXT
 
 	End If
+
+
+	*// Handle Eventos Instalado.
+
+	nEveButton := 0
+
+
 
 	nLinBut := nDeskTopHeight - 220
 
@@ -2659,11 +2640,13 @@ FUNCTION IntCli(  lSoConsulta )
 		OBTN_Create( cFormPrin , 5459, "&Excluir" ,  nLinBut, 120 ,  56,  24 ,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 		OBTN_Font( cFormPrin , 5459,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
-		EventProcessAllHookMessage( EventCreate( {|| EventButton() },    OBTN_Handle( cFormPrin , 5457 )   ), .T. )
-		EventProcessAllHookMessage( EventCreate( {|| EventButton() },    OBTN_Handle( cFormPrin , 5458 )   ), .T. )
-		EventProcessAllHookMessage( EventCreate( {|| EventButton() },    OBTN_Handle( cFormPrin , 5459 )   ), .T. )
+		//EventProcessAllHookMessage( EventCreate( {|| EventButton() },    OBTN_Handle( cFormPrin , 5457 )   ), .T. )
+		//EventProcessAllHookMessage( EventCreate( {|| EventButton() },    OBTN_Handle( cFormPrin , 5458 )   ), .T. )
+		//EventProcessAllHookMessage( EventCreate( {|| EventButton() },    OBTN_Handle( cFormPrin , 5459 )   ), .T. )
+
 
 		//msginfo('pl1')
+
 
 		OBTN_Visible( cFormPrin , 5457 , .t.)
 
@@ -2672,6 +2655,8 @@ FUNCTION IntCli(  lSoConsulta )
 
 		OBTN_Enable( cFormPrin , 5458 , .f.)
 		OBTN_Enable( cFormPrin , 5459 , .f.)
+
+
 	Else
 
 		IF OBTN_Handle(cFormPrin , 5457) > 0
@@ -2687,6 +2672,7 @@ FUNCTION IntCli(  lSoConsulta )
 
 
 	End If
+
 
 Return
 
@@ -2724,6 +2710,9 @@ Function ShowButConsu(lVisible)
 
 Return
 
+
+
+
 FUNCTION EventButton()
 
 	STATIC lTracking30 := .F.
@@ -2738,6 +2727,19 @@ FUNCTION EventButton()
 	LOCAL lUnderline := .F.
 	LOCAL lStrikeOut := .F.
 
+	Local nRow := 0
+	Local nCol := 0
+	Local nHeight := 0
+	Local nValue1
+	Local aItems
+	Local aCli
+	Local nindice
+	Local nid 
+
+	Local cControl
+	Local cForm
+
+
 
 	LOCAL nind1
 	LOCAL nIdBut := 0
@@ -2749,32 +2751,44 @@ FUNCTION EventButton()
 
 	LOCAL ButHnd
 
+	
+	GetControlNameByHandle(nHWnd, @cControl, @cForm)
+
+
 	If (Empty( Alltrim(cActiveJan))) .Or. ( Alltrim(cActiveJan) = "Main")
-		//(!IsWindowDefined( cFormx   )   )
 		Return
 	End If
+
+	If !lInitCompleto
+		lInitCompleto := .t.
+		Return
+	End If
+
+
+	If !_IsWindowDefined(cFormx)
+		Return 
+	End If 
 
 
 	//msginfo(cFormx)
 
 	nInd1 := AScan( aButtons, {| a| a[ 5 ] == nWParam } )
 
-	FOR n1 := 1 TO Len( aButtons )
 
-		//IF ( OBTN_Handle( cFormJan  , aButtons[ n1 ][ 5 ] ) == nHWnd )
+
+	For n1 := 1 TO Len( aButtons )
+
 
 		IF ( OBTN_Handle( cFormX   , aButtons[ n1 ][ 5 ] ) == nHWnd )
 			nIdBut := aButtons[ n1 ][ 5 ]
 		END IF
 
-		//cFormx := cFormPrin
 
-
-		//IF ( OBTN_Handle( cFormPrin, 5457 ) == nHWnd )
 		IF ( OBTN_Handle( cFormPrin  , 5457 ) == nHWnd )
 			nIdBut := 5457
 			cFormx := cFormPrin
 		End If
+
 
 		IF ( OBTN_Handle( cFormPrin , 5458 ) == nHWnd )
 			nIdBut := 5458
@@ -2786,14 +2800,17 @@ FUNCTION EventButton()
 			cFormx := cFormPrin
 		End If
 
-	NEXT
+
+	Next 
 
 
-	IF ( nIdBut > 0  )
 
-		IF ( nMsg == WM_MOUSEMOVE ) .and. (!lTracking30)
+	If ( nIdBut > 0  )
+
+		If ( nMsg == WM_MOUSEMOVE ) .and. (!lTracking30)
 
 			lTracking30 := TrackMouseEvent( nHWnd ) // TME_LEAVE is default flag
+
 
 
 			If (Alltrim(OBTN_Caption(cFormx, nIdBut )) $ cButVerde )
@@ -2805,7 +2822,7 @@ FUNCTION EventButton()
 			OBTN_Enable( cFormx, nIdBut, .T. )
 
 
-			SetHandCursor(  OBTN_Handle( cFormX , nIdBut )  )
+			SetWindowCursor(  OBTN_Handle( cFormX , nIdBut )  , CURSORHAND   )
 
 
 			nindx := Ascan( aButtons , { |a| a[1] == OBTN_Caption(cFormx , nIDBut) } )
@@ -2830,17 +2847,15 @@ FUNCTION EventButton()
 				End If
 
 			End If
+		
 
-			//msginfo('ok')
+		End If
 
 
-		END IF
-
-		IF ( nMsg == WM_MOUSELEAVE )
+		If ( nMsg == WM_MOUSELEAVE )
 
 			If (Alltrim(OBTN_Caption(cFormx , nIdBut )) $ cButVerde)
-				OBTN_Color( cFormx,  nIdBut, aBtnG1 , .T. )
-				//OBTN_Font( cForm, nIdBut ,  { cFontName, nFontSize, .f. , lItalic, lUnderline, lStrikeOut } )
+				OBTN_Color( cFormx,  nIdBut, aBtnG1 , .T. )		
 			Else
 				OBTN_Color( cFormx,  nIdBut, aBtnColor, .T. )
 			End If
@@ -2848,18 +2863,137 @@ FUNCTION EventButton()
 			OBTN_Enable( cFormx, nIdBut, .T. )
 			OBTN_Visible( cFormx, nIdBut, .T. )
 
-			//_ShowWindow(cActiveJan)
-
 			lTracking30 := .F.
 
-		END IF
+		End If
+
+
+
+	Else
+
+
+         IF (nHWnd == GetProperty(  cFormx  , "HANDLE" ))
+
+		 	If (nMsg == WM_DRAWITEM)
+
+				nInd1 := AScan( aButtons, {| a| a[ 5 ] == nWParam } )
+
+				If nInd1 > 0
+					OBTN_Draw( nHWnd,  aButtons[ nind1 ][ 5 ], nLParam )
+				End If 
+
+
+			End If 	
+
+		
+			If nMsg == 273 // WM_COMMAND
+
+				nID := LoWord( nWParam )
+
+				If nID == IDOK
+					nID := GetDlgCtrlID( GetFocus() )
+				End If 
+
+				
+				nIdBt1 := AScan( aBlocks , {| a| a[ 5 ] == nId } )
+
+				If ( nIdBt1 > 0 )
+					PushButton( cFormx  , nId )
+					aBlock := aBlocks[ nIdBt1 ][ 2 ]
+					Eval( aBlock )
+				End If
+
+
+			End If 
+
+		End If 	
+
+
+
+	End If
+
+
+
+	If (nHWnd = GetControlHandle( 'br_Grid', cActiveJan ))
+		
+
+		If nMsg == WM_LBUTTONDOWN
+
+			If _IsControlDefined('Br_Grid',cActiveJan)
+
+				GetCursorPos (@nCol, @nRow)
+
+				aR1 := GetPos_ScreenToClient( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , nRow, nCol )
+
+				nTotal := 20 * (  Len(aLinhas) + 1)
+
+				If (ar1[1] > nTotal )
+					lInvalid := .f.
+					xZeraHead()
+				End If
+
+			End If
+
+		End If
+
+
+
+		If nWParam = VK_ESCAPE
+
+			nI1 := Ascan(aCords , { |a| a[4] == cActiveJan})
+
+			cIndJan := Right(aCords[nI1][1],4)			
+
+			If (!lOpcaoAberta) .And. ;
+				(_IsControlDefined( 'Img' + cIndJan , 'fSplit2' ))
+
+				xPosBrow()
+				FechaJan('Img' + cIndJan  , , )
+
+
+				If nIndx1 > 0
+					EventRemove(nIndx1)
+				End If
+
+				If nIndx2 > 0
+					EventRemove(nIndx2)
+				End If
+
+			Else
+				xSetOpcao()
+			End If
+
+		End If
 
 
 
 
-	ELSE
+		If (nMsg == WM_LBUTTONUP)
 
-	END IF
+			If !lInvalid
+				xZeraHead()
+			End If
+
+			If _IsControlDefined('Br_Grid',cActiveJan)
+
+				GetCursorPos (@nCol, @nRow)
+
+
+				nHeight := GetProperty(cActiveJan , 'br_grid' , 'Height')
+
+				aR1 := GetPos_ScreenToClient( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , nRow, nCol )
+
+				If aR1[1] >= 600
+					BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , Nil , .t. )
+					//SysWait(.2)
+				End If
+
+			End If
+
+		End If
+
+	End If
+
 
 RETURN
 
@@ -2890,23 +3024,6 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 	STATIC lTracking30 := .F.
 
-
-
-	 /*
-	IF !_IsWindowDefined ( cFormJan )
-		RETURN
-	END IF
-
-	IF !_IsWindowDefined ( cMenuName )
-		RETURN
-	END IF
-
-	IF !_IsWindowDefined ( cFormPrin )
-		RETURN
-	END IF
-	*/
-
-	//cForm := cFormJan
 
 
 	cForm := 'FTop1' + Right(cActiveJan,5)
@@ -2946,6 +3063,8 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 			END IF
 		END IF
 
+			/*
+
 		IF nMsg == 273
 
 			nID := LoWord( nWParam )
@@ -2953,6 +3072,8 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 			IF nID == IDOK
 				nID := GetDlgCtrlID( GetFocus() )
 			ENDIF
+
+		
 
 			If (nId == 5458)
 				PushButton( cFormPrin  , nid )
@@ -2999,7 +3120,7 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 			END IF
 
-			*//Exclusï¿½o
+			
 			IF nId == 5459
 
 
@@ -3042,6 +3163,7 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 
 		END IF
+		*/
 
 	END IF
 
@@ -3063,7 +3185,7 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 		ELSEIF nMsg == 273 // WM_COMMAND
 
-			nID := LoWord( nWParam )
+			/*nID := LoWord( nWParam )
 
 			IF nID == IDOK
 				nID := GetDlgCtrlID( GetFocus() )
@@ -3076,13 +3198,12 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 			IF ( nIdBt1 > 0 )
 				PushButton( cForm  , nId )
-				//aBlock := aButtons[ nIdBt1 ][ 2 ]
 				aBlock := aBlocks[ nIdBt1 ][ 2 ]
 				Eval( aBlock )
 			END IF
-
+           */
 		ELSEIF nMsg == 16 // WM_CLOSE
-			// MessageBoxQuit()
+			
 			RETURN 1
 		ENDIF
 
@@ -3172,11 +3293,11 @@ Function CrieSubMenu(aSub1)
 
 	For n1 := 1 To Len(aSub1)
 
-
 		nCont1++
 		cLabelx := 'MenuCons' + StrZero(nCont1,3)
 
-		IF !_IsControlDefined( cLabelx, cMenuName )
+		If !_IsControlDefined( cLabelx, cMenuName )
+
 			nQtElem++
 			DEFINE LABEL &(cLabelx )
 			PARENT    &cMenuName
@@ -3373,10 +3494,10 @@ CASE WM_LBUTTONDOWN
 
 
 		If (nIdConsulta > 0)
+
 			If xInitMov(  nIdConsulta, , cTabela, .f. ,  cFormPrin )
 
 			Else
-
 
 				If _IsControlDefined("G4343", cFormPrin )
 				DoMethod( cFormPrin , "G4343", "Release" )
@@ -3427,7 +3548,6 @@ CASE (WM_MOUSEMOVE)
 
 
 	End If
-
 
 
 	PostMessage(GetControlHandle( 'Image_baixo', cFormPrin ) ,WM_MOUSELEAVE,0,0)
@@ -3515,6 +3635,11 @@ Function xGetScrol( lMouseMove )
 
 	Default lMouseMove := .f.
 
+
+	If (nLineImg == 0)
+		Return
+	End If
+
 	GetCursorPos (@nCol1, @nRow1)
 
 	ar1 := GetPos_ScreenToClient( GetFormHandle(cActiveJan ) , nRow1, nCol1 )
@@ -3549,7 +3674,7 @@ Function xGetScrol( lMouseMove )
 		*//Atualiza display do sub Menu	
 		If (lUpdMenu)
 			BT_ClientAreaInvalidateRect ( cFormPrin , nLineImg, 0,  nLineImg+35 , 178 , .t. )
-			lUpdMenu := .t.
+			lUpdMenu := .f.
 		End If
 
 	End If
@@ -3665,7 +3790,6 @@ nIndice := Ascan(aRotinas , { |a| a[1] == cActiveJan})
 
 If nIndice > 0
 	aBlocks  := Aclone(  aRotinas[nIndice][2]   )
-	//aButtons := Aclone(  aOpcoes )
 End If
 
 
@@ -3866,10 +3990,12 @@ fUNCTION DrawTransp(cJan , zBitMap , cTitulo , nQreg , cTitConsu , cTitFltr )
 				End If
 
 
-				BT_DrawBitmap (hDC, nLineImg   , 2, 177, 17 , BT_COPY, hBit10)
+				BT_DrawBitmap (hDC, nLineImg , 2  , 177, 17 , BT_COPY, hBit10)
 				BT_DrawBitmap (hDC, nLineImg + 18 , 2, 177, 17 , BT_COPY, hBit11)
 
+
 			End If
+
 
 
 		End If

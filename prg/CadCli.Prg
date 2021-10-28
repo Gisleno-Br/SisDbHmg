@@ -910,7 +910,7 @@ FUNCTION xCidEnt()
    LOCAL cUf1 := fCadcli .cmbUf. DisplayValue
    LOCAL cCid := fCadcli .cmbCidEnt. DisplayValue
 
-   SetWindowCursor( GetFormHandle( 'fCadCli' ) , "img\HourGlass.Cur"  )
+   SetWindowCursor( GetFormHandle( 'fCadCli' ) , HOURGLASS )
 
    EncheCmb( 'fCadcli', 'CmbBaiEnt', "select  bairro from bairros where uf = '" + cUf1  + "' and cidade = '"  + cCid + "' order by 1" )
 
@@ -1114,7 +1114,7 @@ FUNCTION xBloquear(  cCodCli, cStatus )
       cSql  := "update " + AllTrim( cTabela ) + " set status = '" + cStatus + "' , dtbloqueio = null where codigo = '" + cCodCli + "'"
    END IF
 
-   SetWindowCursor( GetFormHandle(  cActiveJan ) , "img\HourGlass.Cur"  )   
+   SetWindowCursor( GetFormHandle(  cActiveJan ) , HOURGLASS  )   
  
    oServer := GetConexao()
    oQuery := oServer:Query( cSql )

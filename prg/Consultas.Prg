@@ -1990,12 +1990,14 @@ Function GravaDic( nIdConsul  ,cTabOri)
 
 Return .t.
 
+/*
+
 Function ShowButConsul(lVisible)
 
 	Local cForm := 'fCriaConsulta'
 
 	//ShowBut( cForm , 6598 )
-	syswait(.3)
+//	syswait(.3)
 
 	OBTN_Visible( cForm  , 6595 , lVisible)
 	OBTN_Visible( cForm ,  6596,  lVisible)
@@ -2006,6 +2008,8 @@ Function ShowButConsul(lVisible)
 	//SysWait(.3)
 
 return
+
+*/
 
 
 Function SaveBmpDialog( cJanela1 )

@@ -112,7 +112,7 @@ FUNCTION Main
 
 	PUBLIC fColor := {|| iif( ( LastRec() > 0 ) .AND. ( AllTrim(Status ) == 'Ativo' ), { 78,78,78 },  { 255, 0, 0 } )  }
 
-
+	Public HOURGLASS := 'IMG\HourGlass.Cur'
 
 
 	Public bColorGrid := {|| iif( ( LastRec() > 0 ) .AND. ( RecNo() / 2 == Int(RecNo() / 2 ) ), { 235,243,242 }, {211,231,230} ) }
@@ -1637,34 +1637,16 @@ FUNCTION LabelEventHandler(aLabel)
 	If Empty(Alltrim(cControl))
 		Return 
 	End If 
-	
+
 
 	SWITCH nMsg
 
 	CASE WM_KEYDOWN
 
 	
-		IF nWParam == VK_TAB
-			//LabelSetBorder(aLabel, GetNextDlgTabItem(GetProperty(cForm, "HANDLE"), nHWnd, (GetKeyState(VK_SHIFT) < 0)))
-
-	
-
-		ELSEIF (nWParam == VK_RETURN) .or. (nWParam == VK_SPACE)
-
-
-	
-		ENDIF
-
-		EXIT
-
 	CASE WM_KEYUP
 
-		IF nWParam == VK_TAB
-		
-
-		ENDIF
-
-		EXIT
+	
 
 	CASE WM_LBUTTONDOWN		
 
@@ -1762,8 +1744,6 @@ FUNCTION LabelEventHandler(aLabel)
 		//CursorHand()
 
 		SetWindowCursor( GetControlHandle( cControl , cForm  ),  CURSORHAND )  
-
-
 		
 
 		If (cForm = 'fSplit2')
@@ -1877,7 +1857,7 @@ FUNCTION LabelEventHandler(aLabel)
 		Else
 
 			xOffMenu(cForm , cControl)
-			Do Events
+			//Do Events
 
 
 		End If

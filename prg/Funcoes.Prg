@@ -394,7 +394,7 @@ FUNCTION xInit()
 	//SysWait(.2)
 
 	
-	SetWindowCursor( GetFormHandle( 'Main'  ) , 'IMG\HourGlass.Cur')  
+	SetWindowCursor( GetFormHandle( 'Main'  ) , HOURGLASS )  
 
 
 
