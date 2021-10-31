@@ -154,54 +154,7 @@ FUNCTION Main
 
 	Private cFormJan := ''
 
-	/*
-
-	Private cFormPrin := ''
-
-	PRIVATE cMenuName := ''
-
-	Private cFormJan := ''
-
-	Private nIndexEvent := 0
-
-	Private nindexHndcli := 0
-
-
-	PRIVATE ColorGrid :=  {233,233,233 }
-
-	Private hBitmap2
-
-	Private lFlagGeral1 := .f.
-
-	Private nIndexDlg
-
-	Private lTracking12 := .F.
-
-	Private aLinhas := {}
-
-	Private nItemScr1 := 0
-
-	PRIVATE aFontz1 := ARRAY FONT "Calibri" SIZE 11
-	//BOLD ITALIC
-
-	Private nHanSelected := 0
-	Private nColSelx := 0
-
-	Private nHanAnterior := 0
-
-	Private nIndice := 0
-
-	Private lHitBottom := .f.
-
-	Private nIncr  := 0
-	Private nIncr2 := 0
-
-
-	*/
-
-
-	//Altd()
-
+	
 
 	PUBLIC cRazaoEmp     := ''
 	PUBLIC cFantadisEmp  := ''
@@ -600,6 +553,7 @@ Function xMenuPrin()
 		PostMessage( nHanSelected   , WM_MOUSELEAVE , 0, 0)	
 	End If
 
+	
 	nHanSelected := 0
 
 	Refreshall('fSplitSubMenu')

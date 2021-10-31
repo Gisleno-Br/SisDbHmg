@@ -5,6 +5,7 @@
 
 #define WM_VSCROLL          0x0115
 #define SB_LINEDOWN         1
+#define WM_MOUSEMOVE        512
 
 //25/09
 
@@ -67,6 +68,8 @@
 
 #define CORSEL     {216,228,236}
 
+STATIC lTracking6  := .F. 
+
 /*
 #define DBI_QUERY             1001
 #define RDDI_CONNECT          1001
@@ -118,11 +121,7 @@ FUNCTION CadCli()
 
 	//Local cform
 
-	Local aOp2 := { {'2-Geral' , { || msginfo('ok') } } ,   ;
-		{'2-Geral1' , { || msginfo('ok1')} },;
-		{'2-Geral2' , { || msginfo('ok3')} } ,;
-		{'3-Geral4' , { || msginfo('ok4') } },;
-		{'3-Geral' , { || msginfo('ok5') } } }
+	Local aOp2 
 
 
 
@@ -131,6 +130,14 @@ FUNCTION CadCli()
 	LOCAL aCampos := GetCamposDic( wCad, 'S', .T. )
 
 	HB_SetCodePage("UTF8")
+
+
+	aOp2 := { {'2-Geral' , { || msginfo('ok') } } ,   ;
+		{'2-Geral1' , { || msginfo('ok1')} },;
+		{'2-Geral2' , { || msginfo('ok3')} } ,;
+		{ '3-Parametro 1' , { || msginfo('ok4') } },;
+		{  '3-opções' , { || msginfo('ok5') } } }
+
 
 
 
@@ -489,6 +496,11 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 
 	SetProperty( cFormPrin, "Height", nDeskTopHeight - 90 )
 	SetProperty( cFormPrin, "Width", nDeskTopWidth )
+
+	
+	ShowScrollBar( GetFormHandle(cMenuName ), 0, .F. )
+	ShowScrollBar( GetFormHandle( cMenuName), 1, .F. )
+
 
 //	RefreshCli()//
 
@@ -983,9 +995,9 @@ Function InitTela(  lIni1  , nColz1)
 		EventProcessAllHookMessage ( nEveButton, .t. )
 
 		nIndexEve1 := 452
-		CREATE EVENT PROCNAME LabelEventH4() STOREINDEX nIndexEve1
+		//CREATE EVENT PROCNAME LabelEventH4() STOREINDEX nIndexEve1
 		//	nIndexEve1 := EventCreate( { || LabelEventH4()  }  , ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) )
-		EventProcessAllHookMessage( nIndexEve1 ,   .T.)
+		//EventProcessAllHookMessage( nIndexEve1 ,   .T.)
 
 	End If
 
@@ -1659,12 +1671,12 @@ Return cFormName
 
 
 
-
 Function get_grid_colwidth(ControlName,ParentForm,nColumn)
 
 	Local c := GetControlHandle (ControlName,ParentForm)
 
 Return ListView_GetColumnWidth ( c , nColumn - 1 )
+
 
 
 
@@ -1681,17 +1693,17 @@ Function RedrawMenu( aopcoes  , nindice , nLinha1  )
 		If _IsControlDefined( cLabelx, cFormPrin )
 
 			SetProperty( cFormPrin , cLabelx , "row" , nRow )
-		DoMethod(cFormPrin , cLabelx , "Refresh" )
+			//DoMethod(cFormPrin , cLabelx , "Refresh" )
 
-		If nIndice = n1
-			nRow += nLinha1
-		Else
-			nRow += 20
-		End If
+			If nIndice = n1
+				nRow += nLinha1
+			Else
+				nRow += 20
+			End If
 
-	End If
+		End If	
 
-Next
+	Next
 
 
 Return
@@ -1742,9 +1754,10 @@ Function CrieMenuLabel(aOpcoes , nInd1 , nHeight1 )
 			cLblConsu := cLabelX
 			//msginfo(cLblConsu)
 		End If
+		
 
 
-		If !_IsControlDefined( cLabelx, cMenuName )
+		If !_IsControlDefined( cLabelx, cParent ) // cmenuname
 
 			DEFINE LABEL &(cLabelx )
 				PARENT    &cParent
@@ -1767,17 +1780,23 @@ Function CrieMenuLabel(aOpcoes , nInd1 , nHeight1 )
 				aMrow[n1][2] := nRow
 			End If
 
+
+
 			SetProperty(cParent, cLabelx  , "BACKCOLOR", {7,101,125})
 
-			nHandle1 := GetControlHandle( cLabelx, cParent )
+			//nHandle1 := GetControlHandle( cLabelx, cParent )
 
-
+  /*
 			If (aOpcoes[n1] == 'Consultas') .and. (nHanConsu == 0)
 				nHanConsu := GetControlHandle( cLabelx, cParent )
 			End If
+			*/
 
 
 			//EventProcessAllHookMessage(EventCreate({ || LabelEventH4() }, nHandle1  ), .T.)
+
+			//EventProcessAllHookMessage(EventCreate({ || EventButton() }, nHandle1  ), .T.)
+
 
 
 			If nInd1 > 0
@@ -1789,6 +1808,26 @@ Function CrieMenuLabel(aOpcoes , nInd1 , nHeight1 )
 			Else
 				nRow += 20
 			End If
+
+		Else
+
+			
+			*// Reposicionar posicao correta	
+			If (n1 > Val( Right( cLblConsu , 3  ) ))
+				SetProperty( cParent,cLabelx , 'Row' , nRow )
+			End If 	
+
+			If nInd1 > 0
+				If nInd1 = n1
+					nRow += nHeight1
+				Else
+					nRow += 20
+				End If
+			Else
+				nRow += 20
+			End If
+			
+			 
 
 		End If
 
@@ -2221,7 +2260,6 @@ FUNCTION LabelEventH4(aLabel)
 		SetWindowCursor( GetFormHandle( cActiveJan ) , HOURGLASS)
 
 
-
 		nLinha  := GetProperty(cForm, cControl, "Row" )
 		nCnt:=0
 
@@ -2343,6 +2381,211 @@ FUNCTION LabelEventH4(aLabel)
 
 Return
 
+Function xAbreOpMenu( cF1 , cContrl1 )
+
+	
+	Local cOpcao  := alltrim(GetProperty(	 cF1, cContrl1, "Value" ))
+	Local cName  := alltrim(GetProperty(	 cF1, cContrl1, "Name" ))
+	Local nix1   := 0
+	Local nCnt:=0
+	//Local cOpsel
+	Local nHeight
+	Local nLine1
+	Local nLinha 
+	Local lSalto := .f. 
+
+	SetWindowCursor( GetFormHandle( cActiveJan ) , HOURGLASS)
+
+
+	If (cOpcao == alltrim(cOpSel))
+		cOpsel := ''
+
+		nSalvai := nLineImg
+		nLineImg := 0
+		BT_ClientAreaInvalidateRect ( cFormPrin , nSalvai  , 0,  180 , 50 , .t. )
+
+		
+		DoMethod(cMenuName , "Hide")
+		ShowButConsu(.f.)
+
+		RedrawMenu( aOpz1  )		
+		RefreshLbl()	
+		
+		cLblConsu := ''
+
+		
+		SetWindowCursor( GetFormHandle(cActiveJan ) , IDC_ARROW)
+
+		Return
+	Else 	
+
+
+
+		nSalvai := nLineImg
+		nLineImg := 0
+
+		
+		//DoMethod(cMenuName , "Hide")
+
+
+		If nSalvai > 0
+			BT_ClientAreaInvalidateRect ( cFormPrin , nSalvai  , 0,  180 , 50 , .t. )
+			msginfo('ok')
+		End If 	
+
+		RedrawMenu( aOpz1  )		
+		
+
+		RefreshLbl()
+
+		//SysWait(.1)
+
+		
+
+
+
+
+	End If
+
+	//msginfo('1')
+
+
+
+	cLblConsu := cContrl1	
+	nLinha  := GetProperty(cF1, cContrl1, "Row" )
+	nCnt:=0
+
+	nix1 := ascan(aMrow , { |a| alltrim(a[1]) == alltrim(cOpcao) } )
+
+	If nix1 > 0
+		nLinha := aMRow[nix1][2]
+	Else
+		msginfo('nf')
+	End If
+
+	aSubOp := {}
+	aSubRot := {}
+
+	ShowButConsu(.f.)
+
+
+
+
+
+	If (cOpcao <> 'Consultas')
+
+		nInd := Ascan( aOpz1 , cOpcao )
+
+		aeval(aOpz2 , { |a| Iif(Left(a[1] ,1) == alltrim(Str(nind)), aadd(aSubOp, a[1]  ) , ) } )
+		aeval(aOpz2 , { |a| Iif(Left(a[1] ,1) == alltrim(Str(nind)), aadd(aSubRot, a[2]  ) , ) } )
+
+
+	Else
+		nInd := 1
+
+
+		EnchMtrConsul(cTabela)
+
+		aeval( aConsultas , { |a| aadd(aSubOp , a) } )
+		
+		setProperty( cFormPrin , "LblQtConsu","Value", alltrim(Str( Len(aConsultas) )) )
+
+		// msginfo( aSubOp[  Len(aSubOp) - 1 ] + ' ' + Str(    Len(aSubOp)   )  )
+
+	End If
+	//msginfo('1')
+
+	cOpsel := cOpcao
+	nHeight := 289
+
+	nLine1 := nLinha+80
+	
+
+	If Len(aSubOp) < nItMax
+		nHeight := (Len(aSubOp) * 16)+1
+
+		nPulo  := nHeight+22
+
+		nLineImg := 0
+
+	Else
+
+		If Len(aSubOp) > nItMax
+
+			nPulo  := nHeight+62
+			nLinRow := 0
+			nItx1   := nItMax
+			nQtElem := Len(aSubOp)
+			lSalto  := .t.
+		Else
+
+		End If
+
+	End If
+
+
+
+	LimpaLabels(.f.)
+
+	
+
+	CrieSubMenu(aSubOp)
+
+	
+
+
+	SetProperty(cMenuName , "row" , nLine1)
+	SetProperty(cMenuName , "col" , 1)
+
+	SetProperty(cMenuName , "Height" , nHeight  )
+
+	_ShowWindow( cMenuName )
+
+	//msginfo('1')
+
+	If (lSalto)
+		nLineImg := GetProperty( cMenuName , "Row") + GetProperty( cMenuName , "Height" ) + 5
+	End If
+
+
+	If nLineImg > 0	
+		BT_ClientAreaInvalidateRect ( cActiveJan , nLineImg  , 0,  180 , 50 , .t. )
+	End If 	
+
+
+
+    //msginfo('1')
+
+	//SetProperty( cMenuName , 'Visible' , .t. )
+	Setproperty( cFormPrin , 'Frame_1' , 'Visible' , .t.)
+
+	
+	/////////////////////////////////////////////////////////////msginfo('1')
+
+
+	If nInd < Len(aOpz1)
+		nQtElem := Len(aSubOp)
+		CrieMenuLabel(aOpz1 , nind , nPulo   )
+	Else
+		CrieMenuLabel(aOpz1)
+	End If
+		
+
+	//msginfo('ok')	
+
+
+	//SetWindowCursor( GetControlHandle( 'br_grid', cActiveJan ) , IDC_ARROW)
+	SetWindowCursor( GetFormHandle(cActiveJan ) , IDC_ARROW)
+
+
+	lTracking6  := .F. 
+
+	//msginfo('ok')
+
+
+
+
+Return 	
 
 
 Function xDrawHead()
@@ -2772,6 +3015,7 @@ Return
 FUNCTION EventButton()
 
 	STATIC lTracking35 := .F.
+	
 
 	LOCAL  nHWnd   := EventHWND()
 	LOCAL  nMsg    := EventMSG()
@@ -2792,8 +3036,8 @@ FUNCTION EventButton()
 	Local nindice
 	Local nid 
 
-	Local cControl
-	Local cForm
+	Local cControl := ''
+	Local cForm    := ''
 
 
 
@@ -2861,30 +3105,9 @@ FUNCTION EventButton()
 	Next 
 
 
+	*// Eventos Botoes	
 	If ( nIdBut > 0  )
-		//273
 
-     	/*
-		If nMsg == 273
-			nID := LoWord( nWParam )
-
-			If nID == IDOK
-				nID := GetDlgCtrlID( GetFocus() )
-			End If 
-
-			If nId == 5457
-
-				PushButton( cFormPrin  , nid )
-				zTabela(cTabela)
-				Return 
-
-			End If 
-
-			Return 
-
-		End If 	
-
-		*/
 
 		If ( nMsg == WM_MOUSEMOVE ) .and. (!lTracking35)
 
@@ -2952,7 +3175,84 @@ FUNCTION EventButton()
 	Else
 
 
+		*//Eventos Form Principal.	
+		If  (_IsWindowDefined(cForm)) .And.  (GetProperty(cForm , "HANDLE") == GetProperty(  cActiveJan  , "HANDLE" )) 	
+
+
+			if left(cControl,3) = 'ien'
+				   //msginfo('ok2')		
+			   i := 1
+			end if 	
+
+		
+			If (nMsg == WM_LBUTTONDOWN ) .And. (Right(cActiveJan,3) = Left(cControl,3)) 
+				xAbreOpMenu( cForm,cControl)	
+				//PlaceJan()
+			End If 	
+            
+			If (nMsg == WM_MOUSELEAVE) .And. ( Left(cControl,3) = Right(cActiveJan,3)) .And. (lOpcaoAberta)
+
+				nColSel := 0				
+		
+				If !(Empty(Alltrim(cControl)))
+		
+					If !Empty(cLblSelected )
+		
+						If (alltrim(cControl) != alltrim(cLblSelected))
+							SetProperty(cForm, cControl, "BACKCOLOR", {7,101,125}  )
+							SetProperty(cForm, cControl, "FONTBOLD", .f.)
+						Else
+							lTracking6 := .t.
+						End If
+		
+		
+					Else
+						SetProperty(cForm, cControl, "BACKCOLOR", {7,101,125}  )
+						SetProperty(cForm, cControl, "FONTBOLD", .f.)
+		
+					End If
+					lTracking6 := .f.
+		
+		
+		
+				End If
+
+				
+				SetWindowCursor( GetControlHandle( 'br_grid', cActiveJan ) , IDC_ARROW)
+		
+		
+			End If
+				
+		
+			
+			If (nMsg == 512) .And. (Right(cActiveJan,3) = Left(cControl,3)) .And. (lOpcaoAberta) .And. (!lTracking6)
+		
+						
+				SetWindowCursor( GetControlHandle( cControl , cForm  ) , CURSORHAND)
+		
+		
+				SetProperty(cForm, cControl, "BACKCOLOR", CORSEL)
+				SetProperty(cForm, cControl, "BACKCOLOR", {4,66,81})
+				SetProperty(cForm, cControl, "FONTBOLD", .T.)
+		
+				lTracking6 := TrackMouseEvent(nHWnd)
+				//lTracking5 := .f.
+		
+				//SysWait(.1)
+		
+				Return
+				//lTracking6 := .f.
+		
+			End If
+
+
+
+
+		End If 
+
+		*// Eventos Objetos F1Top.
          If (nHWnd == GetProperty(  cFormx  , "HANDLE" ))
+
 
 		 	If (nMsg == WM_DRAWITEM)
 
@@ -2962,88 +3262,19 @@ FUNCTION EventButton()
 					OBTN_Draw( nHWnd,  aButtons[ nind1 ][ 5 ], nLParam )
 				End If 
 
-
 			End If 	
 
 		
 			If nMsg == 273 // WM_COMMAND
+
 
 				nID := LoWord( nWParam )
 
 				If nID == IDOK
 					nID := GetDlgCtrlID( GetFocus() )
 				End If 
-
-				If (nId == 5458)
-					PushButton( cFormPrin  , nid )
-					
-					GetControlNameByHandle(nHWnd, @cControl2, @cForm2)
-
-					nHxn1 := GetControlHandle(cLblConsu,cFormPrin)
-
-					cTab := GetProperty( cFormPrin  , cLblconsu , "Value" )
-
-					If EditConsulta( cTabela , nIdConsulta)						
-
-						PostMessage( nHxn1 ,WM_LBUTTONDOWN ,0,0)
-						PostMessage( nHxn1 ,WM_LBUTTONDOWN ,0,0)
-
-						SaveLog('dexl3.txt', cSqlConsulta )
-
-						
-						_ReleaseControl('br_grid' , cActiveJan)
-
-						BrowConsulta( cSqlConsulta , GetCamposInf( cTituloCon , 'CABEC'  ) , ;
-							GetCamposInf( cTituloCon , 'TAM'  ), ;
-							GetCamposInf( cTituloCon , 'CAMPOS'  )  , cFormPrin  , GetCamposInf( cTituloCon , 'TIPO'  ) )
-
-						yAviso("Consulta Modificada com sucesso!" , .f.)
-
-
-					End If
-
-					Return
-
-				End If
-
 			
-				IF nId == 5459
-					
-					PushButton( cFormPrin  , nId )
-
-					If Confirmaviso( Hb_AnsiToOem("Confirma Exclusão dessa Consulta ? ")  ,cFormPrin )
-
-
-						ExcluiConsulta(nIdConsulta)
-						SysWait(0.5)
-
-
-						nHxn1 := GetControlHandle(cLblConsu,cFormPrin)
-						//msginfo(str(nHxn1))
-
-
-						If (nHxn1 > 0)
-
-							PostMessage( nHxn1 ,WM_LBUTTONDOWN ,0,0)
-
-							PostMessage( nHxn1 ,WM_LBUTTONDOWN ,0,0)
-						
-							yaviso("Consulta Excluida com sucesso!" , .f.)
-							xSetOpcao()
-
-
-
-						End If
-
-
-					End If
-
-					Return
-
-				End If 
-
-
-				
+							
 				nIdBt1 := AScan( aBlocks , {| a| a[ 5 ] == nId } )
 
 				If ( nIdBt1 > 0 )
@@ -3051,13 +3282,13 @@ FUNCTION EventButton()
 					aBlock := aBlocks[ nIdBt1 ][ 2 ]
 					Eval( aBlock )
 					lTracking35 := .f.
-				End If
-
-				
+				End If			
 
 
 			End If 
 
+
+			
 		End If 	
 
 
@@ -3174,7 +3405,12 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 	Local cFormPrin := cActiveJan
 
+	//Local cForm    := ''
+	Local cControl := ''
+
 	STATIC lTracking30 := .F.
+
+
 
 
 
@@ -3187,6 +3423,9 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 	IF !_IsWindowDefined ( cActiveJan )
 		Return
 	END IF
+
+
+
 
 
 	If nSec11 = 0
@@ -3205,6 +3444,12 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 	End If
 
+	
+	If (GetProperty(  cActiveJan   , "HANDLE" ) = GetProperty(cForm, "HANDLE"))
+
+	End If 	
+
+
 	IF nHWnd == GetProperty(  cActiveJan   , "HANDLE" )
 
 		// msginfo('ok')
@@ -3217,6 +3462,11 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 
 		IF (nMsg == 273)
+
+			
+	
+		///GetControlNameByHandle(nHWnd, @cControl, @cForm)
+
 
 			nID := LoWord( nWParam )
 
@@ -3245,9 +3495,7 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 					SaveLog('dexl3.txt', cSqlConsulta )
 
-					//SysWait(.2)
-
-
+					
 					_ReleaseControl('br_grid' , cActiveJan)
 
 					BrowConsulta( cSqlConsulta , GetCamposInf( cTituloCon , 'CABEC'  ) , ;
@@ -3327,6 +3575,8 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 		ELSEIF nMsg == 273 // WM_COMMAND
 
+			//	msginfo('k33')
+
 			/*nID := LoWord( nWParam )
 
 			IF nID == IDOK
@@ -3362,6 +3612,8 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 				nID := GetDlgCtrlID( GetFocus() )
 			ENDIF
 
+			msginfo('4343')
+
 
 		End If 
 
@@ -3386,8 +3638,39 @@ Return
 
 
 
-
 	PROC RDDSYS();  RETURN
+
+Function RefreshLbl()		
+
+	Local nx1 := 1
+	Local cLabelx1 := ''
+
+	
+	For nx1 := 1 TO 200
+
+		
+		cLabelx1 := Right(cFormPrin,3) + StrZero(nx1,3)
+
+		
+		If _IsControlDefined(  cLabelx1, cFormPrin)
+			//DoMethod( cFormPrin , cLabelx1  , "Release" )
+
+			PostMessage( GetControlHandle( cLabelx1, cFormPrin  )  , WM_MOUSEMOVE ,0,0 )
+			//SysWait(.1)
+
+			PostMessage( GetControlHandle( cLabelx1, cFormPrin  )  , WM_MOUSELEAVE ,0,0 )
+		//	SysWait(.1)
+
+		End If
+		
+
+	Next
+
+
+
+
+
+REturn 	
 
 
 
@@ -3400,22 +3683,27 @@ Function LimpaLabels( lDest )
 
 	For nx1 := 1 TO 200
 
-		If !lDEst
+		///If !lDEst
 			If _IsControlDefined('MenuCons' + StrZero(nx1,3) , cMenuName )
-				DoMethod( cMenuName , 'MenuCons' + StrZero(nx1,3)  , "Release" )
+				DoMethod( cMenuName , 'MenuCons' + StrZero(nx1,3)  , "Release" )				
 			End If
 
-		End If
+		//End If
+
+		/*
 
 		cLabelx1 := Right(cFormPrin,3) + StrZero(nx1,3)
 
 		If lDest
 			If _IsControlDefined(  cLabelx1, cFormPrin)
-				DoMethod( cFormPrin , cLabelx1  , "Release" )
+				DoMethod( cFormPrin , cLabelx1  , "Hide" )
 			End If
 		End If
 
+		*/
+
 	Next
+
 
 
 
@@ -3451,7 +3739,7 @@ Function CrieSubMenu(aSub1)
 			COL       5
 			WIDTH     163
 			HEIGHT    17
-			VALUE     alltrim(  Right(Hb_AnsiToOem( aSub1[n1] ) , Len( Hb_AnsiToOem( aSub1[n1] )) - 2  ) )
+			VALUE     alltrim(  Right( aSub1[n1]  , Len(  aSub1[n1] ) - 2  ) )
 			ALIGNMENT LEFT
 			FONTCOLOR FONTCOR
 			BACKCOLOR BACK1
@@ -3469,9 +3757,11 @@ Function CrieSubMenu(aSub1)
 Next
 
 
+//msginfo('1')
+//ShowScrollBar( GetFormHandle(cMenuName ), 0, .F. )
+//ShowScrollBar( GetFormHandle( cMenuName), 1, .F. )
+//msginfo('1')
 
-ShowScrollBar( GetFormHandle(cMenuName ), 0, .F. )
-ShowScrollBar( GetFormHandle( cMenuName), 1, .F. )
 
 //SetScrollRange( GetFormHandle(  cMenuName  ), 1 , 0 , 100 , .t.  )
 
@@ -3677,6 +3967,7 @@ CASE (WM_MOUSEMOVE)
 	SetWindowCursor( GetControlHandle( cControl , cForm  ),  CURSORHAND )
 
 
+
 	If !lTracking12
 
 
@@ -3706,6 +3997,8 @@ CASE WM_MOUSELEAVE
 
 
 	//savelog('ldfd.txt' , time()  + '  ' + cControl + ' ' + cForm + ' [ leave ]' + QUEBRA)
+
+	SetWindowCursor( GetControlHandle( cControl , cForm  ),  IDC_ARROW )
 
 	SetProperty(cForm, cControl, "BACKCOLOR", BACK1)
 	SetProperty(cForm, cControl, "FONTBOLD", .F.)
@@ -3818,7 +4111,7 @@ Function xGetScrol( lMouseMove )
 
 		*//Atualiza display do sub Menu	
 		If (lUpdMenu)
-			BT_ClientAreaInvalidateRect ( cFormPrin , nLineImg, 0,  nLineImg+35 , 178 , .t. )
+		//	BT_ClientAreaInvalidateRect ( cFormPrin , nLineImg, 0,  nLineImg+35 , 178 , .t. )
 			lUpdMenu := .f.
 		End If
 
