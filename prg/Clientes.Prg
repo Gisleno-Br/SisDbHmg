@@ -69,6 +69,7 @@
 #define CORSEL     {216,228,236}
 
 STATIC lTracking6  := .F. 
+STATIC lTracking12 := .F.
 
 /*
 #define DBI_QUERY             1001
@@ -994,27 +995,37 @@ Function InitTela(  lIni1  , nColz1)
 		CREATE EVENT PROCNAME EventButton() STOREINDEX nEveButton
 		EventProcessAllHookMessage ( nEveButton, .t. )
 
-		nIndexEve1 := 452
-		//CREATE EVENT PROCNAME LabelEventH4() STOREINDEX nIndexEve1
-		//	nIndexEve1 := EventCreate( { || LabelEventH4()  }  , ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) )
-		//EventProcessAllHookMessage( nIndexEve1 ,   .T.)
-
+	
 	End If
 
 
 
 	lInitCompleto := .t.
-
-
 	IntCli()
 
 
 	lInvalid := .f.
 
-	PostMessage(   GetControlHandle( 'br_grid', cActiveJan ) , WM_LBUTTONUP,0,0)
-	SetWindowCursor( GetControlHandle( 'br_grid', cActiveJan ) , IDC_ARROW)
+//	PostMessage(   GetControlHandle( 'br_grid', cActiveJan ) , WM_LBUTTONUP,0,0)
+	//SetWindowCursor( GetControlHandle( 'br_grid', cActiveJan ) , IDC_ARROW)
 
-	//SysWait(.2)
+
+	//Syswait(.2)
+	//lInvalid := .f.
+
+	//lDrawHead := .t.
+
+	//PostMessage(   ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )), WM_MOUSELEAVE,0,0)
+
+	//Syswait(.1)
+
+	BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin )) , Nil , .t. )
+
+
+	
+	//Syswait(.2)
+		
+
 	
 Return
 
@@ -1025,8 +1036,7 @@ Function xInvalidate()
 
 	If (_isControlDefined(      'br_grid', cActiveJan  )) .And. (!lInvalid)
 		VALIDATERECTX(     ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan ))    )
-		lInvalid := .t.
-		//msginfo('ok')
+		lInvalid := .t.		
 	End If
 
 
@@ -1592,7 +1602,7 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 	nQRegx     := Len(aItens)
 
 
-	//nIndexEve1 := EventCreate( { || LabelEventH4()  }  , ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) )
+	//nIndexEve1 := EventCreate( { || EventButton()  }  , ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) )
 	//EventProcessAllHookMessage( nIndexEve1 ,   .T.)
 
 
@@ -2120,14 +2130,13 @@ FUNCTION LabelEventH4(aLabel)
 
 		nColSel := xGetItMtr(ar1[2])
 
-		//	lInvalid := .f.
-		//	xZeraHead()
-
+		
 	End If
 
 
 
-	If (nMsg == WM_MOUSEMOVE) .And. (!lSoltou) .And. (!lOpcaoAberta)
+	If (nMsg == WM_MOUSEMOVE) .And. (!lSoltou) 
+	   //.And. (!lOpcaoAberta)
 
 		lInvalid := .f.
 		xZeraHead()
@@ -3071,6 +3080,9 @@ FUNCTION EventButton()
 	End If 
 
 
+
+
+
 	//msginfo(cFormx)
 
 	nInd1 := AScan( aButtons, {| a| a[ 5 ] == nWParam } )
@@ -3173,6 +3185,212 @@ FUNCTION EventButton()
 
 
 	Else
+
+
+		*// Eventos Handle Header LstView
+		If  (nHWnd = ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan ) )  )
+
+		
+			If nMsg == WM_LBUTTONDOWN				
+				lSoltou := .f.
+			End If
+
+	
+			If (nMsg == WM_LBUTTONUP)
+				lSoltou := .t.
+			End If
+
+
+			If (nMsg == WM_MOUSEMOVE) .And. (lSoltou) .and. (!lOpcaoAberta)
+
+				lSoltou := .f.
+				//TimerRed()
+
+
+
+				If xPosMtrHead() .or. xMudouTam()
+					//msginfo('ok')
+					nColSel := 0
+					//	BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin )) , Nil , .t. )
+					xPosBrow()
+					aLinhas := OpenReg( , ,   1 )
+
+					nColSel := 0
+
+					DoMethod( cFormPrin , "br_grid" , "Show")
+					DoMethod( cFormPrin , "br_grid" , "Refresh")
+
+					PostMessage( ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin )) ,WM_MOUSELEAVE ,0,0)
+
+
+					PostMessage( ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin )) ,WM_MOUSELEAVE ,0,0)
+					SendMessage( ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin )) ,WM_MOUSELEAVE ,0,0)
+
+					If !lInvalid
+						xZeraHead()
+					End If
+
+				End If
+
+			End If 					
+
+			If (nMsg == WM_MOUSEMOVE) .And. (!lSoltou) .and. (!lOpcaoAberta)
+
+				lSoltou := .f.
+					//TimerRed()
+
+				GetCursorPos (@nCol, @nRow)
+				aR1 := GetPos_ScreenToClient( ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin )) , nRow, nCol )
+
+				nColSel := xGetItMtr(ar1[2])
+
+					
+			End If
+
+			
+
+			If ( nMsg == WM_MOUSELEAVE )			
+				nColSel := 0
+			End If 
+
+		
+			If (nMsg == WM_MOUSEMOVE) .And. (!lSoltou) //.And. (!lOpcaoAberta)
+			  //.And. (!lOpcaoAberta)
+				lInvalid := .f.
+				xZeraHead()
+
+
+				//sysWait(.1)
+				
+				//PostMessage( ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin )) ,WM_MOUSELEAVE ,0,0)
+			End If
+
+
+			If (nMsg = WM_LBUTTONDBLCLK) .And. (!lOpcaoAberta)
+
+				OrdeneCol(  nColSel )
+
+				If !lInvalid
+					xZeraHead()
+				End If
+						//TimerRed()
+
+			End If	
+
+
+			If (nMsg == WM_PAINT)
+				If !lInvalid
+					xDrawHead()
+						//MSGINFO('1')
+				End If
+			End If
+	
+
+		End If 
+
+
+
+		*// Eventos Sub menu Consulta.
+
+		If (_IsWindowDefined(cForm)) .And. (GetProperty(cForm , "HANDLE") == GetFormHandle( cMenuName ))
+			//msginfo('ok')
+
+			If  (nMsg == WM_MOUSEMOVE)
+
+
+				SetWindowCursor( GetControlHandle( cControl , cForm  ),  CURSORHAND )
+
+
+				If !lTracking12
+
+
+					SetProperty(cForm, cControl, "BACKCOLOR", CORSEL)
+					SetProperty(cForm, cControl, "FONTBOLD", .T.)
+
+					lTracking12 := TrackMouseEvent(nHWnd) //TME_LEAVE is default flag
+
+					cTp1 := RetSql( "select observacao from consultas where descricao = " + QuotedStr( GetProperty(cForm, cControl, "VALUE" )  )  +  " and tabela = " + QuotedStr(cTabela) )
+
+					If !Empty(cTp1)
+						_SetToolTip(cControl,cForm,hb_AnsiToOem(cTp1 ) )
+					End If
+
+
+				End If			
+
+
+			End If 
+
+
+			If nMsg == WM_MOUSELEAVE	
+				
+				SetWindowCursor( GetControlHandle( cControl , cForm  ),  IDC_ARROW )
+
+				SetProperty(cForm, cControl, "BACKCOLOR", BACK1)
+				SetProperty(cForm, cControl, "FONTBOLD", .F.)
+
+
+				lTracking12 := .F.
+
+			End If 
+			
+
+			If nMsg == WM_LBUTTONDOWN
+
+				cOpcao := GetProperty(cForm, cControl, "VALUE")
+				
+
+				nIndf := ascan(aOpz2 , {|a|  Right(a[1],Len(a[1]) - 2)   == alltrim(cOpcao) } )
+
+
+				If alltrim(cOpSel) == 'Consultas'
+
+					EnableButConsu(  .f.  )
+
+					nIdConsulta := GetId(  'consultas' , Alltrim(cOpcao) )
+
+					cTituloCon := Alltrim(cOpcao)
+
+
+					If (nIdConsulta > 0)
+
+						If xInitMov(  nIdConsulta, , cTabela, .f. ,  cFormPrin )
+
+						Else
+
+							If _IsControlDefined("G4343", cFormPrin )
+								DoMethod( cFormPrin , "G4343", "Release" )
+							End If
+							Refreshall(cMenuName)
+							Refreshall(cFormPrin)
+
+						End If
+
+						EnableButConsu(  .t.  )
+
+					End If
+
+				Else
+					If nIndf > 0
+						Eval(  aOpz2[nindf][2] )
+					End If
+				End If
+
+
+				Refreshall( cMenuName )
+
+
+				If _isControlDefined('G4343' , cFormPrin)
+					DoMethod( cFormPrin , 'G4343', 'Refresh')
+				End If
+				
+			End If 
+
+
+		End If 
+
+
+
 
 
 		*//Eventos Form Principal.	
@@ -3296,7 +3514,7 @@ FUNCTION EventButton()
 	End If
 
 
-
+		*// Eventos Grid 
 	If (nHWnd = GetControlHandle( 'br_Grid', cActiveJan ))
 		
 
@@ -3309,6 +3527,7 @@ FUNCTION EventButton()
 				aR1 := GetPos_ScreenToClient( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , nRow, nCol )
 
 				nTotal := 20 * (  Len(aLinhas) + 1)
+
 
 				If (ar1[1] > nTotal )
 					lInvalid := .f.
@@ -3351,6 +3570,7 @@ FUNCTION EventButton()
 
 
 
+
 		If (nMsg == WM_LBUTTONUP)
 
 			If !lInvalid
@@ -3367,8 +3587,16 @@ FUNCTION EventButton()
 				aR1 := GetPos_ScreenToClient( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , nRow, nCol )
 
 				If aR1[1] >= 600
-					BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , Nil , .t. )
-					//SysWait(.2)
+					//BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , Nil , .t. )
+					//SysWait(.1)
+
+					Syswait(.1)
+					lInvalid := .f.
+
+					PostMessage(   listView_GetHeader(GetControlHandle( 'br_grid', cActiveJan ))  , WM_MOUSEMOVE,0,0)
+
+
+	
 				End If
 
 			End If
@@ -3427,7 +3655,6 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 
 
-
 	If nSec11 = 0
 		nSec11 := hb_MilliSeconds()
 	End If
@@ -3438,11 +3665,13 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 		If (hb_MilliSeconds() - nSec11) >= 20
 			lDrawHead := .t.
-			//SysWait(.4)
 		End If
 
 
 	End If
+
+
+
 
 	
 	If (GetProperty(  cActiveJan   , "HANDLE" ) = GetProperty(cForm, "HANDLE"))
@@ -3748,7 +3977,7 @@ Function CrieSubMenu(aSub1)
 
 		nHandle1 := GetControlHandle( cLabelx, cMenuName )
 
-		EventProcessAllHookMessage(EventCreate({ || LabelEventH2() }, nHandle1  ), .T.)
+		//EventProcessAllHookMessage(EventCreate({ || LabelEventH2() }, nHandle1  ), .T.)
 
 		nRow += 16
 
@@ -3892,6 +4121,8 @@ Return
 
 FUNCTION LabelEventH2(aLabel)
 
+  /*
+
 	// STATIC lTracking12 := .F.
 	LOCAL  nHWnd   := EventHWND()
 	LOCAL  nMsg    := EventMSG()
@@ -4010,6 +4241,8 @@ CASE WM_MOUSELEAVE
 
 ENDSWITCH
 
+*/ 
+
 Return
 
 Function OrdeneCol( nIndice )
@@ -4042,20 +4275,18 @@ Function OrdeneCol( nIndice )
 		lAscendente := .f.
 	End If
 
-DoMethod(cFormPrin , 'br_grid' , 'DeleteAllItems' )
+	DoMethod(cFormPrin , 'br_grid' , 'DeleteAllItems' )
 
 
-For n21 := 1 to Len(aM2)
+	For n21 := 1 to Len(aM2)
 
-	aZ1 := {}
-	For n1 := 1 To Len(  aMtrHeader )
-		Aadd(aZ1 , aM2[n21][n1])
+		aZ1 := {}
+		For n1 := 1 To Len(  aMtrHeader )
+			Aadd(aZ1 , aM2[n21][n1])
+		Next
+		DoMethod(cFormPrin , 'br_grid' , 'AddItem' ,  az1  )
+
 	Next
-DoMethod(cFormPrin , 'br_grid' , 'AddItem' ,  az1  )
-
-Next
-
-//DoMethod(cFormPrin , 'br_grid' , 'Refresh' )
 
 
 Return
@@ -4453,7 +4684,15 @@ Function TimerRed()
 	If _isControlDefined(   'br_Grid'  , cFormPrin )
 
 
+
 		BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin )) , Nil , .t. )
+
+		//Syswait(.1)
+		//lInvalid := .f.
+
+		//PostMessage(   listView_GetHeader(GetControlHandle( 'br_grid', cActiveJan ))  , WM_MOUSEMOVE,0,0)
+
+		
 
 
 	Else
@@ -4592,7 +4831,7 @@ REturn
 
 	TCHAR *cText = (TCHAR *) HMG_parvc(3, 1);
 
-	SelectObject(hDC , CreateFont(14  , 0, 0, 0, FW_THIN , 0, 0, 0, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, "Arial"));
+	SelectObject(hDC , CreateFont(14  , 0, 0, 0, FW_THIN , 0, 0, 0, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, "Arial Unicode MS"));
 
 	//char Buffer[1024];
 
@@ -4607,7 +4846,7 @@ REturn
 
 	{
 
-	SelectObject(hDC , CreateFont(14  , 0, 0, 0, 0 , 0, 0, 0, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, "Arial"));
+	SelectObject(hDC , CreateFont(14  , 0, 0, 0, 0 , 0, 0, 0, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, "Arial Unicode MS"));
 
 	//SetRect(&rect2, Col1+5 , 5 , hb_parvni(5, i) ,  GetDeviceCaps( hDC , VERTRES)  );
 
@@ -4626,7 +4865,7 @@ REturn
 			{
 			if (nColSel == i)
 				{
-				SelectObject(hDC , CreateFont(14  , 0, 0, 0, FW_BOLD , 0, 0, 0, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, "Arial"));
+				SelectObject(hDC , CreateFont(14  , 0, 0, 0, FW_BOLD , 0, 0, 0, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, "Arial Unicode MS"));
 					FillRect(hDC,&rect3,(HBRUSH) hbrush2 );
 					// Mouse por Cima - Cursor
 				}
