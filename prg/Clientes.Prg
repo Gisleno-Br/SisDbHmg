@@ -4727,7 +4727,8 @@ Function TimerRed()
 
 
 
-	//	BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin )) , Nil , .t. )
+		BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin )) , Nil , .t. )
+		
 
 		//Syswait(.1)
 
