@@ -39,6 +39,8 @@
 #DEFINE TAMANHO 2
 #DEFINE TEXTO   3
 
+#define WM_SIZE       5 
+
 
 
 #define QUEBRA Chr(13)+Chr(10)
@@ -387,6 +389,7 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 	Private aLbly1 := {}
 
 
+
 	Private aConsultas := {}
 
 	Private fColorGrid
@@ -514,6 +517,7 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 	//CREATE EVENT PROCNAME xHandleEsc() STOREINDEX nIndexEvent3
 
 
+
 	Activate Window &cFormPrin
 
 
@@ -638,13 +642,13 @@ Function xSetOpcao()
 		*//Critico
 		RefreshAll(cFormPrin)
 
-
+		
 
 		lInvalid := .f.
 		//SysWait(.1)
-		xZeraHead()
+//		xZeraHead()
 
-		//TimerRed()
+//		TimerRed()
 
 		SetProperty(cFormPrin , 'Frame_1' , 'Visible' , .t. )
 		SetProperty(cFormPrin , 'Frame_2' , 'Visible' , .t. )
@@ -655,6 +659,12 @@ Function xSetOpcao()
 
 		lOpcaoAberta := .t.
 		IntCli( .t. )
+
+		
+		lInvalid := .f. 	
+		//xDrawIt()
+
+		SetProperty(cActiveJan , "Timer_1" , "Enabled" , .t. )
 
 
         /*
@@ -699,6 +709,10 @@ Function xSetOpcao()
 
 
 		lOpcaoAberta := .f.
+		
+
+		SetProperty(cActiveJan , "Timer_1" , "Enabled" , .t. )
+
 		InitTela(  .f.  ,  1 )
 
 		OBTN_Caption(cAuxName   , aButtons[5][5]  ,hb_AnsiToOem("Consultas"))
@@ -710,13 +724,16 @@ Function xSetOpcao()
 
 
 
-		BT_ClientAreaInvalidateAll (cActiveJan)
+		//BT_ClientAreaInvalidateAll (cActiveJan)
 
 		lInvalid := .f.
 
-		xZeraHead()
+		//xDrawIt()
+
+		//xZeraHead()
 
 		//msginfo('ok')
+
 
 
 	End If
@@ -998,49 +1015,55 @@ Function InitTela(  lIni1  , nColz1)
 	
 	End If
 
-
-
 	lInitCompleto := .t.
 	IntCli()
 
 
-	lInvalid := .f.
-
-//	PostMessage(   GetControlHandle( 'br_grid', cActiveJan ) , WM_LBUTTONUP,0,0)
-	//SetWindowCursor( GetControlHandle( 'br_grid', cActiveJan ) , IDC_ARROW)
-
-
-	//Syswait(.2)
-	//lInvalid := .f.
-
-	//lDrawHead := .t.
-
-	//PostMessage(   ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )), WM_MOUSELEAVE,0,0)
-
-	//Syswait(.1)
-
-	BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin )) , Nil , .t. )
-
-
-	
-	//Syswait(.2)
-		
-
-	
+	xInvalidate()
+	   
 Return
+
+
+
+Function xDrawIt()
+
+	//BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , Nil , .t. )
+  
+	If _IsControlDefined('br_grid', cActiveJan) .And. (!lInvalid)
+		BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , Nil , .t. )
+		Syswait(.2)
+
+
+		SetProperty(cActiveJan , "Timer_1" , "Enabled" , .f. )
+
+
+		lInvalid := .t. 
+		lDrawHead := .t.
+	
+	End If 	
+
+
+Return 	
 
 
 
 
 Function xInvalidate()
 
-	If (_isControlDefined(      'br_grid', cActiveJan  )) .And. (!lInvalid)
-		VALIDATERECTX(     ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan ))    )
-		lInvalid := .t.		
+	Local n1 := 0
+
+	If (_isControlDefined(      'br_grid', cActiveJan  )) 
+		//.And. (!lInvalid)
+		//VALIDATERECTX(     ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan ))    )
+		//lInvalid := .t.		
+
+		n1 := VALIDATERECTX(     GetControlHandle( 'br_grid', cActiveJan )    )
+
+		UpdateWindow(  GetControlHandle( 'br_grid', cActiveJan )   )
+
 	End If
 
-
-Return
+Return n1
 
 
  *// Handler de Eventos do grid
@@ -1566,7 +1589,7 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 	DYNAMICBACKCOLOR bGrid1 ;
 	COLUMNDRAGDROP  ;
 	ON DBLCLICK ( Eval(  aButtons[2 ][2] )     ) ;
-	ON CHANGE ( CheckBloq() ) ;
+	ON CHANGE ( CheckBloq() ) ;	
 	CELLNAVIGATION
 
 	SetProperty( cActiveJan , cGridName , "PaintDoubleBuffer" , .t.)
@@ -1642,6 +1665,8 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 	SetProperty(cActiveJan , cGridName , "Value" , {  1 ,2} )
 
 	SetWindowCursor( GetFormHandle(  cActiveJan ) , IDC_ARROW )
+
+	//xDrawIt()
 
 
 Return aItens
@@ -2063,7 +2088,7 @@ FUNCTION LabelEventH4(aLabel)
 	Local lSalto := .f.
 	Local nSalvai
 
-
+/*
 	GetControlNameByHandle(nHWnd, @cControl, @cForm)
 
 	If Empty(Alltrim(cActiveJan)) .Or. (cActiveJan = "Main")
@@ -2092,6 +2117,7 @@ FUNCTION LabelEventH4(aLabel)
 
 		lSoltou := .f.
 		//TimerRed()
+
 
 
 		If xPosMtrHead() .or. xMudouTam()
@@ -2211,7 +2237,7 @@ FUNCTION LabelEventH4(aLabel)
 		Return
 	End If
 
-		*// Handle das Consultas.
+	
 
 	If (nMsg == WM_MOUSEMOVE) .And. ( Left(cControl,3) = 'ien') .And. (lOpcaoAberta) .And. (!lTracking6)
 
@@ -2386,6 +2412,7 @@ FUNCTION LabelEventH4(aLabel)
 
 
 	End If
+*/
 
 
 Return
@@ -2439,7 +2466,7 @@ Function xAbreOpMenu( cF1 , cContrl1 )
 
 		If nSalvai > 0
 			BT_ClientAreaInvalidateRect ( cFormPrin , nSalvai  , 0,  180 , 50 , .t. )
-			msginfo('ok')
+			//msginfo('ok')
 		End If 	
 
 		RedrawMenu( aOpz1  )		
@@ -2982,6 +3009,9 @@ FUNCTION IntCli(  lSoConsulta )
 	End If
 
 
+	
+
+
 Return
 
 Function GetTabelaX()
@@ -3204,7 +3234,7 @@ FUNCTION EventButton()
 			If (nMsg == WM_MOUSEMOVE) .And. (lSoltou) .and. (!lOpcaoAberta)
 
 				lSoltou := .f.
-				//TimerRed()
+				TimerRed()
 
 
 
@@ -3225,11 +3255,14 @@ FUNCTION EventButton()
 
 					PostMessage( ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin )) ,WM_MOUSELEAVE ,0,0)
 					SendMessage( ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin )) ,WM_MOUSELEAVE ,0,0)
+				
 
-					If !lInvalid
-						xZeraHead()
-					End If
+				End If
 
+				//lInvalid := .f.
+
+				If !lInvalid
+					xZeraHead()
 				End If
 
 			End If 					
@@ -3237,9 +3270,13 @@ FUNCTION EventButton()
 			If (nMsg == WM_MOUSEMOVE) .And. (!lSoltou) .and. (!lOpcaoAberta)
 
 				lSoltou := .f.
-					//TimerRed()
+
+				SysWait(.1)
+				TimerRed()
+
 
 				GetCursorPos (@nCol, @nRow)
+				
 				aR1 := GetPos_ScreenToClient( ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin )) , nRow, nCol )
 
 				nColSel := xGetItMtr(ar1[2])
@@ -3255,14 +3292,10 @@ FUNCTION EventButton()
 
 		
 			If (nMsg == WM_MOUSEMOVE) .And. (!lSoltou) //.And. (!lOpcaoAberta)
-			  //.And. (!lOpcaoAberta)
+
 				lInvalid := .f.
 				xZeraHead()
 
-
-				//sysWait(.1)
-				
-				//PostMessage( ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin )) ,WM_MOUSELEAVE ,0,0)
 			End If
 
 
@@ -3273,15 +3306,14 @@ FUNCTION EventButton()
 				If !lInvalid
 					xZeraHead()
 				End If
-						//TimerRed()
+				TimerRed()
 
 			End If	
 
 
 			If (nMsg == WM_PAINT)
 				If !lInvalid
-					xDrawHead()
-						//MSGINFO('1')
+					xDrawHead()						
 				End If
 			End If
 	
@@ -3390,9 +3422,6 @@ FUNCTION EventButton()
 		End If 
 
 
-
-
-
 		*//Eventos Form Principal.	
 		If  (_IsWindowDefined(cForm)) .And.  (GetProperty(cForm , "HANDLE") == GetProperty(  cActiveJan  , "HANDLE" )) 	
 
@@ -3401,6 +3430,20 @@ FUNCTION EventButton()
 				   //msginfo('ok2')		
 			   i := 1
 			end if 	
+
+			If nMsg == 5 // WM_SIZE
+
+				msginfo('ok2333')	
+				If nWParam == 2
+
+				End If 	
+
+				//SIZE_MAXIMIZED   2 
+
+
+			End If 	
+
+
 
 		
 			If (nMsg == WM_LBUTTONDOWN ) .And. (Right(cActiveJan,3) = Left(cControl,3)) 
@@ -3524,7 +3567,11 @@ FUNCTION EventButton()
 
 				GetCursorPos (@nCol, @nRow)
 
+				//SysWait(.1)
+
 				aR1 := GetPos_ScreenToClient( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , nRow, nCol )
+
+				//SysWait(.1)
 
 				nTotal := 20 * (  Len(aLinhas) + 1)
 
@@ -3638,10 +3685,6 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 	STATIC lTracking30 := .F.
 
-
-
-
-
 	cForm := 'FTop1' + Right(cActiveJan,5)
 
 	IF !_IsWindowDefined ( cForm )
@@ -3653,8 +3696,6 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 	END IF
 
 
-
-
 	If nSec11 = 0
 		nSec11 := hb_MilliSeconds()
 	End If
@@ -3663,10 +3704,10 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 		TimerRed()
 
+
 		If (hb_MilliSeconds() - nSec11) >= 20
 			lDrawHead := .t.
 		End If
-
 
 	End If
 
@@ -4311,6 +4352,7 @@ Function xGetScrol( lMouseMove )
 
 	GetCursorPos (@nCol1, @nRow1)
 
+
 	ar1 := GetPos_ScreenToClient( GetFormHandle(cActiveJan ) , nRow1, nCol1 )
 
 
@@ -4685,9 +4727,11 @@ Function TimerRed()
 
 
 
-		BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin )) , Nil , .t. )
+	//	BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cFormPrin )) , Nil , .t. )
 
 		//Syswait(.1)
+
+
 		//lInvalid := .f.
 
 		//PostMessage(   listView_GetHeader(GetControlHandle( 'br_grid', cActiveJan ))  , WM_MOUSEMOVE,0,0)
@@ -5247,7 +5291,7 @@ REturn
 
 											HB_FUNC( VALIDATERECTX )
 											{
-											ValidateRect(  (HWND) HMG_parnl (1)  , NULL );
+											hb_retnl(ValidateRect(  (HWND) HMG_parnl (1)  , NULL ));
 
 											}
 

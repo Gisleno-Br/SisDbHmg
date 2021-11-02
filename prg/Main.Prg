@@ -498,6 +498,7 @@ FUNCTION Main
 	Main.Activate
     
 
+
 RETURN
 
 Function xRefresh()
@@ -512,7 +513,10 @@ Function xRefresh()
 
 	End If 
 
-	SysWait(.1)
+	msginfo('max') 
+
+
+	//SysWait(.1)
  	
 
 REturn
@@ -577,6 +581,25 @@ Function xMainHandle( xMainJan )
 
 	
 	If ( Alltrim(cActiveJan) != "Main")	
+
+
+		If (_isWindowDefined(cActiveJan)) .And. (nHWnd == GetFormHandle('Main'))
+		
+			If nMsg == 5 // WM_SIZE				
+			  
+				If nWParam == 2
+			
+					If _isControlDefined( 'br_grid', cActiveJan )						
+						SetProperty(cActiveJan , "Timer_1" , "Enabled" , .t. )
+					End If 	
+
+				End If 	
+
+			End If 	
+
+
+		End If 
+
 		Return 
 	End If 
 
@@ -586,6 +609,7 @@ Function xMainHandle( xMainJan )
 			lEventx := .f.
 		End If 
 	End If	
+
 	
 
 	If nMsg == WM_KEYDOWN
