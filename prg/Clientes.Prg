@@ -2,19 +2,39 @@
 #require "sddmy"
 
 
+/*
+if ( hb_parl (12) )
+      style = LVS_SHAREIMAGELISTS | WS_CHILD | WS_TABSTOP | WS_VISIBLE | LVS_EX_TRACKSELECT | LVS_REPORT|LVS_NOSORTHEADER ; 
+   else
+      style = LVS_SHAREIMAGELISTS | WS_CHILD | WS_TABSTOP | WS_VISIBLE  | LVS_SINGLESEL| LVS_EX_TRACKSELECT | LVS_REPORT|LVS_NOSORTHEADER;
+	  */
+	  
+   
+
+
 
 #define WM_VSCROLL          0x0115
 #define SB_LINEDOWN         1
 #define WM_MOUSEMOVE        512
 
+#define CSIDL_ADMINTOOLS            0x0030
+
 //25/09
 
 #include <hmg.ch>
+#include <dll.ch>
 #include <minigui.ch>
+
+#include <hbdyn.ch>
+
+//#include "simpleio.ch"
 
 
 
 //#include "hmg.ch"
+
+
+#require "hbxpp"
 
 
 
@@ -72,6 +92,9 @@
 
 STATIC lTracking6  := .F. 
 STATIC lTracking12 := .F.
+
+
+//DLLFUNCTION SetWindowLongA( nHwnd, nStyle, nPtr ) USING STDCALL FROM User32.dll
 
 /*
 #define DBI_QUERY             1001
@@ -259,7 +282,27 @@ FUNCTION CadCli()
 	_HMG_SYSDATA[ 350 ] := { 235, 237, 095 }
 	_HMG_SYSDATA[ 351 ] := { 069, 015, 135 }
 
+	//lSucess := Hmg_CallDll( "user32.dll", DLL_OSAPI, "SystemParametersInfoA",  4110  , 1, 0, 0 )
+
+	//cData := Space( 260 )
+   //? Hmg_CallDll( "shell32.dll", DLL_OSAPI, "SHGetFolderPathW", 0, CSIDL_ADMINTOOLS, 0, 0, @cData )
+//     msginfo(cData)
+
+	//DLLFUNCTION SetWindowLongA( nHwnd, nStyle, nPtr ) USING STDCALL FROM User32.dll
+
+	cBuffer := Space(512)
+
+	nCopyCharacters := HMG_CallDLL ("USER32.DLL", HB_DYN_CTYPE_INT, "GetWindowText", Main.HANDLE, @cBuffer, 512)
+
+
+
 	ManutDb( aCabec, aCampos,  GetSql( "clientes", .F. ), "Clien", aTam, "Cadastro de Clientes" ,"Clientes" , aOp1  , aOp2 , aButOpcoes )
+
+
+
+
+
+
 
 RETURN
 
@@ -904,45 +947,43 @@ Function ProcFiltro( cTab1 , lEfect )
 				BT_ClientAreaInvalidateAll ('fSplit2')
 
 				If _isWindowDefined( 'fTop1' + Right(cActiveJan,5) )
-				DoMethod( 'fTop1' + Right(cActiveJan,5) , 'Show')
+					DoMethod( 'fTop1' + Right(cActiveJan,5) , 'Show')
+				End If
+
+				BT_ClientAreaInvalidateAll (cActiveJan)
+
 			End If
 
-			BT_ClientAreaInvalidateAll (cActiveJan)
+			lInvalid := .f.
+
+			xControls( , 34)
+
+			aLinhas := OpenReg(cFiltros  , ,   1 )
+
+			SetProperty(cActiveJan , "Timer_1" , "Enabled" , .t. )
+
+			If _IsControlDefined(   'lblTitulo2' , cActiveJan)
+				SetProperty(  cActiveJan , 'LblTitulo2' , 'Value' , "[Filtro Aplicado] " + Alltrim(Str(  Len(aLinhas)  )) + " Registros.")
+			End If
+
+			If _isControlDefined(    'br_grid', cActiveJan   )
+				PostMessage(   GetControlHandle( 'br_grid', cActiveJan ) , WM_LBUTTONUP,0,0)
+			End If
+
+			OBTN_Caption(cAuxName   , nHan1  , "Limpar Filtro" )
+
+
+		Else
+
+
+
+			SetProperty(cActiveJan , "Timer_1" , "Enabled" , .t. )
+			EfectEnd(  cActiveJan ,  aMx)
+      
 
 		End If
-
-		lInvalid := .f.
-
-		xControls( , 34)
-
-		aLinhas := OpenReg(cFiltros  , ,   1 )
-
-		If _IsControlDefined(   'lblTitulo2' , cActiveJan)
-			SetProperty(  cActiveJan , 'LblTitulo2' , 'Value' , "[Filtro Aplicado] " + Alltrim(Str(  Len(aLinhas)  )) + " Registros.")
-		End If
-
-		If _isControlDefined(    'br_grid', cActiveJan   )
-			PostMessage(   GetControlHandle( 'br_grid', cActiveJan ) , WM_LBUTTONUP,0,0)
-		End If
-
-		OBTN_Caption(cAuxName   , nHan1  , "Limpar Filtro" )
-
-
-	Else
-
-
-		EfectEnd(  cActiveJan ,  aMx)
-
-		If _isControlDefined('br_Grid' , cActiveJan )
-			BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan  )) , Nil , .t. )
-			SysWait(.1)
-		End If
-
 
 	End If
-
-End If
-
 
 
 REturn
@@ -1019,7 +1060,15 @@ Function InitTela(  lIni1  , nColz1)
 	IntCli()
 
 
-	xInvalidate()
+	//xInvalidate()
+
+	//EnableWindow( GetControlHandle( 'br_grid', cActiveJan )   , .f. )
+
+	//SetWindowLongPtr (GetControlHandle( 'br_grid', cActiveJan ), nIndex, dwNewLong) 
+
+
+
+
 	   
 Return
 
@@ -1032,7 +1081,6 @@ Function xDrawIt()
 	If _IsControlDefined('br_grid', cActiveJan) .And. (!lInvalid)
 		BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , Nil , .t. )
 		Syswait(.2)
-
 
 		SetProperty(cActiveJan , "Timer_1" , "Enabled" , .f. )
 
@@ -1198,6 +1246,7 @@ Function CheckBloq()
 	Local nindice
 	Local nValue1
 	Local aItems
+
 	Local aCli
 	Local cXName :=  'FTop1' + Right(cActiveJan,5)
 
@@ -1219,6 +1268,10 @@ Function CheckBloq()
 		//OBTN_Visible(cAuxName   , aButtons[3][5]  , .t.  )
 
 	End If
+	
+
+
+
 
 
 Return
@@ -1571,6 +1624,7 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 
 
 
+
 	//FONT 'Arial Narrow' SIZE 9;
 
 	@ 55   , nColy  GRID &cGridName ;
@@ -1589,8 +1643,9 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 	DYNAMICBACKCOLOR bGrid1 ;
 	COLUMNDRAGDROP  ;
 	ON DBLCLICK ( Eval(  aButtons[2 ][2] )     ) ;
-	ON CHANGE ( CheckBloq() ) ;	
+	ON CHANGE ( CheckBloq() )  ;
 	CELLNAVIGATION
+
 
 	SetProperty( cActiveJan , cGridName , "PaintDoubleBuffer" , .t.)
 
@@ -3234,7 +3289,9 @@ FUNCTION EventButton()
 			If (nMsg == WM_MOUSEMOVE) .And. (lSoltou) .and. (!lOpcaoAberta)
 
 				lSoltou := .f.
-				TimerRed()
+				//TimerRed()
+				lInvalid := .f.
+				SetProperty(cActiveJan , "Timer_1" , "Enabled" , .t. )
 
 
 
@@ -3272,7 +3329,11 @@ FUNCTION EventButton()
 				lSoltou := .f.
 
 				SysWait(.1)
-				TimerRed()
+				//TimerRed()
+
+				lInvalid := .f.
+				SetProperty(cActiveJan , "Timer_1" , "Enabled" , .t. )
+
 
 
 				GetCursorPos (@nCol, @nRow)
@@ -3286,17 +3347,30 @@ FUNCTION EventButton()
 
 			
 
+
 			If ( nMsg == WM_MOUSELEAVE )			
 				nColSel := 0
 			End If 
 
 		
+
 			If (nMsg == WM_MOUSEMOVE) .And. (!lSoltou) //.And. (!lOpcaoAberta)
 
 				lInvalid := .f.
-				xZeraHead()
+				//xZeraHead()
+//				SetHandCursor( GetControlHandle( cImagex , 'fSplit2' ) , CURSORHAND )
+
+				
+				//SetWindowCursor( GetFormHandle(cActiveJan), CURSORHAND)
+				//sysWait(.3)				
+
+
+				SetProperty(cActiveJan , "Timer_1" , "Enabled" , .t. )
+				//xDrawIt()			
 
 			End If
+
+
 
 
 			If (nMsg = WM_LBUTTONDBLCLK) .And. (!lOpcaoAberta)
@@ -3304,21 +3378,29 @@ FUNCTION EventButton()
 				OrdeneCol(  nColSel )
 
 				If !lInvalid
-					xZeraHead()
+				//	xZeraHead()
 				End If
-				TimerRed()
+				//TimerRed()
+
+				lInvalid := .f.
+				//SetProperty(cActiveJan , "Timer_1" , "Enabled" , .t. )
+
+
 
 			End If	
 
 
 			If (nMsg == WM_PAINT)
+
 				If !lInvalid
 					xDrawHead()						
 				End If
+
 			End If
 	
 
 		End If 
+
 
 
 
@@ -3578,10 +3660,11 @@ FUNCTION EventButton()
 
 				If (ar1[1] > nTotal )
 					lInvalid := .f.
-					xZeraHead()
+					//xZeraHead()
 				End If
 
 			End If
+
 
 		End If
 
@@ -3617,11 +3700,10 @@ FUNCTION EventButton()
 
 
 
-
 		If (nMsg == WM_LBUTTONUP)
 
 			If !lInvalid
-				xZeraHead()
+			//	xZeraHead()
 			End If
 
 			If _IsControlDefined('Br_Grid',cActiveJan)
@@ -3637,10 +3719,12 @@ FUNCTION EventButton()
 					//BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , Nil , .t. )
 					//SysWait(.1)
 
-					Syswait(.1)
+					//Syswait(.1)
 					lInvalid := .f.
+					SetProperty(cActiveJan , "Timer_1" , "Enabled" , .t. )
+					
 
-					PostMessage(   listView_GetHeader(GetControlHandle( 'br_grid', cActiveJan ))  , WM_MOUSEMOVE,0,0)
+					//PostMessage(   listView_GetHeader(GetControlHandle( 'br_grid', cActiveJan ))  , WM_MOUSEMOVE,0,0)
 
 
 	

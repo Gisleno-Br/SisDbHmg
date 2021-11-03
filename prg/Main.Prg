@@ -590,7 +590,9 @@ Function xMainHandle( xMainJan )
 				If nWParam == 2
 			
 					If _isControlDefined( 'br_grid', cActiveJan )						
+						lInvalid := .f.
 						SetProperty(cActiveJan , "Timer_1" , "Enabled" , .t. )
+
 					End If 	
 
 				End If 	
