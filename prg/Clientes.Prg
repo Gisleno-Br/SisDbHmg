@@ -295,12 +295,7 @@ FUNCTION CadCli()
 	nCopyCharacters := HMG_CallDLL ("USER32.DLL", HB_DYN_CTYPE_INT, "GetWindowText", Main.HANDLE, @cBuffer, 512)
 
 
-
 	ManutDb( aCabec, aCampos,  GetSql( "clientes", .F. ), "Clien", aTam, "Cadastro de Clientes" ,"Clientes" , aOp1  , aOp2 , aButOpcoes )
-
-
-
-
 
 
 
@@ -565,7 +560,38 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 
 
 
-RETURN
+Return 
+
+
+Function xFechaJan( cInd1 )
+
+
+	If (!lOpcaoAberta) .And. (_IsControlDefined( 'Img' + cInd1 , 'fSplit2' ))
+
+		xPosBrow()
+		FechaJan('Img' + cInd1   , , )
+
+
+		If nIndexEve1 > 0
+			EventRemove(nIndexEve1)
+		End If
+
+		If nEveButton > 0 
+			EventRemove(nEveButton)
+		End if 
+
+		RemoveHandler('EventHndCli')
+		
+
+					
+	Else
+		xSetOpcao()
+	End If
+
+
+
+
+Return 
 
 
 Function RemoveHandler( cProcName )
@@ -1680,8 +1706,10 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 	nQRegx     := Len(aItens)
 
 
-	//nIndexEve1 := EventCreate( { || EventButton()  }  , ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) )
-	//EventProcessAllHookMessage( nIndexEve1 ,   .T.)
+	If (nIndexEve1 = 0)
+		nIndexEve1 := EventCreate( { || EventButton()  }  , ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) )
+		EventProcessAllHookMessage( nIndexEve1 ,   .T.)
+	End If 
 
 
 	cTitFiltro := ''
@@ -3166,8 +3194,6 @@ FUNCTION EventButton()
 
 
 
-
-
 	//msginfo(cFormx)
 
 	nInd1 := AScan( aButtons, {| a| a[ 5 ] == nWParam } )
@@ -3286,6 +3312,7 @@ FUNCTION EventButton()
 			End If
 
 
+
 			If (nMsg == WM_MOUSEMOVE) .And. (lSoltou) .and. (!lOpcaoAberta)
 
 				lSoltou := .f.
@@ -3372,7 +3399,6 @@ FUNCTION EventButton()
 
 
 
-
 			If (nMsg = WM_LBUTTONDBLCLK) .And. (!lOpcaoAberta)
 
 				OrdeneCol(  nColSel )
@@ -3383,7 +3409,7 @@ FUNCTION EventButton()
 				//TimerRed()
 
 				lInvalid := .f.
-				//SetProperty(cActiveJan , "Timer_1" , "Enabled" , .t. )
+				SetProperty(cActiveJan , "Timer_1" , "Enabled" , .t. )
 
 
 
@@ -3670,12 +3696,16 @@ FUNCTION EventButton()
 
 
 
+
 		If nWParam = VK_ESCAPE
 
 			nI1 := Ascan(aCords , { |a| a[4] == cActiveJan})
 
 			cIndJan := Right(aCords[nI1][1],4)			
 
+			xFechaJan(cIndJan)
+
+/*
 			If (!lOpcaoAberta) .And. ;
 				(_IsControlDefined( 'Img' + cIndJan , 'fSplit2' ))
 
@@ -3694,6 +3724,8 @@ FUNCTION EventButton()
 			Else
 				xSetOpcao()
 			End If
+			*/
+
 
 		End If
 
@@ -3795,8 +3827,7 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 	End If
 
-
-
+	
 
 	
 	If (GetProperty(  cActiveJan   , "HANDLE" ) = GetProperty(cForm, "HANDLE"))
