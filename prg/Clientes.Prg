@@ -333,6 +333,9 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 
 //	Local cIndice1 := RetIndJan()
 
+	Local cIndJan
+	Local ni1 
+
 	Private cTitle := ''
 
 
@@ -469,11 +472,6 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 
 
 
-
-
-
-
-
 	Private fScrName := 'fScrx' + cAlias
 
 	Private cBrowName := 'fBrow' + cAlias
@@ -529,7 +527,12 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 
 	SetProperty( cFormPrin , "Title" , cTitle)
 
-	//ON KEY ESCAPE OF &cFormPrin Action ( xPosBrow() , FechaJan('Img' + cIndice1 , , nEven1 , nEven2 ) )
+
+	nI1 := Ascan(aCords , { |a| a[4] == cActiveJan})
+
+	cIndJan := Right(aCords[nI1][1],4)			
+
+	ON KEY ESCAPE OF &cFormPrin Action xFechaJan( cIndJan )
 
 	SetProperty( cFormPrin, "row", 60 )
 	SetProperty( cFormPrin, "col", 0 )
@@ -566,32 +569,46 @@ Return
 Function xFechaJan( cInd1 )
 
 
+
 	If (!lOpcaoAberta) .And. (_IsControlDefined( 'Img' + cInd1 , 'fSplit2' ))
 
 		xPosBrow()
+		
+
+        If nIndexEve1 <= Len(_HMG_EventData )
+			If nIndexEve1 > 0
+				EventRemove(nIndexEve1)
+			End If
+		End If 
+
+		If nEveButton <= Len(_HMG_EventData )
+			If nEveButton > 0 
+				EventRemove(nEveButton)
+			End if 
+		End If 
+
+		//RemoveHandler('EventHndCli')		
+
 		FechaJan('Img' + cInd1   , , )
 
+		
+		//CREATE EVENT PROCNAME LabelEventHandler() STOREINDEX nEveLabel
+		//EventProcessAllHookMessage ( nEveLabel , .t. )
 
-		If nIndexEve1 > 0
-			EventRemove(nIndexEve1)
-		End If
-
-		If nEveButton > 0 
-			EventRemove(nEveButton)
-		End if 
-
-		RemoveHandler('EventHndCli')
+		//sysWait(.1)
 		
 
 					
-	Else
+	Else		
+		
 		xSetOpcao()
+
+
 	End If
 
 
-
-
 Return 
+
 
 
 Function RemoveHandler( cProcName )
@@ -1087,13 +1104,8 @@ Function InitTela(  lIni1  , nColz1)
 
 
 	//xInvalidate()
-
 	//EnableWindow( GetControlHandle( 'br_grid', cActiveJan )   , .f. )
-
 	//SetWindowLongPtr (GetControlHandle( 'br_grid', cActiveJan ), nIndex, dwNewLong) 
-
-
-
 
 	   
 Return
@@ -1750,6 +1762,10 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 	SetWindowCursor( GetFormHandle(  cActiveJan ) , IDC_ARROW )
 
 	//xDrawIt()
+
+	//sysWait(.1)
+
+
 
 
 Return aItens
@@ -4663,10 +4679,12 @@ Function PutImagem(nColx , cTexto , cSeq1 )
 		If !_isControlDefined( cImgName , 'fSplit2' )
 			@ 1,nColx+nWidthBmp - 1 IMAGE &cImgName OF fSplit2 PICTURE "Img\Closex.bmp" WIDTH 20 HEIGHT 40 STRETCH ACTION FechaJan( This.Name , .t. )
 
+			
+
 			EventProcessAllHookMessage(EventCreate({ || LabelEventHandler() },  GetControlHandle( cImgName ,  'fSplit2')   ), .T.)
 			EventProcessAllHookMessage(EventCreate({ || LabelEventHandler() },  GetControlHandle( 'Image_5'  ,  'fSplit2')   ), .T.)
-
 			EventProcessAllHookMessage(EventCreate({ || LabelEventHandler() },  GetControlHandle( 'Image_1'  ,  'fSplit2')   ), .T.)
+			
 
 		End If
 

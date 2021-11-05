@@ -379,6 +379,11 @@ FUNCTION Main
  
 	//yAviso(  Hb_AnsiToOem("Proximo Elemento do Filtro deve ser Uma Expressão. EX: (Codigo = '0000').") , .f. )  
 
+	nEveLabel := 0	
+	
+	//CREATE EVENT PROCNAME LabelEventHandler() STOREINDEX nEveLabel
+	//EventProcessAllHookMessage ( nEveLabel , .t. )
+
 	
 
 	While n  <= Len(aOpcoes)
@@ -413,8 +418,11 @@ FUNCTION Main
 
 	Enddo
 
+
+
 	EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) },   fSplit6.Img_seta1.Handle ) , .T.)
 	EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) },   fSplit6.img_seta2.Handle ) , .T.)
+
 
     HMG_ChangeWindowStyle( fSplit6.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
 
@@ -495,6 +503,7 @@ FUNCTION Main
 
 	Public nIndexEventY := EventCreate (  { ||   xMainHandle( )   }  )  		
 
+
 	Main.Activate
     
 
@@ -562,6 +571,9 @@ Function xMenuPrin()
 
 	Refreshall('fSplitSubMenu')
 	SysWait(.1)	
+
+	//msginfo('ok')
+
 
 
 Return
@@ -682,9 +694,11 @@ Function xMainHandle( xMainJan )
 
 		If nWParam = VK_ESCAPE
 
-			If !lEventx			
+			If !lEventx		
+
 
 				If (cActiveJan = 'Main')
+
 
 					If (nOpSel > 0) .And. (nOpsel <= Len(aOpcoes) )
 
@@ -995,6 +1009,42 @@ Function CaptTelas(  cExtra )
 
 Return
 
+Function xIndexEvent(nHandle1 )
+
+   
+    Local lRet1 := .f. 
+	Local n1 := 1
+	Local aM1 := Aclone(  _HMG_EventData )
+	Local nInd := 0
+	//Local lRet2 := (Ascan(_HMG_EventData , { |a|  Iif( (ValType(a[1]) == 'C') , (a[1] == cEvent) , .f. )      } ) > 0)
+	//(Ascan(_HMG_EventData , { |a|  Iif( (ValType(a[2]) == 'N') , (a[2] == nHandle1) , .f. )      } ) > 0)
+
+  
+	For n1 := 1 to Len(aM1 )
+
+		If (ValType(  aM1[n1] ) == 'A')
+
+			If (ValType(  aM1[n1][2] ) == 'N')
+
+				If (aM1[n1][2] = nHandle1)
+					lRet1 := .t.
+					nInd := aM1[n1][9]
+				End If 
+
+			End If 
+
+
+		End If 
+
+
+	Next 
+
+
+Return nInd  
+
+
+
+
 Function ButtonsTop( lCria )
 
 	Local cMenuName := 'fSplit2'
@@ -1121,6 +1171,7 @@ Function FechaJan(  cJanela  , lExclBut , nI1 , nI2)
 	Local nTam := Len(aButTop)
 	Local cImg1 
 	Local lRealoca := .f.
+	Local nindx := 0
 
 	Default lExclBut := .f.
 
@@ -1209,31 +1260,41 @@ Function FechaJan(  cJanela  , lExclBut , nI1 , nI2)
 
 	//SysWait(.3)
 
-	If nHanSelected > 0
-//		EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, nHanSelected  ), .T.)
-	End If
 
 	cActiveJan := 'Main'
 
 	//xHMenuPrin()
 
-	If  (nHanSelected > 0)
-		EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, nHanSelected  ), .T.)	
+	//SysWait(.3)
+
+	nindx := xIndexEvent( nHanSelected  )
+
+	If  (nIndx == 0)		
+		EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, nHanSelected  ), .T.)			
+	Else
+	    EventStop( nIndx , .f. )	
 	End If 	
 
-	//SysWait(.3)
+
 	nHanSelected := 0
 
 	If nindexHndcli > 0
-		EventRemove(nindexHndcli)
+		//EventRemove(nindexHndcli)
 	End If 
+
 	
+
+	PostMessage(  nHanSelected , WM_MOUSEMOVE , 0 ,0)
+	SysWait(.1)		
+	PostMessage(  nHanSelected , WM_MOUSELEAVE , 0 ,0)
+
 	//SysWait(.2)		
 	//Refreshall('fSplitSubMenu')
+	
 
+	//xHMenuPrin()
 	xMenuPrin()
-	xHMenuPrin()
-    //REmoveHandler('check_grid_events')
+
 
 
 Return
@@ -1507,12 +1568,16 @@ Function OpMenu(aOpcoes , cJan , nLinha , cTitx , nIndx )
 		
 
 
+		
+
+
 	Else
 		SetProperty( cJan ,cLbl  ,"Visible",.t.)
 		DoMethod(cJan , cLbl ,"Show" )
 	End If
 
   Next
+
 
   Refreshall('fSplitSubMenu')
 
@@ -1648,6 +1713,8 @@ FUNCTION LabelEventHandler(aLabel)
 			ScrTest(2 , nContItens )
 			Return Nil
 		End If
+
+
 
 		nacumz := GetProperty('fSplit2','Width')
 		cOpcao := GetProperty(cForm, cControl, "VALUE")
@@ -1817,41 +1884,40 @@ FUNCTION LabelEventHandler(aLabel)
 
 		Else
 
-		cOpcao2 := GetProperty(cForm, cControl, "CAPTION" )
+			cOpcao2 := GetProperty(cForm, cControl, "CAPTION" )
 
-		If !Empty(cOpAberto)
-			//MSGINFO('l')
-			If Alltrim(cOpcao2) != Alltrim(cOpAberto)
 
-			cName := GetProperty(cForm, cControl , "NAME")
+			If !Empty(cOpAberto)
+				//MSGINFO('l')
+				If Alltrim(cOpcao2) != Alltrim(cOpAberto)
 
-			SetProperty(cForm, cControl, "BACKCOLOR", {255,255,255} )
-			SetProperty(cForm, cControl, "FONTBOLD", .F.)
+					cName := GetProperty(cForm, cControl , "NAME")
 
-			If cForm == 'fSplit6'
-				SetProperty(cForm,"Image4","Visible",.f.)
+					SetProperty(cForm, cControl, "BACKCOLOR", {255,255,255} )
+					SetProperty(cForm, cControl, "FONTBOLD", .F.)
+
+					If cForm == 'fSplit6'
+						SetProperty(cForm,"Image4","Visible",.f.)
+					End If
+
+				End If
+
+			Else
+
+				xOffMenu(cForm , cControl)
+				//Do Events
+
+
 			End If
-
-			End If
-
-		Else
-
-			xOffMenu(cForm , cControl)
-			//Do Events
-
 
 		End If
 
-	End If
+		lTracking27  := .f.		
 
-	lTracking27  := .f.
+		
+		EXIT
 
-	
-
-	lTracking27 := .F.
-	EXIT
-
-  ENDSWITCH
+  	ENDSWITCH
 
 
 
@@ -2033,6 +2099,7 @@ Function OpenOpcao( cCadastro , cTitulo , nHandle1 )
 			
 
 		End If
+
 	End If
 
 
