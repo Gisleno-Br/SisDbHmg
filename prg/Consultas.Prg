@@ -1785,10 +1785,14 @@ FUNCTION GrvConsul( cTab  , nId1)
 
 	//SaveBmpDialog('fCriaConsulta' )
 
-	IF !Confirmaviso( 'Confirma Cadastro dessa Consulta?' , cActiveJan , .f. )
+	If !Confirmaviso( 'Confirma Cadastro dessa Consulta?' , cActiveJan , .f. )
 		//_FechaJan('fCriaConsulta' )
 		Return .F.
-	END IF
+	End If
+
+	SetWindowCursor( cActiveJan , HOURGLASS )
+
+	//SysWait(.1)
 
 
 	nTpVend := 1
@@ -1810,6 +1814,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 	hb_MemoWrit( 'Cons1.txt', cSql )
 
 	If oQuery == Nil
+		SetWindowCursor( GetFormHandle( 'fCriaConsulta' ) , IDC_ARROW )	
 		yaviso( Hb_AnsiToOem("Execução da Rotina sera Interrompida(Cons  Cab). " + QUEBRA + "Contacte Suporte.") , .f. )
 		RETURN .F.
 	End If
@@ -1828,6 +1833,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 
 
 	If !GravaDic( nId  , cTabelax )
+		SetWindowCursor( GetFormHandle( 'fCriaConsulta' ) , IDC_ARROW )	
 		yAviso( Hb_AnsiToOem("Houve Falha no processo de Gravação no Dicionario de Dados." ) , .f.  )
 		Return
 	End If
@@ -1865,7 +1871,8 @@ FUNCTION GrvConsul( cTab  , nId1)
 		oQuery := ExecSql( @oServer, cSqlx1 )
 
 		IF oQuery == Nil
-			yAviso( Hb_AnsiToOem("Execuçãoo da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." , .f. )
+			SetWindowCursor( GetFormHandle( 'fCriaConsulta' ) , IDC_ARROW )	
+			yAviso( Hb_AnsiToOem("Execução da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." , .f. )
 			RETURN
 		END IF
 
@@ -1896,6 +1903,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 		hb_MemoWrit( 'ConsParam.txt', cSqlx1 )
 
 		IF oQuery == Nil
+			SetWindowCursor( GetFormHandle( 'fCriaConsulta' ) , IDC_ARROW )	
 			yAviso( hb_ANSIToOEM("Execução da Rotina sera Interrompida(Cons  item).") + QUEBRA + "Contacte Suporte." ,  .f. )
 			RETURN .F.
 		END IF
@@ -1910,6 +1918,9 @@ FUNCTION GrvConsul( cTab  , nId1)
 
 	lREtOk2 := .T.
 	lOk     := .t.
+
+
+	//SetWindowCursor( GetFormHandle( 'fCriaConsulta' ) , IDC_ARROW )	
 
 
 
@@ -1953,7 +1964,7 @@ Function GravaDic( nIdConsul  ,cTabOri)
 		cSql := "Insert into Dicionario Values(" + alltrim(Str( nId )) + "," +;
 			QuotedStr( HB_OemtoAnsi(cTabelax)) + "," + ;
 			QuotedStr( HB_OemtoAnsi( aSistema[1] )) + "," + ;
-			QuotedStr( HB_OemtoAnsi(aTipo[1])) + "," + ;
+			QuotedStr( HB_OemtoAnsi(aTipo[1])) + "," + ;			
 			QuotedStr(  cCampo) + "," + ;
 			QuotedStr( 'S' ) + "," + ;
 			alltrim(Str(aTam[1]))+"," + ;
@@ -1968,10 +1979,8 @@ Function GravaDic( nIdConsul  ,cTabOri)
 		hb_MemoWrit( 'ConsInsert.txt', cSql )
 
 		If oQuery == Nil
-			yAviso( "Execu??????o da Rotina sera Interrompida(Cons  item)." + QUEBRA + "Contacte Suporte." , .f. )
-
-			oServer:Destroy()
-			oServer := Nil
+			yAviso( "Execuçãoo da Rotina sera Interrompida(Cons  item)." + QUEBRA + "Contacte Suporte." , .f. )
+		
 
 			RETURN .F.
 

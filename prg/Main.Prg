@@ -154,6 +154,10 @@ FUNCTION Main
 
 	Private cFormJan := ''
 
+	Public nItemSubHeight := 20
+
+	Private nTamSubMenuConsulta := 300
+
 	
 
 	PUBLIC cRazaoEmp     := ''
@@ -1009,32 +1013,54 @@ Function CaptTelas(  cExtra )
 
 Return
 
-Function xIndexEvent(nHandle1 )
+Function xIndexEvent(nHandle1 , cTipo  )
 
    
     Local lRet1 := .f. 
 	Local n1 := 1
 	Local aM1 := Aclone(  _HMG_EventData )
 	Local nInd := 0
-	//Local lRet2 := (Ascan(_HMG_EventData , { |a|  Iif( (ValType(a[1]) == 'C') , (a[1] == cEvent) , .f. )      } ) > 0)
-	//(Ascan(_HMG_EventData , { |a|  Iif( (ValType(a[2]) == 'N') , (a[2] == nHandle1) , .f. )      } ) > 0)
 
+	Default cTipo := "N"
+	
   
 	For n1 := 1 to Len(aM1 )
 
-		If (ValType(  aM1[n1] ) == 'A')
+		If cTipo == 'N'
 
-			If (ValType(  aM1[n1][2] ) == 'N')
+			If (ValType(  aM1[n1] ) == 'A')
 
-				If (aM1[n1][2] = nHandle1)
-					lRet1 := .t.
-					nInd := aM1[n1][9]
+				If (ValType(  aM1[n1][2] ) == 'N')
+
+					If (aM1[n1][2] = nHandle1)
+						lRet1 := .t.
+						nInd := aM1[n1][9]
+					End If 
+
 				End If 
+
+
+			End If 
+
+		Else
+
+			If (ValType(  aM1[n1] ) == 'A')
+
+				If (ValType(  aM1[n1][1] ) == 'C')
+
+
+					If (aM1[n1][1] = nHandle1)
+						lRet1 := .t.
+						nInd := aM1[n1][9]
+					End If 
+
+				End If 
+
 
 			End If 
 
 
-		End If 
+		End If 	
 
 
 	Next 
@@ -1284,16 +1310,20 @@ Function FechaJan(  cJanela  , lExclBut , nI1 , nI2)
 
 	
 
-	PostMessage(  nHanSelected , WM_MOUSEMOVE , 0 ,0)
-	SysWait(.1)		
-	PostMessage(  nHanSelected , WM_MOUSELEAVE , 0 ,0)
 
-	//SysWait(.2)		
 	//Refreshall('fSplitSubMenu')
 	
 
 	//xHMenuPrin()
 	xMenuPrin()
+
+	
+	PostMessage(  nHanSelected , WM_MOUSEMOVE , 0 ,0)
+	SysWait(.1)		
+	PostMessage(  nHanSelected , WM_MOUSELEAVE , 0 ,0)
+
+	SysWait(.2)		
+	
 
 
 

@@ -1395,6 +1395,8 @@ Function yEfect(cFormName , lEfect)
 
 		Flag_AlphaBlend_Effect := .T.
 
+			
+		
 		If _isWindowDefined(cMenuName)
 			DoMethod( cMenuName , 'Hide')
 		End If 
