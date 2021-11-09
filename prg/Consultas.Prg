@@ -71,6 +71,7 @@ Function EditConsulta( cTabela , nIdConsu , lMovTable )
 	Local nind1      := 0
 	Local aCampos    := {}
 	Local aOrdem     := {}
+
 	Local cTpOrdem   := ''
 
 	Local cSql := "select mascara,tipo,tamdisp,camposistema,campo,conscampos.* from conscampos,dicionario  "
@@ -81,10 +82,13 @@ Function EditConsulta( cTabela , nIdConsu , lMovTable )
 	
 	Private nIndexFiltro := 0
 
+	Private lNovoFilt := .t.
+
 	
 	Private aButFilt := {}
 
-	Private cTabx := cTabelaX	
+	Private cTabx := cTabela	
+
 	
 	
 	Private n11

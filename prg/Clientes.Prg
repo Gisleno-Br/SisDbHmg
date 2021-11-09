@@ -549,18 +549,6 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 	ShowScrollBar( GetFormHandle( cMenuName), 1, .F. )
 
 
-//	RefreshCli()//
-
-
-
-
-	//nIndexEvent3++
-
-
-	//CREATE EVENT PROCNAME xHandleEsc() STOREINDEX nIndexEvent3
-
-
-
 	Activate Window &cFormPrin
 
 
@@ -747,25 +735,6 @@ Function xSetOpcao()
 		SetProperty(cActiveJan , "Timer_1" , "Enabled" , .t. )
 
 
-        /*
-		RemoveHandler( "EventHndCli" )		
-
-		If !EventRemove (nIndexEvent2 )
-			msginfo("Não foi possivel Parar Evento !! " + Str(nIndexEvent2)  )
-		End If
-
-		//nIndexEvent3
-
-		If !EventRemove (nIndexEvent3 )
-			msginfo("Não foi possivel Parar Evento !! " + Str(nIndexEvent3)  )	
-		End If
-
-		
-		If !EventRemove (nIndexEvent4 )
-			msginfo("Não foi possivel Parar Evento !! " + Str(nIndexEvent4)  )			
-		End If
-		*/
-
 
 
 	Else
@@ -803,21 +772,6 @@ Function xSetOpcao()
 
 		SetProperty(cFormPrin , 'Frame_1' , 'Visible' , .f. )
 		SetProperty(cFormPrin , 'Frame_2' , 'Visible' , .f. )
-
-//		msginfo('1')
-
-
-
-
-		//BT_ClientAreaInvalidateAll (cActiveJan)
-
-		//lInvalid := .f.
-
-		//xDrawIt()
-
-		//xZeraHead()
-
-		//msginfo('ok')
 
 
 
@@ -2759,6 +2713,11 @@ Function xButConsul(  lVisible  )
 		OBTN_Enable( cFormPrin , 5459 , .f.)
 
 
+		DoMethod( cFormPrin , 'Label_z1' , 'Show')
+		DoMethod( cFormPrin , 'Label_Sel1' , 'Show')
+
+
+
 
 	Else 
 
@@ -2766,6 +2725,11 @@ Function xButConsul(  lVisible  )
 		OBTN_Visible( cFormPrin , 5457 , .f.)
 		OBTN_Visible( cFormPrin , 5458 , .f.)
 		OBTN_Visible( cFormPrin , 5459 , .f.)
+
+
+		DoMethod( cFormPrin , 'Label_z1' , 'Hide')
+		DoMethod( cFormPrin , 'Label_Sel1' , 'Hide')
+
 
 		
 		
@@ -3070,11 +3034,74 @@ FUNCTION IntCli(  lSoConsulta )
 					OBTN_Create( cFormPrin , 5459, "&Excluir" ,  nLinBut, 120 ,  56,  24 ,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 					OBTN_Font( cFormPrin , 5459,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
+
+					
+
+					If !_IsControlDefined( 'Label_Z1' , cFormPrin)
+
+						DEFINE LABEL Label_z1
+							PARENT &cFormPrin
+							ROW    nLinBut - 245
+							COL    5
+							WIDTH  350
+							HEIGHT 24
+							VALUE "Consuta Selecionada : "
+							FONTNAME XFONT1
+							FONTSIZE 9
+							TOOLTIP ""
+							FONTBOLD .T.
+							FONTITALIC .F.
+							FONTUNDERLINE .F.
+							FONTSTRIKEOUT .F.
+							HELPID Nil
+							VISIBLE .F.
+							TRANSPARENT .F.
+							ACTION Nil
+							AUTOSIZE .F.
+							BACKCOLOR BACKVERDE1
+							FONTCOLOR {78,78,78}
+						END LABEL
+
+						DEFINE LABEL Label_Sel1 
+							PARENT &cFormPrin
+							ROW    nLinBut - 218 
+							COL    5
+							WIDTH  350
+							HEIGHT 24
+							VALUE "                      "
+							FONTNAME XFONT1
+							FONTSIZE 9
+							TOOLTIP ""
+							FONTBOLD .F.
+							FONTITALIC .F.
+							FONTUNDERLINE .F.
+							FONTSTRIKEOUT .F.
+							HELPID Nil
+							VISIBLE .f.
+							TRANSPARENT .T.
+							ACTION Nil
+							AUTOSIZE .F.
+							BACKCOLOR NIL
+							FONTCOLOR {0,0,0}
+						END LABEL
+
+					Else 
+
+
+					End If 
+					
+
 					
 					OBTN_Visible( cFormPrin , 5457 , .f.)
 
 					OBTN_Visible( cFormPrin , 5458 , .f.)
-					OBTN_Visible( cFormPrin , 5459 , .f.)
+					OBTN_Visible( cFormPrin , 5459 , .f.)				
+
+					//msginfo('ok')
+
+					//Syswait(.1)
+
+					
 
 				End If 
 
@@ -3554,6 +3581,18 @@ FUNCTION EventButton()
 
 				If alltrim(cOpSel) == 'Consultas'
 
+					If _IsControlDefined( 'Label_Sel1' , cFormPrin )
+						SetProperty(  cFormPrin  ,   'Label_Sel1' ,   'Value' ,  Alltrim(cOpcao)    )
+						
+
+						
+						lTracking12 := .F. 
+						//Syswait(.1)
+
+					End If 
+
+
+					/*	
 					EnableButConsu(  .f.  )
 
 					nIdConsulta := GetId(  'consultas' , Alltrim(cOpcao) )
@@ -3567,19 +3606,7 @@ FUNCTION EventButton()
 
 						If xInitMov(  nIdConsulta, , cTabela, .f. ,  cFormPrin )
 
-						Else
-
-							/*
-
-							If _IsControlDefined("G4343", cFormPrin )
-								DoMethod( cFormPrin , "G4343", "Release" )
-							End If
-							Refreshall(cMenuName)
-							Refreshall(cFormPrin)
-							*/
-
-							//PostMessage()
-							//msginfo('ok')
+						Else					
 
 							Syswait(.1)
 
@@ -3598,6 +3625,7 @@ FUNCTION EventButton()
 						EnableButConsu(  .t.  )
 
 					End If
+					*/
 
 				Else
 					If nIndf > 0

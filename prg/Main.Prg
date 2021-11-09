@@ -1308,8 +1308,6 @@ Function FechaJan(  cJanela  , lExclBut , nI1 , nI2)
 		//EventRemove(nindexHndcli)
 	End If 
 
-	
-
 
 	//Refreshall('fSplitSubMenu')
 	
@@ -1323,9 +1321,6 @@ Function FechaJan(  cJanela  , lExclBut , nI1 , nI2)
 	PostMessage(  nHanSelected , WM_MOUSELEAVE , 0 ,0)
 
 	SysWait(.2)		
-	
-
-
 
 Return
 
