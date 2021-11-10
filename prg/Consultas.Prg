@@ -85,6 +85,9 @@ Function EditConsulta( cTabela , nIdConsu , lMovTable )
 	Private lNovoFilt := .t.
 
 	
+	Private lFadd := .f.
+
+	
 	Private aButFilt := {}
 
 	Private cTabx := cTabela	
