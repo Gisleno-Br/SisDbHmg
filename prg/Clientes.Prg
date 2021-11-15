@@ -197,6 +197,10 @@ FUNCTION CadCli()
 
 	Private nEveButton := 0
 
+	Private nOpselx := 0
+
+	private nClear := 0 
+
 
 	Private nColOrder  := 0
 
@@ -2503,7 +2507,7 @@ Function xPaintSub()
 	LOCAL Height := BT_ClientAreaHeight (cMenuName)
 
 	
-	Local nTypeText    := BT_TEXT_TRANSPARENT //+ BT_TEXT_BOLD
+	Local nTypeText    := BT_TEXT_TRANSPARENT  //+ BT_TEXT_BOLD
 	Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
 	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
 	Local cTexto := ''
@@ -2518,15 +2522,26 @@ Function xPaintSub()
 
 	
 	hDC2 = BT_CreateDC ( cMenuName , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
+	
+
+		 
+		//BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , 177 ,    nHeightBmp    , BACK1 ,BACK1  )	
+
+		
+	//End If 	
+
 
 	//BT_HDC_INVALIDCLIENTAREA
 
 
-	
+	If (nOpselx = 0)
+		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , 177 ,    nHeightBmp    , BACK1 ,BACK1  )	
+	End If 	
 
+	If nClear > 0
+		BT_DrawGradientFillVertical ( hDC2 ,  (nClear - 1) * nItemSubHeight   , 0  , 177 ,    nHeightBmp    , BACK1 ,BACK1  )	
 
-	//BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , 170 ,    nHeightBmp    , BACK1 ,BACK1  )
-	
+	End If 	
 
 
 	For n1 := 1 To Len(aSubOp)
@@ -2535,11 +2550,17 @@ Function xPaintSub()
 
 		cTexto := strzero(n1,3) + ' ' + aSubOp[n1] 
 
-		BT_DrawText ( hDC2 , nLine + nRow  , 01 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  XBACK1, nTypeText, nAlingText, nOrientation )
+		If (nOpselx > 0) .And. (nOpSelx = n1)
+
+			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow - 2  , 00  , 177 ,    nItemSubHeight - 1     , BACK1 ,WHITE  )
+			BT_DrawText ( hDC2 , nLine + nRow  , 01 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  {32,134,200}   , nTypeText, nAlingText, nOrientation )
+		   
+
+		Else 	
+			BT_DrawText ( hDC2 , nLine + nRow  , 01 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR , BACK1 , nTypeText, nAlingText, nOrientation )
+		End If 	
 
 		
-		//BT_DrawText (hDC, 8, 4 , alltrim(cTexto) , "arial", 9, WHITE, WHITE, nTypeText, nAlingText, nOrientation)
-
 
 		nLine += (nItemSubHeight)
 
@@ -4556,6 +4577,30 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 		
 		If ( nMsg == WM_MOUSEMOVE )
 			//msginfo('ok2')
+
+
+			If nOpselx > 0
+
+				nClear := nOpselx	
+				BT_ClientAreaInvalidateRect( cMenuName , ( (nOpselx - 1) * nItemSubHeight) - 2 , 0 , 177 ,  nItemSubHeight - 1 , .t. )
+
+
+				nClear := 0
+				//msginfo('ok')
+
+
+			End If 	
+
+			nOpselx := xOpSel1(  nHWnd )
+
+			
+			SetWindowCursor( nHWnd , CURSORHAND)  
+
+			If nOpselx > 0
+				//BT_ClientAreaInvalidateAll(cMenuName)
+				BT_ClientAreaInvalidateRect( cMenuName , (nOpselx * nItemSubHeight) - 2 , 0 , 177 ,  nItemSubHeight - 1 , .t. )
+			End If 	
+
 		End If 	
 
 		If ( nMsg == WM_LBUTTONDOWN )
@@ -4657,6 +4702,29 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 	//EventButton()
 
 RETURN NIL
+
+Function xOpSel1( nHWnd1 )
+
+	Local nCol := 0
+	Local nRow := 0			
+	Local ar1 
+	Local NewPos 
+
+	GetCursorPos (@nCol, @nRow)
+
+	aR1 := GetPos_ScreenToClient(   nHWnd1  , nRow, nCol )
+	
+	NewPos := GetScrollPos( GetFormHandle(  cMenuName  ), 1 ) 
+
+	If NewPos > 0 
+		nItem := (Int( (NewPos+Ar1[1])     / nItemSubHeight)+1)
+	Else
+		nItem := (Int(Ar1[1] / nItemSubHeight)+1)		
+	End If 		
+
+
+
+Return nItem 	
 
 
 Function xRefSubMenu()
