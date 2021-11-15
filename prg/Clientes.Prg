@@ -130,6 +130,8 @@ FUNCTION CadCli()
 
 
 
+
+
 	LOCAL wCad := 'clientes'
 	Local aOp1 := {'Consultas','Relatorios','Parametros' }
 
@@ -549,6 +551,8 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 	
 	ShowScrollBar( GetFormHandle(cMenuName ), 0, .F. )
 	ShowScrollBar( GetFormHandle( cMenuName), 1, .F. )
+
+
 
 
 	Activate Window &cFormPrin
@@ -1053,6 +1057,8 @@ Function InitTela(  lIni1  , nColz1)
 
 		CREATE EVENT PROCNAME EventButton() STOREINDEX nEveButton
 		EventProcessAllHookMessage ( nEveButton, .t. )
+
+		//EventProcessAllHookMessage( EventCreate( {|| EventButton() },    GetFormHandle( cMenuName  )   ), .T. )
 	
 	End If
 
@@ -1103,7 +1109,7 @@ Function xInvalidate()
 
 		n1 := VALIDATERECTX(     GetControlHandle( 'br_grid', cActiveJan )    )
 
-		UpdateWindow(  GetControlHandle( 'br_grid', cActiveJan )   )
+		//UpdateWindow(  GetControlHandle( 'br_grid', cActiveJan )   )
 
 	End If
 
@@ -2474,6 +2480,85 @@ FUNCTION LabelEventH4(aLabel)
 
 Return
 
+Function xPaintSub()
+
+	Local aRGBcolor := BACK1
+
+	Local nWidthBmp := 170
+
+	Local nHandle1
+	Local nHandle2
+	Local hWnd
+	Local BTstruct
+	Local BTstruct2
+	Local hDc
+	Local nTYpe
+	Local nLine := 00
+	
+	Local nHeightBmp := nItemSubHeight * Len(aSubOp)
+
+	Local hBitmap2
+
+	LOCAL Width  := BT_ClientAreaWidth  (cMenuName)
+	LOCAL Height := BT_ClientAreaHeight (cMenuName)
+
+	
+	Local nTypeText    := BT_TEXT_TRANSPARENT //+ BT_TEXT_BOLD
+	Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
+	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
+	Local cTexto := ''
+
+	Local nRow := -(GetProperty( cMenuName , "VscrollBar" , "Value"))
+
+
+
+	hBitMap2 := BT_BitmapCreateNew (nWidthBmp , nHeightBmp , BLACK)
+
+	hDC := BT_CreateDC (hBitmap2, BT_HDC_BITMAP  , @BTstruct)
+
+	
+	hDC2 = BT_CreateDC ( cMenuName , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
+
+	//BT_HDC_INVALIDCLIENTAREA
+
+
+	
+
+
+	//BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , 170 ,    nHeightBmp    , BACK1 ,BACK1  )
+	
+
+
+	For n1 := 1 To Len(aSubOp)
+
+		cTexto := alltrim(  Right( aSubOp[n1]  , Len(  aSubOp[n1] ) - 2  ) )
+
+		cTexto := strzero(n1,3) + ' ' + aSubOp[n1] 
+
+		BT_DrawText ( hDC2 , nLine + nRow  , 01 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  XBACK1, nTypeText, nAlingText, nOrientation )
+
+		
+		//BT_DrawText (hDC, 8, 4 , alltrim(cTexto) , "arial", 9, WHITE, WHITE, nTypeText, nAlingText, nOrientation)
+
+
+		nLine += (nItemSubHeight)
+
+	Next 
+
+	//BT_DrawBitmap ( hDC2, 0, 0, 170 , nHeightBmp , BT_COPY, hBitmap2 )
+
+		
+	//BT_BitmapSaveFile (hBitmap2 , "Hx102.bmp")
+
+	BT_DeleteDC (BTstruct )
+	BT_DeleteDC (BTstruct2 )
+
+
+	//bt_Bit
+
+
+REturn 	
+
 Function xAbreOpMenu( cF1 , cContrl1 )
 
 	
@@ -2489,8 +2574,20 @@ Function xAbreOpMenu( cF1 , cContrl1 )
 
 	SetWindowCursor( GetFormHandle( cActiveJan ) , HOURGLASS)
 
+	//SET AUTOSCROLL ON
+
+
+
 
 	If (cOpcao == alltrim(cOpSel))
+
+
+		If !Empty( Alltrim(cSubMenuSel)  )
+			yAviso( Hb_AnsiToOem("Ainda Existe Consulta Selecionada , Favor Cancelar a Seleção.") , .f.)
+			Return 
+		End If 	
+
+
 		cOpsel := ''
 
 		nSalvai := nLineImg
@@ -2505,6 +2602,20 @@ Function xAbreOpMenu( cF1 , cContrl1 )
 		RefreshLbl()	
 		
 		cLblConsu := ''
+
+		
+		cSubMenuSel := ''
+
+			
+		SetProperty(  cFormPrin  ,   'Label_Sel1' ,   'Value' ,  ''    )		
+		
+		OBTN_Visible( cFormPrin , 5460 , .f.)				
+		OBTN_Visible( cFormPrin , 5461 , .f.)				
+
+		
+		SetProperty(   cFormPrin , 'Label_Z1' , 'Visible' , .f. )
+
+
 
 		
 		SetWindowCursor( GetFormHandle(cActiveJan ) , IDC_ARROW)
@@ -2528,11 +2639,6 @@ Function xAbreOpMenu( cF1 , cContrl1 )
 
 		RedrawMenu( aOpz1  )		
 		RefreshLbl()
-
-				
-
-
-
 
 	End If
 
@@ -2571,6 +2677,8 @@ Function xAbreOpMenu( cF1 , cContrl1 )
 		OBTN_Visible( cFormPrin , 5459 , .f.)
 		OBTN_Visible( cFormPrin , 5460 , .f.)
 
+		OBTN_Visible( cFormPrin , 5461 , .f.)				
+
 		SetProperty(   cFormPrin , 'Label_Z1' , 'Visible' , .f. )
 
 		xButConsul( .f. , .f. )
@@ -2593,8 +2701,23 @@ Function xAbreOpMenu( cF1 , cContrl1 )
 		OBTN_Visible( cFormPrin , 5458 , .t.)
 		OBTN_Visible( cFormPrin , 5459 , .t.)
 		OBTN_Visible( cFormPrin , 5460 , .t.)
+		OBTN_Visible( cFormPrin , 5461 , .t.)
 
 		xButConsul( .t. , .f. )
+
+
+
+		lHitBottom := .f.
+		lHitTop    := .t.
+
+		
+		
+		HMG_ChangeWindowStyle( GetFormHandle(cMenuName) ,  WS_THICKFRAME , NIL, .T., .T. )
+
+		
+		//EnableScrollBar (GetFormHandle(cMenuName), 1, .f. )
+
+		
 
 
 		// msginfo( aSubOp[  Len(aSubOp) - 1 ] + ' ' + Str(    Len(aSubOp)   )  )
@@ -2607,6 +2730,12 @@ Function xAbreOpMenu( cF1 , cContrl1 )
 	nHeight := nTamSubMenuConsulta
 
 	nLine1 := nLinha+80
+
+	cSubMenuSel := ''
+
+	
+	SetProperty(  cFormPrin  ,   'Label_Sel1' ,   'Value' ,  ''    )						
+
 	
 
 	If Len(aSubOp) < nItMax
@@ -2633,16 +2762,25 @@ Function xAbreOpMenu( cF1 , cContrl1 )
 
 
 
+
 	LimpaLabels(.f.)
-	CrieSubMenu(aSubOp)
+
+	//CrieSubMenu(aSubOp)
+
+	BT_ClientAreaInvalidateAll(   cMenuName )
+
+
 
 	//Syswait(.2)
 
 
+	
 	SetProperty(cMenuName , "row" , nLine1)
 	SetProperty(cMenuName , "col" , 1)
 
+	nHeight := 300	
 	SetProperty(cMenuName , "Height" , nHeight  )
+	
 
 	_ShowWindow( cMenuName )
 
@@ -2656,7 +2794,9 @@ Function xAbreOpMenu( cF1 , cContrl1 )
 
 
 	If nLineImg > 0	
-		BT_ClientAreaInvalidateRect ( cActiveJan , nLineImg  , 0,  180 , 50 , .t. )
+		//BT_ClientAreaInvalidateRect ( cActiveJan , nLineImg  , 0,  180 , 50 , .t. )
+
+		BT_ClientAreaInvalidateRect ( cActiveJan , nLineImg, 0,  nLineImg+20 , 178 , .t. )
 		//nItx1 := nItemSubHeight
 	End If 	
 
@@ -2734,6 +2874,7 @@ Function xButConsul(  lVisible , lAll   )
 		OBTN_Enable( cFormPrin , 5459 , .f.)
 
 		OBTN_Enable( cFormPrin , 5460 , .f.)	
+		OBTN_Visible( cFormPrin , 5461 , .f.)
 
 
 		DoMethod( cFormPrin , 'Label_z1' , 'Show')
@@ -2748,6 +2889,8 @@ Function xButConsul(  lVisible , lAll   )
 		OBTN_Visible( cFormPrin , 5459 , .f.)
 
 		OBTN_Enable( cFormPrin , 5460 , .f.)	
+
+		OBTN_Visible( cFormPrin , 5461 , .f.)
 
 
 		DoMethod( cFormPrin , 'Label_z1' , 'Hide')
@@ -2766,6 +2909,9 @@ Function xButConsul(  lVisible , lAll   )
 
 		
 		OBTN_Enable( cFormPrin , 5460 , .t.)	
+
+		OBTN_Visible( cFormPrin , 5461 , .t.)	
+		OBTN_Enable( cFormPrin , 5461 , .t.)	
 
 		//msginfo('ok')			
 
@@ -2836,14 +2982,28 @@ Function UpScrool( nDir , nTamanho )
 		lOk := .t.
 		If nItx1 = nTamanho
 			lHitBottom := .t.
-			//lUpdMenu := .t.
+			lHitTop    := .f.
+			lUpdMenu := .t.
 		End If
+
+
+		*// Linha 1 
+		If ( nLinRow =   (1 * nIncre )   )
+
+			lHitTop    := .f.			
+			lUpdMenu   := .t.
+
+		End If 	
+
+
+
 
 
 	Else
 
 		If (!lHitTop) .And. (nDir == 2)
 
+		
 			If nItx1 > nItMax
 				nLinRow := nLinRow - nIncre
 				nItx1--
@@ -2854,9 +3014,20 @@ Function UpScrool( nDir , nTamanho )
 
 
 					lHitBottom := .f.
-					lHitTop    := .f.
+					lHitTop    := .t.
+
 
 					lUpdMenu := .t.
+
+				Else
+
+							*// Linha 1 
+					If ( nItx1  =   (  (nTamanho - 1)   )   )
+						
+						lHitBottom := .f.	
+						lUpdMenu   := .t.
+
+					End If 	
 
 
 				End If
@@ -2875,6 +3046,9 @@ Function UpScrool( nDir , nTamanho )
 
 		End If
 
+
+
+
 	End If
 
 
@@ -2885,15 +3059,55 @@ Function UpScrool( nDir , nTamanho )
 
 
 
+
 	//SysWait(.1)
+
+	
+
+
+	hwnd :=  GetFormHandle(  cMenuName  ) 
+
+	//SetScrollRange ( hwnd , 1 , 0 , nItemSubHeight * len(aSubOp) , .T. )
+
+	//z := GetScrollRangeMax (GetFormHandle(  cMenuName  ), 1 ) 
 
 	If (lOk)
-		_HMG_PRINTER_SETVSCROLLVALUE( GetFormHandle(  cMenuName  )  , nLinRow)
+		
+		
+	//	msginfo('ok')
+
+		//Syswait(.2)
+
+		_HMG_PRINTER_SETVSCROLLVALUE(   hWnd  , nLinRow )
+
+		//msginfo('ok')
+
+		
+    	//SendMessage(  GetFormHandle(  cMenuName  ) , WM_VSCROLL , SB_LINEDOWN , 0 )
+
+
+		
+		//NewPos := GetScrollPos( GetFormHandle(  cMenuName  ), 1 ) + nIncre
+
+    	//nOk := SetScrollPos (GetFormHandle(  cMenuName  ) , 1 , NewPos , 1 )
+
+		
+
+		//SendMessage(  GetFormHandle(  cMenuName  ) , WM_VSCROLL , SB_LINEDOWN , 0 )
+
+
+      
+
+		//SETVSCROLLVALUE(GetFormHandle(  cMenuName  )  )
 	End If
+//	SysWait(.1)
 
-	//SysWait(.1)
+	
 
-	//SendMessage(  GetFormHandle(  cMenuName  ) , WM_VSCROLL , SB_LINEDOWN , 0 )
+
+//	SendMessage(  GetFormHandle(  cMenuName  ) , WM_VSCROLL , SB_LINEDOWN , 0 )
+
+	//_ShowWindow(  cMenuName )
 
 /*
 	
@@ -3062,6 +3276,8 @@ FUNCTION IntCli(  lSoConsulta )
 				nB1++
 
 
+				HB_SetCodePage("UTF8")	
+
 
 				If (nX1 == 1)
 					
@@ -3080,12 +3296,17 @@ FUNCTION IntCli(  lSoConsulta )
 					OBTN_Font( cFormPrin , 5460,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
 					
+					OBTN_Create( cFormPrin , 5461, hb_UTF8TOSTR("&Cancelar Selecao") ,  nLinBut - 315  , 35  ,  125 ,  24 ,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
+					OBTN_Font( cFormPrin , 5461,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
+
+					
+
 
 					If !_IsControlDefined( 'Label_Z1' , cFormPrin)
 
 						DEFINE LABEL Label_z1
 							PARENT &cFormPrin
-							ROW    nLinBut - 245
+							ROW    nLinBut - 265
 							COL    5
 							WIDTH  350
 							HEIGHT 24
@@ -3104,11 +3325,12 @@ FUNCTION IntCli(  lSoConsulta )
 							AUTOSIZE .F.
 							BACKCOLOR BACKVERDE1
 							FONTCOLOR {78,78,78}
+							VISIBLE .F.
 						END LABEL
 
 						DEFINE LABEL Label_Sel1 
 							PARENT &cFormPrin
-							ROW    nLinBut - 218 
+							ROW    nLinBut - 228 
 							COL    5
 							WIDTH  350
 							HEIGHT 24
@@ -3141,12 +3363,12 @@ FUNCTION IntCli(  lSoConsulta )
 					OBTN_Visible( cFormPrin , 5458 , .f.)
 					OBTN_Visible( cFormPrin , 5459 , .f.)				
 
-					OBTN_Visible( cFormPrin , 5460 , .t.)				
+					OBTN_Visible( cFormPrin , 5460 , .f.)				
+					OBTN_Visible( cFormPrin , 5461 , .f.)									
 
-					//OBTN_Visible( cFormPrin , 5460 , .f.)	
 
+					//sginfo('ok')
 
-					//msginfo('ok')
 
 
 					//Syswait(.1)
@@ -3345,6 +3567,7 @@ FUNCTION EventButton()
 		Return 
 	End If 
 
+	
 
 
 	//msginfo(cFormx)
@@ -3384,6 +3607,13 @@ FUNCTION EventButton()
 			cFormx := cFormPrin
 		End If
 
+		
+
+		IF ( OBTN_Handle( cFormPrin  , 5461 ) == nHWnd )
+			nIdBut := 5461
+			cFormx := cFormPrin
+		End If
+
 
 
 	Next 
@@ -3412,7 +3642,7 @@ FUNCTION EventButton()
 
 			nindx := Ascan( aButtons , { |a| a[1] == OBTN_Caption(cFormx , nIDBut) } )
 
-			If (nindx > 0) .And. (nIdBut != 5457) .And. (nIdBut != 5458) .And. (nIdBut != 5459) .And. (nIdBut != 5460)
+			If (nindx > 0) .And. (nIdBut != 5457) .And. (nIdBut != 5458) .And. (nIdBut != 5459) .And. (nIdBut != 5460) .And. (nIdBut != 5461)
 				If !Empty(Alltrim(aBlocks[nindx][4]))
 					SetToolTip ( nHWnd  , aBlocks[nindx][4] ,  GetFormToolTipHandle (cFormx)  )
 				End If
@@ -3434,6 +3664,11 @@ FUNCTION EventButton()
 				If (nIdBut = 5460)
 					SetToolTip ( nHWnd  ,  "Executa a Consulta Selecionada." ,  GetFormToolTipHandle (cFormx)  )
 				End If
+
+				If (nIdBut = 5461)
+					SetToolTip ( nHWnd  ,  "Cancela a Seleção da Consulta." ,  GetFormToolTipHandle (cFormx)  )
+				End If
+
 
 			End If
 
@@ -3587,13 +3822,15 @@ FUNCTION EventButton()
 
 
 
-
 		*// Eventos Sub menu Consulta.
 
 		If (_IsWindowDefined(cForm)) .And. (GetProperty(cForm , "HANDLE") == GetFormHandle( cMenuName ))
 			//msginfo('ok')
 
 			If  (nMsg == WM_MOUSEMOVE)
+
+				msginfo('opk')
+
 
 
 				SetWindowCursor( GetControlHandle( cControl , cForm  ),  CURSORHAND )
@@ -3647,13 +3884,13 @@ FUNCTION EventButton()
 				nIndf := ascan(aOpz2 , {|a|  Right(a[1],Len(a[1]) - 2)   == alltrim(cOpcao) } )
 
 
-
 				If alltrim(cOpSel) == 'Consultas'
 
 					If _IsControlDefined( 'Label_Sel1' , cFormPrin )
 
 
 						If (cSubMenuSel != cControl)
+
 
 						
 							lTracking12 := .F. 		
@@ -3666,11 +3903,12 @@ FUNCTION EventButton()
 
 							End If 
 
+
 							cSubMenuSel := cControl 
 
 							SetProperty(  cFormPrin  ,   'Label_Sel1' ,   'Value' ,  Alltrim(cOpcao)    )						
 
-							Syswait(.1)
+							//Syswait(.1)
 
 							//PostMessage( GetControlHandle( cControl , cForm  ), WM_MOUSELEAVE ,0,0 )
 							
@@ -3679,23 +3917,8 @@ FUNCTION EventButton()
 
 							//Syswait(.2)
 
-						Else 
-							
-							//PostMessage( GetControlHandle( cControl , cForm  ), WM_MOUSELEAVE ,0,0 )
-
-						//	SetProperty(cForm, cSubMenuSel, "BACKCOLOR", BACK1)
-						//	SetProperty(cForm, cSubMenuSel, "FONTBOLD", .F.)
-
-
-						//	SetProperty(  cFormPrin  ,   'Label_Sel1' ,   'Value' ,  ' '    )	
-
-							//Syswait(.1)
-
-						//	lTracking12 := .F. 					
-						//	xButConsul( .t. , .f. )
-
-
-						//	cSubMenuSel := ''
+						Else 					
+					
 
 							xCancelSel()
 
@@ -3748,7 +3971,7 @@ FUNCTION EventButton()
 
 
 
-				Refreshall( cMenuName )
+				//Refreshall( cMenuName )
 
 
 				If _isControlDefined('G4343' , cFormPrin)
@@ -3984,7 +4207,16 @@ FUNCTION EventButton()
 RETURN
 
 
+
+
+
 Function xCancelSel()
+
+
+	If Empty(Alltrim( cSubMenuSel ))
+		yAviso(  Hb_AnsiToOem("Não Existe Consulta Selecionada.") , .f. )
+		return 
+	End If 	
 
  	SetProperty(cMenuName, cSubMenuSel, "BACKCOLOR", BACK1)
 	SetProperty(cMenuName, cSubMenuSel, "FONTBOLD", .F.)
@@ -4165,7 +4397,7 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 		// msginfo('ok')
 		// Return
 		IF nMsg == WM_DRAWITEM
-			IF (nWParam >=  5457) .and. ( nWParam <=  5460  )
+			IF (nWParam >=  5457) .and. ( nWParam <=  5461  )
 				OBTN_Draw( nHWnd,  nWParam , nLParam )
 			END IF
 		END IF
@@ -4245,6 +4477,13 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 			End If 
 
+			
+			If nId = 5461
+				PushButton( cFormPrin  , nid )
+				xCancelSel()				
+			End If 
+
+
 
 			
 			IF nId == 5459
@@ -4311,6 +4550,47 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 
 	END IF
+	
+	If nHWnd == GetProperty(  cMenuName , "HANDLE" )
+
+		
+		If ( nMsg == WM_MOUSEMOVE )
+			//msginfo('ok2')
+		End If 	
+
+		If ( nMsg == WM_LBUTTONDOWN )
+			//msginfo('ok2')
+
+			nCol := 0
+			nRow := 0			
+			GetCursorPos (@nCol, @nRow)
+
+			aR1 := GetPos_ScreenToClient(   nHWnd   , nRow, nCol )
+
+			
+			NewPos := GetScrollPos( GetFormHandle(  cMenuName  ), 1 ) 
+
+			If NewPos > 0 
+
+				nItem := (Int( (NewPos+Ar1[1])     / nItemSubHeight)+1)
+				msginfo(Str(   nItem ) )				
+
+
+			Else
+
+				nItem := (Int(Ar1[1] / nItemSubHeight)+1)
+				msginfo(Str(   nItem ) )
+				
+		    End If 		
+
+
+
+
+		End If 	
+
+
+    End If 		
+
 
 
 	If nHWnd == GetProperty(  cForm, "HANDLE" )
@@ -4546,6 +4826,7 @@ Function CrieSubMenu(aSub1)
 
 	For n1 := 1 To Len(aSub1)
 
+
 		nCont1++
 		cLabelx := 'MenuCons' + StrZero(nCont1,3)
 
@@ -4566,7 +4847,12 @@ Function CrieSubMenu(aSub1)
 			TRANSPARENT .f.
 		END LABEL
 
+
+
 		nHandle1 := GetControlHandle( cLabelx, cMenuName )
+
+		//SetProperty( cMenuName , cLabelx , 'Enabled' , .f. )
+
 
 		//EventProcessAllHookMessage(EventCreate({ || LabelEventH2() }, nHandle1  ), .T.)
 
@@ -4921,7 +5207,8 @@ Function xGetScrol( lMouseMove )
 
 		*//Atualiza display do sub Menu	
 		If (lUpdMenu)
-		//	BT_ClientAreaInvalidateRect ( cFormPrin , nLineImg, 0,  nLineImg+35 , 178 , .t. )
+			BT_ClientAreaInvalidateRect ( cFormPrin , nLineImg, 0,  178 , 35 , .t. )
+
 			lUpdMenu := .f.
 		End If
 
@@ -5965,6 +6252,7 @@ REturn
 
 
 //#pragma ENDDUMP
+
 
 
 

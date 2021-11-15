@@ -2401,6 +2401,26 @@ Return
 	}
 
 	
+HB_FUNC ( SETVSCROLLVALUE )
+{
+
+	SendMessage ( (HWND) HMG_parnl (1), WM_VSCROLL ,  SB_LINEDOWN , 15 ) ;
+
+}
+
+
+
+HB_FUNC ( ENABLESCROLLBAR )
+{
+   HWND hWnd    = (HWND) HMG_parnl (1);
+   UINT nBar    = (UINT) hb_parnl  (2);
+   UINT nAction = (UINT) hb_parl   (3) ? ESB_ENABLE_BOTH : ESB_DISABLE_BOTH;
+
+   EnableScrollBar (hWnd, nBar, nAction);
+}
+
+
+	
 
 	#pragma ENDDUMP
 
