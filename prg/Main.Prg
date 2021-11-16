@@ -147,6 +147,8 @@ FUNCTION Main
 
 	Private lTracking12 := .F.
 
+	Private lTracking62 := .F.
+
 	
 	REQUEST HB_LANG_PT
 	REQUEST HB_CODEPAGE_PT850

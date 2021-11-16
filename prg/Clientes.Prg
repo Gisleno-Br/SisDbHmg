@@ -93,6 +93,9 @@ if ( hb_parl (12) )
 STATIC lTracking6  := .F. 
 STATIC lTracking12 := .F.
 
+//STATIC lTracking62 := .f. 
+
+
 
 //DLLFUNCTION SetWindowLongA( nHwnd, nStyle, nPtr ) USING STDCALL FROM User32.dll
 
@@ -3738,6 +3741,9 @@ FUNCTION EventButton()
 
 				lSoltou := .f.
 				//TimerRed()
+
+				
+				xLimpSubMenu()
 				lInvalid := .f.
 				SetProperty(cActiveJan , "Timer_1" , "Enabled" , .t. )
 
@@ -3775,6 +3781,9 @@ FUNCTION EventButton()
 			If (nMsg == WM_MOUSEMOVE) .And. (!lSoltou) .and. (!lOpcaoAberta)
 
 				lSoltou := .f.
+
+				
+				xLimpSubMenu()
 
 				SysWait(.1)
 				//TimerRed()
@@ -3850,7 +3859,7 @@ FUNCTION EventButton()
 
 			If  (nMsg == WM_MOUSEMOVE)
 
-				msginfo('opk')
+				//msginfo('opk')
 
 
 
@@ -4169,6 +4178,11 @@ FUNCTION EventButton()
 
 		End If
 
+		If nMsg == WM_MOUSEMOVE			
+			xLimpSubMenu()
+			//Syswait(.2)
+
+		End If 
 
 
 
@@ -4286,6 +4300,8 @@ Function xExecConsu(   cOpcao1  )
 			xCancelSel()
 
 
+
+
 			PostMessage(  nHnx1 , WM_LBUTTONDOWN ,0,0 )
 
 			Syswait(.1)	
@@ -4378,6 +4394,8 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 	Local cControl := ''
 
 	STATIC lTracking30 := .F.
+
+	
 
 	cForm := 'FTop1' + Right(cActiveJan,5)
 
@@ -4574,11 +4592,24 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 	
 	If nHWnd == GetProperty(  cMenuName , "HANDLE" )
 
+		If ( nMsg == WM_MOUSELEAVE ) 
+
+			nClear := nOpselx	
+			BT_ClientAreaInvalidateRect( cMenuName , ( (nOpselx - 1) * nItemSubHeight) - 2 , 0 , 177 ,  nItemSubHeight - 1 , .t. )
+
+
+			nClear := 0
+			
+			SetWindowCursor( nHWnd , IDC_ARROW )  
+
+			lTracking62 := .f. 
+
+		End If 
 		
-		If ( nMsg == WM_MOUSEMOVE )
-			//msginfo('ok2')
 
+		If ( nMsg == WM_MOUSEMOVE ) 
 
+			/*
 			If nOpselx > 0
 
 				nClear := nOpselx	
@@ -4586,13 +4617,19 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 
 				nClear := 0
-				//msginfo('ok')
-
+			
 
 			End If 	
+			*/
+
+			xLimpSubMenu()
 
 			nOpselx := xOpSel1(  nHWnd )
 
+			
+			//lTracking62 := TrackMouseEvent(nHWnd)
+
+			
 			
 			SetWindowCursor( nHWnd , CURSORHAND)  
 
@@ -4702,6 +4739,20 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 	//EventButton()
 
 RETURN NIL
+
+Function xLimpSubMenu()
+
+	If nOpselx > 0
+
+		nClear := nOpselx	
+		BT_ClientAreaInvalidateRect( cMenuName , ( (nOpselx - 1) * nItemSubHeight) - 2 , 0 , 177 ,  nItemSubHeight - 1 , .t. )
+
+		nClear := 0			
+
+	End If 	
+
+Return 
+
 
 Function xOpSel1( nHWnd1 )
 
