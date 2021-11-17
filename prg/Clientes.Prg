@@ -329,7 +329,7 @@ Function EnchMtrConsul(cTab1)
 	For n1 := 1 TO oQuery:LastRec()
 
 		oRow := oQuery:GetRow(n1)
-		aadd(aConsultas , '1-' + alltrim(GetCampo(oRow , 'descricao')) )
+		aadd(aConsultas ,  alltrim(GetCampo(oRow , 'descricao')) )
 
 	Next
 
@@ -2538,11 +2538,16 @@ Function xPaintSub()
 
 
 	If (nOpselx = 0)
-		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , 177 ,    nHeightBmp    , BACK1 ,BACK1  )	
+		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , 187 ,    nHeightBmp    , BACK1 ,BACK1  )	
 	End If 	
 
 	If nClear > 0
-		BT_DrawGradientFillVertical ( hDC2 ,  (nClear - 1) * nItemSubHeight   , 0  , 177 ,    nHeightBmp    , BACK1 ,BACK1  )	
+
+		BT_DrawGradientFillVertical ( hDC2 ,   (nClear  * nItemSubHeight)   , 0  , 187 ,    nHeightBmp    ,  BACK1  ,BACK1  )	
+
+		//nClear := 0
+
+		
 
 	End If 	
 
@@ -2551,16 +2556,26 @@ Function xPaintSub()
 
 		cTexto := alltrim(  Right( aSubOp[n1]  , Len(  aSubOp[n1] ) - 2  ) )
 
-		cTexto := strzero(n1,3) + ' ' + aSubOp[n1] 
+		cTexto := aSubOp[n1]
 
-		If (nOpselx > 0) .And. (nOpSelx = n1)
+		//cTexto := strzero(n1,3) + ' ' + aSubOp[n1] 
 
-			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow - 2  , 00  , 177 ,    nItemSubHeight - 1     , BACK1 ,WHITE  )
-			BT_DrawText ( hDC2 , nLine + nRow  , 01 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  {32,134,200}   , nTypeText, nAlingText, nOrientation )
+		If ((nOpselx > 0) .And. (nOpSelx = n1) ) .or. (   (nOpselx > 0) .And. ( Alltrim(cSubMenuSel) = Alltrim(cTexto) )  )
+
+			nTypeText    := BT_TEXT_TRANSPARENT 
+			// + BT_TEXT_BOLD
+
+			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow - 2  , 00  , 187 ,    nItemSubHeight - 1     , BACK1 ,WHITE  )		
+			BT_DrawText ( hDC2 , nLine + nRow  , 05 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  {32,134,200}   , ; 
+			Iif( Alltrim(cSubMenuSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ; 
+			nAlingText, nOrientation )
 		   
 
-		Else 	
-			BT_DrawText ( hDC2 , nLine + nRow  , 01 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR , BACK1 , nTypeText, nAlingText, nOrientation )
+		Else 				
+		
+			nTypeText    := BT_TEXT_TRANSPARENT  
+			BT_DrawText ( hDC2 , nLine + nRow  , 05 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR , BACK1 , nTypeText, nAlingText, nOrientation )
+
 		End If 	
 
 		
@@ -3918,9 +3933,7 @@ FUNCTION EventButton()
 
 					If _IsControlDefined( 'Label_Sel1' , cFormPrin )
 
-
 						If (cSubMenuSel != cControl)
-
 
 						
 							lTracking12 := .F. 		
@@ -3938,14 +3951,11 @@ FUNCTION EventButton()
 
 							SetProperty(  cFormPrin  ,   'Label_Sel1' ,   'Value' ,  Alltrim(cOpcao)    )						
 
-							//Syswait(.1)
-
-							//PostMessage( GetControlHandle( cControl , cForm  ), WM_MOUSELEAVE ,0,0 )
 							
 							lTracking12 := .F. 					
 							xButConsul( .t. , .t. )
 
-							//Syswait(.2)
+							
 
 						Else 					
 					
@@ -4253,8 +4263,11 @@ Function xCancelSel()
 		return 
 	End If 	
 
+	/*
  	SetProperty(cMenuName, cSubMenuSel, "BACKCOLOR", BACK1)
 	SetProperty(cMenuName, cSubMenuSel, "FONTBOLD", .F.)
+
+	*/
 
 
 	SetProperty(  cFormPrin  ,   'Label_Sel1' ,   'Value' ,  ' '    )	
@@ -4382,6 +4395,10 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 	Local nHnx1
 
 	LOCAL nind1
+
+	Local nRow1 := 0
+
+	Local cOpcao 
 
 	Local cForm
 	Local nIdBut := 0
@@ -4592,78 +4609,106 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 	
 	If nHWnd == GetProperty(  cMenuName , "HANDLE" )
 
-		If ( nMsg == WM_MOUSELEAVE ) 
+		If ( nMsg == WM_MOUSELEAVE ) .And. (lTracking62)
 
-			nClear := nOpselx	
-			BT_ClientAreaInvalidateRect( cMenuName , ( (nOpselx - 1) * nItemSubHeight) - 2 , 0 , 177 ,  nItemSubHeight - 1 , .t. )
+			nOpselx := 0
+			BT_ClientAreaInvalidateAll( nHWnd  )
 
 
-			nClear := 0
-			
 			SetWindowCursor( nHWnd , IDC_ARROW )  
-
 			lTracking62 := .f. 
+
+			//msginfo('mkeave')
+
 
 		End If 
 		
 
+
 		If ( nMsg == WM_MOUSEMOVE ) 
-
-			/*
-			If nOpselx > 0
-
-				nClear := nOpselx	
-				BT_ClientAreaInvalidateRect( cMenuName , ( (nOpselx - 1) * nItemSubHeight) - 2 , 0 , 177 ,  nItemSubHeight - 1 , .t. )
+		
+			//.And. (lTracking62)
 
 
-				nClear := 0
-			
-
+			If nOpSelx > 0 
+				nClear := nOpSelx
 			End If 	
-			*/
-
-			xLimpSubMenu()
-
-			nOpselx := xOpSel1(  nHWnd )
 
 			
-			//lTracking62 := TrackMouseEvent(nHWnd)
+			if nClear > 0 
+				xLimpSubMenu()
+			End If 				
+			
+			lTracking62 := TrackMouseEvent(nHWnd)		
 
+			nOpselx := xOpSel1(  nHWnd )			
+
+			cOpcao := aSubOp[nOpSelx]
 			
 			
 			SetWindowCursor( nHWnd , CURSORHAND)  
 
-			If nOpselx > 0
-				//BT_ClientAreaInvalidateAll(cMenuName)
-				BT_ClientAreaInvalidateRect( cMenuName , (nOpselx * nItemSubHeight) - 2 , 0 , 177 ,  nItemSubHeight - 1 , .t. )
+			nRow1 := -(GetProperty( cMenuName , "VscrollBar" , "Value"))
+
+
+			//cTp1 := RetSql( "select observacao from consultas where descricao = " + QuotedStr( Alltrim(cOpcao) )  +  " and tabela = " + QuotedStr(cTabela) )
+
+
+		
+			If nOpselx > 0				
+				BT_ClientAreaInvalidateRect( cMenuName , nRow1  +  ( (nOpselx - 1) * nItemSubHeight)  , 0 , 187 ,  nItemSubHeight  , .t. )				
 			End If 	
+			
+		
 
 		End If 	
 
 		If ( nMsg == WM_LBUTTONDOWN )
-			//msginfo('ok2')
-
-			nCol := 0
-			nRow := 0			
-			GetCursorPos (@nCol, @nRow)
-
-			aR1 := GetPos_ScreenToClient(   nHWnd   , nRow, nCol )
-
+		
 			
-			NewPos := GetScrollPos( GetFormHandle(  cMenuName  ), 1 ) 
+			nOpselx := xOpSel1(  nHWnd )		
 
-			If NewPos > 0 
+			If _IsControlDefined( 'Label_Sel1' , cFormPrin )
 
-				nItem := (Int( (NewPos+Ar1[1])     / nItemSubHeight)+1)
-				msginfo(Str(   nItem ) )				
+				If (cSubMenuSel != aSubOp[nOpselx] )
+
+						
+					lTracking12 := .F. 		
+
+					If !Empty(Alltrim( cSubMenuSel))
+                            
+					//	SetProperty(cForm, cSubMenuSel, "BACKCOLOR", BACK1)
+					//	SetProperty(cForm, cSubMenuSel, "FONTBOLD", .F.)
+
+						xLimpSubMenu()
 
 
-			Else
+					End If 
 
-				nItem := (Int(Ar1[1] / nItemSubHeight)+1)
-				msginfo(Str(   nItem ) )
-				
-		    End If 		
+
+						cSubMenuSel := aSubOp[nOpselx] 
+
+						SetProperty(  cFormPrin  ,   'Label_Sel1' ,   'Value' ,  Alltrim(cSubMenuSel)    )						
+
+							
+						
+						lTracking62 := TrackMouseEvent(nHWnd)		
+			
+						xButConsul( .t. , .t. )
+
+							
+
+				Else 					
+					
+
+					xCancelSel()
+					xLimpSubMenu()
+
+
+
+				End If 
+
+			End If 
 
 
 
@@ -4692,25 +4737,6 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 		ELSEIF nMsg == 273 // WM_COMMAND
 
-			//	msginfo('k33')
-
-			/*nID := LoWord( nWParam )
-
-			IF nID == IDOK
-				nID := GetDlgCtrlID( GetFocus() )
-			ENDIF
-
-			//nIdBt1 := AScan( aButtons, {| a| a[ 5 ] == nId } )
-
-			//aBlocks
-			nIdBt1 := AScan( aBlocks , {| a| a[ 5 ] == nId } )
-
-			IF ( nIdBt1 > 0 )
-				PushButton( cForm  , nId )
-				aBlock := aBlocks[ nIdBt1 ][ 2 ]
-				Eval( aBlock )
-			END IF
-           */
 		ELSEIF nMsg == 16 // WM_CLOSE
 			
 			RETURN 1
@@ -4742,16 +4768,19 @@ RETURN NIL
 
 Function xLimpSubMenu()
 
+	Local nRow1 := -(GetProperty( cMenuName , "VscrollBar" , "Value"))
+
 	If nOpselx > 0
 
 		nClear := nOpselx	
-		BT_ClientAreaInvalidateRect( cMenuName , ( (nOpselx - 1) * nItemSubHeight) - 2 , 0 , 177 ,  nItemSubHeight - 1 , .t. )
 
-		nClear := 0			
-
+		//SysWait(.1)
+		BT_ClientAreaInvalidateRect( cMenuName , nRow1 + ( (nOpselx - 1) * nItemSubHeight)  , 0 , 187 ,  nItemSubHeight - 1 , .t. )
+		
 	End If 	
 
 Return 
+
 
 
 Function xOpSel1( nHWnd1 )
@@ -4760,6 +4789,7 @@ Function xOpSel1( nHWnd1 )
 	Local nRow := 0			
 	Local ar1 
 	Local NewPos 
+	Local nRow1 := -(GetProperty( cMenuName , "VscrollBar" , "Value"))
 
 	GetCursorPos (@nCol, @nRow)
 
