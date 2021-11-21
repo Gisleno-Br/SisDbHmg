@@ -204,6 +204,8 @@ FUNCTION CadCli()
 
 	private nClear := 0 
 
+	Private nOpBak := 0
+
 
 	Private nColOrder  := 0
 
@@ -273,6 +275,8 @@ FUNCTION CadCli()
 	Private aLinhas := {}
 
 	Private cBufHeader := ''
+
+	Private cUltOpcaoSel := ''
 
 	Private nIndexEvent := 0
 
@@ -2543,11 +2547,9 @@ Function xPaintSub()
 
 	If nClear > 0
 
-		BT_DrawGradientFillVertical ( hDC2 ,   (nClear  * nItemSubHeight)   , 0  , 187 ,    nHeightBmp    ,  BACK1  ,BACK1  )	
+		BT_DrawGradientFillVertical ( hDC2 ,   (nClear  * nItemSubHeight)    , 0  , 187 ,    nHeightBmp    ,  BACK1  ,BACK1  )			
 
 		//nClear := 0
-
-		
 
 	End If 	
 
@@ -2995,6 +2997,8 @@ Function UpScrool( nDir , nTamanho )
 
 	Local nIncre := nItemSubHeight
 
+	Local nRow1  := 0
+
 	Local lOk := .f.
 
 //	lHitBottom := .f.
@@ -3033,7 +3037,6 @@ Function UpScrool( nDir , nTamanho )
 			lUpdMenu   := .t.
 
 		End If 	
-
 
 
 
@@ -3087,7 +3090,6 @@ Function UpScrool( nDir , nTamanho )
 
 
 
-
 	End If
 
 
@@ -3096,78 +3098,31 @@ Function UpScrool( nDir , nTamanho )
 		lUpdMenu := .t.
 	End If
 
-
-
-
 	//SysWait(.1)
 
-	
+
+	If nClear > 0 
+
+	//	nClear := nOpBak 	
+		nRow1 := -(GetProperty( cMenuName , "VscrollBar" , "Value"))
+
+		BT_ClientAreaInvalidateRect( cMenuName , ( (nClear - 1) * nItemSubHeight) + nRow1  , 0 , 187 ,  nItemSubHeight - 1 , .t. )
+		
+		nOpselx := 0
+		nOpBak  := 0
+		nClear  := 0
+
+
+	End If 	
+
 
 
 	hwnd :=  GetFormHandle(  cMenuName  ) 
 
-	//SetScrollRange ( hwnd , 1 , 0 , nItemSubHeight * len(aSubOp) , .T. )
-
-	//z := GetScrollRangeMax (GetFormHandle(  cMenuName  ), 1 ) 
 
 	If (lOk)
-		
-		
-	//	msginfo('ok')
-
-		//Syswait(.2)
-
-		_HMG_PRINTER_SETVSCROLLVALUE(   hWnd  , nLinRow )
-
-		//msginfo('ok')
-
-		
-    	//SendMessage(  GetFormHandle(  cMenuName  ) , WM_VSCROLL , SB_LINEDOWN , 0 )
-
-
-		
-		//NewPos := GetScrollPos( GetFormHandle(  cMenuName  ), 1 ) + nIncre
-
-    	//nOk := SetScrollPos (GetFormHandle(  cMenuName  ) , 1 , NewPos , 1 )
-
-		
-
-		//SendMessage(  GetFormHandle(  cMenuName  ) , WM_VSCROLL , SB_LINEDOWN , 0 )
-
-
-      
-
-		//SETVSCROLLVALUE(GetFormHandle(  cMenuName  )  )
+		_HMG_PRINTER_SETVSCROLLVALUE(   hWnd  , nLinRow )	
 	End If
-//	SysWait(.1)
-
-	
-
-
-//	SendMessage(  GetFormHandle(  cMenuName  ) , WM_VSCROLL , SB_LINEDOWN , 0 )
-
-	//_ShowWindow(  cMenuName )
-
-/*
-	
-    z := (GetScrollRangeMax (GetFormHandle(  cMenuName  ), 1 ) / 20)
-
-	NewPos := GetScrollPos( GetFormHandle(  cMenuName  ), 1 ) + nIncre
-
-    nOk := SetScrollPos (GetFormHandle(  cMenuName  ) , 1 , NewPos , 1 )
-
-	*/
-
-	//UpdateWindow ( GetFormHandle(  cMenuName  ) )
-
-	//nError := wapi_GetLastError()
-
-	//PostMessage(  GetFormHandle(  cMenuName  ) , WM_VSCROLL , SB_LINEDOWN , 0 )
-
-
-
-//	   sysWait(.2)
-
 
 
 
@@ -3758,7 +3713,7 @@ FUNCTION EventButton()
 				//TimerRed()
 
 				
-				xLimpSubMenu()
+				//xLimpSubMenu()
 				lInvalid := .f.
 				SetProperty(cActiveJan , "Timer_1" , "Enabled" , .t. )
 
@@ -3798,7 +3753,7 @@ FUNCTION EventButton()
 				lSoltou := .f.
 
 				
-				xLimpSubMenu()
+				//xLimpSubMenu()
 
 				SysWait(.1)
 				//TimerRed()
@@ -4189,7 +4144,7 @@ FUNCTION EventButton()
 		End If
 
 		If nMsg == WM_MOUSEMOVE			
-			xLimpSubMenu()
+			//xLimpSubMenu()
 			//Syswait(.2)
 
 		End If 
@@ -4258,16 +4213,30 @@ RETURN
 Function xCancelSel()
 
 
+	Local nRow1 	
+
 	If Empty(Alltrim( cSubMenuSel ))
 		yAviso(  Hb_AnsiToOem("Não Existe Consulta Selecionada.") , .f. )
 		return 
 	End If 	
 
-	/*
- 	SetProperty(cMenuName, cSubMenuSel, "BACKCOLOR", BACK1)
-	SetProperty(cMenuName, cSubMenuSel, "FONTBOLD", .F.)
+	
+	nRow1 := -(GetProperty( cMenuName , "VscrollBar" , "Value"))
 
-	*/
+
+	//nClear := nOpBak
+
+	nOpselx := 0
+	nOpBak := 0
+
+	nClear := 0	
+	
+
+	//BT_ClientAreaInvalidateRect( cMenuName , ( (nClear - 1) * nItemSubHeight) + nRow1  , 0 , 187 ,  nItemSubHeight - 1 , .t. )
+
+	BT_ClientAreaInvalidateAll(cMenuName)
+
+	
 
 
 	SetProperty(  cFormPrin  ,   'Label_Sel1' ,   'Value' ,  ' '    )	
@@ -4280,7 +4249,7 @@ Function xCancelSel()
 	cSubMenuSel := ''
 
 	
-	//OBTN_Visible( cFormPrin , 5460 , .t.)		
+
 
 Return 
 
@@ -4292,7 +4261,7 @@ Function xExecConsu(   cOpcao1  )
 
 	Local lRet       := .t. 
 
-	Local nHnx1 := GetControlHandle(cLblConsu,cFormPrin)
+	Local nHnx1 := GetFormHandle( cMenuName )
 
 
 	If (nIdConsulta > 0)
@@ -4301,35 +4270,22 @@ Function xExecConsu(   cOpcao1  )
 
 		Else					
 
-			//Syswait(.1)
-
-			
-			//SetProperty(cMenuName , cSubMenuSel, "BACKCOLOR", BACK1)
-			//SetProperty(cMenuName , cSubMenuSel, "FONTBOLD", .F.)
-
-			//cSubMenuSel := ''
-
-			
-			xCancelSel()
-
-
-
-
-			PostMessage(  nHnx1 , WM_LBUTTONDOWN ,0,0 )
-
-			Syswait(.1)	
-
+				
+			xCancelSel()		
 			lTracking12 := .F. 
-
+						
 			
-
-			PostMessage(  nHnx1 , WM_LBUTTONDOWN ,0,0 )
-
-			sysWait(.1)
-
-			
-			_HMG_PRINTER_SETVSCROLLVALUE( GetFormHandle(  cMenuName  )  , (nQtElem - nItMax) * nItemSubHeight  )
 			lRet := .f. 
+
+			nOpselx := 0
+			nOpBak := 0
+
+			nClear := 0	
+	
+	
+			BT_ClientAreaInvalidateAll(cMenuName)
+
+			_HMG_PRINTER_SETVSCROLLVALUE( GetFormHandle(  cMenuName  )  , 0  )
 
 			//xButConsul(   .t. , .f. )
 
@@ -4481,26 +4437,9 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 				cTab := GetProperty( cFormPrin  , cLblconsu , "Value" )
 
 								
-				nIdConsulta := GetId(  'consultas' , Alltrim(   GetProperty(  cMenuName , cSubMenuSel , 'Value'  )  ) )
+				nIdConsulta := GetId(  'consultas' , Alltrim(   cSubMenuSel   ) )
 
 				If EditConsulta( cTabela , nIdConsulta)
-
-					//MsgInfo(cTabela+'  ' + cTab + '  Consulta : ' + cTituloCon )
-					/*
-
-					PostMessage( nHxn1 ,WM_LBUTTONDOWN ,0,0)
-
-					PostMessage( nHxn1 ,WM_LBUTTONDOWN ,0,0)
-
-					SaveLog('dexl3.txt', cSqlConsulta )
-
-					
-					_ReleaseControl('br_grid' , cActiveJan)
-
-					BrowConsulta( cSqlConsulta , GetCamposInf( cTituloCon , 'CABEC'  ) , ;
-						GetCamposInf( cTituloCon , 'TAM'  ), ;
-						GetCamposInf( cTituloCon , 'CAMPOS'  )  , cFormPrin  , GetCamposInf( cTituloCon , 'TIPO'  ) )
-						*/
 
 					yAviso("Consulta Modificada com sucesso!" , .f.)
 
@@ -4527,7 +4466,7 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 				PushButton( cFormPrin  , nId )
 
-				If xExecConsu(  GetProperty(   cMenuName , cSubMenuSel  , 'Value'  )  )
+				If xExecConsu(  Alltrim( cSubMenuSel )  )
 
 				End If 
 
@@ -4543,13 +4482,11 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 			
 			IF nId == 5459
-
-
-				//PushButton( cFormPrin  , nid )
+				
 				PushButton( cFormPrin  , nId )
 
 				
-				nIdConsulta := GetId(  'consultas' , Alltrim(   GetProperty(  cMenuName , cSubMenuSel , 'Value'  )  ) )
+				nIdConsulta := GetId(  'consultas' , Alltrim(cSubMenuSel)  )
 
 
 				If (nIdConsulta > 0) .And.  (Confirmaviso( Hb_AnsiToOem("Confirma Exclusão dessa Consulta ? ")  , cActiveJan , .f. ))
@@ -4558,7 +4495,7 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 					ExcluiConsulta(nIdConsulta)
 				
 
-					nHxn1 := GetControlHandle(cLblConsu,cFormPrin)					
+					nHxn1 := GetFormHandle(cMenuName)
 
 
 					If (nHxn1 > 0)
@@ -4572,22 +4509,23 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 						cOpBak := cOpsel 
 						cOpSel := ''
 
-					    xManutSub1()
-
-						Syswait(.1)
-
-						PostMessage(  nHnx1 , WM_LBUTTONDOWN ,0,0 )
-
-						Syswait(.1)
+					    //xManutSub1()
+					
 			
 			
-						_HMG_PRINTER_SETVSCROLLVALUE( GetFormHandle(  cMenuName  )  , (nQtElem - nItMax) * nItemSubHeight  )
+						_HMG_PRINTER_SETVSCROLLVALUE( nHxn1  , 0 )
 
 
 						//Syswait(.2)
 
-						cOpsel := copBak 
+						
 						SetWindowCursor( GetFormHandle(cActiveJan ) , IDC_ARROW)	
+
+						nOpselx := 0
+						nClear  := 0
+						nOpBak  := 0
+
+						BT_ClientAreaInvalidateAll( cMenuName )
 
 						xCancelSel()						
 
@@ -4611,14 +4549,27 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 		If ( nMsg == WM_MOUSELEAVE ) .And. (lTracking62)
 
-			nOpselx := 0
+			//nOpBak1 := nOpBak
+			nOpselx := 0			
+
+
+			
 			BT_ClientAreaInvalidateAll( nHWnd  )
+			
+			//cSubMenuSel := ''
 
 
-			SetWindowCursor( nHWnd , IDC_ARROW )  
+			If (nOpBak > 0) .And. (nOpBak != nOpselx)
+				nOpselx := nOpBak
+
+				BT_ClientAreaInvalidateRect( cMenuName , nRow1  +  ( (nOpselx - 1) * nItemSubHeight)  , 0 , 187 ,  nItemSubHeight - 1  , .t. )	
+			End If 	
+
+			
+
+			SetWindowCursor( nHWnd , IDC_ARROW )  			
 			lTracking62 := .f. 
 
-			//msginfo('mkeave')
 
 
 		End If 
@@ -4626,24 +4577,46 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 
 		If ( nMsg == WM_MOUSEMOVE ) 
-		
-			//.And. (lTracking62)
 
+
+			If (nOpselx > Len(aSubOp)) 
+				return 	
+			End If 	
+			
+		
 
 			If nOpSelx > 0 
-				nClear := nOpSelx
+				nClear := nOpSelx		
 			End If 	
 
 			
-			if nClear > 0 
-				xLimpSubMenu()
+			If nClear > 0 
+				xLimpSubMenu()				
 			End If 				
+
+			//nClear := nOpSelx
 			
-			lTracking62 := TrackMouseEvent(nHWnd)		
 
 			nOpselx := xOpSel1(  nHWnd )			
 
+			IF (nOpselx = 0) .or. (nOpselx > Len(aSubOp)) 
+				Return 
+			End If 	
+
+
 			cOpcao := aSubOp[nOpSelx]
+
+			
+		    If (cUltOpcaoSel = cOpcao)
+				Return 
+			End If 	
+
+			If (nClear > 0) .And. (nClear <= Len(aSubOp))
+				cUltOpcaoSel := aSubOp[nClear]
+			Else
+				Return 	
+			End If 			
+
 			
 			
 			SetWindowCursor( nHWnd , CURSORHAND)  
@@ -4653,22 +4626,31 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 			//cTp1 := RetSql( "select observacao from consultas where descricao = " + QuotedStr( Alltrim(cOpcao) )  +  " and tabela = " + QuotedStr(cTabela) )
 
+			cUltOpcaoSel :=  Alltrim(cOpcao) 
 
 		
 			If nOpselx > 0				
-				BT_ClientAreaInvalidateRect( cMenuName , nRow1  +  ( (nOpselx - 1) * nItemSubHeight)  , 0 , 187 ,  nItemSubHeight  , .t. )				
+				BT_ClientAreaInvalidateRect( cMenuName , nRow1  +  ( (nOpselx - 1) * nItemSubHeight)  , 0 , 187 ,  nItemSubHeight - 1  , .t. )				
 			End If 	
+
 			
+			lTracking62 := TrackMouseEvent(nHWnd)		
+
 		
 
 		End If 	
 
 		If ( nMsg == WM_LBUTTONDOWN )
+
+			//msginfo( Str(nOpselx) + ' '  + Str(nOpBak) ) 
 		
-			
+			//nClear  := nOpselx
 			nOpselx := xOpSel1(  nHWnd )		
 
-			If _IsControlDefined( 'Label_Sel1' , cFormPrin )
+			
+
+			If (_IsControlDefined( 'Label_Sel1' , cFormPrin )) 
+				 //.And. (nOpselx <= Len(aSubOp))
 
 				If (cSubMenuSel != aSubOp[nOpselx] )
 
@@ -4676,25 +4658,39 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 					lTracking12 := .F. 		
 
 					If !Empty(Alltrim( cSubMenuSel))
-                            
-					//	SetProperty(cForm, cSubMenuSel, "BACKCOLOR", BACK1)
-					//	SetProperty(cForm, cSubMenuSel, "FONTBOLD", .F.)
 
-						xLimpSubMenu()
+						If nOpBak > 0 
+							nClear := nOpBak 
+						End If 	
+
+						
+						nRow1 := -(GetProperty( cMenuName , "VscrollBar" , "Value"))
+
+					//	Syswait(.1)
+
+
+						BT_ClientAreaInvalidateRect( cMenuName , ( (nClear - 1) * nItemSubHeight) + nRow1  , 0 , 187 ,  nItemSubHeight - 1 , .t. )
+
+						
+					
 
 
 					End If 
 
 
-						cSubMenuSel := aSubOp[nOpselx] 
 
-						SetProperty(  cFormPrin  ,   'Label_Sel1' ,   'Value' ,  Alltrim(cSubMenuSel)    )						
+					cSubMenuSel := aSubOp[nOpselx] 
+
+					SetProperty(  cFormPrin  ,   'Label_Sel1' ,   'Value' ,  Alltrim(cSubMenuSel)    )						
+					nOpBak := nOpselx
+
+					//cSubMenuSel := 
 
 							
 						
-						lTracking62 := TrackMouseEvent(nHWnd)		
+					lTracking62 := TrackMouseEvent(nHWnd)		
 			
-						xButConsul( .t. , .t. )
+					xButConsul( .t. , .t. )
 
 							
 
@@ -4774,8 +4770,12 @@ Function xLimpSubMenu()
 
 		nClear := nOpselx	
 
+		//nClear := nOpBak
+
 		//SysWait(.1)
 		BT_ClientAreaInvalidateRect( cMenuName , nRow1 + ( (nOpselx - 1) * nItemSubHeight)  , 0 , 187 ,  nItemSubHeight - 1 , .t. )
+
+		//SysWait(.1)
 		
 	End If 	
 
@@ -4816,23 +4816,30 @@ Function xRefSubMenu()
 
 	xManutSub1( .t.)
 
-	Syswait(.1)
-
+//	Syswait(.1)
 	
+	
+
+
 	PostMessage(  nHnx1 , WM_LBUTTONDOWN ,0,0 )
 
-	Syswait(.1)
+	//Syswait(.1)
 
 
-	_HMG_PRINTER_SETVSCROLLVALUE( GetFormHandle(  cMenuName  )  , (nQtElem - nItMax) * nIncre  )
+	//_HMG_PRINTER_SETVSCROLLVALUE( GetFormHandle(  cMenuName  )  , (nQtElem - nItMax) * nIncre  )
 
 
 
 Return 
 
 Function zTabela(cTabela1 , nZHandle)
-	Local nHnx1 := GetControlHandle(cLblConsu,cFormPrin)
+
+	Local nHnx1 := GetFormHandle(cMenuName)
+
 	Local nincre := nItemSubHeight
+
+	
+	Local nRow1 := -(GetProperty( cMenuName , "VscrollBar" , "Value"))
 
 	Local cDesc1 := ''
 
@@ -4840,37 +4847,53 @@ Function zTabela(cTabela1 , nZHandle)
 	If (NovaConsulta(cTabela1))
 
 		
+		SetWindowCursor( GetControlHandle(  'br_grid' , cActiveJan ) , HOURGLASS )
 
-		If nQtElem > nItMax
+		
+		Syswait(.1)
 
-  /*
-			xManutSub1( .t.)
+		xRefSubMenu()	
 
-			Syswait(.1)
+
+		nOpselx := 0
+		nClear  := 0
+		nOpBak  := 0
+		BT_ClientAreaInvalidateAll( cMenuName )
+
+		
+        
+
+
+		//NewPos := GetScrollPos( nHnx1, 1 ) + (Len(aSubOp) * nIncre)
+		//SetScrollPos ( nHnx1, 1, NewPos, 0 )
+		
+		//_HMG_PRINTER_SETVSCROLLVALUE( nHnx1  , (Len(aSubOp) * nIncre)  )
+
+		UpScrool(1 ,(Len(aSubOp) * nIncre)  )
+
+
+		
+		NewPos := GetScrollPos( nHnx1, 1 ) + (Len(aSubOp) * nIncre)
+		SetScrollPos ( nHnx1, 1, nRow1 +   (Len(aSubOp) * nIncre)  , 0 )
+		
+
+
+
+		//Syswait(.2)
+
+		lTracking62 := .f.
 
 			
-			PostMessage(  nHnx1 , WM_LBUTTONDOWN ,0,0 )
-
-			Syswait(.1)
-
-
-			_HMG_PRINTER_SETVSCROLLVALUE( GetFormHandle(  cMenuName  )  , (nQtElem - nItMax) * nIncre  )
-			*/
-
+	//	BT_ClientAreaInvalidateRect ( cFormPrin , nLineImg, 0,  178 , 35 , .t. )
+	
+		lUpdMenu := .f.
 			
-			xRefSubMenu()	
-			//xCancelSel()
+	
 
+		
+		SetWindowCursor( GetControlHandle(  'br_grid' , cActiveJan ) , IDC_ARROW )
+		
 
-
-		Else
-
-			//_HMG_PRINTER_SETVSCROLLVALUE( GetFormHandle(  cMenuName  )  , * nIncre  )	
-
-		End If
-
-
-		//SysWait(.1)
 
 
 	End If

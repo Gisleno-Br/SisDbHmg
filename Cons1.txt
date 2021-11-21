@@ -1,1 +1,1 @@
-Insert into Consultas Values(31,1,1,'ZZZZZZQQQ','','2021-11-10','Ativo','Clientes')
+Insert into Consultas Values(71,1,1,'NJ333333','','2021-11-20','Ativo','Clientes')
