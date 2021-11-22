@@ -3030,6 +3030,7 @@ Function UpScrool( nDir , nTamanho )
 		End If
 
 
+
 		*// Linha 1 
 		If ( nLinRow =   (1 * nIncre )   )
 
@@ -4666,13 +4667,8 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 						
 						nRow1 := -(GetProperty( cMenuName , "VscrollBar" , "Value"))
 
-					//	Syswait(.1)
-
-
-						BT_ClientAreaInvalidateRect( cMenuName , ( (nClear - 1) * nItemSubHeight) + nRow1  , 0 , 187 ,  nItemSubHeight - 1 , .t. )
-
-						
 					
+						BT_ClientAreaInvalidateRect( cMenuName , ( (nClear - 1) * nItemSubHeight) + nRow1  , 0 , 187 ,  nItemSubHeight - 1 , .t. )
 
 
 					End If 
@@ -4843,14 +4839,18 @@ Function zTabela(cTabela1 , nZHandle)
 
 	Local cDesc1 := ''
 
+	Local nItemQt := 0
+
 
 	If (NovaConsulta(cTabela1))
 
 		
-		SetWindowCursor( GetControlHandle(  'br_grid' , cActiveJan ) , HOURGLASS )
+		SetWindowCursor( GetFormHandle( cActivejan ) , HOURGLASS )
+
+		//MSGINFO('ok')
 
 		
-		Syswait(.1)
+		//Syswait(.1)
 
 		xRefSubMenu()	
 
@@ -4860,38 +4860,31 @@ Function zTabela(cTabela1 , nZHandle)
 		nOpBak  := 0
 		BT_ClientAreaInvalidateAll( cMenuName )
 
+
+		nItemQt := (nTamSubMenuConsulta / nItemSubHeight)
+
+		If Len(aSubOp) > nItemQt 
+	    	nSalto := ( Len(aSubOp) - nItemQt ) * nIncre 
+		Else 
+			nSalto :=  Len(aSubOp)  * nIncre 
+		End If 	
+
+
+
+		_HMG_PRINTER_SETVSCROLLVALUE(   nHnx1  , nSalto   )	
 		
-        
-
-
-		//NewPos := GetScrollPos( nHnx1, 1 ) + (Len(aSubOp) * nIncre)
-		//SetScrollPos ( nHnx1, 1, NewPos, 0 )
-		
-		//_HMG_PRINTER_SETVSCROLLVALUE( nHnx1  , (Len(aSubOp) * nIncre)  )
-
-		UpScrool(1 ,(Len(aSubOp) * nIncre)  )
-
-
-		
-		NewPos := GetScrollPos( nHnx1, 1 ) + (Len(aSubOp) * nIncre)
-		SetScrollPos ( nHnx1, 1, nRow1 +   (Len(aSubOp) * nIncre)  , 0 )
-		
-
-
-
-		//Syswait(.2)
+		//Syswait(.1)
 
 		lTracking62 := .f.
 
 			
-	//	BT_ClientAreaInvalidateRect ( cFormPrin , nLineImg, 0,  178 , 35 , .t. )
-	
+
+
 		lUpdMenu := .f.
 			
-	
 
 		
-		SetWindowCursor( GetControlHandle(  'br_grid' , cActiveJan ) , IDC_ARROW )
+		SetWindowCursor( GetFormHandle( cActivejan ) , IDC_ARROW )
 		
 
 
