@@ -202,6 +202,8 @@ FUNCTION CadCli()
 
 	Private nOpselx := 0
 
+	Private WinJan := 0 
+
 	private nClear := 0 
 
 	Private nOpBak := 0
@@ -4360,6 +4362,7 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 	Local cForm
 	Local nIdBut := 0
 
+
 	Local cFormx := cFormJan
 
 	Local cFormPrin := cActiveJan
@@ -4566,6 +4569,12 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 				BT_ClientAreaInvalidateRect( cMenuName , nRow1  +  ( (nOpselx - 1) * nItemSubHeight)  , 0 , 187 ,  nItemSubHeight - 1  , .t. )	
 			End If 	
 
+
+			If WinJan > 0
+				SendMessage( WinJan, WM_SYSCOMMAND, SC_CLOSE, 0 )
+				WinJan := 0 
+			End If 	
+
 			
 
 			SetWindowCursor( nHWnd , IDC_ARROW )  			
@@ -4593,6 +4602,13 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 			
 			If nClear > 0 
 				xLimpSubMenu()				
+
+				
+				If IsWindowVisible( WinJan)
+					SendMessage( WinJan, WM_SYSCOMMAND, SC_CLOSE, 0 )
+					WinJan := 0 
+				End If 	
+
 			End If 				
 
 			//nClear := nOpSelx
@@ -4625,7 +4641,8 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 			nRow1 := -(GetProperty( cMenuName , "VscrollBar" , "Value"))
 
 
-			//cTp1 := RetSql( "select observacao from consultas where descricao = " + QuotedStr( Alltrim(cOpcao) )  +  " and tabela = " + QuotedStr(cTabela) )
+			cTp1 := RetSql( "select observacao from consultas where descricao = " + QuotedStr( Alltrim(cOpcao) )  +  " and tabela = " + QuotedStr(cTabela) )
+
 
 			cUltOpcaoSel :=  Alltrim(cOpcao) 
 
@@ -4633,6 +4650,21 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 			If nOpselx > 0				
 				BT_ClientAreaInvalidateRect( cMenuName , nRow1  +  ( (nOpselx - 1) * nItemSubHeight)  , 0 , 187 ,  nItemSubHeight - 1  , .t. )				
 			End If 	
+
+			
+			If !Empty(alltrim(cTp1))
+
+				GetCursorPos (@nCol, @nRow)
+
+				If !_isWindowDefined("Win_Msg")
+					WinJan := Notifier( nRow , 110 ,   alltrim(cTp1) ,, 0.5 )
+					_ShowWindow("Win_Msg")
+				End If 	
+
+				SysWait(.1)
+
+			End If 
+
 
 			
 			lTracking62 := TrackMouseEvent(nHWnd)		
@@ -4846,12 +4878,6 @@ Function zTabela(cTabela1 , nZHandle)
 
 		
 		SetWindowCursor( GetFormHandle( cActivejan ) , HOURGLASS )
-
-		//MSGINFO('ok')
-
-		
-		//Syswait(.1)
-
 		xRefSubMenu()	
 
 
@@ -4873,20 +4899,13 @@ Function zTabela(cTabela1 , nZHandle)
 
 		_HMG_PRINTER_SETVSCROLLVALUE(   nHnx1  , nSalto   )	
 		
-		//Syswait(.1)
+		
 
 		lTracking62 := .f.
-
-			
-
-
-		lUpdMenu := .f.
-			
+		lUpdMenu := .f.		
 
 		
 		SetWindowCursor( GetFormHandle( cActivejan ) , IDC_ARROW )
-		
-
 
 
 	End If

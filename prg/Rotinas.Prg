@@ -146,3 +146,48 @@ FUNCTION SaveCampo( cCampo1, cTab1  )
    oQuery := Nil
 
 RETURN .T.
+
+
+Function Notifier( nTop , nLeft ,   cMsg,ERROR,nSeconds)
+   LOCAL nHeight := 30 , nWidth := 204
+   //LOCAL nLeft := (GetDesktopWidth() - 5) - nWidth
+   //LOCAL nTop := (GetDesktopHeight() - 50) - nHeight
+   LOCAL hWnd, aBcolor, nWinRow := nTop, nWinCol := nLeft
+
+   DEFAULT nSeconds := 2
+   If ValType(ERROR) = "U"
+      aBcolor := {250,243,180}
+   Else
+      aBcolor := {250,243,180}
+   Endif
+
+   DEFINE WINDOW Win_Msg AT nTop, nLeft WIDTH nWidth HEIGHT nHeight TOPMOST ;
+      NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION BACKCOLOR aBcolor
+      
+      DEFINE LABEL Label_1
+         ROW         3
+         COL         3
+         WIDTH       nWidth - 20
+         HEIGHT      nHeight - 20
+         VALUE       cMsg
+         FONTNAME    XFONT1
+         FONTSIZE    10
+         FONTBOLD    .F.
+         BACKCOLOR   aBcolor
+         FONTCOLOR   BLACK
+         CENTERALIGN .T. 
+      END LABEL
+
+   END WINDOW
+   hWnd := GetFormHandle("Win_Msg")
+   HMG_ChangeWindowStyle(hWnd, WS_EX_CLIENTEDGE, NIL, .T.)
+
+   //_ShowWindow("Win_Msg")
+/*
+   AnimateWindow(hWnd, (nSeconds*300), AW_VER_NEGATIVE)
+   hb_IdleSleep(nSeconds)
+   AnimateWindow(hWnd, (nSeconds*1500), (AW_BLEND + AW_HIDE))
+   SendMessage( hWnd, WM_SYSCOMMAND, SC_CLOSE, 0 )
+   */
+
+Return hWnd
