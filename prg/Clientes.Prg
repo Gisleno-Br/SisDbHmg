@@ -129,6 +129,9 @@ REQUEST HB_LANG_PT
 REQUEST HB_CODEPAGE_PT850
 
 
+DECLARE WINDOW Win_Msg
+
+
 FUNCTION CadCli()
 
 
@@ -4581,6 +4584,16 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 			lTracking62 := .f. 
 
 
+			//CloseJanTip(   nHwnd  )
+
+			If _isWindowDefined("Win_Msg")
+				If IsWindowVisible(  GetFormHandle("Win_Msg") )	   		
+					CloseJanTip(   GetFormHandle("Win_Msg")  ) 
+					Syswait(.1)
+				End If   
+			End If 	
+
+
 
 		End If 
 		
@@ -4602,13 +4615,6 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 			
 			If nClear > 0 
 				xLimpSubMenu()				
-
-				
-				If IsWindowVisible( WinJan)
-					SendMessage( WinJan, WM_SYSCOMMAND, SC_CLOSE, 0 )
-					WinJan := 0 
-				End If 	
-
 			End If 				
 
 			//nClear := nOpSelx
@@ -4651,19 +4657,39 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 				BT_ClientAreaInvalidateRect( cMenuName , nRow1  +  ( (nOpselx - 1) * nItemSubHeight)  , 0 , 187 ,  nItemSubHeight - 1  , .t. )				
 			End If 	
 
+
 			
-			If !Empty(alltrim(cTp1))
+			If !Empty(Alltrim(cTp1))
 
 				GetCursorPos (@nCol, @nRow)
 
 				If !_isWindowDefined("Win_Msg")
-					WinJan := Notifier( nRow , 110 ,   alltrim(cTp1) ,, 0.5 )
-					_ShowWindow("Win_Msg")
+					//WinJan := Notifier( nRow , 110 ,   alltrim(cTp1) ,, 0.5 )
+
+					CrieJanTip( nRow - 15 , GetProperty(cMenuName , "Width")  + 15 ,   alltrim(cTp1) ,, 0.5 )					
+					
+					
+				Else 					
+				//	HideWindow( GetFormHandle("Win_Msg"))
+
+					SetProperty( 'Win_Msg' , 'Row' , nRow - 15 )
+					SetProperty( 'Win_Msg' , 'Label_1' , 'Value' , Alltrim(cTp1) )  
+				    	
 				End If 	
 
-				SysWait(.1)
+				If !IsWindowVisible(  GetFormHandle("Win_Msg") )
+				   _ShowWindow("Win_Msg")
+				End If   
 
+
+			Else 
+			     	
+				HideWindow( GetFormHandle("Win_Msg"))
+				
 			End If 
+
+
+			SysWait(.1)
 
 
 			

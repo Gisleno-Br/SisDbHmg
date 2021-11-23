@@ -148,7 +148,18 @@ FUNCTION SaveCampo( cCampo1, cTab1  )
 RETURN .T.
 
 
-Function Notifier( nTop , nLeft ,   cMsg,ERROR,nSeconds)
+Function CloseJanTip(   nHwnd  )
+
+   Local nSeconds := 1
+
+   //AnimateWindow(hWnd, (nSeconds*300), AW_VER_NEGATIVE)
+   //hb_IdleSleep(0.5)
+   AnimateWindow(nHwnd, (nSeconds*1500), (AW_BLEND + AW_HIDE))
+   SendMessage( nHwnd, WM_SYSCOMMAND, SC_CLOSE, 0 )
+
+Return    
+
+Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds)
    LOCAL nHeight := 30 , nWidth := 204
    //LOCAL nLeft := (GetDesktopWidth() - 5) - nWidth
    //LOCAL nTop := (GetDesktopHeight() - 50) - nHeight
@@ -161,7 +172,9 @@ Function Notifier( nTop , nLeft ,   cMsg,ERROR,nSeconds)
       aBcolor := {250,243,180}
    Endif
 
-   DEFINE WINDOW Win_Msg AT nTop, nLeft WIDTH nWidth HEIGHT nHeight TOPMOST ;
+   //TOPMOST
+
+   DEFINE WINDOW Win_Msg AT nTop, nLeft WIDTH nWidth HEIGHT nHeight  ;
       NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION BACKCOLOR aBcolor
       
       DEFINE LABEL Label_1
@@ -191,3 +204,5 @@ Function Notifier( nTop , nLeft ,   cMsg,ERROR,nSeconds)
    */
 
 Return hWnd
+
+
