@@ -755,14 +755,14 @@ FUNCTION RetSql( cSql )
 		oServ:Destroy( 0 )
 		oServ := Nil
 
-		RETURN ''
+		Return ''
+
 	ENDIF
 
-
-	IF oQuery:LastRec() > 0
+	If oQuery:LastRec() > 0
 		oRow := oQuery:GetRow( 1 )
 		cDesc := oRow:FieldGet( 1 )
-	END IF
+	End If
 
 	oQuery:Destroy()
 	oQuery := Nil

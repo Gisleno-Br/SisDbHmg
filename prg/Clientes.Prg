@@ -3830,6 +3830,8 @@ FUNCTION EventButton()
 
 		*// Eventos Sub menu Consulta.
 
+		/*
+
 		If (_IsWindowDefined(cForm)) .And. (GetProperty(cForm , "HANDLE") == GetFormHandle( cMenuName ))
 			//msginfo('ok')
 
@@ -3962,7 +3964,7 @@ FUNCTION EventButton()
 						EnableButConsu(  .t.  )
 
 					End If
-					*/
+		
 
 				Else
 					If nIndf > 0
@@ -3983,6 +3985,8 @@ FUNCTION EventButton()
 
 
 		End If 
+
+		*/
 
 
 		*//Eventos Form Principal.	
@@ -4588,11 +4592,13 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 			If _isWindowDefined("Win_Msg")
 				If IsWindowVisible(  GetFormHandle("Win_Msg") )	   		
-					CloseJanTip(   GetFormHandle("Win_Msg")  ) 
+					//CloseJanTip(   GetFormHandle("Win_Msg")  ) 
+					HideWindow( GetFormHandle("Win_Msg"))
 					Syswait(.1)
 				End If   
 			End If 	
 
+			//Syswait(.1)
 
 
 		End If 
@@ -4666,33 +4672,32 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 				If !_isWindowDefined("Win_Msg")
 					//WinJan := Notifier( nRow , 110 ,   alltrim(cTp1) ,, 0.5 )
 
-					CrieJanTip( nRow - 15 , GetProperty(cMenuName , "Width")  + 15 ,   alltrim(cTp1) ,, 0.5 )					
-					
+					CrieJanTip( nRow - 35 , 30  ,   Alltrim(cTp1) ,, 0.5 )					
+										
 					
 				Else 					
 				//	HideWindow( GetFormHandle("Win_Msg"))
 
-					SetProperty( 'Win_Msg' , 'Row' , nRow - 15 )
+					SetTamJan( Alltrim(cTp1)  )	
+					SetProperty( 'Win_Msg' , 'Row' , nRow - 35 )
 					SetProperty( 'Win_Msg' , 'Label_1' , 'Value' , Alltrim(cTp1) )  
 				    	
 				End If 	
 
 				If !IsWindowVisible(  GetFormHandle("Win_Msg") )
+					SetTamJan( Alltrim(cTp1)  )					
 				   _ShowWindow("Win_Msg")
 				End If   
 
-
-			Else 
+			
+			Else 		
 			     	
-				HideWindow( GetFormHandle("Win_Msg"))
-				
+				HideWindow( GetFormHandle("Win_Msg"))				
+
 			End If 
 
 
 			SysWait(.1)
-
-
-			
 			lTracking62 := TrackMouseEvent(nHWnd)		
 
 		
@@ -5079,8 +5084,8 @@ Return (nRow)
 
 Function RefreshCli()
 
-	EventProcessAllHookMessage( nIndx1 := EventCreate({ || LabelEventH3() }, GetControlHandle( "Image_cima" , cFormPrin )) , .T.)
-	EventProcessAllHookMessage( nIndx2 := EventCreate({ || LabelEventH3() }, GetControlHandle( "Image_baixo" , cFormPrin ))  , .T.)
+	//EventProcessAllHookMessage( nIndx1 := EventCreate({ || LabelEventH3() }, GetControlHandle( "Image_cima" , cFormPrin )) , .T.)
+	//EventProcessAllHookMessage( nIndx2 := EventCreate({ || LabelEventH3() }, GetControlHandle( "Image_baixo" , cFormPrin ))  , .T.)
 
 	//InstallEventHandler( 'LabelEventH3' )
 
@@ -5088,236 +5093,10 @@ Function RefreshCli()
 Return
 
 
- *// Handler das Setas baixo e cima(Sub Menu) - Consultas.
+ 
 
-FUNCTION LabelEventH3(aLabel)
 
-	STATIC lTracking5 := .F.
-	LOCAL  nHWnd   := EventHWND()
-	LOCAL  nMsg    := EventMSG()
-	LOCAL  nWParam := EventWPARAM()
-	LOCAL  cControl
-	LOCAL  cForm
-	Local cOpcao
 
-	GetControlNameByHandle(nHWnd, @cControl, @cForm)
-
-
-
-	If nMsg == WM_KEYDOWN
-		//msginfo('lp2')
-	End If
-     /*
-
-	If nMsg == WM_MOUSEMOVE
-
-		if !lTracking5
-			If (cControl == 'Image_cima') .or. (cControl == 'Image_baixo')
-
-			
-				If alltrim(Upper(GetProperty(cForm , cControl , 'picture' ))) = Upper("img\setab22.png")
-
-					SetProperty(cForm , cControl , 'picture' , 'img\Setab2.Png' )
-					lTracking5 := TrackMouseEvent(nHWnd)
-				
-				End If
-
-				If alltrim(Upper(GetProperty(cForm , cControl , 'picture' ))) = Upper("img\setac22.png")
-					SetProperty(cForm , cControl , 'picture' , 'img\Setac2.Png' )
-					lTracking5 := TrackMouseEvent(nHWnd)				
-				End If
-
-				SetWindowCursor( GetControlHandle( 'Image_baixo' , cFormPrin  ) , CURSORHAND)  
-				SetWindowCursor( GetControlHandle( 'Image_cima' , cFormPrin  )  , CURSORHAND)  
-
-
-			End If
-
-
-		End If
-
-	End If
-
-
-	If (nMsg == WM_MOUSELEAVE)
-
-		If (cControl == 'Image_cima') .or. (cControl == 'Image_baixo')
-			If alltrim(Upper(GetProperty(cForm , cControl , 'picture' ))) = Upper("img\setab2.png")
-				SetProperty(cForm , cControl , 'picture' , 'img\Setab22.Png' )
-			End If
-
-			If alltrim(Upper(GetProperty(cForm , cControl , 'picture' ))) = Upper("img\setac2.png")
-				SetProperty(cForm , cControl , 'picture' , 'img\Setac22.Png' )
-			End If
-
-
-			lTracking5 := .f.
-
-		End If
-
-	End If
-
-   
-
-	If nMsg == WM_LBUTTONDOWN
-
-
-		//SysWait(.1)
-
-		
-		If (cControl == 'Image_baixo')
-			PostMessage(GetControlHandle( 'Image_cima', cFormPrin ) ,WM_MOUSELEAVE,0,0)	
-			UpScrool( 1 , nQtElem )
-		End If
-
-		If (cControl == 'Image_cima')
-			PostMessage(GetControlHandle( 'Image_baixo', cFormPrin ) ,WM_MOUSELEAVE,0,0)
-			UpScrool( 2 , nQtElem )
-		End If
-				
-
-		lTracking5 := TrackMouseEvent(nHWnd)
-
-		
-		PostMessage(GetControlHandle( 'Image_baixo', cFormPrin ) ,WM_MOUSELEAVE,0,0)
-		PostMessage(GetControlHandle( 'Image_cima', cFormPrin ) ,WM_MOUSELEAVE,0,0)
-
-		//SysWait(.1)
-
-
-	End If
-
-
-*/
-
-Return
-
-
-FUNCTION LabelEventH2(aLabel)
-
-  /*
-
-	// STATIC lTracking12 := .F.
-	LOCAL  nHWnd   := EventHWND()
-	LOCAL  nMsg    := EventMSG()
-	LOCAL  nWParam := EventWPARAM()
-	LOCAL  cControl
-	LOCAL  cForm
-	Local cOpcao
-	Local cTp1
-
-	GetControlNameByHandle(nHWnd, @cControl, @cForm)
-
-
-	//lTracking5 := .f.
-	SWITCH nMsg
-
-
-CASE WM_LBUTTONDOWN
-
-
-	SetFocus(nHWnd)
-	//LabelSetBorder(aLabel, nHWnd)
-	cOpcao := GetProperty(cForm, cControl, "VALUE")
-	// msginfo(copcao)
-
-	nIndf := ascan(aOpz2 , {|a|  Right(a[1],Len(a[1]) - 2)   == alltrim(cOpcao) } )
-
-
-	If alltrim(cOpSel) == 'Consultas'
-
-		EnableButConsu(  .f.  )
-
-		nIdConsulta := GetId(  'consultas' , Alltrim(cOpcao) )
-
-		cTituloCon := Alltrim(cOpcao)
-
-
-		If (nIdConsulta > 0)
-
-			If xInitMov(  nIdConsulta, , cTabela, .f. ,  cFormPrin )
-
-			Else
-
-				If _IsControlDefined("G4343", cFormPrin )
-				DoMethod( cFormPrin , "G4343", "Release" )
-			End If
-			Refreshall(cMenuName)
-			Refreshall(cFormPrin)
-
-		End If
-
-		EnableButConsu(  .t.  )
-
-	End If
-
-Else
-	If nIndf > 0
-		Eval(  aOpz2[nindf][2] )
-	End If
-End If
-
-
-Refreshall( cMenuName )
-
-
-If _isControlDefined('G4343' , cFormPrin)
-DoMethod( cFormPrin , 'G4343', 'Refresh')
-End If
-
-
-CASE (WM_MOUSEMOVE)
-
-
-	SetWindowCursor( GetControlHandle( cControl , cForm  ),  CURSORHAND )
-
-
-
-	If !lTracking12
-
-
-		SetProperty(cForm, cControl, "BACKCOLOR", CORSEL)
-		SetProperty(cForm, cControl, "FONTBOLD", .T.)
-
-		lTracking12 := TrackMouseEvent(nHWnd) //TME_LEAVE is default flag
-
-		cTp1 := RetSql( "select observacao from consultas where descricao = " + QuotedStr( GetProperty(cForm, cControl, "VALUE" )  )  +  " and tabela = " + QuotedStr(cTabela) )
-
-		If !Empty(cTp1)
-			_SetToolTip(cControl,cForm,hb_AnsiToOem(cTp1 ) )
-		End If
-
-
-	End If
-
-
-	PostMessage(GetControlHandle( 'Image_baixo', cFormPrin ) ,WM_MOUSELEAVE,0,0)
-	PostMessage(GetControlHandle( 'Image_cima', cFormPrin ) ,WM_MOUSELEAVE,0,0)
-
-	lTracking5 := .f.
-
-	EXIT
-
-CASE WM_MOUSELEAVE
-
-
-	//savelog('ldfd.txt' , time()  + '  ' + cControl + ' ' + cForm + ' [ leave ]' + QUEBRA)
-
-	SetWindowCursor( GetControlHandle( cControl , cForm  ),  IDC_ARROW )
-
-	SetProperty(cForm, cControl, "BACKCOLOR", BACK1)
-	SetProperty(cForm, cControl, "FONTBOLD", .F.)
-
-
-	lTracking12 := .F.
-
-	EXIT
-
-ENDSWITCH
-
-*/ 
-
-Return
 
 Function OrdeneCol( nIndice )
 
@@ -5389,12 +5168,14 @@ Function xGetScrol( lMouseMove )
 	ar1 := GetPos_ScreenToClient( GetFormHandle(cActiveJan ) , nRow1, nCol1 )
 
 
+
 	If (nLineImg > 0)
 
 		Aadd(aM1 , {  nLineImg , nLineImg + 18 , 2, 179  }        )
 		Aadd(aM1 , {  nLineImg + 19 , nLineImg + 40, 2, 179  }    )
 
 
+		*// Cima
 		If Ascan(aM1 , { |a|   (ar1[1] >= a[1]) .And. (ar1[1] <= a[2]) .And. (ar1[2] >= 2) .And. ( ar1[2] <= 181)  }  )  = 1
 
 			If !lMouseMove
@@ -5405,6 +5186,7 @@ Function xGetScrol( lMouseMove )
 
 		End If
 
+		*// Baixo 
 		If Ascan(aM1 , { |a|   (ar1[1] >= a[1]) .And. (ar1[1] <= a[2]) .And. (ar1[2] >= 2) .And. (ar1[2] <= 181)  }  ) = 2
 
 			If !lMouseMove
@@ -5736,9 +5518,9 @@ fUNCTION DrawTransp(cJan , zBitMap , cTitulo , nQreg , cTitConsu , cTitFltr )
 					hBit11 := BT_BitmapLoadFile ( 'img\setac2d.png')
 				End If
 
-
-				BT_DrawBitmap (hDC, nLineImg , 2  , 177, 17 , BT_COPY, hBit10)
-				BT_DrawBitmap (hDC, nLineImg + 18 , 2, 177, 17 , BT_COPY, hBit11)
+					// BT_COPY 
+				BT_DrawBitmap (hDC, nLineImg      , 2   , 177, 17 , BT_STRETCH, hBit10)
+				BT_DrawBitmap (hDC, nLineImg + 18 , 2   , 177, 17 , BT_STRETCH, hBit11)
 
 
 			End If

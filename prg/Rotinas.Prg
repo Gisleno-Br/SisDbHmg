@@ -160,7 +160,9 @@ Function CloseJanTip(   nHwnd  )
 Return    
 
 Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds)
-   LOCAL nHeight := 30 , nWidth := 204
+   LOCAL nHeight := 20 , nWidth := 304
+   Local hFont 
+   Local FontHandle
    //LOCAL nLeft := (GetDesktopWidth() - 5) - nWidth
    //LOCAL nTop := (GetDesktopHeight() - 50) - nHeight
    LOCAL hWnd, aBcolor, nWinRow := nTop, nWinCol := nLeft
@@ -178,22 +180,30 @@ Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds)
       NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION BACKCOLOR aBcolor
       
       DEFINE LABEL Label_1
-         ROW         3
-         COL         3
-         WIDTH       nWidth - 20
-         HEIGHT      nHeight - 20
-         VALUE       cMsg
-         FONTNAME    XFONT1
-         FONTSIZE    10
+         ROW         0
+         COL         1
+         WIDTH       450
+         HEIGHT      15
+         VALUE       Alltrim(cMsg)
+         FONTNAME    'Arial' //XFONT1
+         FONTSIZE    8
          FONTBOLD    .F.
          BACKCOLOR   aBcolor
          FONTCOLOR   BLACK
-         CENTERALIGN .T. 
+         CENTERALIGN .f. 
       END LABEL
 
    END WINDOW
    hWnd := GetFormHandle("Win_Msg")
-   HMG_ChangeWindowStyle(hWnd, WS_EX_CLIENTEDGE, NIL, .T.)
+   //HMG_ChangeWindowStyle(hWnd, WS_EX_CLIENTEDGE, NIL, .T.)
+
+
+   //FontHandle := _SetFont (GetControlHandle( 'Label_1' , 'Win_Msg' ), 'Arial', 8 , .t. , .f. ,.f. ,.t. )
+
+   //hFont := SendMessage (GetControlHandle( 'Label_1' , 'Win_Msg' )   , WM_GETFONT, 0, 0)
+
+   //SetProperty(   'Win_msg' , 'Width' , GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 4   )
+
 
    //_ShowWindow("Win_Msg")
 /*
@@ -204,5 +214,15 @@ Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds)
    */
 
 Return hWnd
+
+
+function SetTamJan( cMsg  )
+
+   Local  FontHandle := _SetFont (GetControlHandle( 'Label_1' , 'Win_Msg' ), 'Arial', 8 , .f. , .f. ,.f. ,.f. )
+   SetProperty(   'Win_msg' , 'Width' , GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 1   )
+
+Return 
+
+
 
 

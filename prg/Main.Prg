@@ -121,6 +121,15 @@ FUNCTION Main
 
 	Public lTelaToda := .f.
 
+	PRIVATE lOnToolTipCustomDraw := .T.
+
+	
+ 	SET TOOLTIPSTYLE BALLOON
+ 
+	 SET TOOLTIPFORECOLOR BLUE
+
+ 	SET TOOLTIPCUSTOMDRAW TO lOnToolTipCustomDraw   // F
+
 
 
 	Public Corg1 := {255,255,125}
