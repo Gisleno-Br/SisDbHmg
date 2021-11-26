@@ -1865,7 +1865,7 @@ Function CrieMenuLabel(aOpcoes , nInd1 , nHeight1 )
 		cLabelx := Right(cActiveJan,3) + StrZero(n1,3)
 
 		If Empty(cLblConsu) .and. (aOpcoes[n1] == 'Consultas')
-			cLblConsu := cLabelX
+			cLblConsu := Space(26)
 			//msginfo(cLblConsu)
 		End If
 		
@@ -2759,14 +2759,7 @@ Function xAbreOpMenu( cF1 , cContrl1 )
 		
 		
 		HMG_ChangeWindowStyle( GetFormHandle(cMenuName) ,  WS_THICKFRAME , NIL, .T., .T. )
-
 		
-		//EnableScrollBar (GetFormHandle(cMenuName), 1, .f. )
-
-		
-
-
-		// msginfo( aSubOp[  Len(aSubOp) - 1 ] + ' ' + Str(    Len(aSubOp)   )  )
 
 	End If
 	//msginfo('1')
@@ -2800,6 +2793,9 @@ Function xAbreOpMenu( cF1 , cContrl1 )
 			nItx1   := nItMax
 			nQtElem := Len(aSubOp)
 			lSalto  := .t.
+
+			nHeight := 300	
+
 		Else
 
 		End If
@@ -2811,11 +2807,11 @@ Function xAbreOpMenu( cF1 , cContrl1 )
 
 	LimpaLabels(.f.)
 
-	//CrieSubMenu(aSubOp)
 
 	BT_ClientAreaInvalidateAll(   cMenuName )
 
 
+	//CrieSubMenu(aSubOp)
 
 	//Syswait(.2)
 
@@ -2824,15 +2820,15 @@ Function xAbreOpMenu( cF1 , cContrl1 )
 	SetProperty(cMenuName , "row" , nLine1)
 	SetProperty(cMenuName , "col" , 1)
 
-	nHeight := 300	
+	
 	SetProperty(cMenuName , "Height" , nHeight  )
+
+	_HMG_PRINTER_SETVSCROLLVALUE(   GetFormHandle( cMenuName)  , 0 )	
 	
 
 	_ShowWindow( cMenuName )
 
 	//msginfo('1')
-
-
 
 	If (lSalto)
 		nLineImg := GetProperty( cMenuName , "Row") + GetProperty( cMenuName , "Height" ) + 5
@@ -2840,10 +2836,7 @@ Function xAbreOpMenu( cF1 , cContrl1 )
 
 
 	If nLineImg > 0	
-		//BT_ClientAreaInvalidateRect ( cActiveJan , nLineImg  , 0,  180 , 50 , .t. )
-
-		BT_ClientAreaInvalidateRect ( cActiveJan , nLineImg, 0,  nLineImg+20 , 178 , .t. )
-		//nItx1 := nItemSubHeight
+		BT_ClientAreaInvalidateRect ( cActiveJan , nLineImg, 0,  nLineImg+20 , 178 , .t. )		
 	End If 	
 
  
@@ -2874,20 +2867,6 @@ Function xAbreOpMenu( cF1 , cContrl1 )
 
 	lTracking6  := .F. 
 
-
-
-	
-/*
-	OBTN_Visible( cFormPrin , 5457 , .t.)
-
-	OBTN_Visible( cFormPrin , 5458 , .t.)
-	OBTN_Visible( cFormPrin , 5459 , .t.)
-
-	OBTN_Enable( cFormPrin , 5458 , .f.)
-	OBTN_Enable( cFormPrin , 5459 , .f.)
-	*/
-
-	//msginfo('ok')
 
 
 	xButConsul(  .t.  )
@@ -4011,16 +3990,58 @@ FUNCTION EventButton()
 			End If 	
 
 
-
 		
 			If (nMsg == WM_LBUTTONDOWN ) .And. (Right(cActiveJan,3) = Left(cControl,3)) 
-				xAbreOpMenu( cForm,cControl)	
-				//PlaceJan()
+
+
+				If ( cLblConsu <> cControl) .And. (!Empty(Alltrim(  cLblConsu     )))
+
+					SetProperty(cForm, cLblConsu, "BACKCOLOR", {7,101,125}  )
+					SetProperty(cForm, cLblConsu, "FONTBOLD", .f.)				
+
+
+				End If 
+
+				SetProperty(cForm, cControl, "BACKCOLOR", CORSEL)
+				SetProperty(cForm, cControl, "BACKCOLOR", {4,66,81})
+				SetProperty(cForm, cControl, "FONTBOLD", .T.)
+
+				//SysWait(.1)
+
+
+				xAbreOpMenu( cForm,cControl)					
+
 			End If 	
+
+			If (nMsg == WM_MOUSELEAVE)
+				lTracking6 := .f.
+			End If 
             
-			If (nMsg == WM_MOUSELEAVE) .And. ( Left(cControl,3) = Right(cActiveJan,3)) .And. (lOpcaoAberta)
+			If (nMsg == WM_MOUSELEAVE) .And. ( Left(cControl,3) = Right(cActiveJan,3)) .And. (lOpcaoAberta) 			      
 
 				nColSel := 0				
+
+
+				//cLblSelected
+
+				If !Empty(cLblConsu)
+					If (alltrim(cControl) != alltrim(cLblConsu))
+						SetProperty(cForm, cControl, "BACKCOLOR", {7,101,125}  )
+						SetProperty(cForm, cControl, "FONTBOLD", .f.)
+					Else
+						lTracking6 := .f.
+					End If
+				Else 
+
+					SetProperty(cForm, cControl, "BACKCOLOR", {7,101,125}  )
+					SetProperty(cForm, cControl, "FONTBOLD", .f.)
+
+					lTracking6 := .f.
+
+				End If 	
+
+
+				/*
 		
 				If !(Empty(Alltrim(cControl)))
 		
@@ -4037,13 +4058,15 @@ FUNCTION EventButton()
 					Else
 						SetProperty(cForm, cControl, "BACKCOLOR", {7,101,125}  )
 						SetProperty(cForm, cControl, "FONTBOLD", .f.)
+
+						
 		
 					End If
 					lTracking6 := .f.
 		
-		
-		
 				End If
+
+				*/
 
 				
 				SetWindowCursor( GetControlHandle( 'br_grid', cActiveJan ) , IDC_ARROW)
@@ -4062,14 +4085,14 @@ FUNCTION EventButton()
 				SetProperty(cForm, cControl, "BACKCOLOR", CORSEL)
 				SetProperty(cForm, cControl, "BACKCOLOR", {4,66,81})
 				SetProperty(cForm, cControl, "FONTBOLD", .T.)
+
+				//cLblConsu := cControl
 		
 				lTracking6 := TrackMouseEvent(nHWnd)
-				//lTracking5 := .f.
-		
-				//SysWait(.1)
+			
 		
 				Return
-				//lTracking6 := .f.
+			
 		
 			End If
 
@@ -4360,6 +4383,8 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 	Local copBak := ''
 	Local nHnx1
 
+	Local cTp1 := ''
+
 	LOCAL nind1
 
 	Local nRow1 := 0
@@ -4633,6 +4658,7 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 			End If 	
 
 
+
 			cOpcao := aSubOp[nOpSelx]
 
 			
@@ -4653,7 +4679,9 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 			nRow1 := -(GetProperty( cMenuName , "VscrollBar" , "Value"))
 
 
-			cTp1 := RetSql( "select observacao from consultas where descricao = " + QuotedStr( Alltrim(cOpcao) )  +  " and tabela = " + QuotedStr(cTabela) )
+			If (cOpSel == "Consultas")
+				cTp1 := RetSql( "select observacao from consultas where descricao = " + QuotedStr( Alltrim( Hb_AnsiToOem(cOpcao)  ) )  +  " and tabela = " + QuotedStr(cTabela) )
+			End If 	
 
 
 			cUltOpcaoSel :=  Alltrim(cOpcao) 
@@ -4665,7 +4693,7 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 
 			
-			If !Empty(Alltrim(cTp1))
+			If (!Empty(Alltrim(cTp1))) .And. (cOpSel == "Consultas")
 
 				GetCursorPos (@nCol, @nRow)
 
@@ -4692,7 +4720,9 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 			
 			Else 		
 			     	
-				HideWindow( GetFormHandle("Win_Msg"))				
+				If (cOpSel == "Consultas")	 	
+					HideWindow( GetFormHandle("Win_Msg"))				
+				End If 	
 
 			End If 
 
@@ -5166,6 +5196,7 @@ Function xGetScrol( lMouseMove )
 
 
 	ar1 := GetPos_ScreenToClient( GetFormHandle(cActiveJan ) , nRow1, nCol1 )
+
 
 
 
