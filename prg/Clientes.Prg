@@ -2496,114 +2496,7 @@ FUNCTION LabelEventH4(aLabel)
 
 Return
 
-Function xPaintSub()
 
-	Local aRGBcolor := BACK1
-
-	Local nWidthBmp := 170
-
-	Local nHandle1
-	Local nHandle2
-	Local hWnd
-	Local BTstruct
-	Local BTstruct2
-	Local hDc
-	Local nTYpe
-	Local nLine := 00
-	
-	Local nHeightBmp := nItemSubHeight * Len(aSubOp)
-
-	Local hBitmap2
-
-	LOCAL Width  := BT_ClientAreaWidth  (cMenuName)
-	LOCAL Height := BT_ClientAreaHeight (cMenuName)
-
-	
-	Local nTypeText    := BT_TEXT_TRANSPARENT  //+ BT_TEXT_BOLD
-	Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
-	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
-	Local cTexto := ''
-
-	Local nRow := -(GetProperty( cMenuName , "VscrollBar" , "Value"))
-
-
-
-	hBitMap2 := BT_BitmapCreateNew (nWidthBmp , nHeightBmp , BLACK)
-
-	hDC := BT_CreateDC (hBitmap2, BT_HDC_BITMAP  , @BTstruct)
-
-	
-	hDC2 = BT_CreateDC ( cMenuName , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
-	
-
-		 
-		//BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , 177 ,    nHeightBmp    , BACK1 ,BACK1  )	
-
-		
-	//End If 	
-
-
-	//BT_HDC_INVALIDCLIENTAREA
-
-
-	If (nOpselx = 0)
-		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , 187 ,    nHeightBmp    , BACK1 ,BACK1  )	
-	End If 	
-
-	If nClear > 0
-
-		BT_DrawGradientFillVertical ( hDC2 ,   (nClear  * nItemSubHeight)    , 0  , 187 ,    nHeightBmp    ,  BACK1  ,BACK1  )			
-
-		//nClear := 0
-
-	End If 	
-
-
-	For n1 := 1 To Len(aSubOp)
-
-		cTexto := alltrim(  Right( aSubOp[n1]  , Len(  aSubOp[n1] ) - 2  ) )
-
-		cTexto := aSubOp[n1]
-
-		//cTexto := strzero(n1,3) + ' ' + aSubOp[n1] 
-
-		If ((nOpselx > 0) .And. (nOpSelx = n1) ) .or. (   (nOpselx > 0) .And. ( Alltrim(cSubMenuSel) = Alltrim(cTexto) )  )
-
-			nTypeText    := BT_TEXT_TRANSPARENT 
-			// + BT_TEXT_BOLD
-
-			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow - 2  , 00  , 187 ,    nItemSubHeight - 1     , BACK1 ,WHITE  )		
-			BT_DrawText ( hDC2 , nLine + nRow  , 05 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  {32,134,200}   , ; 
-			Iif( Alltrim(cSubMenuSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ; 
-			nAlingText, nOrientation )
-		   
-
-		Else 				
-		
-			nTypeText    := BT_TEXT_TRANSPARENT  
-			BT_DrawText ( hDC2 , nLine + nRow  , 05 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR , BACK1 , nTypeText, nAlingText, nOrientation )
-
-		End If 	
-
-		
-
-		nLine += (nItemSubHeight)
-
-	Next 
-
-	//BT_DrawBitmap ( hDC2, 0, 0, 170 , nHeightBmp , BT_COPY, hBitmap2 )
-
-		
-	//BT_BitmapSaveFile (hBitmap2 , "Hx102.bmp")
-
-	BT_DeleteDC (BTstruct )
-	BT_DeleteDC (BTstruct2 )
-
-
-	//bt_Bit
-
-
-REturn 	
 
 Function xAbreOpMenu( cF1 , cContrl1 )
 
@@ -4892,9 +4785,13 @@ Function xOpSel1( nHWnd1 )
 		nItem := (Int(Ar1[1] / nItemSubHeight)+1)		
 	End If 		
 
-
-
 Return nItem 	
+
+
+
+
+
+
 
 
 Function xRefSubMenu()
@@ -5110,17 +5007,6 @@ Next
 
 Return (nRow)
 
-
-
-Function RefreshCli()
-
-	//EventProcessAllHookMessage( nIndx1 := EventCreate({ || LabelEventH3() }, GetControlHandle( "Image_cima" , cFormPrin )) , .T.)
-	//EventProcessAllHookMessage( nIndx2 := EventCreate({ || LabelEventH3() }, GetControlHandle( "Image_baixo" , cFormPrin ))  , .T.)
-
-	//InstallEventHandler( 'LabelEventH3' )
-
-
-Return
 
 
  

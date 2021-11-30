@@ -101,6 +101,8 @@ FUNCTION Main
 
 	Private aButx1 := {}
 
+	Private  lTracking42 := .f. 
+
 	SET SCROLLSTEP TO 10
 
 	PUBLIC cBackColor := { 166, 210, 210 }
@@ -122,6 +124,8 @@ FUNCTION Main
 	Public lTelaToda := .f.
 
 	PRIVATE lOnToolTipCustomDraw := .T.
+
+	Private cUltOpcaoSel := ''
 
 	
  	SET TOOLTIPSTYLE BALLOON
@@ -371,10 +375,18 @@ FUNCTION Main
 
 	Private aRotinas := {}
 
-	Private aOpcoes := {{"Cadastro", Nil , 1 , 0  }, ;
-		{"Movimentos", Nil , 2  , 0  },;
-		{"Relatorios", Nil , 3 , 0    },;
-		{"Parametros", Nil , 4 , 0    } }
+	Private nMainSel  := 0
+	Private nClearSel := 0
+
+	Private cOpMainSel  := ''
+
+	//xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel)
+
+
+	Private aOpcoes := {{"1-Cadastro", Nil , 1 , 0  }, ;
+		{"2-Movimentos", Nil , 2  , 0  },;
+		{"3-Relatorios", Nil , 3 , 0    },;
+		{"4-Parametros", Nil , 4 , 0    } }
 
 	Private nOpSel := 0
 
@@ -391,6 +403,12 @@ FUNCTION Main
 	
 	HB_SETCODEPAGE("UTF8")
 	n := 1
+
+
+	
+	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventHndMain"  ) )  ) = 0
+		InstallEventHandler( "EventHndMain" )
+	End If
  
 	//yAviso(  Hb_AnsiToOem("Proximo Elemento do Filtro deve ser Uma Expressão. EX: (Codigo = '0000').") , .f. )  
 
@@ -399,7 +417,7 @@ FUNCTION Main
 	//CREATE EVENT PROCNAME LabelEventHandler() STOREINDEX nEveLabel
 	//EventProcessAllHookMessage ( nEveLabel , .t. )
 
-	
+	/*
 
 	While n  <= Len(aOpcoes)
 		
@@ -449,9 +467,28 @@ FUNCTION Main
 
 	//msginfo('1')
 
+	*/
+
+
+	
+    HMG_ChangeWindowStyle( fSplit6.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
+
+
+	HMG_ChangeWindowStyle( fSplit3.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
+	HMG_ChangeWindowStyle( fSplit4.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
+
+	HMG_ChangeWindowStyle(fSplit2.Handle    , 0x00010200 , NIL, .F., .F.)
+	HMG_ChangeWindowStyle( fSplit2.Handle  ,WS_EX_TOOLWINDOW  , NIL, .t., .t.)
+
+
 
 	HMG_ChangeWindowStyle(fSplitsubMenu.Handle    , 0x00010200 , NIL, .F., .F.)
 	HMG_ChangeWindowStyle(fSplitSubMenu.Handle  ,WS_EX_TOOLWINDOW  , NIL, .t., .t.)
+
+	//SetProperty( 'fSplit6' , 'Height' , Len(aOpcoes) * nItemSubHeight  )
+
+
+
 
 
 	DEFINE LABEL fLabel1Dt
@@ -519,11 +556,203 @@ FUNCTION Main
 	Public nIndexEventY := EventCreate (  { ||   xMainHandle( )   }  )  		
 
 
+	
+	BT_ClientAreaInvalidateAll('fSplit6')
+
+	//SysWait(.1)
+
+
+
 	Main.Activate
     
 
 
 RETURN
+
+
+Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
+
+	Local cOpcao := ''
+		
+	If nHWnd == GetProperty(  'fSplit6' , "HANDLE" )
+
+
+		If ( nMsg == WM_MOUSELEAVE )  .and. (   lTracking42  )
+
+		//	nMainSel := 0
+		
+			
+			//BT_ClientAreaInvalidateAll( nHWnd  )
+			
+			//cSubMenuSel := ''
+
+              /*
+			If (nOpBak > 0) .And. (nOpBak != nOpselx)
+				nOpselx := nOpBak
+
+				BT_ClientAreaInvalidateRect( 'fSplit6' , nRow1  +  ( (nOpselx - 1) * nItemSubHeight)  , 0 , 187 ,  nItemSubHeight - 1  , .t. )	
+			End If 	
+			*/
+
+
+               /*
+			If WinJan > 0
+				SendMessage( WinJan, WM_SYSCOMMAND, SC_CLOSE, 0 )
+				WinJan := 0 
+			End If 	
+			*/
+
+			
+
+		//	SetWindowCursor( nHWnd , IDC_ARROW )  			
+			//lTracking62 := .f. 
+
+
+		End If 
+
+
+		If ( nMsg == WM_MOUSEMOVE ) 
+			//.And. (!lTracking42)
+
+			nMainSel := xOpSelPos( 'fSplit6' )
+
+
+
+			If (nMainSel > Len(aOpcoes)) 
+				return 	
+			End If 	
+
+			
+
+			If nClearSel > 0 
+				//xLimpSubMenu()	
+				xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel )			
+			End If 			
+					
+
+
+			If nMainSel > 0 
+				nClearSel := nMainSel		
+			End If 	
+
+
+
+			
+//			If nClearSel > 0 
+				//xLimpSubMenu()	
+//				xLimpSub( 'fSplit6' , @nMainSel , @nClearSel )			
+//			End If 				
+
+			//nClear := nOpSelx
+			
+			//SysWait(.1)
+
+			//nMainSel := xOpSelPos( 'fSplit6' )
+
+			IF (nMainSel = 0) .or. (nMainSel > Len(aOpcoes)) 
+				Return 
+			End If 	
+
+
+
+
+			//nClearSel := nMainSel
+
+
+			//cOpcao := aOpcoes[nMainSel][1]
+
+			cOpcao := alltrim(  Right( aOpcoes[nMainSel][1]  , Len( aOpcoes[nMainSel][1] ) - 2  ) )
+
+			
+		    If (cUltOpcaoSel = cOpcao)
+				Return 
+			End If 	
+
+
+			If (nClearSel > 0) .And. (nClearSel <= Len(aOpcoes))
+				//cUltOpcaoSel := aOpcoes[nClearSel][1]
+
+				cUltOpcaoSel := Alltrim(  Right( aOpcoes[nClearSel][1]  , Len( aOpcoes[nClearSel][1] ) - 2  ) )
+			Else
+				Return 	
+			End If 			
+
+
+			//msginfo('ok')
+
+			
+			
+			SetWindowCursor( nHWnd , CURSORHAND)  
+
+			nRow1 := -(GetProperty( 'fSplit6' , "VscrollBar" , "Value"))
+
+
+		////	If (cOpSel == "Consultas")
+			//	cTp1 := RetSql( "select observacao from consultas where descricao = " + QuotedStr( Alltrim( Hb_AnsiToOem(cOpcao)  ) )  +  " and tabela = " + QuotedStr(cTabela) )
+		//	End If 	
+
+
+			cUltOpcaoSel :=  Alltrim(cOpcao) 
+
+		
+			If nMainSel > 0				
+				BT_ClientAreaInvalidateRect( 'fSplit6' , nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , 187 ,  nItemSubHeight - 1  , .t. )				
+			End If 	
+
+			/*
+
+
+			
+			If (!Empty(Alltrim(cTp1))) .And. (cOpSel == "Consultas")
+
+				GetCursorPos (@nCol, @nRow)
+
+				If !_isWindowDefined("Win_Msg")
+					//WinJan := Notifier( nRow , 110 ,   alltrim(cTp1) ,, 0.5 )
+
+					CrieJanTip( nRow - 35 , 30  ,   Alltrim(cTp1) ,, 0.5 )					
+										
+					
+				Else 					
+				//	HideWindow( GetFormHandle("Win_Msg"))
+
+					SetTamJan( Alltrim(cTp1)  )	
+					SetProperty( 'Win_Msg' , 'Row' , nRow - 35 )
+					SetProperty( 'Win_Msg' , 'Label_1' , 'Value' , Alltrim(cTp1) )  
+				    	
+				End If 	
+
+				If !IsWindowVisible(  GetFormHandle("Win_Msg") )
+					SetTamJan( Alltrim(cTp1)  )					
+				   _ShowWindow("Win_Msg")
+				End If   
+
+			
+			Else 		
+			     	
+				If (cOpSel == "Consultas")	 	
+					HideWindow( GetFormHandle("Win_Msg"))				
+				End If 	
+
+			End If 
+
+			*/
+
+
+			//SysWait(.1)
+			lTracking42 := TrackMouseEvent(nHWnd)		
+
+
+			
+
+
+		End If 
+
+	End If 	
+
+
+return 
+
 
 Function xRefresh()
 	

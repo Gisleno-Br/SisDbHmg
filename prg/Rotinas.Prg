@@ -1,6 +1,21 @@
 #include <hmg.ch>
 
 
+#define FONTCOR {0,106,133}
+
+#define BACK1 {229,237,242}
+
+#define BACK5 {255,255,255}
+
+
+#define CORSEL {215,228,236}
+//{180,205,220}
+//{216,228,236}
+
+#define FONT1 {102,102,102}
+
+
+
 
 FUNCTION AltTamCampo( cTabx, cCampo, cForm )
 
@@ -222,6 +237,240 @@ function SetTamJan( cMsg  )
    SetProperty(   'Win_msg' , 'Width' , GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 1   )
 
 Return 
+
+
+Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel)
+
+	Local aRGBcolor := BACK1
+
+	Local nWidthBmp := 170
+
+	Local nHandle1
+	Local nHandle2
+	Local hWnd
+	Local BTstruct
+	Local BTstruct2
+	Local hDc
+	Local nTYpe
+	Local nLine := 00
+	
+	Local nHeightBmp := nItemSubHeight * Len(aMtrOp)
+
+	Local hBitmap2
+
+	LOCAL Width  := BT_ClientAreaWidth  (cForm)
+	LOCAL Height := BT_ClientAreaHeight (cForm)
+
+	
+	Local nTypeText    := BT_TEXT_TRANSPARENT  //+ BT_TEXT_BOLD
+	Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
+	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
+	Local cTexto := ''
+
+	Local nRow := -(GetProperty( cForm    , "VscrollBar" , "Value"))
+
+
+
+	hBitMap2 := BT_BitmapCreateNew (nWidthBmp , nHeightBmp , BLACK)
+
+	hDC := BT_CreateDC (hBitmap2, BT_HDC_BITMAP  , @BTstruct)
+
+	
+	hDC2 = BT_CreateDC ( cForm  , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )	
+
+
+	If (nOpselx1 = 0)
+		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , 187 ,    nHeightBmp    , WHITE , WHITE  )	
+	End If 	
+
+	If nClear1 > 0
+		BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemSubHeight)    , 0  , 187 ,    nHeightBmp    ,  WHITE  , WHITE  )			
+	End If 	
+
+
+
+	For n1 := 1 To Len(aMtrOp)
+
+		cTexto := alltrim(  Right( aMtrOp[n1][1]  , Len(  aMtrOp[n1][1] ) - 2  ) )
+
+		//cTexto := aMtrOp[n1][1]
+
+
+		If ((nOpselx1 > 0) .And. (nOpSelx1 = n1) ) .or. (   (nOpselx1 > 0) .And. ( Alltrim(cTextSel) = Alltrim(cTexto) )  )
+
+			nTypeText    := BT_TEXT_TRANSPARENT 
+			// + BT_TEXT_BOLD
+
+			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow - 2  , 00  , 187 ,    nItemSubHeight - 1     , WHITE  , BACK1  )		
+
+			BT_DrawText ( hDC2 , nLine + nRow  , 05 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  {32,134,200}   , ; 
+			Iif( Alltrim(cTextSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ; 
+			nAlingText, nOrientation )
+		   
+
+		Else 				
+		
+			nTypeText    := BT_TEXT_TRANSPARENT  
+			BT_DrawText ( hDC2 , nLine + nRow  , 05 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  FONTCOR , WHITE , nTypeText, nAlingText, nOrientation )
+
+		End If 	
+		
+
+		nLine += (nItemSubHeight)
+
+	Next 
+
+	BT_DeleteDC (BTstruct )
+	BT_DeleteDC (BTstruct2 )
+
+
+	//bt_Bit
+
+
+REturn 	
+
+Function xLimpSub(cJan , nOpsely , nClr )
+
+	Local nRow1 := -(GetProperty( cJan , "VscrollBar" , "Value"))
+
+	If nOpsely > 0
+
+		//nClr := nOpsely	
+		
+		BT_ClientAreaInvalidateRect( cJan , nRow1 + ( (nOpsely - 1) * nItemSubHeight)  , 0 , 187 ,  nItemSubHeight - 1 , .t. )
+
+		
+		
+	End If 	
+
+Return 
+
+
+
+
+Function xPaintSub()
+
+	Local aRGBcolor := BACK1
+
+	Local nWidthBmp := 170
+
+	Local nHandle1
+	Local nHandle2
+	Local hWnd
+	Local BTstruct
+	Local BTstruct2
+	Local hDc
+	Local nTYpe
+	Local nLine := 00
+	
+	Local nHeightBmp := nItemSubHeight * Len(aSubOp)
+
+	Local hBitmap2
+
+	LOCAL Width  := BT_ClientAreaWidth  (cMenuName)
+	LOCAL Height := BT_ClientAreaHeight (cMenuName)
+
+	
+	Local nTypeText    := BT_TEXT_TRANSPARENT  //+ BT_TEXT_BOLD
+	Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
+	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
+	Local cTexto := ''
+
+	Local nRow := -(GetProperty( cMenuName , "VscrollBar" , "Value"))
+
+
+
+	hBitMap2 := BT_BitmapCreateNew (nWidthBmp , nHeightBmp , BLACK)
+
+	hDC := BT_CreateDC (hBitmap2, BT_HDC_BITMAP  , @BTstruct)
+
+	
+	hDC2 = BT_CreateDC ( cMenuName , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )	
+
+
+	If (nOpselx = 0)
+		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , 187 ,    nHeightBmp    , BACK1 ,BACK1  )	
+	End If 	
+
+	If nClear > 0
+
+		BT_DrawGradientFillVertical ( hDC2 ,   (nClear  * nItemSubHeight)    , 0  , 187 ,    nHeightBmp    ,  BACK1  ,BACK1  )			
+
+		//nClear := 0
+
+	End If 	
+
+
+	For n1 := 1 To Len(aSubOp)
+
+		cTexto := alltrim(  Right( aSubOp[n1]  , Len(  aSubOp[n1] ) - 2  ) )
+
+		cTexto := aSubOp[n1]
+
+		//cTexto := strzero(n1,3) + ' ' + aSubOp[n1] 
+
+		If ((nOpselx > 0) .And. (nOpSelx = n1) ) .or. (   (nOpselx > 0) .And. ( Alltrim(cSubMenuSel) = Alltrim(cTexto) )  )
+
+			nTypeText    := BT_TEXT_TRANSPARENT 
+			// + BT_TEXT_BOLD
+
+			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow - 2  , 00  , 187 ,    nItemSubHeight - 1     , BACK1 ,WHITE  )		
+			BT_DrawText ( hDC2 , nLine + nRow  , 05 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  {32,134,200}   , ; 
+			Iif( Alltrim(cSubMenuSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ; 
+			nAlingText, nOrientation )
+		   
+
+		Else 				
+		
+			nTypeText    := BT_TEXT_TRANSPARENT  
+			BT_DrawText ( hDC2 , nLine + nRow  , 05 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR , BACK1 , nTypeText, nAlingText, nOrientation )
+
+		End If 	
+
+		
+
+		nLine += (nItemSubHeight)
+
+	Next 
+
+	BT_DeleteDC (BTstruct )
+	BT_DeleteDC (BTstruct2 )
+
+
+	//bt_Bit
+
+
+REturn 	
+
+
+
+
+Function xOpSelPos( cJan )
+
+	Local nCol := 0
+	Local nRow := 0			
+	Local ar1 
+	Local NewPos 
+	Local nRow1 := -(GetProperty( cJan , "VscrollBar" , "Value"))
+
+	GetCursorPos (@nCol, @nRow)
+
+
+   SaveLog( 'LOG002.txt' , Str(nRow) + '   ' + Str(nCol)  + Chr(13)+Chr(10)  ) 
+
+	aR1 := GetPos_ScreenToClient(   GetFormHandle(  cJan  )  , nRow, nCol )
+	
+	NewPos := GetScrollPos( GetFormHandle(  cJan  ), 1 ) 
+
+	If NewPos > 0 
+		nItem := (Int( (NewPos+Ar1[1])     / nItemSubHeight)+1)
+	Else
+		nItem := (Int(Ar1[1] / nItemSubHeight)+1)		
+	End If 		
+
+Return nItem 	
+
+
 
 
 
