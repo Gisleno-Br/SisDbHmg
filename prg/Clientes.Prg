@@ -4499,7 +4499,6 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 				SendMessage( WinJan, WM_SYSCOMMAND, SC_CLOSE, 0 )
 				WinJan := 0 
 			End If 	
-
 			
 
 			SetWindowCursor( nHWnd , IDC_ARROW )  			
@@ -4509,8 +4508,7 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 			//CloseJanTip(   nHwnd  )
 
 			If _isWindowDefined("Win_Msg")
-				If IsWindowVisible(  GetFormHandle("Win_Msg") )	   		
-					//CloseJanTip(   GetFormHandle("Win_Msg")  ) 
+				If IsWindowVisible(  GetFormHandle("Win_Msg") )	   							
 					HideWindow( GetFormHandle("Win_Msg"))
 					Syswait(.1)
 				End If   

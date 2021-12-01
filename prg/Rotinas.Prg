@@ -231,12 +231,31 @@ Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds)
 Return hWnd
 
 
+Function xHidehint()
+
+   If IsWindowVisible(  GetFormHandle("Win_Msg") )
+   	HideWindow( GetFormHandle("Win_Msg"))				
+   End If 	
+
+
+Return 
+
 function SetTamJan( cMsg  )
 
    Local  FontHandle := _SetFont (GetControlHandle( 'Label_1' , 'Win_Msg' ), 'Arial', 8 , .f. , .f. ,.f. ,.f. )
    SetProperty(   'Win_msg' , 'Width' , GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 1   )
 
 Return 
+
+
+function GetTextoLen( cMsg  )
+
+   Local  FontHandle := _SetFont (GetControlHandle( 'Label_1' , 'Win_Msg' ), 'Arial', 8 , .f. , .f. ,.f. ,.f. )
+//   SetProperty(   'Win_msg' , 'Width' , GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 1   )
+
+Return (GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 1 )
+
+
 
 
 Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel)
@@ -345,6 +364,24 @@ Function xLimpSub(cJan , nOpsely , nClr )
 
 Return 
 
+
+Function xDispHint( cMsg1 , nRow1 )
+
+ 	SetTamJan( Alltrim(cMsg1)  )	
+	SetProperty( 'Win_Msg' , 'Row' , nRow1 - 35 )
+	SetProperty( 'Win_Msg' , 'Label_1' , 'Value' , Alltrim(cMsg1) )  			    	
+
+
+Return 
+
+Function xDispUpTam(  cMsg1 )
+
+	If !IsWindowVisible(  GetFormHandle("Win_Msg") )
+		SetTamJan( Alltrim(cMsg1)  )					
+	   _ShowWindow("Win_Msg")
+	End If   
+
+Return 
 
 
 
@@ -456,7 +493,7 @@ Function xOpSelPos( cJan )
 	GetCursorPos (@nCol, @nRow)
 
 
-   SaveLog( 'LOG002.txt' , Str(nRow) + '   ' + Str(nCol)  + Chr(13)+Chr(10)  ) 
+   //SaveLog( 'LOG002.txt' , Str(nRow) + '   ' + Str(nCol)  + Chr(13)+Chr(10)  ) 
 
 	aR1 := GetPos_ScreenToClient(   GetFormHandle(  cJan  )  , nRow, nCol )
 	

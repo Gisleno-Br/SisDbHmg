@@ -383,10 +383,10 @@ FUNCTION Main
 	//xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel)
 
 
-	Private aOpcoes := {{"1-Cadastro", Nil , 1 , 0  }, ;
-		{"2-Movimentos", Nil , 2  , 0  },;
-		{"3-Relatorios", Nil , 3 , 0    },;
-		{"4-Parametros", Nil , 4 , 0    } }
+	Private aOpcoes := {{"1-Cadastro", Nil , 1 , 0  , "Acesso a Cadastros Gerais e Principais." }, ;
+		{"2-Movimentos", Nil , 2  , 0  , "Acesso a Movimentação de Estoque" },;
+		{"3-Relatorios", Nil , 3 , 0  ,   "Relatorios do Sistema"},;
+		{"4-Parametros", Nil , 4 , 0 , "Parametros e Configurações Gerais"  } }
 
 	Private nOpSel := 0
 
@@ -573,42 +573,78 @@ RETURN
 Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 	Local cOpcao := ''
+	Local nCol   := 0
+	Local nRow   := 0
+	Local aR1
+
 		
 	If nHWnd == GetProperty(  'fSplit6' , "HANDLE" )
 
 
 		If ( nMsg == WM_MOUSELEAVE )  .and. (   lTracking42  )
 
-		//	nMainSel := 0
-		
-			
-			//BT_ClientAreaInvalidateAll( nHWnd  )
+			nMainSel := 0
+			nClearSel := 0					
+			BT_ClientAreaInvalidateAll( nHWnd  )
 			
 			//cSubMenuSel := ''
 
-              /*
-			If (nOpBak > 0) .And. (nOpBak != nOpselx)
-				nOpselx := nOpBak
+			
+			SetWindowCursor( nHWnd , IDC_ARROW )  			
+			lTracking42 := .f. 
 
-				BT_ClientAreaInvalidateRect( 'fSplit6' , nRow1  +  ( (nOpselx - 1) * nItemSubHeight)  , 0 , 187 ,  nItemSubHeight - 1  , .t. )	
-			End If 	
-			*/
-
-
-               /*
-			If WinJan > 0
-				SendMessage( WinJan, WM_SYSCOMMAND, SC_CLOSE, 0 )
-				WinJan := 0 
-			End If 	
-			*/
 
 			
-
-		//	SetWindowCursor( nHWnd , IDC_ARROW )  			
-			//lTracking62 := .f. 
+			If _isWindowDefined("Win_Msg")
+				If IsWindowVisible(  GetFormHandle("Win_Msg") )	   							
+					HideWindow( GetFormHandle("Win_Msg"))
+					//Syswait(.1)
+				End If   
+			End If 	
 
 
 		End If 
+
+
+		If (nMsg == WM_LBUTTONDOWN)
+			//MsgInfo('ok')		
+
+			nMainSel := xOpSelPos( 'fSplit6' )
+
+			cOpMainSel := Alltrim(  Right( aOpcoes[nMainSel][1]  , Len( aOpcoes[nMainSel][1] ) - 2  ) )
+
+			
+			GetCursorPos (@nCol, @nRow)	
+
+			
+			aR1 := GetPos_ScreenToClient(   GetFormHandle(  'fSplit6'  )  , nRow, nCol )
+	
+			
+			//nTop1   := GetProperty('fSplit6',  aOpcoes[nOpSel][LABEL_NAME]   , "Row")
+
+			//msginfo(Str(  nRow ) + '   ' + Str(ar1[1]) + '  ' + Str(ar1[2])    )
+			xDropDown( Alltrim(Str(nMainSel)) + "-" + cOpMainSel   , ar1[1]  )
+			
+					
+
+
+
+		End If
+
+
+		If (nMsg == WM_RBUTTONDOWN)
+
+			
+			SET CODEPAGE TO PORTUGUESE
+			REQUEST HB_LANG_PT
+			REQUEST HB_CODEPAGE_PT850
+
+			HB_SETCODEPAGE("UTF8")
+
+			MsgInfo( 'Sem função' )		
+
+		End If
+
 
 
 		If ( nMsg == WM_MOUSEMOVE ) 
@@ -616,13 +652,15 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 			nMainSel := xOpSelPos( 'fSplit6' )
 
-
-
 			If (nMainSel > Len(aOpcoes)) 
+				nClearSel := 0					
+				nMainSel := 0					
+				BT_ClientAreaInvalidateAll( nHWnd  )
 				return 	
 			End If 	
 
 			
+
 
 			If nClearSel > 0 
 				//xLimpSubMenu()	
@@ -634,32 +672,6 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 			If nMainSel > 0 
 				nClearSel := nMainSel		
 			End If 	
-
-
-
-			
-//			If nClearSel > 0 
-				//xLimpSubMenu()	
-//				xLimpSub( 'fSplit6' , @nMainSel , @nClearSel )			
-//			End If 				
-
-			//nClear := nOpSelx
-			
-			//SysWait(.1)
-
-			//nMainSel := xOpSelPos( 'fSplit6' )
-
-			IF (nMainSel = 0) .or. (nMainSel > Len(aOpcoes)) 
-				Return 
-			End If 	
-
-
-
-
-			//nClearSel := nMainSel
-
-
-			//cOpcao := aOpcoes[nMainSel][1]
 
 			cOpcao := alltrim(  Right( aOpcoes[nMainSel][1]  , Len( aOpcoes[nMainSel][1] ) - 2  ) )
 
@@ -686,57 +698,40 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 			nRow1 := -(GetProperty( 'fSplit6' , "VscrollBar" , "Value"))
 
-
-		////	If (cOpSel == "Consultas")
-			//	cTp1 := RetSql( "select observacao from consultas where descricao = " + QuotedStr( Alltrim( Hb_AnsiToOem(cOpcao)  ) )  +  " and tabela = " + QuotedStr(cTabela) )
-		//	End If 	
-
-
+	
 			cUltOpcaoSel :=  Alltrim(cOpcao) 
-
 		
 			If nMainSel > 0				
 				BT_ClientAreaInvalidateRect( 'fSplit6' , nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , 187 ,  nItemSubHeight - 1  , .t. )				
 			End If 	
 
-			/*
 
+			If !Empty(    Alltrim(  aOpcoes[nMainSel][5]  )   )
+				cTp1 := Alltrim(  aOpcoes[nMainSel][5]  ) 
+			End If 
 
-			
-			If (!Empty(Alltrim(cTp1))) .And. (cOpSel == "Consultas")
+					
+			If (!Empty(Alltrim(cTp1))) 
 
 				GetCursorPos (@nCol, @nRow)
 
 				If !_isWindowDefined("Win_Msg")
-					//WinJan := Notifier( nRow , 110 ,   alltrim(cTp1) ,, 0.5 )
-
-					CrieJanTip( nRow - 35 , 30  ,   Alltrim(cTp1) ,, 0.5 )					
-										
-					
-				Else 					
-				//	HideWindow( GetFormHandle("Win_Msg"))
-
-					SetTamJan( Alltrim(cTp1)  )	
-					SetProperty( 'Win_Msg' , 'Row' , nRow - 35 )
-					SetProperty( 'Win_Msg' , 'Label_1' , 'Value' , Alltrim(cTp1) )  
+					CrieJanTip( nRow  , GetProperty('fSplit6', 'Width') - 15 ,   Alltrim(cTp1) ,, 0.5 )					
+				Else 							
+					xDispHint( cTp1 , nRow+15 )
 				    	
 				End If 	
 
-				If !IsWindowVisible(  GetFormHandle("Win_Msg") )
-					SetTamJan( Alltrim(cTp1)  )					
-				   _ShowWindow("Win_Msg")
-				End If   
+				xDispUpTam(cTp1)				
 
 			
-			Else 		
-			     	
-				If (cOpSel == "Consultas")	 	
-					HideWindow( GetFormHandle("Win_Msg"))				
-				End If 	
+			Else 				     	
+		
+
+				xHideHint()
 
 			End If 
-
-			*/
+			
 
 
 			//SysWait(.1)
@@ -2203,6 +2198,7 @@ Function xDropDown(  cMenuDesc  , nTopx1 )
 	Local nTop   := nTopx1
 
 	nOpSel := nIndice
+
 
 
 	If nIndice <= 0
