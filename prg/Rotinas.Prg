@@ -258,7 +258,7 @@ Return (GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 1 )
 
 
 
-Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel)
+Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDropedDown , nHeightDroped , lSetas  )
 
 	Local aRGBcolor := BACK1
 
@@ -288,6 +288,11 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel)
 
 	Local nRow := -(GetProperty( cForm    , "VscrollBar" , "Value"))
 
+   DEFAULT nItemDropedDown := 0
+   DEFAULT nHeightDroped   := 0
+   DEFAULT lSetas          := .f. 
+
+
 
 
 	hBitMap2 := BT_BitmapCreateNew (nWidthBmp , nHeightBmp , BLACK)
@@ -303,7 +308,7 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel)
 	End If 	
 
 	If nClear1 > 0
-		BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemSubHeight)    , 0  , 187 ,    nHeightBmp    ,  WHITE  , WHITE  )			
+		BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemSubHeight)    , 0  , nColTamMenu ,    nHeightBmp    ,  WHITE  , WHITE  )			
 	End If 	
 
 
@@ -319,10 +324,9 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel)
 
 			nTypeText    := BT_TEXT_TRANSPARENT 
 			// + BT_TEXT_BOLD
+			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow - 2  , 00  , nColTamMenu ,    nItemSubHeight - 1     , WHITE  , BACK1  )		
 
-			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow - 2  , 00  , 187 ,    nItemSubHeight - 1     , WHITE  , BACK1  )		
-
-			BT_DrawText ( hDC2 , nLine + nRow  , 05 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  {32,134,200}   , ; 
+			BT_DrawText ( hDC2 , nLine + nRow  , 15 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  {32,134,200}   , ; 
 			Iif( Alltrim(cTextSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ; 
 			nAlingText, nOrientation )
 		   
@@ -330,12 +334,24 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel)
 		Else 				
 		
 			nTypeText    := BT_TEXT_TRANSPARENT  
-			BT_DrawText ( hDC2 , nLine + nRow  , 05 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  FONTCOR , WHITE , nTypeText, nAlingText, nOrientation )
+			BT_DrawText ( hDC2 , nLine + nRow  , 15 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  FONTCOR , WHITE , nTypeText, nAlingText, nOrientation )
 
 		End If 	
 		
 
-		nLine += (nItemSubHeight)
+		
+
+      If (nItemDropedDown > 0)
+
+         If (nItemDropedDown == n1)
+             nLine += Iif( !lSetas , nHeightDroped , nHeightDroped + ( 2 * nItemSubHeight) )
+         Else     
+             nLine += (nItemSubHeight)  
+         End If 
+
+      Else
+         nLine += (nItemSubHeight)     
+      End If 
 
 	Next 
 
@@ -356,9 +372,9 @@ Function xLimpSub(cJan , nOpsely , nClr )
 
 		//nClr := nOpsely	
 		
-		BT_ClientAreaInvalidateRect( cJan , nRow1 + ( (nOpsely - 1) * nItemSubHeight)  , 0 , 187 ,  nItemSubHeight - 1 , .t. )
+		BT_ClientAreaInvalidateRect( cJan , nRow1 + ( (nOpsely - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1 , .t. )
 
-		
+		//SysWait(.2)
 		
 	End If 	
 
@@ -426,15 +442,11 @@ Function xPaintSub()
 
 
 	If (nOpselx = 0)
-		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , 187 ,    nHeightBmp    , BACK1 ,BACK1  )	
+		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , nColTamMenu ,    nHeightBmp    , BACK1 ,BACK1  )	
 	End If 	
 
 	If nClear > 0
-
-		BT_DrawGradientFillVertical ( hDC2 ,   (nClear  * nItemSubHeight)    , 0  , 187 ,    nHeightBmp    ,  BACK1  ,BACK1  )			
-
-		//nClear := 0
-
+		BT_DrawGradientFillVertical ( hDC2 ,   (nClear  * nItemSubHeight)    , 0  , nColTamMenu ,    nHeightBmp    ,  BACK1  ,BACK1  )			
 	End If 	
 
 
@@ -451,7 +463,7 @@ Function xPaintSub()
 			nTypeText    := BT_TEXT_TRANSPARENT 
 			// + BT_TEXT_BOLD
 
-			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow - 2  , 00  , 187 ,    nItemSubHeight - 1     , BACK1 ,WHITE  )		
+			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow - 2  , 00  , nColTamMenu ,    nItemSubHeight - 1     , BACK1 ,WHITE  )		
 			BT_DrawText ( hDC2 , nLine + nRow  , 05 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  {32,134,200}   , ; 
 			Iif( Alltrim(cSubMenuSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ; 
 			nAlingText, nOrientation )

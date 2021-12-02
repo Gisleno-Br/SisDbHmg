@@ -2687,7 +2687,7 @@ Function xAbreOpMenu( cF1 , cContrl1 )
 			nQtElem := Len(aSubOp)
 			lSalto  := .t.
 
-			nHeight := 300	
+			nHeight := nTamSubMenuConsulta
 
 		Else
 
