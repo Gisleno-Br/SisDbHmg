@@ -339,18 +339,18 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 		End If 	
 		
 
-		
+		 nLine += (nItemSubHeight)     
 
       If (nItemDropedDown > 0)
 
          If (nItemDropedDown == n1)
              nLine += Iif( !lSetas , nHeightDroped , nHeightDroped + ( 2 * nItemSubHeight) )
          Else     
-             nLine += (nItemSubHeight)  
+             //nLine += (nItemSubHeight)  
          End If 
 
       Else
-         nLine += (nItemSubHeight)     
+        // nLine += (nItemSubHeight)     
       End If 
 
 	Next 
@@ -494,7 +494,7 @@ REturn
 
 
 
-Function xOpSelPos( cJan )
+Function xOpSelPos( cJan , nHeit2 )
 
 	Local nCol := 0
 	Local nRow := 0			
@@ -502,7 +502,10 @@ Function xOpSelPos( cJan )
 	Local NewPos 
 	Local nRow1 := -(GetProperty( cJan , "VscrollBar" , "Value"))
 
+   DEFAULT nHeit2 := 0
+
 	GetCursorPos (@nCol, @nRow)
+
 
 
    //SaveLog( 'LOG002.txt' , Str(nRow) + '   ' + Str(nCol)  + Chr(13)+Chr(10)  ) 
@@ -516,6 +519,11 @@ Function xOpSelPos( cJan )
 	Else
 		nItem := (Int(Ar1[1] / nItemSubHeight)+1)		
 	End If 		
+
+
+   If (nHeit2 > 0) .and. (nHeit2 < ar1[1] )
+      nItem := (Int(  (Ar1[1] - nHeit2) / nItemSubHeight)+1)	
+   End If 
 
 Return nItem 	
 

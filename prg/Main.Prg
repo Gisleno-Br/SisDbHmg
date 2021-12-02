@@ -688,7 +688,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 		If ( nMsg == WM_MOUSEMOVE ) 
 			//.And. (!lTracking42)
 
-			nMainSel := xOpSelPos( 'fSplit6' )
+			nMainSel := xOpSelPos( 'fSplit6' , nHeightDrop )
 
 			If (nMainSel > Len(aOpcoes)) 
 
@@ -2271,9 +2271,11 @@ Function xDropDown(  cMenuDesc  , nTopx1 )
 
 	If nContItens > nItemMax
 		SetProperty('fSplitSubMenu' , 'Height',  nTamSubMenuConsulta    )
-		If (nItemSel == 0 )
-			nItemSel := nItemMax
-		End If
+
+		//If (nItemSel == 0 )
+		//	nItemSel := nItemMax
+		//End If
+
 	Else
 	
 		SetProperty('fSplitSubMenu' , 'Height',  nItemSubHeight * nContItens      )
@@ -2299,11 +2301,14 @@ Function xDropDown(  cMenuDesc  , nTopx1 )
 
 	Aeval(aItens , { | a | Iif( Left(a[1],1) == Alltrim(Str(nindice)) , Aadd(aOpx1,Right(a[1],Len(a[1]) - 2) ) , Nil ) } )
 
+	nLinRow :=  GetProperty('fSplit6' , 'Row')  + ((nIndice + 1 )  * nItemSubHeight)
 
 
-	SetProperty( 'fSplitSubMenu' , 'Row',  nTop  + nItemSubHeight  )
+
+	SetProperty( 'fSplitSubMenu' , 'Row',  nLinRow + 5  )
 
 	SetProperty( 'fSplitSubMenu' , 'Visible',   .t.  )
+
 
 
 	DoMethod('fSplitSubMenu' ,'Show' )
