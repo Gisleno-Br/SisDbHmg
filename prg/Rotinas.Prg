@@ -304,7 +304,7 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 
 	If (nOpselx1 = 0)
-		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , 187 ,    nHeightBmp    , WHITE , WHITE  )	
+		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , WHITE , WHITE  )	
 	End If 	
 
 	If nClear1 > 0
@@ -319,7 +319,8 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 		//cTexto := aMtrOp[n1][1]
 
-
+      
+    
 		If ((nOpselx1 > 0) .And. (nOpSelx1 = n1) ) .or. (   (nOpselx1 > 0) .And. ( Alltrim(cTextSel) = Alltrim(cTexto) )  )
 
 			nTypeText    := BT_TEXT_TRANSPARENT 
@@ -341,17 +342,17 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 		 nLine += (nItemSubHeight)     
 
-      If (nItemDropedDown > 0)
+
+       If (nItemDropedDown > 0)
 
          If (nItemDropedDown == n1)
-             nLine += Iif( !lSetas , nHeightDroped , nHeightDroped + ( 2 * nItemSubHeight) )
-         Else     
-             //nLine += (nItemSubHeight)  
-         End If 
-
-      Else
-        // nLine += (nItemSubHeight)     
+             nLine += Iif( !lSetas , nHeightDroped , nHeightDroped + ( 2 * nItemSubHeight) )         
+         End If               
+         
       End If 
+
+
+
 
 	Next 
 
@@ -364,15 +365,17 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 REturn 	
 
-Function xLimpSub(cJan , nOpsely , nClr )
+Function xLimpSub(cJan , nOpsely , nClr , nHeight1 )
 
 	Local nRow1 := -(GetProperty( cJan , "VscrollBar" , "Value"))
+
+   DEFAULT nHeight1 := 0
 
 	If nOpsely > 0
 
 		//nClr := nOpsely	
 		
-		BT_ClientAreaInvalidateRect( cJan , nRow1 + ( (nOpsely - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1 , .t. )
+		BT_ClientAreaInvalidateRect( cJan , nHeight1 + nRow1 + ( (nOpsely - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1 , .t. )
 
 		//SysWait(.2)
 		

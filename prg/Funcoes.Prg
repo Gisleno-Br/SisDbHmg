@@ -398,6 +398,7 @@ FUNCTION xInit()
 
 
 
+
 	DO EVENTS
 
 	SetProperty("fSplit4","fUserDb","Value",cBanco)

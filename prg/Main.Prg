@@ -604,8 +604,10 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 				If nClearSel > 0 								
 					nMainSel := 0
-					xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel )					
-				End If 			
+					xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , nHeightDrop )					
+				End If 		
+
+				xHideHint()	
 
 				Return 
 
@@ -623,6 +625,8 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 					//Syswait(.1)
 				End If   
 			End If 	
+
+			//xHideHint()
 
 
 		End If 
@@ -646,7 +650,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 			End If 
 
 			If nClearSel > 0 				
-				xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel )			
+				xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel ,  nHeightDrop )			
 			End If 			
 
 			cOpcao 		:= alltrim(  Right( aOpcoes[nMainSel][1]  , Len( aOpcoes[nMainSel][1] ) - 2  ) )
@@ -658,12 +662,29 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 				cOpMainSel := ''
 				nMainSel := 0
 				nClearSel := 0					
+
+				nHeightDrop := 0
+				nItemDrop1  := 0
+
+				//SysWait(.1)
+
+				DoMethod('fSplitSubMenu' ,'Hide')			
+
+				_HMG_PRINTER_SETVSCROLLVALUE(   nHWnd  , 0 )	
+
+
 				BT_ClientAreaInvalidateAll( nHWnd  )
+
+				
+
+				//msginfo('ok')
+
+				Return 
 
 			Else 
 			
 				If nMainSel > 0				
-					BT_ClientAreaInvalidateRect( 'fSplit6' , nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )				
+					BT_ClientAreaInvalidateRect( 'fSplit6' ,nHeightDrop +  nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )				
 				End If 	
 
 				
@@ -674,12 +695,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 			End If 
 
 			nRow1 := (nMainSel * nItemSubHeight)
-
-			
-			//nTop1   := GetProperty('fSplit6',  aOpcoes[nOpSel][LABEL_NAME]   , "Row")
 			xDropDown(   Alltrim(Str( nMainsel)) + "-" + cOpcao   , nRow1  )
-
-					
 
 
 		End If 
@@ -701,7 +717,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 					
 					If nClearSel > 0 				
-						xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel )			
+						xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , nHeightDrop)			
 					End If 			
 				End If 
 
@@ -715,9 +731,8 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 
 			If nClearSel > 0 				
-				xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel )			
-			End If 			
-					
+				xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , nHeightDrop )			
+			End If 	
 
 
 			If nMainSel > 0 
@@ -756,7 +771,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 			cUltOpcaoSel :=  Alltrim(cOpcao) 
 		
 			If nMainSel > 0				
-				BT_ClientAreaInvalidateRect( 'fSplit6' , nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )				
+				BT_ClientAreaInvalidateRect( 'fSplit6' , nHeightDrop + nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )				
 			End If 	
 
 
