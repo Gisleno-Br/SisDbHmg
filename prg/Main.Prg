@@ -162,6 +162,8 @@ FUNCTION Main
 
 	Private lTracking12 := .F.
 
+	Private cOpBak := ''
+
 	Private lTracking62 := .F.
 
 	Private nItemDrop1   := 0
@@ -567,6 +569,9 @@ FUNCTION Main
 
 	//SysWait(.1)
 
+	
+	_HMG_PRINTER_SETVSCROLLVALUE(   GetFormHandle('fSplit6')  , 0 )	
+
 
 
 	Main.Activate
@@ -583,7 +588,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 	Local nRow   := 0
 	Local aR1
 	Local nInd2  := 0
-	Local cOpBak := ''
+	
 	
 
 		
@@ -595,10 +600,12 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 			If Empty( Alltrim(cOpMainSel)   )
 
-				nMainSel := 0
-				nClearSel := 0					
-				BT_ClientAreaInvalidateAll( nHWnd  )
-				SetWindowCursor( nHWnd , IDC_ARROW )  			
+				If nClearSel > 0
+					nMainSel := 0
+					nClearSel := 0					
+					BT_ClientAreaInvalidateAll( nHWnd  )
+					SetWindowCursor( nHWnd , IDC_ARROW )  			
+				End If 
 
 			Else
 
@@ -704,25 +711,30 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 		If ( nMsg == WM_MOUSEMOVE ) 
 			//.And. (!lTracking42)
 
-			nMainSel := xOpSelPos( 'fSplit6' , nHeightDrop )
+			nMainSel := xOpSelPos( 'fSplit6' , nHeightDrop , Len(aOpcoes) )
+			
 
 			If (nMainSel > Len(aOpcoes)) 
 
 
 				If Empty( Alltrim(cOpMainSel)   )
-					nClearSel := 0					
-					nMainSel := 0					
-					BT_ClientAreaInvalidateAll( nHWnd  )
+
+					If nClearSel > 0 
+						nClearSel := 0					
+						nMainSel := 0					
+						BT_ClientAreaInvalidateAll( nHWnd  )
+					End If 
 				Else 
 
 					
-					If nClearSel > 0 				
+					If (nClearSel > 0) .And. (nHeightDrop == 0) 				
 						xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , nHeightDrop)			
-					End If 			
+					End If 	
+
 				End If 
 
 
-				return 	
+				Return 	
 
 
 			End If 	
@@ -2281,15 +2293,10 @@ Function xDropDown(  cMenuDesc  , nTopx1 )
 	nItemDrop1 := nIndice 
 	
 
-
 				//msginfo(Str(nContItens))
 
 	If nContItens > nItemMax
 		SetProperty('fSplitSubMenu' , 'Height',  nTamSubMenuConsulta    )
-
-		//If (nItemSel == 0 )
-		//	nItemSel := nItemMax
-		//End If
 
 	Else
 	
@@ -2321,6 +2328,7 @@ Function xDropDown(  cMenuDesc  , nTopx1 )
 
 
 	SetProperty( 'fSplitSubMenu' , 'Row',  nLinRow + 5  )
+
 
 	SetProperty( 'fSplitSubMenu' , 'Visible',   .t.  )
 

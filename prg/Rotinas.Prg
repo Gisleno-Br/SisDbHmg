@@ -497,7 +497,7 @@ REturn
 
 
 
-Function xOpSelPos( cJan , nHeit2 )
+Function xOpSelPos( cJan , nHeit2 , nItMax )
 
 	Local nCol := 0
 	Local nRow := 0			
@@ -508,6 +508,7 @@ Function xOpSelPos( cJan , nHeit2 )
    DEFAULT nHeit2 := 0
 
 	GetCursorPos (@nCol, @nRow)
+
 
 
 
@@ -522,11 +523,18 @@ Function xOpSelPos( cJan , nHeit2 )
 	Else
 		nItem := (Int(Ar1[1] / nItemSubHeight)+1)		
 	End If 		
+        //nHe
+   If (nItMax != nItem)
+      If (nHeit2 > 0) .and. (nHeit2 < ar1[1] ) .And. (nHeit2 > nItemSubHeight)
+         nItem := (Int(  (Ar1[1] - nHeit2) / nItemSubHeight)+1)	
+      End If 
+   End If    
 
+   If nItem > nItMax
+      altd()
 
-   If (nHeit2 > 0) .and. (nHeit2 < ar1[1] )
-      nItem := (Int(  (Ar1[1] - nHeit2) / nItemSubHeight)+1)	
-   End If 
+      //msginfo('ok')
+   End If    
 
 Return nItem 	
 
