@@ -318,8 +318,6 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 		cTexto := alltrim(  Right( aMtrOp[n1][1]  , Len(  aMtrOp[n1][1] ) - 2  ) )
 
 		//cTexto := aMtrOp[n1][1]
-
-      
     
 		If ((nOpselx1 > 0) .And. (nOpSelx1 = n1) ) .or. (   (nOpselx1 > 0) .And. ( Alltrim(cTextSel) = Alltrim(cTexto) )  )
 
@@ -343,23 +341,16 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 		 nLine += (nItemSubHeight)     
 
 
-       If (nItemDropedDown > 0)
-
+      If (nItemDropedDown > 0)
          If (nItemDropedDown == n1)
              nLine += Iif( !lSetas , nHeightDroped , nHeightDroped + ( 2 * nItemSubHeight) )         
          End If               
-         
       End If 
-
-
-
 
 	Next 
 
 	BT_DeleteDC (BTstruct )
 	BT_DeleteDC (BTstruct2 )
-
-
 	//bt_Bit
 
 
@@ -495,9 +486,23 @@ Function xPaintSub()
 REturn 	
 
 
+Function xMove1()
+
+   Local nRow , nCol 
+   Local ar1
+  
+   nRow := _HMG_SYSDATA [ 191 ] // Mouse Row
+   nCol := _HMG_SYSDATA [ 192 ] // Mouse Col
+
+   ar1 := GetPos_ScreenToClient(   GetFormHandle(  'fSplit6'  )  , nRow, nCol )
 
 
-Function xOpSelPos( cJan , nHeit2 , nItMax )
+   SaveLog("mouse2321.txt" , Str(ar1[1]) + "   " + Str(nRow) +  chr(13) + Chr(10))
+
+   
+Return ar1
+
+Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred   )
 
 	Local nCol := 0
 	Local nRow := 0			
@@ -505,36 +510,34 @@ Function xOpSelPos( cJan , nHeit2 , nItMax )
 	Local NewPos 
 	Local nRow1 := -(GetProperty( cJan , "VscrollBar" , "Value"))
 
+   Local aPos := xMove1()
+
    DEFAULT nHeit2 := 0
+   DEFAULT nItDopred := 0
 
 	GetCursorPos (@nCol, @nRow)
 
 
 
-
-   //SaveLog( 'LOG002.txt' , Str(nRow) + '   ' + Str(nCol)  + Chr(13)+Chr(10)  ) 
-
 	aR1 := GetPos_ScreenToClient(   GetFormHandle(  cJan  )  , nRow, nCol )
+
 	
 	NewPos := GetScrollPos( GetFormHandle(  cJan  ), 1 ) 
 
 	If NewPos > 0 
 		nItem := (Int( (NewPos+Ar1[1])     / nItemSubHeight)+1)
 	Else
-		nItem := (Int(Ar1[1] / nItemSubHeight)+1)		
+		//nItem := (Int(Ar1[1] / nItemSubHeight)+1)		
+      nItem := (Int(  Ar1[1]  / nItemSubHeight)+1)	
 	End If 		
-        //nHe
-   If (nItMax != nItem)
-      If (nHeit2 > 0) .and. (nHeit2 < ar1[1] ) .And. (nHeit2 > nItemSubHeight)
-         nItem := (Int(  (Ar1[1] - nHeit2) / nItemSubHeight)+1)	
-      End If 
-   End If    
 
-   If nItem > nItMax
-      altd()
+        
+   If (nHeit2 > 0) .and. (nHeit2 < ar1[1] ) .And. (nHeit2 >= nItemSubHeight) .And. (ar1[1] > (nItMax * nItemSubHeight)   ) 
+       nItem := (Int( NewPos + (Ar1[1] - nHeit2) / nItemSubHeight)+1)	
+   End If  
+		       
+   
 
-      //msginfo('ok')
-   End If    
 
 Return nItem 	
 

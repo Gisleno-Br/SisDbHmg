@@ -609,7 +609,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 			Else
 
-				If nClearSel > 0 								
+				If (nClearSel > 0) .And. (nHeightDrop == 0)
 					nMainSel := 0
 					xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , nHeightDrop )					
 				End If 		
@@ -642,7 +642,13 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 			nRow1 := -(GetProperty( 'fSplit6' , "VscrollBar" , "Value"))
 
+		
+
 			cOpBak := cOpMainSel
+
+		
+
+			//msginfo(Str(   nMainSel )  )
 			
 
 			If !Empty( Alltrim(cOpMainSel)   )
@@ -659,6 +665,11 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 			If nClearSel > 0 				
 				xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel ,  nHeightDrop )			
 			End If 			
+
+			If (nMainSel == 0 )
+				Return 
+			End If 
+
 
 			cOpcao 		:= alltrim(  Right( aOpcoes[nMainSel][1]  , Len( aOpcoes[nMainSel][1] ) - 2  ) )
 			cOpMainSel  := cOpcao 
@@ -711,9 +722,9 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 		If ( nMsg == WM_MOUSEMOVE ) 
 			//.And. (!lTracking42)
 
-			nMainSel := xOpSelPos( 'fSplit6' , nHeightDrop , Len(aOpcoes) )
-			
+			nMainSel := xOpSelPos( 'fSplit6' , nHeightDrop , Len(aOpcoes) , nItemDrop1 )
 
+			
 			If (nMainSel > Len(aOpcoes)) 
 
 
@@ -723,32 +734,39 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 						nClearSel := 0					
 						nMainSel := 0					
 						BT_ClientAreaInvalidateAll( nHWnd  )
+						nItemDrop1 := 0						
 					End If 
 				Else 
 
 					
-					If (nClearSel > 0) .And. (nHeightDrop == 0) 				
-						xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , nHeightDrop)			
+					If (nClearSel > 0) 					    		
+						xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , nHeightDrop  )			
 					End If 	
 
 				End If 
 
-
+				//lTracking42 := .t.
 				Return 	
 
 
 			End If 	
 
+			//PostMessage(nHWnd ,WM_PAINT , 0,0 )
 			
 
+			nsel1 := nClearSel
 
 			If nClearSel > 0 				
-				xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , nHeightDrop )			
+				xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , Iif( nClearSel > nItemDrop1   , nHeightDrop , 0    ) )							
+
+	
 			End If 	
 
 
 			If nMainSel > 0 
 				nClearSel := nMainSel		
+			Else 
+			    Return 	
 			End If 	
 
 			cOpcao := alltrim(  Right( aOpcoes[nMainSel][1]  , Len( aOpcoes[nMainSel][1] ) - 2  ) )
@@ -784,11 +802,12 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 		
 			If nMainSel > 0				
 				BT_ClientAreaInvalidateRect( 'fSplit6' , nHeightDrop + nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )				
+				//BT_ClientAreaInvalidateRect( 'fSplit6' , nHeightDrop + nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )				
 			End If 	
 
 
 			If !Empty(    Alltrim(  aOpcoes[nMainSel][5]  )   )
-				cTp1 := Alltrim(  aOpcoes[nMainSel][5]  ) 
+				cTp1 := Alltrim(  aOpcoes[nMainSel][5]  )  + '  ' + Alltrim(Str(nsel1)) + '    ' +  Alltrim(Str( nMainSel  ))
 			End If 
 
 					
@@ -797,13 +816,14 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 				GetCursorPos (@nCol, @nRow)
 
 				If !_isWindowDefined("Win_Msg")
-					CrieJanTip( nRow  , GetProperty('fSplit6', 'Width') - 15 ,   Alltrim(cTp1) ,, 0.5 )					
+					CrieJanTip( nRow  , GetProperty('fSplit6', 'Width') - 15 ,   Alltrim(cTp1)      ,, 0.5 )					
 				Else 							
 					xDispHint( cTp1 , nRow+15 )
-				    	
+
+				
 				End If 	
 
-				xDispUpTam(cTp1)				
+				xDispUpTam(cTp1   )				
 
 			
 			Else 				     	
@@ -811,6 +831,8 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 			End If 
 			
 			lTracking42 := TrackMouseEvent(nHWnd)		
+
+			//lTracking42 := .f.
 
 
 		End If 
