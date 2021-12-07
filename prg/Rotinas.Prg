@@ -17,6 +17,7 @@
 
 
 
+
 FUNCTION AltTamCampo( cTabx, cCampo, cForm )
 
    LOCAL cSql := "select * from dicionario where tabela = '" + cTabx + "' and camposistema = '" + AllTrim( hb_OEMToANSI( cCampo ) ) + "'"
@@ -191,6 +192,16 @@ Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds)
 
    //TOPMOST
 
+   
+//   HB_SETCODEPAGE("PT850")
+
+
+   REQUEST HB_CODEPAGE_PT850
+   hb_setcodepage("PT850")
+
+//   msginfo(   Hb_AnsiToOem(cMsg) )
+
+
    DEFINE WINDOW Win_Msg AT nTop, nLeft WIDTH nWidth HEIGHT nHeight  ;
       NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION BACKCOLOR aBcolor
       
@@ -199,8 +210,8 @@ Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds)
          COL         1
          WIDTH       450
          HEIGHT      15
-         VALUE       Alltrim(cMsg)
-         FONTNAME    'Arial' //XFONT1
+         VALUE       Hb_AnsiToOem(cMsg)
+         FONTNAME    XFONT1
          FONTSIZE    8
          FONTBOLD    .F.
          BACKCOLOR   aBcolor
@@ -209,6 +220,10 @@ Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds)
       END LABEL
 
    END WINDOW
+
+
+   //SetProperty( "Win_msg" , "Label_1" , "Value" , cMsg )
+
    hWnd := GetFormHandle("Win_Msg")
    //HMG_ChangeWindowStyle(hWnd, WS_EX_CLIENTEDGE, NIL, .T.)
 
@@ -233,9 +248,11 @@ Return hWnd
 
 Function xHidehint()
 
-   If IsWindowVisible(  GetFormHandle("Win_Msg") )
-   	HideWindow( GetFormHandle("Win_Msg"))				
-   End If 	
+   If _isWindowDefined( 'Win_Msg' )
+      If IsWindowVisible(  GetFormHandle("Win_Msg") )
+         HideWindow( GetFormHandle("Win_Msg"))				
+      End If 	
+   End If 
 
 
 Return 
@@ -286,12 +303,13 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
 	Local cTexto := ''
 
+   Local hBitOk := BT_BitmapLoadFile ( 'img\ngi.png')
+
 	Local nRow := -(GetProperty( cForm    , "VscrollBar" , "Value"))
 
    DEFAULT nItemDropedDown := 0
    DEFAULT nHeightDroped   := 0
    DEFAULT lSetas          := .f. 
-
 
 
 
@@ -312,7 +330,6 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 	End If 	
 
 
-
 	For n1 := 1 To Len(aMtrOp)
 
 		cTexto := alltrim(  Right( aMtrOp[n1][1]  , Len(  aMtrOp[n1][1] ) - 2  ) )
@@ -321,19 +338,25 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
     
 		If ((nOpselx1 > 0) .And. (nOpSelx1 = n1) ) .or. (   (nOpselx1 > 0) .And. ( Alltrim(cTextSel) = Alltrim(cTexto) )  )
 
+
+
 			nTypeText    := BT_TEXT_TRANSPARENT 
 			// + BT_TEXT_BOLD
-			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow - 2  , 00  , nColTamMenu ,    nItemSubHeight - 1     , WHITE  , BACK1  )		
+			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , WHITE  , BACK1  )		
 
-			BT_DrawText ( hDC2 , nLine + nRow  , 15 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  {32,134,200}   , ; 
+			BT_DrawText ( hDC2 , nLine + nRow  , 25 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  {32,134,200}   , ; 
 			Iif( Alltrim(cTextSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ; 
 			nAlingText, nOrientation )
+
+         
+         BT_DrawBitmap (hDC2  , nLine  + nRow    , 1   , 20  , 20 , BT_STRETCH, hBitOk)
+
 		   
 
 		Else 				
 		
 			nTypeText    := BT_TEXT_TRANSPARENT  
-			BT_DrawText ( hDC2 , nLine + nRow  , 15 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  FONTCOR , WHITE , nTypeText, nAlingText, nOrientation )
+			BT_DrawText ( hDC2 , nLine + nRow  , 25 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  FONTCOR , WHITE , nTypeText, nAlingText, nOrientation )
 
 		End If 	
 		
@@ -362,13 +385,9 @@ Function xLimpSub(cJan , nOpsely , nClr , nHeight1 )
 
    DEFAULT nHeight1 := 0
 
-	If nOpsely > 0
-
-		//nClr := nOpsely	
+	If nOpsely > 0	
 		
-		BT_ClientAreaInvalidateRect( cJan , nHeight1 + nRow1 + ( (nOpsely - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1 , .t. )
-
-		//SysWait(.2)
+		BT_ClientAreaInvalidateRect( cJan , nHeight1 + nRow1 + ( (nOpsely - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight  , .t. )
 		
 	End If 	
 
@@ -378,8 +397,9 @@ Return
 Function xDispHint( cMsg1 , nRow1 )
 
  	SetTamJan( Alltrim(cMsg1)  )	
+
 	SetProperty( 'Win_Msg' , 'Row' , nRow1 - 35 )
-	SetProperty( 'Win_Msg' , 'Label_1' , 'Value' , Alltrim(cMsg1) )  			    	
+	SetProperty( 'Win_Msg' , 'Label_1' , 'Value' , Alltrim(  hb_AnsiToOem(cMsg1) ) )  			    	
 
 
 Return 
@@ -510,7 +530,7 @@ Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred   )
 	Local NewPos 
 	Local nRow1 := -(GetProperty( cJan , "VscrollBar" , "Value"))
 
-   Local aPos := xMove1()
+
 
    DEFAULT nHeit2 := 0
    DEFAULT nItDopred := 0
@@ -535,6 +555,7 @@ Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred   )
    If (nHeit2 > 0) .and. (nHeit2 < ar1[1] ) .And. (nHeit2 >= nItemSubHeight) .And. (ar1[1] > (nItMax * nItemSubHeight)   ) 
        nItem := (Int( NewPos + (Ar1[1] - nHeit2) / nItemSubHeight)+1)	
    End If  
+
 		       
    
 

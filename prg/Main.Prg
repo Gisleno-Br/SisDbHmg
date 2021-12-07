@@ -85,7 +85,7 @@ FUNCTION Main
 
 	Public lAtivaBlack := .f.
 
-	Public nColTamMenu := 187
+	Public nColTamMenu := 189
 
 	SET TOOLTIPCUSTOMDRAW ON
 	SET TOOLTIPSTYLE BALLOON
@@ -383,18 +383,21 @@ FUNCTION Main
 
 	Private aRotinas := {}
 
-	Private nMainSel  := 0
-	Private nClearSel := 0
+	Private nMainSel  := 1
+	Private nClearSel := 1
 
 	Private cOpMainSel  := ''
 
 	//xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel)
 
+	//HB_SetCodePage( "UTF8")
 
 	Private aOpcoes := {{"1-Cadastro", Nil , 1 , 0  , "Acesso a Cadastros Gerais e Principais." }, ;
-		{"2-Movimentos", Nil , 2  , 0  , "Acesso a Movimentação de Estoque" },;
+		{"2-Movimentos", Nil , 2  , 0  ,  "Acesso a Movimentação de Estoque"  },;
 		{"3-Relatorios", Nil , 3 , 0  ,   "Relatorios do Sistema"},;
 		{"4-Parametros", Nil , 4 , 0 , "Parametros e Configurações Gerais"  } }
+
+	cOpMainSel  := aOpcoes[1][1]	
 
 	Private nOpSel := 0
 
@@ -409,7 +412,8 @@ FUNCTION Main
 
 	Private nRowIni := 10
 	
-	HB_SETCODEPAGE("UTF8")
+	//HB_SETCODEPAGE("UTF8")
+
 	n := 1
 
 
@@ -421,6 +425,9 @@ FUNCTION Main
 	//yAviso(  Hb_AnsiToOem("Proximo Elemento do Filtro deve ser Uma Expressão. EX: (Codigo = '0000').") , .f. )  
 
 	nEveLabel := 0	
+
+	
+	
 	
 	//CREATE EVENT PROCNAME LabelEventHandler() STOREINDEX nEveLabel
 	//EventProcessAllHookMessage ( nEveLabel , .t. )
@@ -719,6 +726,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 		End If 
 
 
+
 		If ( nMsg == WM_MOUSEMOVE ) 
 			//.And. (!lTracking42)
 
@@ -736,18 +744,19 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 						BT_ClientAreaInvalidateAll( nHWnd  )
 						nItemDrop1 := 0						
 					End If 
-				Else 
 
+				Else 
 					
 					If (nClearSel > 0) 					    		
 						xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , nHeightDrop  )			
 					End If 	
 
 				End If 
+				
+				SetWindowCursor( nHWnd , IDC_ARROW )  
+				xHideHint()	
 
-				//lTracking42 := .t.
 				Return 	
-
 
 			End If 	
 
@@ -758,8 +767,6 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 			If nClearSel > 0 				
 				xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , Iif( nClearSel > nItemDrop1   , nHeightDrop , 0    ) )							
-
-	
 			End If 	
 
 
@@ -802,7 +809,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 		
 			If nMainSel > 0				
 				BT_ClientAreaInvalidateRect( 'fSplit6' , nHeightDrop + nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )				
-				//BT_ClientAreaInvalidateRect( 'fSplit6' , nHeightDrop + nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )				
+				
 			End If 	
 
 
@@ -813,12 +820,14 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 					
 			If (!Empty(Alltrim(cTp1))) 
 
-				GetCursorPos (@nCol, @nRow)
+			    nRow1 := 0
+
+				GetCursorPos (@nCol, @nRow1)
 
 				If !_isWindowDefined("Win_Msg")
-					CrieJanTip( nRow  , GetProperty('fSplit6', 'Width') - 15 ,   Alltrim(cTp1)      ,, 0.5 )					
+					CrieJanTip( nRow1  , GetProperty('fSplit6', 'Width') - 15 ,   Alltrim(cTp1)      ,, 0.5 )					
 				Else 							
-					xDispHint( cTp1 , nRow+15 )
+					xDispHint( cTp1 , nRow1+15 )
 
 				
 				End If 	
@@ -2335,7 +2344,8 @@ Function xDropDown(  cMenuDesc  , nTopx1 )
 
 	
 	SetProperty( 'fSplitSubMenu' , 'Col', 1)
-	SetProperty( 'fSplitSubMenu' , 'Width', fSplit6.Width - 4 )
+	SetProperty( 'fSplitSubMenu' , 'Width', fSplit6.Width  )
+
 
 	ShowScrollBar( GetFormHandle( 'fSplitSubMenu' ), 0, .F. )
 
