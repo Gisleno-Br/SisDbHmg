@@ -104,6 +104,7 @@ FUNCTION Main
 	Private aButx1 := {}
 
 	Private  lTracking42 := .f. 
+	Private  lTracking142 := .f. 
 
 	SET SCROLLSTEP TO 10
 
@@ -124,6 +125,16 @@ FUNCTION Main
 	Public lVScrool := .f.
 
 	Public lTelaToda := .f.
+
+	
+	Private aOpx1 := {}
+
+	Private nItemx1 := 0
+
+	Private nItemClr := 0
+
+	Private cOpSely := ''
+
 
 	PRIVATE lOnToolTipCustomDraw := .T.
 
@@ -392,21 +403,22 @@ FUNCTION Main
 
 	//HB_SetCodePage( "UTF8")
 
-	Private aOpcoes := {{"1-Cadastro", Nil , 1 , 0  , "Acesso a Cadastros Gerais e Principais." }, ;
-		{"2-Movimentos", Nil , 2  , 0  ,  "Acesso a Movimentação de Estoque"  },;
-		{"3-Relatorios", Nil , 3 , 0  ,   "Relatorios do Sistema"},;
-		{"4-Parametros", Nil , 4 , 0 , "Parametros e Configurações Gerais"  } }
+	Private aOpcoes := {{"1-Cadastro",  "Acesso a Cadastros Gerais e Principais." }, ;
+		{"2-Movimentos"				,   "Acesso a Movimentação de Estoque"  },;
+		{"3-Relatorios"				,   "Relatorios do Sistema"},;
+		{"4-Parametros"				,  	"Parametros e Configurações Gerais"  } }
 
 	cOpMainSel  := aOpcoes[1][1]	
 
 	Private nOpSel := 0
 
 	Private aItens := { {"1-Clientes","Cadastro de Clientes"} , { "1-Fornecedores","Cadastro de Fornecedores"} , ;
-	 { "1-Vendedores", "Cadastro de Vendedores" } , {"1-Colaboradores",Nil} ,   {"1-Grupo Produtos",Nil} , ;
-		{"1-Locais Estoque",Nil} , {"1-Funções",Nil} , ;
-		{"1-Categoria Produto",Nil} , {"1-Unidades",Nil} , {"1-Tipo Produtos",Nil} ,;
-		{"1-Tipo Produto1s",Nil},{"1-Tipo Produto2s",Nil},{"1-Tipo Produt3os",Nil},{"1-Tipo Produtos",Nil},{"1-Tipo Produtos",Nil},;
-		{"2-Pedidos",Nil} , {"2-Orçamento",Nil}  , {"3-Listagem Clientes",Nil} ,    {"4-Configurações",Nil} }
+	 { "1-Vendedores", "Cadastro de Vendedores" } , {"1-Colaboradores",""} ,   {"1-Grupo Produtos",""} , ;
+		{"1-Locais Estoque",""} , {"1-Funções",""} , ;
+		{"1-Categoria Produto",""} , {"1-Unidades",""} , {"1-Tipo Produtos",""} ,;
+		{"1-Tipo Produto1s",""},{"1-Tipo Produto2s","" } ,{"1-Tipo Produt3os",""},{"1-Tipo Produt222os",""},{"1-Tipo 444Produtos",""}, ;
+		 { "1-Rotatividade","Rot"} , {"1-TES","TES1" } , ;
+		{"2-Pedidos","Vendas"} , {"2-Orçamento","Orçamento"}  , {"3-Listagem Clientes","Lista"} ,    {"4-Configurações",""} }
 
 
 
@@ -595,6 +607,94 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 	Local nRow   := 0
 	Local aR1
 	Local nInd2  := 0
+	Local cTp1   := ''
+
+
+	If nHWnd == GetProperty(  'fSplitSubMenu' , "HANDLE" )
+
+
+		
+
+		If ( nMsg == WM_MOUSELEAVE )  .and. (   lTracking142  )
+
+			nItemx1 := 0
+			nItemClr := 0					
+			BT_ClientAreaInvalidateAll( nHWnd  )
+			SetWindowCursor( nHWnd , IDC_ARROW )  	
+
+
+
+		End If 
+
+
+		
+
+		If ( nMsg == WM_MOUSEMOVE ) 
+			//.And. (!lTracking42)
+
+			nItemx1 := xOpSelPos( 'fSplitSubMenu' , 0 , Len(aOpx1) , 0 )			
+			nRow1 := -(GetProperty( 'fSplitSubMenu' , "VscrollBar" , "Value"))
+
+			
+			
+			SetWindowCursor( nHWnd , CURSORHAND)  
+
+
+			If nItemClr > 0 				
+				xLimpSub( 'fSplitSubMenu' , @nItemClr ,  @nItemx1 , 0 )							
+			End If 	
+
+
+			If nItemx1 > 0 
+				nItemClr := nItemx1		
+			Else 
+			    Return 	
+			End If 	
+
+
+
+			If nItemx1 > 0				
+				BT_ClientAreaInvalidateRect( 'fSplitSubMenu' ,  nRow1  +  ( ( nItemx1 - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )								
+			End If 	
+
+
+			If !Empty(    Alltrim(  aOpx1[nItemx1][2]  )   )
+
+			   cTp1 :=	  Alltrim( 	 aOpx1[nItemx1][2]  )  
+
+			   nRow1 := 0
+
+				GetCursorPos (@nCol, @nRow1)
+
+				If !_isWindowDefined("Win_Msg")
+					CrieJanTip( nRow1  , GetProperty('fSplitSubMenu', 'Width') - 15 ,   Alltrim(cTp1)      ,, 0.5 )					
+				Else 							
+					xDispHint( cTp1 , nRow1+15 )				
+				End If 	
+
+				xDispUpTam(cTp1   )				
+
+
+
+			Else 
+
+			   xHideHint()	
+			End If 
+
+
+			
+			lTracking142 := TrackMouseEvent(nHWnd)		
+
+
+			//msginfo('ok  ')
+
+
+		End If 			
+
+
+
+
+	End If 
 	
 	
 
@@ -616,7 +716,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 			Else
 
-				If (nClearSel > 0) .And. (nHeightDrop == 0)
+				If (nClearSel > 0) 				
 					nMainSel := 0
 					xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , nHeightDrop )					
 				End If 		
@@ -631,17 +731,14 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 			lTracking42 := .f. 
 
-
 			
 			If _isWindowDefined("Win_Msg")
 				If IsWindowVisible(  GetFormHandle("Win_Msg") )	   							
-					HideWindow( GetFormHandle("Win_Msg"))
-					//Syswait(.1)
+					HideWindow( GetFormHandle("Win_Msg"))					
 				End If   
 			End If 	
 
-			//xHideHint()
-
+			
 
 		End If 
 
@@ -747,11 +844,13 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 				Else 
 					
-					If (nClearSel > 0) 					    		
+					If (nClearSel > 0) 					    								
 						xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , nHeightDrop  )			
 					End If 	
 
 				End If 
+
+				nClearSel := 0
 				
 				SetWindowCursor( nHWnd , IDC_ARROW )  
 				xHideHint()	
@@ -808,13 +907,12 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 			cUltOpcaoSel :=  Alltrim(cOpcao) 
 		
 			If nMainSel > 0				
-				BT_ClientAreaInvalidateRect( 'fSplit6' , nHeightDrop + nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )				
-				
+				BT_ClientAreaInvalidateRect( 'fSplit6' , nHeightDrop + nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )								
 			End If 	
 
 
-			If !Empty(    Alltrim(  aOpcoes[nMainSel][5]  )   )
-				cTp1 := Alltrim(  aOpcoes[nMainSel][5]  )  + '  ' + Alltrim(Str(nsel1)) + '    ' +  Alltrim(Str( nMainSel  ))
+			If !Empty(    Alltrim(  aOpcoes[nMainSel][2]  )   )
+				cTp1 := Alltrim(  aOpcoes[nMainSel][2]  )  + '  ' + Alltrim(Str(nsel1)) + '    ' +  Alltrim(Str( nMainSel  ))
 			End If 
 
 					
@@ -2297,7 +2395,8 @@ Function xDropDown(  cMenuDesc  , nTopx1 )
 	Local nLinex1
 	Local nIncremento
 	//Local cOpAberto
-	Local aOpx1  := {}
+	//Local aOpx1  := {}
+
 	Local nTop   := nTopx1    
 
 	//nItemDrop1 , nHeightDrop , lSetasDown
@@ -2322,24 +2421,29 @@ Function xDropDown(  cMenuDesc  , nTopx1 )
 	Aeval(aItens , { | a | Iif( Left(a[1],1) == Alltrim(Str(nindice)) , nContItens++ , Nil ) } )
 
 	nItemDrop1 := nIndice 
+
+	aOpx1 := {}
 	
+
 
 				//msginfo(Str(nContItens))
 
-	If nContItens > nItemMax
-		SetProperty('fSplitSubMenu' , 'Height',  nTamSubMenuConsulta    )
 
+	If nContItens >= nItemMax
+		SetProperty('fSplitSubMenu' , 'Height',  nTamSubMenuConsulta    )
+		nHeightDrop := nTamSubMenuConsulta 
+		_HMG_PRINTER_SETVSCROLLVALUE( fSplitSubMenu.Handle, 0 )
 	Else
 	
 		SetProperty('fSplitSubMenu' , 'Height',  nItemSubHeight * nContItens      )
-		_HMG_PRINTER_SETVSCROLLVALUE( fSplitSubMenu.Handle, 0 )
-		nHeightDrop := nItemSubHeight * nContItens
+		nHeightDrop := nItemSubHeight * nContItens 
 
 	End If
 
 
 		
-	BT_ClientAreaInvalidateAll(  GetFormHandle('fSplit6')  )
+	//BT_ClientAreaInvalidateAll(  GetFormHandle('fSplit6')  )
+
 
 
 	
@@ -2353,7 +2457,7 @@ Function xDropDown(  cMenuDesc  , nTopx1 )
 
 	aOpx1 := {}
 
-	Aeval(aItens , { | a | Iif( Left(a[1],1) == Alltrim(Str(nindice)) , Aadd(aOpx1,Right(a[1],Len(a[1]) - 2) ) , Nil ) } )
+	//Aeval(aItens , { | a | Iif( Left(a[1],1) == Alltrim(Str(nindice)) , Aadd(aOpx1,Right(a[1],Len(a[1]) - 2) ) , Nil ) } )
 
 	nLinRow :=  GetProperty('fSplit6' , 'Row')  + ((nIndice + 1 )  * nItemSubHeight)
 
@@ -2366,7 +2470,7 @@ Function xDropDown(  cMenuDesc  , nTopx1 )
 
 
 
-	DoMethod('fSplitSubMenu' ,'Show' )
+	//DoMethod('fSplitSubMenu' ,'Show' )
 
 
 /*
@@ -2415,9 +2519,25 @@ Function xDropDown(  cMenuDesc  , nTopx1 )
 
 	Do Events
 
-//	OpMenu( aOpx1 , 'fSplitSubMenu' , 0  , ''  , nindice)
+	OpMenu( aOpx1 , 'fSplitSubMenu' , 0  , ''  , nindice)
 
 */
+	
+   
+	Aeval(aItens , { | a | Iif( Left(a[1],1) == Alltrim(Str(nindice)) , Aadd(aOpx1, a ) , Nil ) } )
+	cOpAberto := Alltrim(cMenuDesc)
+
+	//aOpx1 := ACLONE( aItens )
+
+	//OpMenu( aOpx1 , 'fSplitSubMenu' , 0  , ''  , nindice)
+
+	BT_ClientAreaInvalidateAll('fSplitSubMenu')
+
+	DoMethod('fSplitSubMenu' ,'Show' )
+
+
+	BT_ClientAreaInvalidateAll('fSplit6')
+
 
 
 Return 

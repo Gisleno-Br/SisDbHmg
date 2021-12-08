@@ -531,13 +531,10 @@ Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred   )
 	Local nRow1 := -(GetProperty( cJan , "VscrollBar" , "Value"))
 
 
-
    DEFAULT nHeit2 := 0
    DEFAULT nItDopred := 0
 
 	GetCursorPos (@nCol, @nRow)
-
-
 
 	aR1 := GetPos_ScreenToClient(   GetFormHandle(  cJan  )  , nRow, nCol )
 
@@ -556,11 +553,21 @@ Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred   )
        nItem := (Int( NewPos + (Ar1[1] - nHeit2) / nItemSubHeight)+1)	
    End If  
 
-		       
-   
-
-
 Return nItem 	
+
+
+Function xRetLinha(  cJan )
+
+   Local nCol := 0
+	Local nRow := 0		
+   Local nRow1 := -(GetProperty( cJan , "VscrollBar" , "Value"))
+
+	GetCursorPos (@nCol, @nRow)
+
+	aR1 := GetPos_ScreenToClient(   GetFormHandle(  cJan  )  , nRow, nCol )
+
+Return Ar1[1]   
+
 
 
 
