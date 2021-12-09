@@ -623,9 +623,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 			SetWindowCursor( nHWnd , IDC_ARROW )  	
 
 
-
 		End If 
-
 
 		
 
