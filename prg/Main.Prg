@@ -392,6 +392,7 @@ FUNCTION Main
 
 
 
+
 	Private aRotinas := {}
 
 	Private nMainSel  := 1
@@ -420,6 +421,7 @@ FUNCTION Main
 		 { "1-Rotatividade","Rot"} , {"1-TES","TES1" } , ;
 		{"2-Pedidos","Vendas"} , {"2-Orçamento","Orçamento"}  , {"3-Listagem Clientes","Lista"} ,    {"4-Configurações",""} }
 
+		
 
 
 	Private nRowIni := 10
@@ -609,6 +611,8 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 	Local nInd2  := 0
 	Local cTp1   := ''
 
+	*// Eventos Sub menu.
+	
 
 	If nHWnd == GetProperty(  'fSplitSubMenu' , "HANDLE" )
 
@@ -635,12 +639,14 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 			
 			
+
 			SetWindowCursor( nHWnd , CURSORHAND)  
 
 
 			If nItemClr > 0 				
 				xLimpSub( 'fSplitSubMenu' , @nItemClr ,  @nItemx1 , 0 )							
 			End If 	
+
 
 
 			If nItemx1 > 0 
@@ -825,7 +831,27 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 		If ( nMsg == WM_MOUSEMOVE ) 
 			//.And. (!lTracking42)
 
+			yP1 := 0
+
+			If nMainSel > 0	
+				If (nMainSel == xOpSelPos( 'fSplit6' , nHeightDrop , Len(aOpcoes) , nItemDrop1 ))
+					Return 
+				End If 	
+			End if
+
+			//nMainSel := xOpSelPos( 'fSplit6' , nHeightDrop , Len(aOpcoes) , nItemDrop1 )
+			
+
 			nMainSel := xOpSelPos( 'fSplit6' , nHeightDrop , Len(aOpcoes) , nItemDrop1 )
+
+
+
+
+			If nMainSel = nClearSel
+				Return	
+			End If 	
+
+			//msginfo('ok ' + Str(nMainSel)+ '  ' + Str(nClearSel)  )
 
 			
 			If (nMainSel > Len(aOpcoes)) 

@@ -280,6 +280,7 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 	Local aRGBcolor := BACK1
 
 	Local nWidthBmp := 170
+   
 
 	Local nHandle1
 	Local nHandle2
