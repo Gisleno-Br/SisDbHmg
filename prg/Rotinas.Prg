@@ -268,14 +268,13 @@ Return
 function GetTextoLen( cMsg  )
 
    Local  FontHandle := _SetFont (GetControlHandle( 'Label_1' , 'Win_Msg' ), 'Arial', 8 , .f. , .f. ,.f. ,.f. )
-//   SetProperty(   'Win_msg' , 'Width' , GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 1   )
 
 Return (GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 1 )
 
 
 
 
-Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDropedDown , nHeightDroped , lSetas  )
+Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDropedDown , nHeightDroped , lSetas , lSubMenu1 )
 
 	Local aRGBcolor := BACK1
 
@@ -290,10 +289,12 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 	Local hDc
 	Local nTYpe
 	Local nLine := 00
-	
+
+  	
 	Local nHeightBmp := nItemSubHeight * Len(aMtrOp)
 
 	Local hBitmap2
+
 
 	LOCAL Width  := BT_ClientAreaWidth  (cForm)
 	LOCAL Height := BT_ClientAreaHeight (cForm)
@@ -312,6 +313,8 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
    DEFAULT nHeightDroped   := 0
    DEFAULT lSetas          := .f. 
 
+   DEFAULT lSubMenu1       := .f.
+
 
 
 	hBitMap2 := BT_BitmapCreateNew (nWidthBmp , nHeightBmp , BLACK)
@@ -323,11 +326,25 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 
 	If (nOpselx1 = 0)
-		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , WHITE , WHITE  )	
+
+      If !lSubMenu1
+		   BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , WHITE , WHITE  )	
+      Else 
+         BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , aCorSub1 , aCorSub1  )	
+      End If    
+
 	End If 	
 
 	If nClear1 > 0
-		BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemSubHeight)    , 0  , nColTamMenu ,    nHeightBmp    ,  WHITE  , WHITE  )			
+
+      If !lSubMenu1
+		   BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemSubHeight)    , 0  , nColTamMenu ,    nHeightBmp    ,  WHITE  , WHITE  )			
+      Else 
+         BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemSubHeight)    , 0  , nColTamMenu ,    nHeightBmp    ,  aCorSub1  , aCorSub1  )			
+      End If    
+
+
+
 	End If 	
 
 
@@ -342,22 +359,36 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 
 			nTypeText    := BT_TEXT_TRANSPARENT 
-			// + BT_TEXT_BOLD
-			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , WHITE  , BACK1  )		
 
-			BT_DrawText ( hDC2 , nLine + nRow  , 25 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  {32,134,200}   , ; 
-			Iif( Alltrim(cTextSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ; 
-			nAlingText, nOrientation )
 
-         
-         BT_DrawBitmap (hDC2  , nLine  + nRow    , 1   , 20  , 20 , BT_STRETCH, hBitOk)
+         If !lSubMenu1
+			   BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , WHITE  , BACK1  )		
 
+            BT_DrawText ( hDC2 , nLine + nRow  , 25 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  {132,134,200}   , ; 
+   			Iif( Alltrim(cTextSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ; 
+	   		nAlingText, nOrientation )
+
+            
+            BT_DrawBitmap (hDC2  , nLine  + nRow    , 1   , 20  , 20 , BT_STRETCH, hBitOk)
+
+         Else 
+             BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , WHITE  , aCorSub1  )		
+
+             BT_DrawText ( hDC2 , nLine + nRow  , 35 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  FONTCOR ,  aCorSub1  , ; 
+   			Iif( Alltrim(cTextSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ; 
+	   		nAlingText, nOrientation )
+
+         End If   
 		   
 
 		Else 				
 		
 			nTypeText    := BT_TEXT_TRANSPARENT  
-			BT_DrawText ( hDC2 , nLine + nRow  , 25 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  FONTCOR , WHITE , nTypeText, nAlingText, nOrientation )
+         If !lSubMenu1
+			   BT_DrawText ( hDC2 , nLine + nRow  , 25 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  FONTCOR , WHITE , nTypeText, nAlingText, nOrientation )
+         Else 
+            BT_DrawText ( hDC2 , nLine + nRow  , 35 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  FONTCOR , aCorSub1 , nTypeText, nAlingText, nOrientation )
+         End If    
 
 		End If 	
 		

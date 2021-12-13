@@ -182,6 +182,8 @@ FUNCTION Main
 	Private lSetasDown   := .f. 
 
 	
+
+	
 	REQUEST HB_LANG_PT
 	REQUEST HB_CODEPAGE_PT850
 
@@ -347,6 +349,9 @@ FUNCTION Main
 	Public nDesktopWidth := GetDesktopWidth()
 
 	Public lMainJan := .t.
+
+
+	Public  aCorSub1 := {145,200,200 }
 
 
 
@@ -634,10 +639,17 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 		If ( nMsg == WM_MOUSEMOVE ) 
 			//.And. (!lTracking42)
 
-			nItemx1 := xOpSelPos( 'fSplitSubMenu' , 0 , Len(aOpx1) , 0 )			
-			nRow1 := -(GetProperty( 'fSplitSubMenu' , "VscrollBar" , "Value"))
+
+			If (nItemx1 > 0)
+				If (nItemx1 = xOpSelPos( 'fSplitSubMenu' , 0 , Len(aOpx1) , 0 )	)					
+					Return 
+				End If 
+			End If 
 
 			
+
+			nItemx1 := xOpSelPos( 'fSplitSubMenu' , 0 , Len(aOpx1) , 0 )			
+			nRow1 := -(GetProperty( 'fSplitSubMenu' , "VscrollBar" , "Value"))			
 			
 
 			SetWindowCursor( nHWnd , CURSORHAND)  
@@ -700,8 +712,8 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 	End If 
 	
-	
 
+	
 		
 	If nHWnd == GetProperty(  'fSplit6' , "HANDLE" )
 
@@ -720,9 +732,9 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 			Else
 
-				If (nClearSel > 0) 				
+				If (nClearSel > 0) .And. (nClearSel != nMainSel)				
 					nMainSel := 0
-					xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , nHeightDrop )					
+					xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , IIF( nMainSel  >= nItemDrop1 , HeightDrop,0)   )					
 				End If 		
 
 				xHideHint()	
@@ -749,6 +761,10 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 		If (nMsg == WM_LBUTTONDOWN)
 
 			nRow1 := -(GetProperty( 'fSplit6' , "VscrollBar" , "Value"))
+
+			If nItemDrop1 > 0
+				xRestMenu( nHWnd , .f. )
+			End If 
 
 		
 
@@ -785,6 +801,8 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 			If cOpMainSel == cOpBak 
 
+
+                  /*
 				cOpMainSel := ''
 				nMainSel := 0
 				nClearSel := 0					
@@ -800,10 +818,11 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 
 				BT_ClientAreaInvalidateAll( nHWnd  )
+				*/
 
-				
+				xRestMenu( nHWnd )
 
-				//msginfo('ok')
+				//SysWait(.1)
 
 				Return 
 
@@ -822,6 +841,9 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 			nRow1 := (nMainSel * nItemSubHeight)
 			xDropDown(   Alltrim(Str( nMainsel)) + "-" + cOpcao   , nRow1  )
+
+			
+			//SysWait(.1)
 
 
 		End If 
@@ -846,10 +868,12 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 
 
-
+           
 			If nMainSel = nClearSel
 				Return	
 			End If 	
+			
+
 
 			//msginfo('ok ' + Str(nMainSel)+ '  ' + Str(nClearSel)  )
 
@@ -901,10 +925,12 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 			cOpcao := alltrim(  Right( aOpcoes[nMainSel][1]  , Len( aOpcoes[nMainSel][1] ) - 2  ) )
 
-			
+			/*
 		    If (cUltOpcaoSel = cOpcao)
 				Return 
 			End If 	
+			*/
+
 
 
 			If (nClearSel > 0) .And. (nClearSel <= Len(aOpcoes))
@@ -931,7 +957,14 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 			cUltOpcaoSel :=  Alltrim(cOpcao) 
 		
 			If nMainSel > 0				
-				BT_ClientAreaInvalidateRect( 'fSplit6' , nHeightDrop + nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )								
+
+				If ( nMainSel  >= nItemDrop1 )
+					BT_ClientAreaInvalidateRect( 'fSplit6' ,nHeightDrop + nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )								
+				Else
+					BT_ClientAreaInvalidateRect( 'fSplit6' ,nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )								
+				End If 
+
+
 			End If 	
 
 
@@ -972,6 +1005,28 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 
 return 
+
+Function xRestMenu( nHandle , lZeraVars  )
+
+	Default lZeraVars := .t. 
+
+
+	If (lZeraVars)
+		cOpMainSel := ''
+		nMainSel := 0
+		nClearSel := 0					
+		nHeightDrop := 0
+		nItemDrop1  := 0
+	End If 
+
+				//SysWait(.1)
+
+	DoMethod('fSplitSubMenu' ,'Hide')			
+
+	_HMG_PRINTER_SETVSCROLLVALUE(   nHandle  , 0 )	
+	BT_ClientAreaInvalidateAll( nHandle  )
+
+REturn 
 
 
 Function xRefresh()
