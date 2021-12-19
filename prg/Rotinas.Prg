@@ -274,7 +274,7 @@ Return (GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 1 )
 
 
 
-Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDropedDown , nHeightDroped , lSetas , lSubMenu1 )
+Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDropedDown , nHeightDroped , lSetas , lSubMenu1 , lHitB , lHitT )
 
 	Local aRGBcolor := BACK1
 
@@ -289,6 +289,9 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 	Local hDc
 	Local nTYpe
 	Local nLine := 00
+
+   Local hBit10
+   Local hBit11 
 
   	
 	Local nHeightBmp := nItemSubHeight * Len(aMtrOp)
@@ -309,12 +312,39 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 	Local nRow := -(GetProperty( cForm    , "VscrollBar" , "Value"))
 
+   Local nLineSeta := GetProperty('fSplitSubMenu' , 'Height' )
+
+   Local nLinDrop := 0
+
+
+
    DEFAULT nItemDropedDown := 0
    DEFAULT nHeightDroped   := 0
    DEFAULT lSetas          := .f. 
 
    DEFAULT lSubMenu1       := .f.
 
+   DEFAULT lHitB := .f. 
+   DEFAULT lHitT := .t. 
+
+
+
+
+   If lSetas
+      If !lHitB
+         hBit10 := BT_BitmapLoadFile ( 'SETAB2' )
+      Else
+         hBit10 := BT_BitmapLoadFile ('SETAB2D')
+      End If
+
+
+      If !lHitT
+         hBit11 := BT_BitmapLoadFile ( 'SETAC2' )
+      Else
+         hBit11 := BT_BitmapLoadFile ( 'SETAC2D' ) 
+      End If
+
+   End If 
 
 
 	hBitMap2 := BT_BitmapCreateNew (nWidthBmp , nHeightBmp , BLACK)
@@ -396,13 +426,34 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 		 nLine += (nItemSubHeight)     
 
 
+
       If (nItemDropedDown > 0)
          If (nItemDropedDown == n1)
-             nLine += Iif( !lSetas , nHeightDroped , nHeightDroped + ( 2 * nItemSubHeight) )         
+             nLine += Iif( !lSetas , nHeightDroped , nTamSubMenuConsulta + ( 2 * nItemSubHeight) + 5 )         
+             //nLinDrop := nLine 
          End If               
       End If 
 
 	Next 
+
+
+   If (lSetas) .And. (!lSubMenu1)
+      
+		BT_DrawBitmap (hDC2, nLineSeta + nItemSubHeight     ,   0   , nColTamMenu, nItemSubHeight , BT_STRETCH, hBit10)
+		BT_DrawBitmap (hDC2, nLineSeta + (nItemSubHeight * 2)+1 , 0   , nColTamMenu , nItemSubHeight , BT_STRETCH, hBit11)
+
+
+      
+      BT_BitmapRelease ( hBit10 )
+      BT_BitmapRelease ( hBit11 )
+
+
+
+
+    //  msginfo('ok')
+
+
+   End If       
 
 	BT_DeleteDC (BTstruct )
 	BT_DeleteDC (BTstruct2 )

@@ -768,6 +768,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 		
 
+
 			cOpBak := cOpMainSel
 
 		
@@ -801,28 +802,8 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 			If cOpMainSel == cOpBak 
 
-
-                  /*
-				cOpMainSel := ''
-				nMainSel := 0
-				nClearSel := 0					
-
-				nHeightDrop := 0
-				nItemDrop1  := 0
-
-				//SysWait(.1)
-
-				DoMethod('fSplitSubMenu' ,'Hide')			
-
-				_HMG_PRINTER_SETVSCROLLVALUE(   nHWnd  , 0 )	
-
-
-				BT_ClientAreaInvalidateAll( nHWnd  )
-				*/
-
-				xRestMenu( nHWnd )
-
-				//SysWait(.1)
+				lSetasDown := .f. 
+				xRestMenu( nHWnd )			
 
 				Return 
 
@@ -956,7 +937,8 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 	
 			cUltOpcaoSel :=  Alltrim(cOpcao) 
 		
-			If nMainSel > 0				
+			If nMainSel > 0	
+							
 
 				If ( nMainSel  >= nItemDrop1 )
 					BT_ClientAreaInvalidateRect( 'fSplit6' ,nHeightDrop + nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )								
@@ -2507,11 +2489,14 @@ Function xDropDown(  cMenuDesc  , nTopx1 )
 
 				//msginfo(Str(nContItens))
 
+	lSetasDown := .f. 	
+
 
 	If nContItens >= nItemMax
 		SetProperty('fSplitSubMenu' , 'Height',  nTamSubMenuConsulta    )
-		nHeightDrop := nTamSubMenuConsulta 
+		nHeightDrop := nTamSubMenuConsulta +  (nItemSubHeight * 2)+1 
 		_HMG_PRINTER_SETVSCROLLVALUE( fSplitSubMenu.Handle, 0 )
+		lSetasDown := .t. 
 	Else
 	
 		SetProperty('fSplitSubMenu' , 'Height',  nItemSubHeight * nContItens      )
@@ -2520,9 +2505,9 @@ Function xDropDown(  cMenuDesc  , nTopx1 )
 	End If
 
 
+
 		
 	//BT_ClientAreaInvalidateAll(  GetFormHandle('fSplit6')  )
-
 
 
 	
