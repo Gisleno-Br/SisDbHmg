@@ -332,7 +332,8 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
    If lSetas
       If !lHitB
-         hBit10 := BT_BitmapLoadFile ( 'SETAB2' )
+         hBit10 := BT_BitmapLoadFile ( 'SETAB2' ) 
+         //SETAB2
       Else
          hBit10 := BT_BitmapLoadFile ('SETAB2D')
       End If
@@ -341,7 +342,8 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
       If !lHitT
          hBit11 := BT_BitmapLoadFile ( 'SETAC2' )
       Else
-         hBit11 := BT_BitmapLoadFile ( 'SETAC2D' ) 
+         hBit11 := BT_BitmapLoadFile ( 'SETAC2D'  ) 
+         //SETAC2D
       End If
 
    End If 
@@ -429,8 +431,9 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
       If (nItemDropedDown > 0)
          If (nItemDropedDown == n1)
-             nLine += Iif( !lSetas , nHeightDroped , nTamSubMenuConsulta + ( 2 * nItemSubHeight) + 5 )         
-             //nLinDrop := nLine 
+             nLinDrop := nLine 
+             nLine += Iif( !lSetas , nHeightDroped , nTamSubMenuConsulta + ( 2 * nItemSubHeight)  )         
+             
          End If               
       End If 
 
@@ -439,18 +442,16 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
    If (lSetas) .And. (!lSubMenu1)
       
-		BT_DrawBitmap (hDC2, nLineSeta + nItemSubHeight     ,   0   , nColTamMenu, nItemSubHeight , BT_STRETCH, hBit10)
-		BT_DrawBitmap (hDC2, nLineSeta + (nItemSubHeight * 2)+1 , 0   , nColTamMenu , nItemSubHeight , BT_STRETCH, hBit11)
+		//BT_DrawBitmap (hDC2, nLineSeta + nItemSubHeight     ,   0       , nColTamMenu , nItemSubHeight , BT_STRETCH, hBit10)
+		//BT_DrawBitmap (hDC2, nLineSeta + (nItemSubHeight * 2) , 0   , nColTamMenu , nItemSubHeight , BT_STRETCH, hBit11)
 
+
+ 		BT_DrawBitmap (hDC2, nLinDrop + nLineSeta     ,                 0   , nColTamMenu , nItemSubHeight , BT_STRETCH, hBit10)
+		BT_DrawBitmap (hDC2, nLinDrop + nLineSeta + nItemSubHeight   ,   0   , nColTamMenu , nItemSubHeight , BT_STRETCH, hBit11)
 
       
       BT_BitmapRelease ( hBit10 )
       BT_BitmapRelease ( hBit11 )
-
-
-
-
-    //  msginfo('ok')
 
 
    End If       
@@ -612,6 +613,9 @@ Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred   )
 	Local ar1 
 	Local NewPos 
 	Local nRow1 := -(GetProperty( cJan , "VscrollBar" , "Value"))
+   Local nIa1 , nIa2 
+
+   Local nItem := 0
 
 
    DEFAULT nHeit2 := 0
@@ -635,6 +639,25 @@ Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred   )
    If (nHeit2 > 0) .and. (nHeit2 < ar1[1] ) .And. (nHeit2 >= nItemSubHeight) .And. (ar1[1] > (nItMax * nItemSubHeight)   ) 
        nItem := (Int( NewPos + (Ar1[1] - nHeit2) / nItemSubHeight)+1)	
    End If  
+
+   If (lSetasDown)
+
+       nIa1 := (nItDopred * nItemSubHeight) + nTamSubMenuConsulta
+       nIa2 := nIa1 + (nItemSubHeight * 2)
+
+       If (Ar1[1] >= nIa1) .And. (  Ar1[1] <= nIa2 )
+
+
+            If Ar1[1] <  (nIa1 + nItemSubHeight )
+               nItem := -1
+            Else 
+               nItem := -2
+            End If    
+
+       End If 
+
+
+   End If 
 
 Return nItem 	
 

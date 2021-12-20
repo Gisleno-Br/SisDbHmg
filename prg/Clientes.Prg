@@ -2993,8 +2993,6 @@ Function UpScrool( nDir , nTamanho )
 
 	End If 	
 
-
-
 	hwnd :=  GetFormHandle(  cMenuName  ) 
 
 

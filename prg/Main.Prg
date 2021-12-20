@@ -587,7 +587,7 @@ FUNCTION Main
 
 	Private aButTop := {}	
 
-	Public nIndexEventY := EventCreate (  { ||   xMainHandle( )   }  )  		
+	//Public nIndexEventY := EventCreate (  { ||   xMainHandle( )   }  )  		
 
 
 	
@@ -598,11 +598,7 @@ FUNCTION Main
 	
 	_HMG_PRINTER_SETVSCROLLVALUE(   GetFormHandle('fSplit6')  , 0 )	
 
-
-
-
-	Main.Activate
-    
+	Main.Activate    
 
 
 RETURN
@@ -895,7 +891,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 			nsel1 := nClearSel
 
 			If nClearSel > 0 				
-				xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , Iif( nClearSel > nItemDrop1   , nHeightDrop , 0    ) )							
+				xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , Iif( nClearSel > nItemDrop1   , Iif(lSetasDown ,nHeightDrop  , nHeightDrop) , 0    ) )							
 			End If 	
 
 
@@ -931,6 +927,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 			
 			
+
 			SetWindowCursor( nHWnd , CURSORHAND)  
 
 			nRow1 := -(GetProperty( 'fSplit6' , "VscrollBar" , "Value"))
@@ -939,14 +936,12 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 			cUltOpcaoSel :=  Alltrim(cOpcao) 
 		
 			If nMainSel > 0	
-							
 
 				If ( nMainSel  >= nItemDrop1 )
-					BT_ClientAreaInvalidateRect( 'fSplit6' ,nHeightDrop + nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )								
+					BT_ClientAreaInvalidateRect( 'fSplit6' , Iif(lSetasDown ,nHeightDrop + 0 , nHeightDrop) + nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1   , .t. )								
 				Else
-					BT_ClientAreaInvalidateRect( 'fSplit6' ,nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )								
+					BT_ClientAreaInvalidateRect( 'fSplit6' ,nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1 , .t. )								
 				End If 
-
 
 			End If 	
 
@@ -965,9 +960,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 				If !_isWindowDefined("Win_Msg")
 					CrieJanTip( nRow1  , GetProperty('fSplit6', 'Width') - 15 ,   Alltrim(cTp1)      ,, 0.5 )					
 				Else 							
-					xDispHint( cTp1 , nRow1+15 )
-
-				
+					xDispHint( cTp1 , nRow1+15 )				
 				End If 	
 
 				xDispUpTam(cTp1   )				
@@ -2495,7 +2488,7 @@ Function xDropDown(  cMenuDesc  , nTopx1 )
 
 	If nContItens >= nItemMax
 		SetProperty('fSplitSubMenu' , 'Height',  nTamSubMenuConsulta    )
-		nHeightDrop := nTamSubMenuConsulta +  (nItemSubHeight * 2)+1 
+		nHeightDrop := nTamSubMenuConsulta +  (nItemSubHeight * 2) 
 		_HMG_PRINTER_SETVSCROLLVALUE( fSplitSubMenu.Handle, 0 )
 		lSetasDown := .t. 
 	Else
