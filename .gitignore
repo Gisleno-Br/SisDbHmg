@@ -162,7 +162,6 @@ SisDb.hbc
 SisDb.rc
 sisdb.sql
 sisdb2.sql
-SisDbHmg.rc
 sisdbnovo.sql
 Prg/hbFormat.ini
 release/n.exe
