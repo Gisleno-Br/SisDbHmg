@@ -20,222 +20,222 @@
 
 FUNCTION AltTamCampo( cTabx, cCampo, cForm )
 
-   LOCAL cSql := "select * from dicionario where tabela = '" + cTabx + "' and camposistema = '" + AllTrim( hb_OEMToANSI( cCampo ) ) + "'"
+	LOCAL cSql := "select * from dicionario where tabela = '" + cTabx + "' and camposistema = '" + AllTrim( hb_OEMToANSI( cCampo ) ) + "'"
 
-   LOCAL oServer := GetConexao()
-   LOCAL oQuery  := oServer:Query( cSql )
-   LOCAL oRow
+	LOCAL oServer := GetConexao()
+	LOCAL oQuery  := oServer:Query( cSql )
+	LOCAL oRow
 
-   LOCAL lBold      := .F.
-   LOCAL lItalic    := .F.
-   LOCAL lUnderline := .F.
-   LOCAL lStrikeOut := .F.
-
-
+	LOCAL lBold      := .F.
+	LOCAL lItalic    := .F.
+	LOCAL lUnderline := .F.
+	LOCAL lStrikeOut := .F.
 
 
-   PRIVATE lOkz := .F.
-   PRIVATE aButx1
-
-   PRIVATE pCampo   := cCampo
-   PRIVATE pTabelax := cTabx
-
-   IF ( oQuery:LastRec() > 0 )
-
-      oRow := oQuery:GetRow( 1 )
-
-      Load Window fEditTam
-
-      SET NAVIGATION EXTENDED
-
-      fEditTam .lblcampo. value := AllTrim( GetCampo( oRow, 'campo' ) )
-
-      fEditTam .tamanho. value   := GetCampo( oRow, 'tamdisp' )
-      fEditTam .cabecalho. value := hb_ANSIToOEM( GetCampo( oRow, 'camposistema' ) )
-
-      fEditTam .mascara. value := GetCampo( oRow, 'mascara' )
-
-      fEditTam .chkBrowse. Value := GetCampo( oRow, 'browse' ) == 'S'
-
-      ON KEY ESCAPE Of fEditTam Action _ReleaseWindow( 'fEditTam' )
-
-      HMG_ChangeWindowStyle( fEditTam.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
-      HMG_ChangeWindowStyle( fEditTam.Handle, WS_EX_STATICEDGE, NIL, .T., .T. )
 
 
-      OBTN_Create( 'fEditTam',  6798, "Ok", 135, 180,  65,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
-      OBTN_Font( 'fEditTam', 6798,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
+	PRIVATE lOkz := .F.
+	PRIVATE aButx1
 
-      OBTN_Create( 'fEditTam', 6799, "Cancelar", 135, 245,  65,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
-      OBTN_Font( 'fEditTam', 6799,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
+	PRIVATE pCampo   := cCampo
+	PRIVATE pTabelax := cTabx
 
-      aButx1 := {}
-      AAdd( aButx1, {  6798,  OBTN_Handle( 'fEditTam', 6798 )    } )
-      AAdd( aButx1, {  6799,  OBTN_Handle( 'fEditTam', 6799 )    } )
+	IF ( oQuery:LastRec() > 0 )
 
-      SetProperty( 'fEditTam', "Label_5", "Value",  hb_ANSIToOEM( 'Propriedades Visualização Campo' ) )
+		oRow := oQuery:GetRow( 1 )
 
-      EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, 'fEditTam'  ) },   OBTN_Handle( 'fEditTam', 6798 )   ), .T. )
-      EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, 'fEditTam' ) },     OBTN_Handle( 'fEditTam', 6799 )   ), .T. )
+		Load Window fEditTam
 
-      Obtn_Enable(  'fEditTam',  6798, .F. )
+		SET NAVIGATION EXTENDED
+
+		fEditTam .lblcampo. value := AllTrim( GetCampo( oRow, 'campo' ) )
+
+		fEditTam .tamanho. value   := GetCampo( oRow, 'tamdisp' )
+		fEditTam .cabecalho. value := hb_ANSIToOEM( GetCampo( oRow, 'camposistema' ) )
+
+		fEditTam .mascara. value := GetCampo( oRow, 'mascara' )
+
+		fEditTam .chkBrowse. Value := GetCampo( oRow, 'browse' ) == 'S'
+
+		ON KEY ESCAPE Of fEditTam Action _ReleaseWindow( 'fEditTam' )
+
+		HMG_ChangeWindowStyle( fEditTam.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
+		HMG_ChangeWindowStyle( fEditTam.Handle, WS_EX_STATICEDGE, NIL, .T., .T. )
 
 
-      Activate Window fEditTam
+		OBTN_Create( 'fEditTam',  6798, "Ok", 135, 180,  65,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
+		OBTN_Font( 'fEditTam', 6798,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
+
+		OBTN_Create( 'fEditTam', 6799, "Cancelar", 135, 245,  65,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
+		OBTN_Font( 'fEditTam', 6799,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
+
+		aButx1 := {}
+		AAdd( aButx1, {  6798,  OBTN_Handle( 'fEditTam', 6798 )    } )
+		AAdd( aButx1, {  6799,  OBTN_Handle( 'fEditTam', 6799 )    } )
+
+		SetProperty( 'fEditTam', "Label_5", "Value",  hb_ANSIToOEM( 'Propriedades Visualização Campo' ) )
+
+		EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, 'fEditTam'  ) },   OBTN_Handle( 'fEditTam', 6798 )   ), .T. )
+		EventProcessAllHookMessage( EventCreate( {|| InputEvButton( aButx1, 'fEditTam' ) },     OBTN_Handle( 'fEditTam', 6799 )   ), .T. )
+
+		Obtn_Enable(  'fEditTam',  6798, .F. )
 
 
-   ELSE
-      yAviso( 'Campo/Tabela Não Localizado no Dicionario de Dados.' , .f.)
-      SetProperty( cForm, 'Image_baixo', 'Visible', .F. )
-      SetProperty( cForm, 'Image_cima', 'Visible', .F. )
-      Refreshall( cForm )
-   END IF
+		Activate Window fEditTam
 
 
-   oQuery:Destroy()
-   oQuery := Nil
+	ELSE
+		yAviso( 'Campo/Tabela Não Localizado no Dicionario de Dados.' , .f.)
+		SetProperty( cForm, 'Image_baixo', 'Visible', .F. )
+		SetProperty( cForm, 'Image_cima', 'Visible', .F. )
+		Refreshall( cForm )
+	END IF
 
-   oServer:Destroy()
-   oServer := Nil
+
+	oQuery:Destroy()
+	oQuery := Nil
+
+	oServer:Destroy()
+	oServer := Nil
 
 RETURN lOkz
 
 
 FUNCTION SvTamCampo( cCampo1, cTab1, nTam1  )
 
-   LOCAL oSErver
-   LOCAL oQuery
-   LOCAL cSqlUp := "Update dicionario "
+	LOCAL oSErver
+	LOCAL oQuery
+	LOCAL cSqlUp := "Update dicionario "
 
-   cSqlUp += " Set tamdisp = " + AllTrim( Str(  nTam1 ) )
-   cSqlUp += " where tabela = '" + cTab1 + "' and Camposistema = '" + AllTrim( hb_OEMToANSI( cCampo1 ) ) + "'"
+	cSqlUp += " Set tamdisp = " + AllTrim( Str(  nTam1 ) )
+	cSqlUp += " where tabela = '" + cTab1 + "' and Camposistema = '" + AllTrim( hb_OEMToANSI( cCampo1 ) ) + "'"
 
-   oServer := GetConexao()
-   oQuery := oServer:Query( cSqlUp )
+	oServer := GetConexao()
+	oQuery := oServer:Query( cSqlUp )
 
-   IF oQuery:NetErr()
-      yAviso( '(SvCampo) Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
-      RETURN .F.
-   END IF
+	IF oQuery:NetErr()
+		yAviso( '(SvCampo) Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
+		RETURN .F.
+	END IF
 
-   oServer:Destroy()
-   oServer := Nil
+	oServer:Destroy()
+	oServer := Nil
 
-   oQuery:Destroy()
-   oQuery := Nil
+	oQuery:Destroy()
+	oQuery := Nil
 
 RETURN .T.
 
 
 FUNCTION SaveCampo( cCampo1, cTab1  )
 
-   LOCAL oSErver
-   LOCAL oQuery
-   LOCAL cSqlUp := "Update dicionario "
+	LOCAL oSErver
+	LOCAL oQuery
+	LOCAL cSqlUp := "Update dicionario "
 
-   cSqlUp += " Set tamdisp = " + AllTrim( Str(  fEditTam .tamanho. value  ) ) + ","
-   cSqlUp += "camposistema = '" + AllTrim( hb_ANSIToOEM( fEditTam .cabecalho. value ) ) + "',"
-   cSqlUp += "mascara = '" + AllTrim( fEditTam .mascara. value ) + "',"
-   cSqlUp += "browse = '" + iif( fEditTam .chkBrowse. Value, "S", "N" ) + "' "
-   cSqlUp += " where tabela = '" + cTab1 + "' and Camposistema = '" + AllTrim( hb_OEMToANSI( cCampo1 ) ) + "'"
+	cSqlUp += " Set tamdisp = " + AllTrim( Str(  fEditTam .tamanho. value  ) ) + ","
+	cSqlUp += "camposistema = '" + AllTrim( hb_ANSIToOEM( fEditTam .cabecalho. value ) ) + "',"
+	cSqlUp += "mascara = '" + AllTrim( fEditTam .mascara. value ) + "',"
+	cSqlUp += "browse = '" + iif( fEditTam .chkBrowse. Value, "S", "N" ) + "' "
+	cSqlUp += " where tabela = '" + cTab1 + "' and Camposistema = '" + AllTrim( hb_OEMToANSI( cCampo1 ) ) + "'"
 
-   oServer := GetConexao()
-   oQuery := oServer:Query( cSqlUp )
+	oServer := GetConexao()
+	oQuery := oServer:Query( cSqlUp )
 
-   IF oQuery:NetErr()
+	IF oQuery:NetErr()
 
-      yAviso( '(SaveCampo) Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
+		yAviso( '(SaveCampo) Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error(), .F. )
 
-      oServer:Destroy()
-      oServer := Nil
+		oServer:Destroy()
+		oServer := Nil
 
-      oQuery:Destroy()
-      oQuery := Nil
+		oQuery:Destroy()
+		oQuery := Nil
 
-      RETURN .F.
-   END IF
+		RETURN .F.
+	END IF
 
-   oServer:Destroy()
-   oServer := Nil
+	oServer:Destroy()
+	oServer := Nil
 
-   oQuery:Destroy()
-   oQuery := Nil
+	oQuery:Destroy()
+	oQuery := Nil
 
 RETURN .T.
 
 
 Function CloseJanTip(   nHwnd  )
 
-   Local nSeconds := 1
+	Local nSeconds := 1
 
-   //AnimateWindow(hWnd, (nSeconds*300), AW_VER_NEGATIVE)
-   //hb_IdleSleep(0.5)
-   AnimateWindow(nHwnd, (nSeconds*1500), (AW_BLEND + AW_HIDE))
-   SendMessage( nHwnd, WM_SYSCOMMAND, SC_CLOSE, 0 )
+	//AnimateWindow(hWnd, (nSeconds*300), AW_VER_NEGATIVE)
+	//hb_IdleSleep(0.5)
+	AnimateWindow(nHwnd, (nSeconds*1500), (AW_BLEND + AW_HIDE))
+	SendMessage( nHwnd, WM_SYSCOMMAND, SC_CLOSE, 0 )
 
-Return    
+Return
 
 Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds)
-   LOCAL nHeight := 20 , nWidth := 304
-   Local hFont 
-   Local FontHandle
-   //LOCAL nLeft := (GetDesktopWidth() - 5) - nWidth
-   //LOCAL nTop := (GetDesktopHeight() - 50) - nHeight
-   LOCAL hWnd, aBcolor, nWinRow := nTop, nWinCol := nLeft
+	LOCAL nHeight := 20 , nWidth := 304
+	Local hFont
+	Local FontHandle
+	//LOCAL nLeft := (GetDesktopWidth() - 5) - nWidth
+	//LOCAL nTop := (GetDesktopHeight() - 50) - nHeight
+	LOCAL hWnd, aBcolor, nWinRow := nTop, nWinCol := nLeft
 
-   DEFAULT nSeconds := 2
-   If ValType(ERROR) = "U"
-      aBcolor := {250,243,180}
-   Else
-      aBcolor := {250,243,180}
-   Endif
+	DEFAULT nSeconds := 2
+	If ValType(ERROR) = "U"
+		aBcolor := {250,243,180}
+	Else
+		aBcolor := {250,243,180}
+	Endif
 
-   //TOPMOST
+	//TOPMOST
 
-   
+
 //   HB_SETCODEPAGE("PT850")
 
 
-   REQUEST HB_CODEPAGE_PT850
-   hb_setcodepage("PT850")
+	REQUEST HB_CODEPAGE_PT850
+	hb_setcodepage("PT850")
 
 //   msginfo(   Hb_AnsiToOem(cMsg) )
 
 
-   DEFINE WINDOW Win_Msg AT nTop, nLeft WIDTH nWidth HEIGHT nHeight  ;
-      NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION BACKCOLOR aBcolor
-      
-      DEFINE LABEL Label_1
-         ROW         0
-         COL         1
-         WIDTH       450
-         HEIGHT      15
-         VALUE       Hb_AnsiToOem(cMsg)
-         FONTNAME    XFONT1
-         FONTSIZE    8
-         FONTBOLD    .F.
-         BACKCOLOR   aBcolor
-         FONTCOLOR   BLACK
-         CENTERALIGN .f. 
-      END LABEL
+	DEFINE WINDOW Win_Msg AT nTop, nLeft WIDTH nWidth HEIGHT nHeight  ;
+		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION BACKCOLOR aBcolor
 
-   END WINDOW
+	DEFINE LABEL Label_1
+	ROW         0
+	COL         1
+	WIDTH       450
+	HEIGHT      15
+	VALUE       Hb_AnsiToOem(cMsg)
+	FONTNAME    XFONT1
+	FONTSIZE    8
+	FONTBOLD    .F.
+	BACKCOLOR   aBcolor
+	FONTCOLOR   BLACK
+	CENTERALIGN .f.
+END LABEL
 
-
-   //SetProperty( "Win_msg" , "Label_1" , "Value" , cMsg )
-
-   hWnd := GetFormHandle("Win_Msg")
-   //HMG_ChangeWindowStyle(hWnd, WS_EX_CLIENTEDGE, NIL, .T.)
+END WINDOW
 
 
-   //FontHandle := _SetFont (GetControlHandle( 'Label_1' , 'Win_Msg' ), 'Arial', 8 , .t. , .f. ,.f. ,.t. )
+//SetProperty( "Win_msg" , "Label_1" , "Value" , cMsg )
 
-   //hFont := SendMessage (GetControlHandle( 'Label_1' , 'Win_Msg' )   , WM_GETFONT, 0, 0)
+hWnd := GetFormHandle("Win_Msg")
+//HMG_ChangeWindowStyle(hWnd, WS_EX_CLIENTEDGE, NIL, .T.)
 
-   //SetProperty(   'Win_msg' , 'Width' , GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 4   )
+
+//FontHandle := _SetFont (GetControlHandle( 'Label_1' , 'Win_Msg' ), 'Arial', 8 , .t. , .f. ,.f. ,.t. )
+
+//hFont := SendMessage (GetControlHandle( 'Label_1' , 'Win_Msg' )   , WM_GETFONT, 0, 0)
+
+//SetProperty(   'Win_msg' , 'Width' , GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 4   )
 
 
-   //_ShowWindow("Win_Msg")
+//_ShowWindow("Win_Msg")
 /*
    AnimateWindow(hWnd, (nSeconds*300), AW_VER_NEGATIVE)
    hb_IdleSleep(nSeconds)
@@ -248,30 +248,99 @@ Return hWnd
 
 Function xHidehint()
 
-   If _isWindowDefined( 'Win_Msg' )
-      If IsWindowVisible(  GetFormHandle("Win_Msg") )
-         HideWindow( GetFormHandle("Win_Msg"))				
-      End If 	
-   End If 
+	If _isWindowDefined( 'Win_Msg' )
+		If IsWindowVisible(  GetFormHandle("Win_Msg") )
+			HideWindow( GetFormHandle("Win_Msg"))
+		End If
+	End If
 
 
-Return 
+Return
 
 function SetTamJan( cMsg  )
 
-   Local  FontHandle := _SetFont (GetControlHandle( 'Label_1' , 'Win_Msg' ), 'Arial', 8 , .f. , .f. ,.f. ,.f. )
-   SetProperty(   'Win_msg' , 'Width' , GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 1   )
+	Local  FontHandle := _SetFont (GetControlHandle( 'Label_1' , 'Win_Msg' ), 'Arial', 8 , .f. , .f. ,.f. ,.f. )
+	SetProperty(   'Win_msg' , 'Width' , GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 1   )
 
-Return 
+Return
 
 
 function GetTextoLen( cMsg  )
 
-   Local  FontHandle := _SetFont (GetControlHandle( 'Label_1' , 'Win_Msg' ), 'Arial', 8 , .f. , .f. ,.f. ,.f. )
+	Local  FontHandle := _SetFont (GetControlHandle( 'Label_1' , 'Win_Msg' ), 'Arial', 8 , .f. , .f. ,.f. ,.f. )
 
 Return (GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 1 )
 
 
+
+
+
+Function ScrollMenu( nDirecao , hWnd1 , nScr1 , nPonteiro , nTotal , lHtp , lHtb )
+
+   Local lOk := .t. 
+   Local nLineSeta := GetProperty('fSplitSubMenu' , 'Height' )         
+
+   Local nItens := Int(nTamSubMenuConsulta / nItemSubHeight)
+
+	If nDirecao == 2
+      *// Baixo
+
+      If !lHtb
+
+		   nScr1 += nItemSubHeight
+         nPonteiro++
+
+
+         lHtp := .f. 
+
+         If (nPonteiro == nTotal)
+            lHtb := .t.    
+
+            
+			//	BT_ClientAreaInvalidateAll('fSplit6')
+         End If 
+
+      Else 
+         yAviso( Hb_AnsitoOem("Opção Não Disponivel.") , .f. )
+         lOk := .f. 
+      End If        
+
+     
+	Else
+
+      *// Cima
+
+
+
+      If !lHtp
+
+		   nScr1 -= nItemSubHeight
+         nPonteiro--
+
+         lHtb := .f. 
+
+
+         If (nPonteiro == nItens)
+            lHtp := .t.  
+           // BT_ClientAreaInvalidateAll('fSplit6')
+         End If 
+
+      Else 
+         yAviso( Hb_AnsitoOem("Opção Não Disponivel.") , .f. )
+         lOk := .f. 
+      End If        
+
+	End If
+   
+
+
+	If (lOk)
+		_HMG_PRINTER_SETVSCROLLVALUE(   hWnd1  , nScr1 )	      
+	End If
+
+
+
+Return
 
 
 Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDropedDown , nHeightDroped , lSetas , lSubMenu1 , lHitB , lHitT )
@@ -279,7 +348,7 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 	Local aRGBcolor := BACK1
 
 	Local nWidthBmp := 170
-   
+
 
 	Local nHandle1
 	Local nHandle2
@@ -290,10 +359,10 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 	Local nTYpe
 	Local nLine := 00
 
-   Local hBit10
-   Local hBit11 
+	Local hBit10
+	Local hBit11
 
-  	
+
 	Local nHeightBmp := nItemSubHeight * Len(aMtrOp)
 
 	Local hBitmap2
@@ -302,82 +371,83 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 	LOCAL Width  := BT_ClientAreaWidth  (cForm)
 	LOCAL Height := BT_ClientAreaHeight (cForm)
 
-	
+
 	Local nTypeText    := BT_TEXT_TRANSPARENT  //+ BT_TEXT_BOLD
 	Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
 	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
 	Local cTexto := ''
 
-   Local hBitOk := BT_BitmapLoadFile ( 'img\ngi.png')
+	Local hBitOk := BT_BitmapLoadFile ( 'img\ngi.png')
 
 	Local nRow := -(GetProperty( cForm    , "VscrollBar" , "Value"))
 
-   Local nLineSeta := GetProperty('fSplitSubMenu' , 'Height' )
+	Local nLineSeta := GetProperty('fSplitSubMenu' , 'Height' )
 
-   Local nLinDrop := 0
-
-
-
-   DEFAULT nItemDropedDown := 0
-   DEFAULT nHeightDroped   := 0
-   DEFAULT lSetas          := .f. 
-
-   DEFAULT lSubMenu1       := .f.
-
-   DEFAULT lHitB := .f. 
-   DEFAULT lHitT := .t. 
+	Local nLinDrop := 0
 
 
 
+	DEFAULT nItemDropedDown := 0
+	DEFAULT nHeightDroped   := 0
+	DEFAULT lSetas          := .f.
 
-   If lSetas
-      If !lHitB
-         hBit10 := BT_BitmapLoadFile ( 'SETAB2' ) 
-         //SETAB2
-      Else
-         hBit10 := BT_BitmapLoadFile ('SETAB2D')
-      End If
+	DEFAULT lSubMenu1       := .f.
+
+	DEFAULT lHitB := .f.
+	DEFAULT lHitT := .f.
 
 
-      If !lHitT
-         hBit11 := BT_BitmapLoadFile ( 'SETAC2' )
-      Else
-         hBit11 := BT_BitmapLoadFile ( 'SETAC2D'  ) 
-         //SETAC2D
-      End If
 
-   End If 
+
+	If lSetas
+
+		If !lHitB
+			hBit10 := BT_BitmapLoadFile ( 'SETAB2' )
+			//SETAB2
+		Else
+			hBit10 := BT_BitmapLoadFile ('SETAB2D')
+		End If
+
+
+		If !lHitT
+			hBit11 := BT_BitmapLoadFile ( 'SETAC2' )
+		Else
+			hBit11 := BT_BitmapLoadFile ( 'SETAC2D'  )
+			//SETAC2D
+		End If
+
+	End If
 
 
 	hBitMap2 := BT_BitmapCreateNew (nWidthBmp , nHeightBmp , BLACK)
 
 	hDC := BT_CreateDC (hBitmap2, BT_HDC_BITMAP  , @BTstruct)
 
-	
-	hDC2 = BT_CreateDC ( cForm  , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )	
+
+	hDC2 = BT_CreateDC ( cForm  , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
 
 
 	If (nOpselx1 = 0)
 
-      If !lSubMenu1
-		   BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , WHITE , WHITE  )	
-      Else 
-         BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , aCorSub1 , aCorSub1  )	
-      End If    
+		If !lSubMenu1
+			BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , WHITE , WHITE  )
+		Else
+			BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , aCorSub1 , aCorSub1  )
+		End If
 
-	End If 	
+	End If
 
 	If nClear1 > 0
 
-      If !lSubMenu1
-		   BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemSubHeight)    , 0  , nColTamMenu ,    nHeightBmp    ,  WHITE  , WHITE  )			
-      Else 
-         BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemSubHeight)    , 0  , nColTamMenu ,    nHeightBmp    ,  aCorSub1  , aCorSub1  )			
-      End If    
+		If !lSubMenu1
+			BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemSubHeight)    , 0  , nColTamMenu ,    nHeightBmp    ,  WHITE  , WHITE  )
+		Else
+			BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemSubHeight)    , 0  , nColTamMenu ,    nHeightBmp    ,  aCorSub1  , aCorSub1  )
+		End If
 
 
 
-	End If 	
+	End If
 
 
 	For n1 := 1 To Len(aMtrOp)
@@ -385,117 +455,115 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 		cTexto := alltrim(  Right( aMtrOp[n1][1]  , Len(  aMtrOp[n1][1] ) - 2  ) )
 
 		//cTexto := aMtrOp[n1][1]
-    
+
 		If ((nOpselx1 > 0) .And. (nOpSelx1 = n1) ) .or. (   (nOpselx1 > 0) .And. ( Alltrim(cTextSel) = Alltrim(cTexto) )  )
 
+			nTypeText    := BT_TEXT_TRANSPARENT
 
 
-			nTypeText    := BT_TEXT_TRANSPARENT 
+			If !lSubMenu1
+				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , WHITE  , BACK1  )
+
+				BT_DrawText ( hDC2 , nLine + nRow  , 25 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  {132,134,200}   , ;
+					Iif( Alltrim(cTextSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ;
+					nAlingText, nOrientation )
 
 
-         If !lSubMenu1
-			   BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , WHITE  , BACK1  )		
+				BT_DrawBitmap (hDC2  , nLine  + nRow    , 1   , 20  , 20 , BT_STRETCH, hBitOk)
 
-            BT_DrawText ( hDC2 , nLine + nRow  , 25 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  {132,134,200}   , ; 
-   			Iif( Alltrim(cTextSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ; 
-	   		nAlingText, nOrientation )
+			Else
+				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , WHITE  , aCorSub1  )
 
-            
-            BT_DrawBitmap (hDC2  , nLine  + nRow    , 1   , 20  , 20 , BT_STRETCH, hBitOk)
+				BT_DrawText ( hDC2 , nLine + nRow  , 35 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  FONTCOR ,  aCorSub1  , ;
+					Iif( Alltrim(cTextSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ;
+					nAlingText, nOrientation )
 
-         Else 
-             BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , WHITE  , aCorSub1  )		
+			End If
 
-             BT_DrawText ( hDC2 , nLine + nRow  , 35 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  FONTCOR ,  aCorSub1  , ; 
-   			Iif( Alltrim(cTextSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ; 
-	   		nAlingText, nOrientation )
 
-         End If   
-		   
+		Else
 
-		Else 				
-		
-			nTypeText    := BT_TEXT_TRANSPARENT  
-         If !lSubMenu1
-			   BT_DrawText ( hDC2 , nLine + nRow  , 25 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  FONTCOR , WHITE , nTypeText, nAlingText, nOrientation )
-         Else 
-            BT_DrawText ( hDC2 , nLine + nRow  , 35 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  FONTCOR , aCorSub1 , nTypeText, nAlingText, nOrientation )
-         End If    
+			nTypeText    := BT_TEXT_TRANSPARENT
+			If !lSubMenu1
+				BT_DrawText ( hDC2 , nLine + nRow  , 25 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  FONTCOR , WHITE , nTypeText, nAlingText, nOrientation )
+			Else
+				BT_DrawText ( hDC2 , nLine + nRow  , 35 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  FONTCOR , aCorSub1 , nTypeText, nAlingText, nOrientation )
+			End If
 
-		End If 	
-		
+		End If
 
-		 nLine += (nItemSubHeight)     
+
+		nLine += (nItemSubHeight)
 
 
 
-      If (nItemDropedDown > 0)
-         If (nItemDropedDown == n1)
-             nLinDrop := nLine 
-             nLine += Iif( !lSetas , nHeightDroped , nTamSubMenuConsulta + ( 2 * nItemSubHeight)  )         
-             
-         End If               
-      End If 
+		If (nItemDropedDown > 0)
+			If (nItemDropedDown == n1)
+				nLinDrop := nLine
+				nLine += Iif( !lSetas , nHeightDroped , nTamSubMenuConsulta + ( 2 * nItemSubHeight)  )
 
-	Next 
+			End If
+		End If
+
+	Next
 
 
-   If (lSetas) .And. (!lSubMenu1)
-      
+	If (lSetas) .And. (!lSubMenu1)
+
 		//BT_DrawBitmap (hDC2, nLineSeta + nItemSubHeight     ,   0       , nColTamMenu , nItemSubHeight , BT_STRETCH, hBit10)
 		//BT_DrawBitmap (hDC2, nLineSeta + (nItemSubHeight * 2) , 0   , nColTamMenu , nItemSubHeight , BT_STRETCH, hBit11)
 
 
- 		BT_DrawBitmap (hDC2, nLinDrop + nLineSeta     ,                 0   , nColTamMenu , nItemSubHeight , BT_STRETCH, hBit10)
+		BT_DrawBitmap (hDC2, nLinDrop + nLineSeta     ,                 0   , nColTamMenu , nItemSubHeight , BT_STRETCH, hBit10)
 		BT_DrawBitmap (hDC2, nLinDrop + nLineSeta + nItemSubHeight   ,   0   , nColTamMenu , nItemSubHeight , BT_STRETCH, hBit11)
 
-      
-      BT_BitmapRelease ( hBit10 )
-      BT_BitmapRelease ( hBit11 )
+
+		BT_BitmapRelease ( hBit10 )
+		BT_BitmapRelease ( hBit11 )
 
 
-   End If       
+	End If
 
 	BT_DeleteDC (BTstruct )
 	BT_DeleteDC (BTstruct2 )
 	//bt_Bit
 
 
-REturn 	
+REturn
 
 Function xLimpSub(cJan , nOpsely , nClr , nHeight1 )
 
 	Local nRow1 := -(GetProperty( cJan , "VscrollBar" , "Value"))
 
-   DEFAULT nHeight1 := 0
+	DEFAULT nHeight1 := 0
 
-	If nOpsely > 0	
-		
+	If nOpsely > 0
+
 		BT_ClientAreaInvalidateRect( cJan , nHeight1 + nRow1 + ( (nOpsely - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight  , .t. )
-		
-	End If 	
 
-Return 
+	End If
+
+Return
 
 
 Function xDispHint( cMsg1 , nRow1 )
 
- 	SetTamJan( Alltrim(cMsg1)  )	
+	SetTamJan( Alltrim(cMsg1)  )
 
 	SetProperty( 'Win_Msg' , 'Row' , nRow1 - 35 )
-	SetProperty( 'Win_Msg' , 'Label_1' , 'Value' , Alltrim(  hb_AnsiToOem(cMsg1) ) )  			    	
+	SetProperty( 'Win_Msg' , 'Label_1' , 'Value' , Alltrim(  hb_AnsiToOem(cMsg1) ) )
 
 
-Return 
+Return
 
 Function xDispUpTam(  cMsg1 )
 
 	If !IsWindowVisible(  GetFormHandle("Win_Msg") )
-		SetTamJan( Alltrim(cMsg1)  )					
-	   _ShowWindow("Win_Msg")
-	End If   
+		SetTamJan( Alltrim(cMsg1)  )
+		_ShowWindow("Win_Msg")
+	End If
 
-Return 
+Return
 
 
 
@@ -513,7 +581,7 @@ Function xPaintSub()
 	Local hDc
 	Local nTYpe
 	Local nLine := 00
-	
+
 	Local nHeightBmp := nItemSubHeight * Len(aSubOp)
 
 	Local hBitmap2
@@ -521,7 +589,7 @@ Function xPaintSub()
 	LOCAL Width  := BT_ClientAreaWidth  (cMenuName)
 	LOCAL Height := BT_ClientAreaHeight (cMenuName)
 
-	
+
 	Local nTypeText    := BT_TEXT_TRANSPARENT  //+ BT_TEXT_BOLD
 	Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
 	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
@@ -535,17 +603,17 @@ Function xPaintSub()
 
 	hDC := BT_CreateDC (hBitmap2, BT_HDC_BITMAP  , @BTstruct)
 
-	
-	hDC2 = BT_CreateDC ( cMenuName , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )	
+
+	hDC2 = BT_CreateDC ( cMenuName , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
 
 
 	If (nOpselx = 0)
-		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , nColTamMenu ,    nHeightBmp    , BACK1 ,BACK1  )	
-	End If 	
+		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , nColTamMenu ,    nHeightBmp    , BACK1 ,BACK1  )
+	End If
 
 	If nClear > 0
-		BT_DrawGradientFillVertical ( hDC2 ,   (nClear  * nItemSubHeight)    , 0  , nColTamMenu ,    nHeightBmp    ,  BACK1  ,BACK1  )			
-	End If 	
+		BT_DrawGradientFillVertical ( hDC2 ,   (nClear  * nItemSubHeight)    , 0  , nColTamMenu ,    nHeightBmp    ,  BACK1  ,BACK1  )
+	End If
 
 
 	For n1 := 1 To Len(aSubOp)
@@ -554,31 +622,31 @@ Function xPaintSub()
 
 		cTexto := aSubOp[n1]
 
-		//cTexto := strzero(n1,3) + ' ' + aSubOp[n1] 
+		//cTexto := strzero(n1,3) + ' ' + aSubOp[n1]
 
 		If ((nOpselx > 0) .And. (nOpSelx = n1) ) .or. (   (nOpselx > 0) .And. ( Alltrim(cSubMenuSel) = Alltrim(cTexto) )  )
 
-			nTypeText    := BT_TEXT_TRANSPARENT 
+			nTypeText    := BT_TEXT_TRANSPARENT
 			// + BT_TEXT_BOLD
 
-			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow - 2  , 00  , nColTamMenu ,    nItemSubHeight - 1     , BACK1 ,WHITE  )		
-			BT_DrawText ( hDC2 , nLine + nRow  , 05 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  {32,134,200}   , ; 
-			Iif( Alltrim(cSubMenuSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ; 
-			nAlingText, nOrientation )
-		   
+			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow - 2  , 00  , nColTamMenu ,    nItemSubHeight - 1     , BACK1 ,WHITE  )
+			BT_DrawText ( hDC2 , nLine + nRow  , 05 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  {32,134,200}   , ;
+				Iif( Alltrim(cSubMenuSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ;
+				nAlingText, nOrientation )
 
-		Else 				
-		
-			nTypeText    := BT_TEXT_TRANSPARENT  
+
+		Else
+
+			nTypeText    := BT_TEXT_TRANSPARENT
 			BT_DrawText ( hDC2 , nLine + nRow  , 05 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR , BACK1 , nTypeText, nAlingText, nOrientation )
 
-		End If 	
+		End If
 
-		
+
 
 		nLine += (nItemSubHeight)
 
-	Next 
+	Next
 
 	BT_DeleteDC (BTstruct )
 	BT_DeleteDC (BTstruct2 )
@@ -587,92 +655,94 @@ Function xPaintSub()
 	//bt_Bit
 
 
-REturn 	
+REturn
 
 
 Function xMove1()
 
-   Local nRow , nCol 
-   Local ar1
-  
-   nRow := _HMG_SYSDATA [ 191 ] // Mouse Row
-   nCol := _HMG_SYSDATA [ 192 ] // Mouse Col
+	Local nRow , nCol
+	Local ar1
 
-   ar1 := GetPos_ScreenToClient(   GetFormHandle(  'fSplit6'  )  , nRow, nCol )
+	nRow := _HMG_SYSDATA [ 191 ] // Mouse Row
+	nCol := _HMG_SYSDATA [ 192 ] // Mouse Col
+
+	ar1 := GetPos_ScreenToClient(   GetFormHandle(  'fSplit6'  )  , nRow, nCol )
 
 
-   SaveLog("mouse2321.txt" , Str(ar1[1]) + "   " + Str(nRow) +  chr(13) + Chr(10))
+	SaveLog("mouse2321.txt" , Str(ar1[1]) + "   " + Str(nRow) +  chr(13) + Chr(10))
 
-   
+
 Return ar1
 
 Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred   )
 
 	Local nCol := 0
-	Local nRow := 0			
-	Local ar1 
-	Local NewPos 
+	Local nRow := 0
+	Local ar1
+	Local NewPos
 	Local nRow1 := -(GetProperty( cJan , "VscrollBar" , "Value"))
-   Local nIa1 , nIa2 
+	Local nIa1 , nIa2
 
-   Local nItem := 0
+	Local nItem := 0
 
 
-   DEFAULT nHeit2 := 0
-   DEFAULT nItDopred := 0
+	DEFAULT nHeit2 := 0
+	DEFAULT nItDopred := 0
 
 	GetCursorPos (@nCol, @nRow)
 
 	aR1 := GetPos_ScreenToClient(   GetFormHandle(  cJan  )  , nRow, nCol )
 
-	
-	NewPos := GetScrollPos( GetFormHandle(  cJan  ), 1 ) 
 
-	If NewPos > 0 
+	NewPos := GetScrollPos( GetFormHandle(  cJan  ), 1 )
+
+	If NewPos > 0
 		nItem := (Int( (NewPos+Ar1[1])     / nItemSubHeight)+1)
 	Else
-		//nItem := (Int(Ar1[1] / nItemSubHeight)+1)		
-      nItem := (Int(  Ar1[1]  / nItemSubHeight)+1)	
-	End If 		
-
-        
-   If (nHeit2 > 0) .and. (nHeit2 < ar1[1] ) .And. (nHeit2 >= nItemSubHeight) .And. (ar1[1] > (nItMax * nItemSubHeight)   ) 
-       nItem := (Int( NewPos + (Ar1[1] - nHeit2) / nItemSubHeight)+1)	
-   End If  
-
-   If (lSetasDown)
-
-       nIa1 := (nItDopred * nItemSubHeight) + nTamSubMenuConsulta
-       nIa2 := nIa1 + (nItemSubHeight * 2)
-
-       If (Ar1[1] >= nIa1) .And. (  Ar1[1] <= nIa2 )
+		//nItem := (Int(Ar1[1] / nItemSubHeight)+1)
+		nItem := (Int(  Ar1[1]  / nItemSubHeight)+1)
+	End If
 
 
-            If Ar1[1] <  (nIa1 + nItemSubHeight )
-               nItem := -1
-            Else 
-               nItem := -2
-            End If    
+	If (nHeit2 > 0) .and. (nHeit2 < ar1[1] ) .And. (nHeit2 >= nItemSubHeight) .And. (ar1[1] > (nItMax * nItemSubHeight)   )
+		nItem := (Int( NewPos + (Ar1[1] - nHeit2) / nItemSubHeight)+1)
+	End If
 
-       End If 
+	If (lSetasDown)
+
+		nIa1 := (nItDopred * nItemSubHeight) + nTamSubMenuConsulta
+		nIa2 := nIa1 + (nItemSubHeight * 2)
+
+		If (Ar1[1] >= nIa1) .And. (  Ar1[1] <= nIa2 )
 
 
-   End If 
+			If Ar1[1] <  (nIa1 + nItemSubHeight )
+				nItem := -1
+			Else
+				nItem := -2
+			End If
 
-Return nItem 	
+		End If
+
+
+
+
+	End If
+
+Return nItem
 
 
 Function xRetLinha(  cJan )
 
-   Local nCol := 0
-	Local nRow := 0		
-   Local nRow1 := -(GetProperty( cJan , "VscrollBar" , "Value"))
+	Local nCol := 0
+	Local nRow := 0
+	Local nRow1 := -(GetProperty( cJan , "VscrollBar" , "Value"))
 
 	GetCursorPos (@nCol, @nRow)
 
 	aR1 := GetPos_ScreenToClient(   GetFormHandle(  cJan  )  , nRow, nCol )
 
-Return Ar1[1]   
+Return Ar1[1]
 
 
 

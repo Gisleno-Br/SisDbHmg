@@ -8,15 +8,18 @@ DEFINE WINDOW TEMPLATE AT nMaximizedWindowRow , nMaximizedWindowCol WIDTH nMaxim
 
 //nMaximizedWindowRow
 
+
+
     DEFINE SPLITBOX HORIZONTAL
         LOAD WINDOW fSplit6
         LOAD WINDOW fSplit2
         LOAD WINDOW fSplit3
         LOAD WINDOW fSplit4
         LOAD WINDOW fSplit5
-        LOAD WINDOW fSplit10
+        LOAD WINDOW fSplit10        
     END SPLITBOX
        
+
 
      
 

@@ -427,7 +427,7 @@ FUNCTION xInit()
 
 	SetProperty("fSplit10","Col",  nDesktopWidth - 50)
 
-	SetProperty('fSplit10', 'Image_1','Transparent', .t. )
+	//SetProperty('fSplit10', 'Image_1','Transparent', .t. )
 
 
 	SetProperty("fSplit10","Row", GetProperty("fSplit2","Row" )+23)
@@ -436,8 +436,17 @@ FUNCTION xInit()
 	ShowScrollBar( GetFormHandle( 'fSplit2' ), 1, .F. )
 
 
+	//SetProperty( 'fSplitSubMenu' , 'Visible' , .f. )
+
+	DoMethod( 'fSplitSubMenu' , 'Hide' )
+	
+
 
 	SetWindowCursor( GetFormHandle( 'Main'  ) , IDC_ARROW)  
+
+
+	//SET WINDOW fSplit10 TRANSPARENT TO COLOR {9,111,137}
+
 
 
 	
@@ -490,6 +499,8 @@ BT_DeleteDC ( BTstruct )
 Return
 
 
+
+
 Function Proc_ON_PAINT(wJanela)
 
 //LOCAL Width  := BT_ClientAreaWidth  ( ThisWindow.name )
@@ -502,6 +513,9 @@ Function Proc_ON_PAINT(wJanela)
 	Local nTypeText    := BT_TEXT_TRANSPARENT + BT_TEXT_BOLD
 	Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
 	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
+
+	Local hBitmap_aux2
+	Local hBitmap_aux
 
 
 
@@ -525,9 +539,7 @@ Function Proc_ON_PAINT(wJanela)
 
 	hDC = BT_CreateDC ( wJanela , BT_HDC_INVALIDCLIENTAREA, @BTstruct )
 
-	// IF cont > 6
-	// cont = 2
-	// ENDIF
+
 
 	IF ThisWindow.name = 'fCli'
 		cont = 1
@@ -594,6 +606,29 @@ Function Proc_ON_PAINT(wJanela)
 
 
 	END CASE
+
+
+
+	If wJanela = 'fSplit10'
+
+		hBitmap_aux := BT_BitmapLoadFile ("OK24")  // load from resource
+        BT_DrawBitmapTransparent (hDC, 7, 10 , 24, 24  , BT_STRETCH , hBitmap_aux, { 7 , 101,125 })
+     	BT_BitmapRelease (hBitmap_aux)
+
+	End If 
+
+
+
+	
+
+	If wJanela = 'fSplit2'
+
+		hBitmap_aux2 := BT_BitmapLoadFile ("HOME1")  // load from resource
+        BT_DrawBitmapTransparent (hDC, 1, 2 , 32, 32   , BT_STRETCH , hBitmap_aux2, { 7 , 101 ,125 })
+     	BT_BitmapRelease (hBitmap_aux2)
+
+	End If 
+
 
 
 	BT_DeleteDC ( BTstruct )

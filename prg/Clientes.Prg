@@ -2981,7 +2981,7 @@ Function UpScrool( nDir , nTamanho )
 
 	If nClear > 0 
 
-	//	nClear := nOpBak 	
+	
 		nRow1 := -(GetProperty( cMenuName , "VscrollBar" , "Value"))
 
 		BT_ClientAreaInvalidateRect( cMenuName , ( (nClear - 1) * nItemSubHeight) + nRow1  , 0 , 187 ,  nItemSubHeight - 1 , .t. )
