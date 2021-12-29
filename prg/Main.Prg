@@ -139,8 +139,8 @@ FUNCTION Main
 
 	Private nItemClr := 0
 
-	Private l_Httb := .f. 
-	Private l_Http := .t. 
+	Private l_Httb := .f.
+	Private l_Http := .t.
 
 
 	Private cOpSely := ''
@@ -149,6 +149,18 @@ FUNCTION Main
 	PRIVATE lOnToolTipCustomDraw := .T.
 
 	Private cUltOpcaoSel := ''
+
+
+
+	*//xMenuOp	
+
+	Private aOpz11 
+
+	Private nItemx2 := 0
+
+	Private nItemZ1 := 0
+
+	Private cOpy2 := ''
 
 
 	SET TOOLTIPSTYLE BALLOON
@@ -363,6 +375,10 @@ FUNCTION Main
 
 	Public  aCorSub1 := {145,200,200 }
 
+	Public CorDisabled := {192,192,192}
+
+	Public CorDisabled2 := {230,230,230}
+
 
 
 
@@ -422,26 +438,27 @@ FUNCTION Main
 
 	Private cOpMainSel  := ''
 
-	//xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel)
 
 	//HB_SetCodePage( "UTF8")
 
-	Private aOpcoes := {{"1-Cadastro",  "Acesso a Cadastros Gerais e Principais." }, ;
-		{"2-Movimentos"				,   "Acesso a Movimentação de Estoque"  },;
-		{"3-Relatorios"				,   "Relatorios do Sistema"},;
-		{"4-Parametros"				,  	"Parametros e Configurações Gerais"  } }
+	Private aOpcoes := {{"1-Cadastro",  "Acesso a Cadastros Gerais e Principais." , .t.  }, ;
+		{"2-Movimentos"				,   "Acesso a Movimentação de Estoque"   , .t.  },;
+		{"3-Relatórios"				,   "Relatorios do Sistema"  ,   .f. }  ,;
+		{"4-Parametros"				,  	"Parametros e Configurações Gerais" , .f.  } }
 
 	cOpMainSel  := aOpcoes[1][1]
 
+
+
 	Private nOpSel := 0
 
-	Private aItens := { {"1-Clientes","Cadastro de Clientes"} , { "1-Fornecedores","Cadastro de Fornecedores"} , ;
-		{ "1-Vendedores", "Cadastro de Vendedores" } , {"1-Colaboradores",""} ,   {"1-Grupo Produtos",""} , ;
-		{"1-Locais Estoque",""} , {"1-Funções",""} , ;
-		{"1-Categoria Produto",""} , {"1-Unidades",""} , {"1-Tipo Produtos",""} ,;
-		{"1-Tipo Produto1s",""},{"1-Tipo Produto2s","" } ,{"1-Tipo Produt3os",""},{"1-Tipo Produt222os",""},{"1-Tipo 444Produtos",""}, ;
-		{ "1-Rotatividade","Rot"} , {"1-TES","TES1" } , ;
-		{"2-Pedidos","Vendas"} , {"2-Orçamento","Orçamento"}  , {"3-Listagem Clientes","Lista"} ,    {"4-Configurações",""} }
+	Private aItens := { {"1-Clientes","Cadastro de Clientes" , .t.  , {  || xTesMenu()  }} , { "1-Fornecedores","Cadastro de Fornecedores" , .t.  , Nil } , ;
+		{ "1-Vendedores", "Cadastro de Vendedores" , .f.  , Nil } , {"1-Colaboradores","" , .f. } ,   {"1-Grupo Produtos","" , .f. , Nil  } , ;
+		{"1-Locais Estoque","" , .t.  , Nil } , {"1-Funções","" , .f. , Nil } , ;
+		{"1-Categoria Produto","" , .t. , Nil } , {"1-Unidades","" , .f. , Nil } , {"1-Tipo Produtos","",.t. , Nil  } ,;
+		{"1-Tipo Produto1s","" , .t. , Nil  },{"1-Tipo Produto2s","", .f. , Nil } ,{"1-Tipo Produt3os","" , .f. , Nil },{"1-Tipo Produt222os","", .t. , Nil  },{"1-Tipo 444Produtos","", .t. , Nil  }, ;
+		{ "1-Rotatividade","Rot" , .t. , Nil } , {"1-TES","TES1" , .f. , Nil  } , ;
+		{"2-Pedidos","Vendas" , .f.  , Nil } , {"2-Orçamento","Orçamento" , .f. , Nil }  , {"3-Listagem Clientes","Lista" , .t. , Nil  } ,    {"4-Configurações","" , .t. , Nil  } }
 
 
 
@@ -458,67 +475,11 @@ FUNCTION Main
 		InstallEventHandler( "EventHndMain" )
 	End If
 
-	//yAviso(  Hb_AnsiToOem("Proximo Elemento do Filtro deve ser Uma Expressão. EX: (Codigo = '0000').") , .f. )
 
 	nEveLabel := 0
 
 
 
-
-	//CREATE EVENT PROCNAME LabelEventHandler() STOREINDEX nEveLabel
-	//EventProcessAllHookMessage ( nEveLabel , .t. )
-
-	/*
-
-	While n  <= Len(aOpcoes)
-		
-
-		DEFINE LABEL &(aOpcoes[n][LABEL_NAME] )
-			PARENT    fSplit6
-			ROW       nRowIni
-			COL       21
-			WIDTH     fSplit6.Width
-			FONTNAME  XFONT1
-			FONTSIZE  10
-			HEIGHT    16
-			VALUE     Alltrim( hb_UTF8ToStr(aOpcoes[n][LABEL_NAME] )    )
-			ALIGNMENT Left
-			FONTCOLOR FONTCOR
-			BACKCOLOR {255,255,255}
-		END LABEL
-
-
-		Aadd(aMtrPos  , nRowIni)
-		aOpcoes[n][4] := nRowIni
-
-		nRowIni += 15
-
-		aOpcoes[n][LABEL_HWND] := GetProperty("fSplit6", aOpcoes[n][LABEL_NAME] , "HANDLE")
-		SetHandCursor( GetControlHandle(aOpcoes[n][LABEL_NAME] , "fSplit6"), CURSORHAND )
-
-		EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, aOpcoes[n][LABEL_HWND]), .T.)
-
-		n++
-
-	Enddo
-
-
-
-	EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) },   fSplit6.Img_seta1.Handle ) , .T.)
-	EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) },   fSplit6.img_seta2.Handle ) , .T.)
-
-
-    HMG_ChangeWindowStyle( fSplit6.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
-
-	HMG_ChangeWindowStyle( fSplit3.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
-	HMG_ChangeWindowStyle( fSplit4.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
-
-	HMG_ChangeWindowStyle(fSplit2.Handle    , 0x00010200 , NIL, .F., .F.)
-	HMG_ChangeWindowStyle( fSplit2.Handle  ,WS_EX_TOOLWINDOW  , NIL, .t., .t.)
-
-	//msginfo('1')
-
-	*/
 
 
 
@@ -536,85 +497,83 @@ FUNCTION Main
 	HMG_ChangeWindowStyle(fSplitsubMenu.Handle    , 0x00010200 , NIL, .F., .F.)
 	HMG_ChangeWindowStyle(fSplitSubMenu.Handle  ,WS_EX_TOOLWINDOW  , NIL, .t., .t.)
 
-	//SetProperty( 'fSplit6' , 'Height' , Len(aOpcoes) * nItemSubHeight  )
-
-
-
+   
 
 	DEFINE LABEL fLabel1Dt
-	PARENT    fSplit3
-	ROW       18
-	COL       51
-	WIDTH     140
-	HEIGHT    16
-	VALUE     Alltrim(Dtoc(dDataBase))
-	ALIGNMENT LEft
-	FONTCOLOR {102,102,102}
-	BACKCOLOR {255,255,255}
-	FONTBOLD .f.
-END LABEL
+		PARENT    fSplit3
+		ROW       18
+		COL       51
+		WIDTH     140
+		HEIGHT    16
+		VALUE     Alltrim(Dtoc(dDataBase))
+		ALIGNMENT LEft
+		FONTCOLOR {102,102,102}
+		BACKCOLOR {255,255,255}
+		FONTBOLD .f.
+		END LABEL
 
-DEFINE LABEL fLabelUser
-PARENT    fSplit4
-ROW       03
-COL       10
-WIDTH     140
-HEIGHT    16
-VALUE     Alltrim(cUserName)
-ALIGNMENT Left
-FONTCOLOR {102,102,102}
-BACKCOLOR {255,255,255}
-//TRANSPARENT .T.
-ACTION xMenuPrin()
-FONTBOLD .f.
-END LABEL
-
-
-
-DEFINE LABEL fUserDb
-PARENT    fSplit4
-ROW       32
-COL       10
-WIDTH     140
-HEIGHT    16
-VALUE     Alltrim(cUserDb)
-ALIGNMENT Left
-FONTCOLOR {102,102,102}
-BACKCOLOR {255,255,255}
-ACTION msginfo('ok')
-END LABEL
+	DEFINE LABEL fLabelUser
+		PARENT    fSplit4
+		ROW       03
+		COL       10
+		WIDTH     140
+		HEIGHT    16
+		VALUE     Alltrim(cUserName)
+		ALIGNMENT Left
+		FONTCOLOR {102,102,102}
+		BACKCOLOR {255,255,255}
+		//TRANSPARENT .T.
+		ACTION xMenuPrin()
+		FONTBOLD .f.
+	END LABEL
 
 
-DEFINE LABEL fServerDb
-PARENT    fSplit4
-ROW       51
-COL       10
-WIDTH     140
-HEIGHT    16
-VALUE     ""
-ALIGNMENT Left
-FONTCOLOR FONTCOR
-BACKCOLOR BACK1
-TRANSPARENT .T.
-ACTION msginfo('ok')
-//FONTBOLD .t.
-END LABEL
+
+	DEFINE LABEL fUserDb
+		PARENT    fSplit4
+		ROW       32
+		COL       10
+		WIDTH     140
+		HEIGHT    16
+		VALUE     Alltrim(cUserDb)
+		ALIGNMENT Left
+		FONTCOLOR {102,102,102}
+		BACKCOLOR {255,255,255}
+		ACTION msginfo('ok')
+	END LABEL
 
 
-Private aButTop := {}
+	DEFINE LABEL fServerDb
+		PARENT    fSplit4
+		ROW       51
+		COL       10
+		WIDTH     140
+		HEIGHT    16
+		VALUE     ""
+		ALIGNMENT Left
+		FONTCOLOR FONTCOR
+		BACKCOLOR BACK1
+		TRANSPARENT .T.
+		ACTION msginfo('ok')
+		//FONTBOLD .t.
+	END LABEL
+
+
+ 
+	Private aButTop := {}
 
 //Public nIndexEventY := EventCreate (  { ||   xMainHandle( )   }  )
 
 
 
-BT_ClientAreaInvalidateAll('fSplit6')
+	BT_ClientAreaInvalidateAll('fSplit6')
 
 //SysWait(.1)
 
 
-_HMG_PRINTER_SETVSCROLLVALUE(   GetFormHandle('fSplit6')  , 0 )
+	_HMG_PRINTER_SETVSCROLLVALUE(   GetFormHandle('fSplit6')  , 0 )
 
-Main.Activate
+	Main.Activate
 
 
 RETURN
@@ -629,7 +588,9 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 	Local nInd2  := 0
 	Local cTp1   := ''
 //	Local nCol := 0
-	Local nRow1 := 0 
+	Local nRow1 := 0
+
+	Local nLhn := GetProperty( 'fSplitSubMenu' , 'Height')
 
 	*// Eventos Sub menu.
 
@@ -643,25 +604,25 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 			GetCursorPos (@nCol, @nRow1)
 
-			If nCol <= 30 
+			If nCol <= 30
 				SetWindowCursor( nHWnd , CURSORHAND)
-			Else 
-			    SetWindowCursor( nHWnd , IDC_ARROW)	
-			End If 	
+			Else
+				SetWindowCursor( nHWnd , IDC_ARROW)
+			End If
 
 		End If
 
 
 		If (nMsg == WM_LBUTTONDOWN)
 
-			
+
 			GetCursorPos (@nCol, @nRow1)
 
-			If nCol <= 30 
-			//	msginfo(Str(   nCol ))
-			End If 	
+			If nCol <= 30
+				//	msginfo(Str(   nCol ))
+			End If
 
-		End If 
+		End If
 
 
 
@@ -702,6 +663,29 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 		End If
 
 
+		If (nMsg == WM_LBUTTONDOWN)
+
+
+
+			If (nItemx1 <= Len(aOpX1))
+
+				If !aOpx1[nItemx1][3]
+					SetWindowCursor( nHWnd , IDC_ARROW)
+					yaviso("Opção Indisponivel." , .f. )
+					Return
+				End If
+
+				If (aOpx1[nItemx1][4] != Nil )
+					Eval( aOpx1[nItemx1][4]   )
+				End If
+
+
+			End If
+
+
+		End If
+
+
 
 		If ( nMsg == WM_MOUSEMOVE )
 			//.And. (!lTracking42)
@@ -713,12 +697,18 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 				End If
 			End If
 
-
-
-
-
 			nItemx1 := xOpSelPos( 'fSplitSubMenu' , 0 , Len(aOpx1) , 0 )
 			nRow1 := -(GetProperty( 'fSplitSubMenu' , "VscrollBar" , "Value"))
+
+
+
+			If (nItemx1 <= Len(aOpX1))
+				If !aOpx1[nItemx1][3]
+					SetWindowCursor( nHWnd , IDC_ARROW)
+					Return
+				End If
+			End If
+
 
 
 			SetWindowCursor( nHWnd , CURSORHAND)
@@ -758,9 +748,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 					xDispHint( cTp1 , nRow1+15 )
 				End If
 
-				xDispUpTam(cTp1   )
-
-
+				xDispUpTam(cTp1 )
 
 			Else
 
@@ -784,7 +772,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 
 
-
+	*// Menu Principal
 	If nHWnd == GetProperty(  'fSplit6' , "HANDLE" )
 
 
@@ -804,7 +792,8 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 				If (nClearSel > 0) .And. (nClearSel != nMainSel)
 					nMainSel := 0
-					xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , IIF( nMainSel  >= nItemDrop1 , HeightDrop,0)   )
+					xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , Iif( nMainSel  >= nItemDrop1 , HeightDrop ,0) - 1  )
+
 				End If
 
 				xHideHint()
@@ -835,31 +824,26 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 
 
+
+
 			If (lSetasDown)
 
 				If (nLinhaAtual == 0)
 					nLinhaAtual := Int(nTamSubMenuConsulta / nItemSubHeight)
-				End If 	
+				End If
 
 
 				If (nMainSel = -1)
 
-
-					ScrollMenu( 2 , GetProperty(  'fSplitSubMenu' , "HANDLE" ) , @nScrLin , @nLinhaAtual , nContItens , @l_Http , @l_Httb   )
-
-					//BT_ClientAreaInvalidateAll('fSplit6')
-
+					ScrollMenu( 2 , GetProperty(  'fSplitSubMenu' , "HANDLE" ) , @nScrLin , @nLinhaAtual , nContItens , @l_Http , @l_Httb , nItemDrop1  )
 					Return
-
 
 				End If
 
 
-				If (nMainSel = -2)		
+				If (nMainSel = -2)
 
-					ScrollMenu( 1 , GetProperty(  'fSplitSubMenu' , "HANDLE" ) , @nScrLin , @nLinhaAtual , nContItens , @l_Http , @l_Httb   )
-					//BT_ClientAreaInvalidateAll('fSplit6')
-
+					ScrollMenu( 1 , GetProperty(  'fSplitSubMenu' , "HANDLE" ) , @nScrLin , @nLinhaAtual , nContItens , @l_Http , @l_Httb , nItemDrop1   )
 					Return
 
 				End If
@@ -919,6 +903,13 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 			End If
 
+			If !aOpcoes[nMainSel][3]
+				yAviso(  Hb_AnsiToOem("Opção Indisponivel.") , .f. )
+				Return
+			End If
+
+
+
 			nRow1 := (nMainSel * nItemSubHeight)
 			xDropDown(   Alltrim(Str( nMainsel)) + "-" + cOpcao   , nRow1  )
 
@@ -931,7 +922,6 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 
 		If ( nMsg == WM_MOUSEMOVE )
-			//.And. (!lTracking42)
 
 			yP1 := 0
 
@@ -941,16 +931,28 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 				End If
 			End if
 
-			//nMainSel := xOpSelPos( 'fSplit6' , nHeightDrop , Len(aOpcoes) , nItemDrop1 )
-
 
 			nMainSel := xOpSelPos( 'fSplit6' , nHeightDrop , Len(aOpcoes) , nItemDrop1 )
+
+
+			If (nMainSel = -1) .or. (nMainSel = -2)
+
+				If (nMainSel = -1) .And. (l_Httb)
+					SetWindowCursor( nHWnd , IDC_ARROW )
+					Return
+				End If
+
+				If (nMainSel = -2) .And. (l_Http)
+					SetWindowCursor( nHWnd , IDC_ARROW )
+					Return
+				End If
+
+			End If
 
 
 
 			If nMainSel = nClearSel
 				Return
-
 			End If
 
 
@@ -970,6 +972,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 				Else
 
+
 					If (nClearSel > 0)
 						xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , nHeightDrop  )
 					End If
@@ -988,16 +991,17 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 
 
-
-
 			//PostMessage(nHWnd ,WM_PAINT , 0,0 )
 
 
 			nsel1 := nClearSel
 
+
+
 			If nClearSel > 0
-				xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , Iif( nClearSel > nItemDrop1   , Iif(lSetasDown ,nHeightDrop  , nHeightDrop) , 0    ) )
+				xLimpSub( 'fSplit6' , @nClearSel ,  @nMainSel , Iif( nClearSel > nItemDrop1   , Iif(lSetasDown ,nHeightDrop   , nHeightDrop  )    , 0    ) )
 			End If
+
 
 
 			If nMainSel > 0
@@ -1005,6 +1009,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 			Else
 				Return
 			End If
+
 
 			cOpcao := alltrim(  Right( aOpcoes[nMainSel][1]  , Len( aOpcoes[nMainSel][1] ) - 2  ) )
 
@@ -1032,7 +1037,6 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 
 
-
 			SetWindowCursor( nHWnd , CURSORHAND)
 
 			nRow1 := -(GetProperty( 'fSplit6' , "VscrollBar" , "Value"))
@@ -1040,20 +1044,33 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 			cUltOpcaoSel :=  Alltrim(cOpcao)
 
+
+
 			If nMainSel > 0
 
+				If !aOpcoes[nMainSel][3]
+					SetWindowCursor( nHWnd , IDC_ARROW)
+					xHideHint()
+					Return
+				End If
+
+
+
 				If ( nMainSel  >= nItemDrop1 )
-					BT_ClientAreaInvalidateRect( 'fSplit6' , Iif(lSetasDown ,nHeightDrop + 0 , nHeightDrop) + nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1   , .t. )
+					BT_ClientAreaInvalidateRect( 'fSplit6' , Iif(lSetasDown ,nHeightDrop + 0 , nHeightDrop) + nRow1  +  ( ( nMainSel - 1) * nItemSubHeight) , 0 , nColTamMenu ,  nItemSubHeight - 1    , .t. )
 				Else
-					BT_ClientAreaInvalidateRect( 'fSplit6' ,nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1 , .t. )
+					BT_ClientAreaInvalidateRect( 'fSplit6' ,nRow1  +  ( ( nMainSel - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight  - 1  , .t. )
 				End If
 
 			End If
 
 
+
+
 			If !Empty(    Alltrim(  aOpcoes[nMainSel][2]  )   )
 				cTp1 := Alltrim(  aOpcoes[nMainSel][2]  )  + '  ' + Alltrim(Str(nsel1)) + '    ' +  Alltrim(Str( nMainSel  ))
 			End If
+
 
 
 			If (!Empty(Alltrim(cTp1)))
@@ -1162,7 +1179,7 @@ Function xMenuPrin()
 
 
 	If nHanSelected > 0
-		EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, nHanSelected  ), .T.)
+	//	EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, nHanSelected  ), .T.)
 		PostMessage( nHanSelected   , WM_MOUSELEAVE , 0, 0)
 	End If
 
@@ -1178,7 +1195,7 @@ Function xMenuPrin()
 
 Return
 
-
+/*
 Function xMainHandle( xMainJan )
 
 	LOCAL  nHWnd   := EventHWND()
@@ -1189,8 +1206,7 @@ Function xMainHandle( xMainJan )
 	Local nRow       := 0
 	Local nindice
 
-	*// Aguarda 3 segundos liberacao do Token
-
+	
 
 	If ( Alltrim(cActiveJan) != "Main")
 
@@ -1512,7 +1528,9 @@ Function xMainHandle( xMainJan )
 
 REturn
 
+*/
 
+/*
 Function xHMenuPrin(nItem)
 
 	Default nItem := 0
@@ -1533,6 +1551,7 @@ Function xHMenuPrin(nItem)
 	End If
 
 Return
+*/
 
 
 
@@ -1722,7 +1741,7 @@ Function ButtonsTop( lCria )
 
 			SetProperty( 'fSplit2' , cLabelx , 'BACKCOLOR' , {9,111,137} )
 
-			EventProcessAllHookMessage(EventCreate({ || LabelEventHandler() },  GetControlHandle( cLabelx  ,  'fSplit2')   ), .T.)
+		//	EventProcessAllHookMessage(EventCreate({ || LabelEventHandler() },  GetControlHandle( cLabelx  ,  'fSplit2')   ), .T.)
 
 
 			Aadd( aCords  , { cLabelx , nCol ,nCol+110  , "F" + Left(  Alltrim(  aButTop[n1][2] ) , 5)  }  )
@@ -1737,7 +1756,7 @@ Function ButtonsTop( lCria )
 
 			@ 1,nCol+110 IMAGE &(cImagex) OF fSplit2  PICTURE "img\Fechax.Bmp" WIDTH 20 HEIGHT 40 STRETCH ACTION FechaJan(  This.Name )
 
-			EventProcessAllHookMessage(EventCreate({ || LabelEventHandler() },  GetControlHandle( cImagex  ,  'fSplit2')   ), .T.)
+			//EventProcessAllHookMessage(EventCreate({ || LabelEventHandler() },  GetControlHandle( cImagex  ,  'fSplit2')   ), .T.)
 
 			nHandle1 := GetControlHandle( cLabelx , 'fSplit2'  )
 
@@ -1892,9 +1911,9 @@ Function FechaJan(  cJanela  , lExclBut , nI1 , nI2)
 	nindx := xIndexEvent( nHanSelected  )
 
 	If  (nIndx == 0)
-		EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, nHanSelected  ), .T.)
+		//EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, nHanSelected  ), .T.)
 	Else
-		EventStop( nIndx , .f. )
+	//	EventStop( nIndx , .f. )
 	End If
 
 
@@ -2139,7 +2158,7 @@ Function HideAll(cForm1 , lVisible)
 Return
 
 	// Criar e exibe itens do menu (pop pup)
-
+/*
 Function OpMenu(aOpcoes , cJan , nLinha , cTitx , nIndx )
 
 	Local n1
@@ -2185,7 +2204,7 @@ Function OpMenu(aOpcoes , cJan , nLinha , cTitx , nIndx )
 		nHnd1 := GetProperty(cJan , cLbl  , "HANDLE")
 
 
-		EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, nHnd1  ), .T.)
+		//EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, nHnd1  ), .T.)
 
 
 
@@ -2206,8 +2225,11 @@ Refreshall('fSplitSubMenu')
 
 
 Return nRow
+*/
 
 // Realiza a acomodaï¿½ï¿½o dos itens do menu abaixo do aberto atualmente.
+
+/*
 
 Function RestMenu(nOp1 , nLinha , nTam , nOpSel )
 
@@ -2279,11 +2301,12 @@ Function RestMenu(nOp1 , nLinha , nTam , nOpSel )
 	Next
 
 Return
+*/
 
 
 /////////////
 
-
+/*
 FUNCTION LabelEventHandler(aLabel)
 	STATIC lTracking27 := .F.
 	LOCAL  nHWnd   := EventHWND()
@@ -2544,7 +2567,7 @@ CASE WM_MOUSELEAVE
 
 RETURN NIL
 
-
+ */
 
 Function xDropDown(  cMenuDesc  , nTopx1 )
 
@@ -2640,7 +2663,7 @@ Function xDropDown(  cMenuDesc  , nTopx1 )
 	Aeval(aItens , { | a | Iif( Left(a[1],1) == Alltrim(Str(nindice)) , Aadd(aOpx1, a ) , Nil ) } )
 	cOpAberto := Alltrim(cMenuDesc)
 
-	
+
 
 	BT_ClientAreaInvalidateAll('fSplitSubMenu')
 
@@ -2929,6 +2952,28 @@ Function D1Black(cJan,zBitMap)
 
 
 Return
+
+Function xTesMenu()
+
+  Local aZop1 := {}
+  
+
+
+  Aadd(aZop1 , { "1-Impressão" , "Imp.Doc" , .t. , { || msginfo('k2' )   }    }    )
+
+  Aadd(aZop1 , { "2-Visualizar Imp." , "Vis Imp.Doc" , .t. , { || msginfo('k32' )     }      }   )
+  Aadd(aZop1 , { "3-Novo Arquivo   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+  Aadd(aZop1 , { "4-Novo Arquivo2   " , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
+  Aadd(aZop1 , { "  Novo Arquivo3   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+  Aadd(aZop1 , { "  Novo Arquivo4   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+  Aadd(aZop1 , { "  Novo Arquivo5   " , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
+  Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+
+
+  xMenuOp(aZop1 , 250 , 425 ) 
+
+
+Return 
 
 
 Function Box(CurSRow, CurSCol, LastSWidth, LastSHeight , NOSm , cJanela1 , cImgTab )

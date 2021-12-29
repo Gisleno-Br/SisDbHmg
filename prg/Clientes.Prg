@@ -5279,11 +5279,6 @@ Function PutImagem(nColx , cTexto , cSeq1 )
 
 			
 
-			EventProcessAllHookMessage(EventCreate({ || LabelEventHandler() },  GetControlHandle( cImgName ,  'fSplit2')   ), .T.)
-			EventProcessAllHookMessage(EventCreate({ || LabelEventHandler() },  GetControlHandle( 'Image_5'  ,  'fSplit2')   ), .T.)
-			EventProcessAllHookMessage(EventCreate({ || LabelEventHandler() },  GetControlHandle( 'Image_1'  ,  'fSplit2')   ), .T.)
-			
-
 		End If
 
 
@@ -5308,7 +5303,7 @@ Function PutImagem(nColx , cTexto , cSeq1 )
 			SetProperty('fSplit2','Image_5','Visible', .t.)
 			SetProperty('fSplit2',cImgName,'Visible', .t.)
 
-			EventProcessAllHookMessage(EventCreate({ || LabelEventHandler() },  GetControlHandle( cImgName  ,  'fSplit2')   ), .T.)
+			
 			SetHandCursor( GetControlHandle( cImgName , 'fSplit2' ) , "Finger.cur" )
 
 		End If
