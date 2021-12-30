@@ -4,6 +4,13 @@
 #include <minigui.ch>
 
 
+#require "hbxpp"
+
+
+#include <hmg.ch>
+#include <dll.ch>
+
+
 
 #define QUEBRA Chr(13)+Chr(10)
 
@@ -152,16 +159,7 @@ FUNCTION Main
 
 
 
-	*//xMenuOp	
-
-	Private aOpz11 
-
-	Private nItemx2 := 0
-
-	Private nItemZ1 := 0
-
-	Private cOpy2 := ''
-
+	
 
 	SET TOOLTIPSTYLE BALLOON
 
@@ -452,7 +450,7 @@ FUNCTION Main
 
 	Private nOpSel := 0
 
-	Private aItens := { {"1-Clientes","Cadastro de Clientes" , .t.  , {  || xTesMenu()  }} , { "1-Fornecedores","Cadastro de Fornecedores" , .t.  , Nil } , ;
+	Private aItens := { {"1-Clientes","Cadastro de Clientes" , .t.  , {  || xTesMenu()  }} , { "1-Fornecedores","Cadastro de Fornecedores" , .t.  , {||xFechaMen() }  } , ;
 		{ "1-Vendedores", "Cadastro de Vendedores" , .f.  , Nil } , {"1-Colaboradores","" , .f. } ,   {"1-Grupo Produtos","" , .f. , Nil  } , ;
 		{"1-Locais Estoque","" , .t.  , Nil } , {"1-Funções","" , .f. , Nil } , ;
 		{"1-Categoria Produto","" , .t. , Nil } , {"1-Unidades","" , .f. , Nil } , {"1-Tipo Produtos","",.t. , Nil  } ,;
@@ -832,10 +830,10 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 					nLinhaAtual := Int(nTamSubMenuConsulta / nItemSubHeight)
 				End If
 
-
 				If (nMainSel = -1)
 
-					ScrollMenu( 2 , GetProperty(  'fSplitSubMenu' , "HANDLE" ) , @nScrLin , @nLinhaAtual , nContItens , @l_Http , @l_Httb , nItemDrop1  )
+					ScrollMenu( 2 , GetProperty(  'fSplitSubMenu' , "HANDLE" ) , @nScrLin , @nLinhaAtual , nContItens , @l_Http , @l_Httb , nItemDrop1 , ;
+					'fSplit6' , GetProperty('fSplitSubMenu' , 'Height' )  )
 					Return
 
 				End If
@@ -843,13 +841,11 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 				If (nMainSel = -2)
 
-					ScrollMenu( 1 , GetProperty(  'fSplitSubMenu' , "HANDLE" ) , @nScrLin , @nLinhaAtual , nContItens , @l_Http , @l_Httb , nItemDrop1   )
+					ScrollMenu( 1 , GetProperty(  'fSplitSubMenu' , "HANDLE" ) , @nScrLin , @nLinhaAtual , nContItens , @l_Http , @l_Httb , nItemDrop1 , ;
+					'fSplit6' , GetProperty('fSplitSubMenu' , 'Height' )  )
 					Return
 
 				End If
-
-
-
 
 			End If
 
@@ -2960,14 +2956,30 @@ Function xTesMenu()
 
 
   Aadd(aZop1 , { "1-Impressão" , "Imp.Doc" , .t. , { || msginfo('k2' )   }    }    )
-
-  Aadd(aZop1 , { "2-Visualizar Imp." , "Vis Imp.Doc" , .t. , { || msginfo('k32' )     }      }   )
+  Aadd(aZop1 , { "2-Visualizar Imp." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }      }   )
   Aadd(aZop1 , { "3-Novo Arquivo   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-  Aadd(aZop1 , { "4-Novo Arquivo2   " , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
-  Aadd(aZop1 , { "  Novo Arquivo3   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+  Aadd(aZop1 , { "4-Novo Arquivo2   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+  Aadd(aZop1 , { "  Novo Arquivo3   " , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
   Aadd(aZop1 , { "  Novo Arquivo4   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-  Aadd(aZop1 , { "  Novo Arquivo5   " , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
+  Aadd(aZop1 , { "  Novo Arquivo5   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
   Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+
+
+
+  Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+  Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+  Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+
+
+  Aadd(aZop1 , { "  Novo Arquivo12   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+
+  Aadd(aZop1 , { "  Novo Arquivo13   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+  Aadd(aZop1 , { "  Novo Arquivo14   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+  Aadd(aZop1 , { "  Novo Arquivo15   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+
+  Aadd(aZop1 , { "  Novo Arquivo16   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+  Aadd(aZop1 , { "  Novo Arquivo17   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+  Aadd(aZop1 , { "  Novo Arquivo18   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 
 
   xMenuOp(aZop1 , 250 , 425 ) 

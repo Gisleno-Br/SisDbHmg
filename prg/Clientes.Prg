@@ -624,8 +624,6 @@ Function RemoveHandler( cProcName )
 		Adel(_HMG_SYSDATA [ 60 ] , nInd)
 		Asize( _HMG_SYSDATA [ 60 ] , nTam - 1 )
 	End If
-//		InstallEventHandler( "EventHndCli" )
-//	End If	
 
 Return (nInd > 0)
 

@@ -1,7 +1,8 @@
 #include <hmg.ch>
 //#include "dll.ch"
 
-//#include "Dll.ch"
+#include "dll.ch"
+
 
 //25-09
 
@@ -3053,16 +3054,18 @@ FUNCTION FormateSql( cSql1, aCabec  )
 RETURN ( cTabela )
 
 
-PROCEDURE DoFindWin(cTitle)
-LOCAL nWin := HMG_CallDLL( "User32.dll", DLL_OSAPI, "FindWindow", 0, cTitle)
 
+Function DoFindWin(cTitle)
+LOCAL nWin := HMG_CallDLL( "User32.dll", DLL_OSAPI, "FindWindow", 0, cTitle)
+/*
    If !EMPTY(nWin)
       HMG_CallDLL( "User32.dll", DLL_OSAPI, "SetForegroundWindow", nWin )
       HMG_CallDLL( "User32.dll", DLL_OSAPI, "BringWindowToTop", nWin )
       HMG_CallDLL( "User32.dll", DLL_OSAPI, "ShowWindow", nWin, 1 )
-      HMG_CallDLL( "User32.dll", DLL_OSAPI, "UpdateWindow", nWin )
-	  msginfo('ok')
+      HMG_CallDLL( "User32.dll", DLL_OSAPI, "UpdateWindow", nWin )	
    End If 
+   */
 
-RETURN
+
+RETURN nWin 
 

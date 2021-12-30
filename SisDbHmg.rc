@@ -6,6 +6,8 @@
     OK24        PNG     img\ok24Png.Png 
     HOME1       PNG     img\Home1.Png 
     CURSOR1     CURSOR  img\hourglass.Cur  
+    NAOPODE     CURSOR  img\aero_unavail_xl.Cur 
+    NEXT        PNG     img\go-next.Png 
     
 
     
