@@ -384,6 +384,7 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 	Local BTstruct2
 	Local hDc
 	Local hDc2
+	Local lSeta1
 	Local nTYpe
 	Local nLine := 00
 
@@ -408,7 +409,7 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 	Local hBitOk := BT_BitmapLoadFile ( 'img\ngi.png')
 
 	
-	Local hBitSeta := BT_BitmapLoadFile ( 'NEXT')
+	Local hBitSeta := BT_BitmapLoadFile ( 'SETATRANSP')
 
 	Local nRow := -(GetProperty( cForm    , "VscrollBar" , "Value"))
 
@@ -493,11 +494,17 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 		lEnabled := aMtrOp[n1][3]
 
+		lSeta1   := .f.
+
+
+		If Len(aMtrOp[n1]) >= 5
+			lSeta1   := aMtrOp[n1][5]
+		End If 	
+
 
 		If ((nOpselx1 > 0) .And. (nOpSelx1 = n1) .And. aMtrOp[n1][3] ) .or. (   (lEnabled ) .And. (nOpselx1 > 0) .And. ( Alltrim(cTextSel) = Alltrim(cTexto) )  )
 
 			nTypeText    := BT_TEXT_TRANSPARENT
-
 
 			If !lSubMenu1
 				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , WHITE  , BACK1  )
@@ -510,17 +517,18 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 				BT_DrawBitmap (hDC2  , nLine  + nRow    , 1   , 20  , 20 , BT_STRETCH, hBitOk)
 
 			Else
+
 				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , WHITE  , aCorSub1  )
-
-
-				
-				//BT_DrawBitmap (hDC2  , nLine  + nRow    , 1   , 16  , 16 , BT_STRETCH, hBitSeta)
-
 				
 
 				BT_DrawText ( hDC2 , nLine + nRow  , 35 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  FONTCOR ,  aCorSub1  , ;
 					Iif( Alltrim(cTextSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ;
 					nAlingText, nOrientation )
+
+
+				If lSeta1 				
+					BT_DrawBitmapTransparent ( hDC2,  nLine  + nRow   , Width - 20    , 16 , 16 , BT_COPY   ,  hBitSeta , {7,101,125} )
+				End If 		
 
 			End If
 
@@ -548,8 +556,11 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 			Else
 				BT_DrawText ( hDC2 , nLine + nRow  , 35 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  cCor , aCorSub1 , nTypeText, nAlingText, nOrientation )
 
-				
-				BT_DrawBitmapTransparent ( hDC2,  nLine  + nRow   , 1, 16 , 16 , BT_COPY,  hBitSeta , aCorSub1 )
+				If lSeta1 				
+					BT_DrawBitmapTransparent ( hDC2,  nLine  + nRow   , Width - 20    , 16 , 16 , BT_COPY   ,  hBitSeta , {7,101,125} )
+				End If 	
+
+
 			End If
 
 		End If
@@ -568,6 +579,7 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 
 		End If
+
 
 	Next
 
@@ -623,7 +635,7 @@ Function xDispHint( cMsg1 , nRow1 , nCol1 )
 	SetProperty( 'Win_Msg' , 'Row' , nRow1 - 35 )
 
 	If (nCol1 > 0)
-		SetProperty( 'Win_Msg' , 'Col' , nCol1 )
+		SetProperty( 'Win_Msg' , 'Col' , nCol1  )
 	End If 
 
 	SetProperty( 'Win_Msg' , 'Label_1' , 'Value' , Alltrim(  hb_AnsiToOem(cMsg1) ) )

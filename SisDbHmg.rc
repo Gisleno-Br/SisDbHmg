@@ -8,6 +8,7 @@
     CURSOR1     CURSOR  img\hourglass.Cur  
     NAOPODE     CURSOR  img\aero_unavail_xl.Cur 
     NEXT        PNG     img\go-next.Png 
+    SETATRANSP  PNG     img\0001.Png 
     
 
     

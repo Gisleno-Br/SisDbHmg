@@ -618,7 +618,6 @@ Function Proc_ON_PAINT(wJanela)
 	End If 
 
 
-
 	
 
 	If wJanela = 'fSplit2'

@@ -363,15 +363,17 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 				cTp1 :=	  Alltrim( 	 aOpz11[nItemx2][2]  )
 
 				nRow1 := 0
+				
 
 				GetCursorPos (@nCol, @nRow1)
 
 				If !_isWindowDefined("Win_Msg")
 					CrieJanTip( nRow1  , GetProperty('Win_Menu1', 'Width') - 15 ,   Alltrim(cTp1)      ,, 0.5 )
 				Else
-					xDispHint( cTp1 , nRow1 + 15   , GetProperty('Win_Menu1', 'Col') + GetProperty('Win_Menu1', 'Width') + 3  )
+					xDispHint( cTp1 , nRow1 + 15   , GetProperty('Win_Menu1', 'Col') + GetProperty('Win_Menu1', 'Width') + 3 + 5 )
 					DoFindWin('xHint')
 				End If
+
 
 				xDispUpTam(cTp1 )
 
