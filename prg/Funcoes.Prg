@@ -394,12 +394,11 @@ FUNCTION xInit()
 	//SysWait(.2)
 
 	
-	SetWindowCursor( GetFormHandle( 'Main'  ) , HOURGLASS )  
-
-
+	SetWindowCursor( GetFormHandle( 'Main'  ) , 'CURSOR1' )  
 
 
 	DO EVENTS
+
 
 	SetProperty("fSplit4","fUserDb","Value",cBanco)
 	SetProperty("fSplit4","fServerDb","Value",cServer)
@@ -407,15 +406,22 @@ FUNCTION xInit()
 	np1 := (nDesktopHeight - 81) - GetProperty("fSplit4","Height" )
 	np2 := np1 - GetProperty("fSplit3","Height" )
 
-	SetProperty("fSplit3","Row", np2 )
+	SetProperty("fSplit3","Row", np2  - 0 )
 	SetProperty("fSplit4","Row", np1 )
 
 	SetProperty("fSplit5","Row",nDesktopHeight - 80 )
 
+
 	SetProperty("fSplit6","Row",61 )
 
-	//np2 := np1 - GetProperty("fSplit3","Height" )
+
+	np1 := (nDesktopHeight - 81) - GetProperty("fSplit4","Height" )
+	np2 := np1 - GetProperty("fSplit3","Height" )
+    
+	
+
 	SetProperty("fSplit6","Height", (np2 - 22) - GetProperty( "fSplit6","Row" ) )
+
 
 	SetProperty("fSplit5","Width",nDesktopWidth - nLop)
 
@@ -427,7 +433,7 @@ FUNCTION xInit()
 
 	SetProperty("fSplit10","Col",  nDesktopWidth - 50)
 
-	//SetProperty('fSplit10', 'Image_1','Transparent', .t. )
+	
 
 
 	SetProperty("fSplit10","Row", GetProperty("fSplit2","Row" )+23)
@@ -436,18 +442,7 @@ FUNCTION xInit()
 	ShowScrollBar( GetFormHandle( 'fSplit2' ), 1, .F. )
 
 
-	//SetProperty( 'fSplitSubMenu' , 'Visible' , .f. )
-
-	DoMethod( 'fSplitSubMenu' , 'Hide' )
-	
-
-
 	SetWindowCursor( GetFormHandle( 'Main'  ) , IDC_ARROW)  
-
-
-	//SET WINDOW fSplit10 TRANSPARENT TO COLOR {9,111,137}
-
-
 
 	
 
@@ -536,6 +531,7 @@ Function Proc_ON_PAINT(wJanela)
 		Return
 
 	End If
+	
 
 	hDC = BT_CreateDC ( wJanela , BT_HDC_INVALIDCLIENTAREA, @BTstruct )
 

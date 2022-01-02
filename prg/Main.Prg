@@ -12,6 +12,8 @@
 
 
 
+
+
 #define QUEBRA Chr(13)+Chr(10)
 
 #define SB_LINEUP           0    // ok
@@ -73,6 +75,7 @@ Static lSubOpen := .f.
 
 
 DECLARE WINDOW fSplit10
+
 
 
 REQUEST HB_LANG_PT
@@ -197,9 +200,9 @@ FUNCTION Main
 
 	Private lTracking62 := .F.
 
-	Private nItemDrop1   := 0
-	Private nHeightDrop  := 0
-	Private lSetasDown   := .f.
+	//Private nItemDrop1   := 0
+	//Private nHeightDrop  := 0
+//	Private lSetasDown   := .f.
 
 
 
@@ -277,6 +280,10 @@ FUNCTION Main
 
 
 	Public Flag_AlphaBlend_Effect := .f.
+
+
+
+
 
 
 	PUBLIC aEmpresa       := {}
@@ -401,10 +408,7 @@ FUNCTION Main
 
 
 	Set AutoScroll On
-
 	Aadd(aJanelas , { 'Main' , 'Main'  , 0}  )
-
-
 
 
 
@@ -413,21 +417,12 @@ FUNCTION Main
 	Load Window Main
 
 
-
-	//SET WINDOW fSplit10 TRANSPARENT TO COLOR {9,111,137}
-
-
-
-	//Main.Center
-
-
 	Main.Maximize()
 
 
-	Load Window fSplitSubMenu
+	//Load Window fSplitSubMenu
 
-	//Load Window fFiltro
-
+	
 
 	Private aRotinas := {}
 
@@ -443,8 +438,8 @@ FUNCTION Main
 
 	Private aOpcoes := {{"1-Cadastro",  "Acesso a Cadastros Gerais e Principais." , .t.  }, ;
 		{"2-Movimentos"				,   "Acesso a Movimentação de Estoque"   , .t.  },;
-		{"3-Relatórios"				,   "Relatorios do Sistema"  ,   .f. }  ,;
-		{"4-Parametros"				,  	"Parametros e Configurações Gerais" , .f.  } }
+		{"3-Relatórios"				,   "Relatorios do Sistema"  ,   .t. }  ,;
+		{"4-Parametros"				,  	"Parametros e Configurações Gerais" , .t.  } }
 
 	//cOpMainSel  := aOpcoes[1][1]
 
@@ -473,8 +468,18 @@ FUNCTION Main
 
 
 
+
+
+
+
+
+
+
+
+
+
 	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventHndMain"  ) )  ) = 0
-		InstallEventHandler( "EventHndMain" )
+	//	InstallEventHandler( "EventHndMain" )
 	End If
 
 
@@ -483,7 +488,12 @@ FUNCTION Main
 	HMG_ChangeWindowStyle( fSplit6.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
 
 
+
+	
+
+
 	HMG_ChangeWindowStyle( fSplit3.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
+
 	HMG_ChangeWindowStyle( fSplit4.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
 
 	HMG_ChangeWindowStyle(fSplit2.Handle    , 0x00010200 , NIL, .F., .F.)
@@ -491,8 +501,8 @@ FUNCTION Main
 
 
 
-	HMG_ChangeWindowStyle(fSplitsubMenu.Handle    , 0x00010200 , NIL, .F., .F.)
-	HMG_ChangeWindowStyle(fSplitSubMenu.Handle  ,WS_EX_TOOLWINDOW  , NIL, .t., .t.)
+	//HMG_ChangeWindowStyle(fSplitsubMenu.Handle    , 0x00010200 , NIL, .F., .F.)
+//	HMG_ChangeWindowStyle(fSplitSubMenu.Handle  ,WS_EX_TOOLWINDOW  , NIL, .t., .t.)
 
    
 
@@ -507,7 +517,7 @@ FUNCTION Main
 		FONTCOLOR {102,102,102}
 		BACKCOLOR {255,255,255}
 		FONTBOLD .f.
-		END LABEL
+	END LABEL
 
 	DEFINE LABEL fLabelUser
 		PARENT    fSplit4
@@ -564,15 +574,22 @@ FUNCTION Main
 
 
 
-	BT_ClientAreaInvalidateAll('fSplit6')
+
+	//BT_ClientAreaInvalidateAll('fSplit6')
 
 //SysWait(.1)
 
 
 
-	_HMG_PRINTER_SETVSCROLLVALUE(   GetFormHandle('fSplit6')  , 0 )
+	//_HMG_PRINTER_SETVSCROLLVALUE(   GetFormHandle('fSplit6')  , 0 )
 
+	xMenuMain( 70 , 1  , aOpcoes , aItens )
+
+
+	
 	Main.Activate
+
+
 
 
 RETURN
@@ -596,15 +613,6 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 	Local nLhn := GetProperty( 'fSplitSubMenu' , 'Height')
 
 	*// Eventos Sub menu.
-
-
-	If nMsg == WM_KEYDOWN
-	//	msginfo('lp')
-	End If 
-
-
-
-
 	*// Barra Superior 
 	If nHWnd == GetProperty(  'fSplit2' , "HANDLE" )
 
@@ -654,6 +662,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 		End If
 
+
 	End If
 
 
@@ -674,7 +683,6 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 
 		If (nMsg == WM_LBUTTONDOWN)
-
 
 
 			If (nItemx1 <= Len(aOpX1))
@@ -758,10 +766,10 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 						GetCursorPos( @nCol2 , @nRow2)
 
 						Eval( aOpx1[nItemx1][6]  ,  nRow2   , ;
-						  GetProperty('fSplitSubMenu'  , 'Col') + nColTamMenu + 10  )
+						GetProperty('fSplitSubMenu'  , 'Col') + nColTamMenu + 10  )
 
 
-						  lSubOpen := .t. 
+						 lSubOpen := .t. 
 
 
 						Return 
@@ -811,6 +819,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 
 	End If
+
 
 
 
@@ -945,6 +954,14 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 				yAviso(  Hb_AnsiToOem("Opção Indisponivel.") , .f. )
 				Return
 			End If
+
+		
+
+			If lSubOpen
+				xFechaMen()	 
+				//msginfo('ok22')
+				BT_ClientAreaInvalidateAll('fSplit6')
+			End If 
 
 
 
@@ -1148,28 +1165,6 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 Return
 
-Function xRestMenu( nHandle , lZeraVars  )
-
-	Default lZeraVars := .t.
-
-
-	If (lZeraVars)
-		cOpMainSel := ''
-		nMainSel := 0
-		nClearSel := 0
-		nHeightDrop := 0
-		nItemDrop1  := 0
-	End If
-
-	//SysWait(.1)
-
-	DoMethod('fSplitSubMenu' ,'Hide')
-
-	_HMG_PRINTER_SETVSCROLLVALUE(   nHandle  , 0 )
-	BT_ClientAreaInvalidateAll( nHandle  )
-
-REturn
-
 
 Function xRefresh()
 
@@ -1278,363 +1273,6 @@ Function xMainHandle( xMainJan )
 
 REturn 	
 
-/*
-Function xMainHandle( xMainJan )
-
-	LOCAL  nHWnd   := EventHWND()
-	LOCAL  nMsg    := EventMSG()
-	LOCAL  nWParam := EventWPARAM()
-	Local nContItens := 0
-	Local nQt        := 0
-	Local nRow       := 0
-	Local nindice
-
-	
-
-	If ( Alltrim(cActiveJan) != "Main")
-
-
-		If (_isWindowDefined(cActiveJan)) .And. (nHWnd == GetFormHandle('Main'))
-
-			If nMsg == 5 // WM_SIZE
-
-				If nWParam == 2
-
-					If _isControlDefined( 'br_grid', cActiveJan )
-						lInvalid := .f.
-						SetProperty(cActiveJan , "Timer_1" , "Enabled" , .t. )
-
-					End If
-
-				End If
-
-			End If
-
-
-		End If
-
-		Return
-	End If
-
-
-	If (nSec1 > 0) .And. (lEventx)
-		If (hb_MilliSeconds() - nSec1) >= 350
-			lEventx := .f.
-		End If
-	End If
-
-
-
-	If nMsg == WM_KEYDOWN
-
-		If nWParam = VK_RETURN
-
-			//msginfo('ok enter')
-
-			If !lEventx
-				If Empty(Alltrim(cOpAberto))
-
-					//PostMessage(  aOpcoes[nOpSel][LABEL_HWND] , WM_LBUTTONDOWN ,0,0)
-					//SysWait(.1)
-
-					nTop1   := GetProperty('fSplit6',  aOpcoes[nOpSel][LABEL_NAME]   , "Row")
-					xDropDown(  GetProperty( 'fSplit6' , aOpcoes[nOpSel][LABEL_NAME]    , 'Caption')  , nTop1  )
-
-
-					nSubMenuItem := 1
-					cLbl := "Mnx" + StrZero(nSubMenuItem,4)
-
-					RefreshAll('fSplitSubMenu')
-
-					If  _IsControlDefined(cLbl , 'fSplitSubMenu')
-
-						DoMethod( 'fSplitSubMenu' , cLbl , 'SetFocus' )
-						xHighSubMenu(  'fSplitSubMenu' , cLbl   )
-					End If
-
-					SysWait(.1)
-					xHighSubMenu(  'fSplitSubMenu' , cLbl   )
-
-				Else
-
-					cLbl := "Mnx" + StrZero(nSubMenuItem,4)
-					cTexto := GetProperty( 'fSplitSubMenu' , cLbl   , 'Caption')
-
-					nHan1 := GetControlHandle(  cLbl ,  'fSplitSubMenu' )
-
-					nIndice := Ascan(aItens , { |a| Right( a[1] , Len(a[1]) - 2 ) =  Alltrim(cTexto)  })
-
-					If (nIndice > 0)
-						OpenOpcao( Right(aItens[ nIndice ][1] , Len(aItens[ nIndice ][1])  - 2) , aItens[ nIndice ][2]  , nHan1)
-					End If
-
-				End If
-
-				nSec1 := hb_MilliSeconds()
-				lEventx := .t.
-
-			End If
-
-		End If
-
-
-		If nWParam = VK_F3
-			PRIVATE nGradDirF  := 0
-			PRIVATE cFontName  := 'Arial'
-			PRIVATE nFontSize  := 9
-
-			PRIVATE aBtnFont  := { 'Arial' , 8 , .F., .F., .F., .F. }
-
-			xCadCli( .t. )
-		End If
-
-
-
-
-		If nWParam = VK_ESCAPE
-
-			If !lEventx
-
-
-				If (cActiveJan = 'Main')
-
-
-					If (nOpSel > 0) .And. (nOpsel <= Len(aOpcoes) )
-
-						nIncr2 := 0
-						nIncr  := 0
-
-						If Empty(Alltrim(cOpAberto))
-							xOffMenu('fSplit6' , aOpcoes[nOpSel][LABEL_NAME] )
-							nOpSel := 0
-						Else
-
-							xHMenuPrin(  nOpsel )
-							//xHighMenu(  'fSplit6' ,  aOpcoes[1][LABEL_NAME] ,GetProperty( 'fSplit6' , aOpcoes[1][LABEL_NAME]   , 'Row')     )
-
-						End If
-
-
-					Else
-						xOffMenu('fSplit6' , aOpcoes[1][LABEL_NAME] )
-						If Confirmaviso("Confirma Saida?" , 'Main' )
-							Release All
-							Quit
-						End If
-					End If
-
-				Else
-
-
-				End If
-
-				nSec1 := hb_MilliSeconds()
-				lEventx := .t.
-
-			End If
-
-		End If
-
-		If nWParam = VK_UP
-
-			If (nOpSel = 0)
-				yAviso( 'Selecione um Item do Menu Principal Antes.' ,, .f. )
-				RefreshAll('fSplitSubMenu')
-				Return
-			End If
-
-			If Empty(Alltrim(cOpAberto))
-				If (nOpSel > 1)
-					xOffMenu('fSplit6' , aOpcoes[nOpSel][LABEL_NAME] )
-					nOpSel--
-					xHighMenu(  'fSplit6' ,  aOpcoes[nOpSel][LABEL_NAME] ,GetProperty( 'fSplit6' , aOpcoes[nOpSel][LABEL_NAME]   , 'Row')     )
-					nItemScr1 := 0
-					nIncr2    := 0
-					//SysWait(.1)
-				End If
-			Else
-
-				If (nSubMenuItem > 1)
-
-					cLbl := "Mnx" + StrZero(nSubMenuItem,4)
-					nRow := GetProperty( 'fSplitSubMenu' , cLbl   , 'Row')
-
-					If (nRow = 0 )
-						//msginfo('ok')
-					End If
-
-					nContItens := 0
-					Aeval(aItens , { | a | Iif( Left(a[1],1) == Alltrim(Str( nOpSel )) , nContItens++ , Nil ) } )
-
-					nDiff := nContItens - nItemMax
-
-					If nSubMenuItem > 1
-						xOffMenu( 'fSplitSubMenu' , "Mnx" + StrZero(nSubMenuItem ,4) )
-					End If
-
-					nSubMenuItem--
-					cLbl := "Mnx" + StrZero(nSubMenuItem,4)
-
-					If _IsControlDefined(cLbl , 'fSplitSubMenu')
-						xHighSubMenu(  'fSplitSubMenu' , cLbl   )
-					End If
-
-
-					If (nDiff > 0) .And. (lHitBottom)
-						If nSubMenuItem <= nDiff
-							nIncr2++
-							nQt := (-1) * (nIncr2 * nItemHeight)
-							_HMG_PRINTER_SETVSCROLLVALUE( fSplitSubMenu.Handle, nRow - nItemHeight )
-							If nSubMenuItem == 1
-								lHitBottom := .f.
-							End If
-						End If
-					Else
-						nIncr2 := 0
-					End If
-
-
-
-				End If
-
-			End If
-		End If
-
-		If nWParam = VK_DOWN
-			//msginfo('down ' + cControl)
-
-			If (nOpSel = 0)
-				yAviso( 'Selecione um Item do Menu Principal Antes.' ,, .f. )
-				RefreshAll('fSplitSubMenu')
-				Return
-			End If
-
-
-			nIncr2 := 0
-			If Empty(Alltrim(cOpAberto))
-
-				If (nOpSel < Len(aOpcoes))
-
-					nItemScr1 := 0
-
-					xOffMenu('fSplit6' , aOpcoes[nOpSel][LABEL_NAME] )
-					nOpSel++
-					xHighMenu(  'fSplit6' ,  aOpcoes[nOpSel][LABEL_NAME] ,GetProperty( 'fSplit6' , aOpcoes[nOpSel][LABEL_NAME]   , 'Row')     )
-					//SysWait(.1)
-
-				End If
-
-			Else
-
-				nSubMenuItem++
-				cLbl := "Mnx" + StrZero(nSubMenuItem,4)
-
-				nContItens := 0
-				Aeval(aItens , { | a | Iif( Left(a[1],1) == Alltrim(Str( nOpSel )) , nContItens++ , Nil ) } )
-
-				If (nContItens < nSubMenuItem)
-					nSubMenuItem := nContItens
-					nIncr := 0
-					Return
-				End If
-
-
-				nRow := GetProperty( 'fSplitSubMenu' , cLbl   , 'Row') + ;
-					GetProperty( 'fSplitSubMenu' , cLbl   , 'Height')
-
-				If (nRow > GetProperty( 'fSplitSubMenu' , 'Height'))
-					nIncr++
-					nQt := (nItemHeight * nIncr)
-					_HMG_PRINTER_SETVSCROLLVALUE( fSplitSubMenu.Handle, nQt )
-					lHitBottom := .t.
-					If (nItemScr1 = 0)
-						nItemScr1 := nSubMenuItem
-					End If
-				Else
-					nIncr := 0
-				End If
-
-				//_HMG_PRINTER_SETVSCROLLVALUE( fSplitSubMenu.Handle, nLinSc )
-
-				If _IsControlDefined(cLbl , 'fSplitSubMenu')
-					xHighSubMenu(  'fSplitSubMenu' , cLbl   )
-
-				End If
-
-				If nSubMenuItem > 1
-					xOffMenu( 'fSplitSubMenu' , "Mnx" + StrZero(nSubMenuItem - 1,4) )
-				End If
-
-				//SysWait(.1)
-
-			End If
-
-		End If
-
-		IF nWParam == 13
-
-		End If
-
-	End If
-
-	IF nWParam == VK_TAB
-
-		If !lEventx
-			If nOpsel = 0
-				nOpSel := 1
-				xHighMenu(  'fSplit6' ,  aOpcoes[nOpSel][LABEL_NAME] ,GetProperty( 'fSplit6' , aOpcoes[nOpSel][LABEL_NAME]   , 'Row')     )
-			Else
-
-
-				If Empty(Alltrim(cOpAberto))
-					xOffMenu('fSplit6' , aOpcoes[nOpSel][LABEL_NAME] )
-				End If
-
-				nOpSel		 := 0
-				nSubMenuItem := 0
-				nIncr2       := 0
-				nIncr        := 0
-
-			End If
-
-			nSec1 := hb_MilliSeconds()
-			lEventx := .t.
-
-		End If
-
-		//HMG_CleanLastVirtualKeyUp()
-		//SysWait(.3)
-
-	End If
-
-
-
-REturn
-
-*/
-
-/*
-Function xHMenuPrin(nItem)
-
-	Default nItem := 0
-
-	cOpAberto := ''
-	SetProperty('fSplit6','Image1' , 'Visible' , .f.)
-	SetProperty('fSplit6','Image4' , 'Visible' , .f.)
-	RestMenu(1 , 0  , GetProperty('fSplitSubMenu' , 'Height') , 0 )
-	DoMethod('fSplitSubMenu' ,'Hide' )
-	OffSeta()
-	nSubMenuItem := 0
-	nItemScr1 	 := 0
-
-	If nItem > 0
-		xHighMenu(  'fSplit6' ,  aOpcoes[nItem][LABEL_NAME] ,GetProperty( 'fSplit6' , aOpcoes[nItem][LABEL_NAME]   , 'Row')     )
-	Else
-		nOpSel := 0
-	End If
-
-Return
-*/
 
 
 
@@ -1785,6 +1423,7 @@ Function ButtonsTop( lCria )
 	Local cSelected := ''
 	Local cValor    := ''
 	Local n1
+
 
 	Default lCria := .t.
 
@@ -2291,6 +1930,7 @@ Function OpMenu(aOpcoes , cJan , nLinha , cTitx , nIndx )
 
 
 
+		
 
 
 
@@ -2385,6 +2025,10 @@ Function RestMenu(nOp1 , nLinha , nTam , nOpSel )
 
 Return
 */
+
+
+
+
 
 
 /////////////
@@ -2652,112 +2296,6 @@ RETURN NIL
 
  */
 
-Function xDropDown(  cMenuDesc  , nTopx1 )
-
-	//Local nIndAnt := nIndice
-	Local nIndice := Ascan(aOpcoes , { |a|  Alltrim(a[1]) == Alltrim(cMenuDesc) } )
-	//Local nContItens := 0
-	Local nLinRow
-	Local nLinex1
-	Local nIncremento
-	//Local cOpAberto
-	//Local aOpx1  := {}
-
-	Local nTop   := nTopx1
-
-	//nItemDrop1 , nHeightDrop , lSetasDown
-
-	Local nItemMax := Int(nTamSubMenuConsulta / nItemSubHeight)
-
-
-	nOpSel := nIndice
-
-
-
-
-	If nIndice <= 0
-		msginfo('Falha em System 0')
-		Return
-	End If
-
-	//OffSeta()
-	//SetProperty('fSplit6',"Image4","Visible",.f.)
-
-	nContItens := 0
-	Aeval(aItens , { | a | Iif( Left(a[1],1) == Alltrim(Str(nindice)) , nContItens++ , Nil ) } )
-
-	nItemDrop1 := nIndice
-
-	aOpx1 := {}
-
-
-
-	//msginfo(Str(nContItens))
-
-	lSetasDown := .f.
-
-
-
-	If nContItens >= nItemMax
-		SetProperty('fSplitSubMenu' , 'Height',  nTamSubMenuConsulta    )
-		nHeightDrop := nTamSubMenuConsulta +  (nItemSubHeight * 2)
-		_HMG_PRINTER_SETVSCROLLVALUE( fSplitSubMenu.Handle, 0 )
-		lSetasDown := .t.
-	Else
-
-		SetProperty('fSplitSubMenu' , 'Height',  nItemSubHeight * nContItens      )
-		nHeightDrop := nItemSubHeight * nContItens
-
-	End If
-
-
-
-
-	//BT_ClientAreaInvalidateAll(  GetFormHandle('fSplit6')  )
-
-
-
-	SetProperty( 'fSplitSubMenu' , 'Col', 1)
-	SetProperty( 'fSplitSubMenu' , 'Width', fSplit6.Width  )
-
-
-
-	ShowScrollBar( GetFormHandle( 'fSplitSubMenu' ), 0, .F. )
-
-	ShowScrollBar( GetFormHandle( 'fSplitSubMenu' ), 1, .F. )
-
-	aOpx1 := {}
-
-
-
-	//Aeval(aItens , { | a | Iif( Left(a[1],1) == Alltrim(Str(nindice)) , Aadd(aOpx1,Right(a[1],Len(a[1]) - 2) ) , Nil ) } )
-
-	nLinRow :=  GetProperty('fSplit6' , 'Row')  + ((nIndice + 1 )  * nItemSubHeight)
-
-
-	SetProperty( 'fSplitSubMenu' , 'Row',  nLinRow + 5  )
-
-
-
-	SetProperty( 'fSplitSubMenu' , 'Visible',   .t.  )
-
-
-
-	Aeval(aItens , { | a | Iif( Left(a[1],1) == Alltrim(Str(nindice)) , Aadd(aOpx1, a ) , Nil ) } )
-	cOpAberto := Alltrim(cMenuDesc)
-
-
-
-	BT_ClientAreaInvalidateAll('fSplitSubMenu')
-
-	DoMethod('fSplitSubMenu' ,'Show' )
-
-
-	BT_ClientAreaInvalidateAll('fSplit6')
-
-
-
-Return
 
 
 
@@ -2904,54 +2442,6 @@ Function OffSeta()
 
 Return
 
-Function ScrTest( nDir , nTamanho )
-
-	Local nIncre := 16
-
-	If nDir == 1
-
-
-		If nItemSel = nTamanho
-			Return
-		End If
-
-		nLinSc := nLinSc+nIncre
-		nItemSel := nItemSel + 1
-
-		SetProperty('fSplit6' , 'img_seta2' , 'picture' , 'img\Setac2.Png' )
-		//msginfo(Str(nItemSel)  + ' ' + str(nTamanho) )
-
-		_HMG_PRINTER_SETVSCROLLVALUE( fSplitSubMenu.Handle, nLinSc )
-
-		If nItemSel = nTamanho
-			SetProperty('fSplit6' , 'img_seta1' , 'picture' , 'img\setab2d.Png' )
-		End If
-
-	Else
-
-		If nItemSel > nItemMax
-
-			SetProperty('fSplit6' , 'img_seta1' , 'picture' , 'img\Setab2.Png' )
-
-			nLinSc := nLinSc-nIncre
-			nItemSel := nItemSel - 1
-
-			_HMG_PRINTER_SETVSCROLLVALUE( fSplitSubMenu.Handle, nLinSc )
-
-
-			If nItemSel = nItemMax
-				SetProperty('fSplit6' , 'img_seta2' , 'picture' , 'img\setac2d.Png' )
-			End If
-
-		Else
-
-			SetProperty('fSplit6' , 'img_seta2' , 'picture' , 'img\setac2d.Png' )
-		End If
-
-	End If
-
-
-Return
 
 
 Function ShowButTop( lShow )

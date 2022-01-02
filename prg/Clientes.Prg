@@ -5356,6 +5356,7 @@ fUNCTION DrawTransp(cJan , zBitMap , cTitulo , nQreg , cTitConsu , cTitFltr )
 	Local cGrid := 'Br_Grid'
 
 	LOCAL cFormName := ''
+	
 
 	Local nTypeText    := BT_TEXT_TRANSPARENT
 	//+ BT_TEXT_BOLD

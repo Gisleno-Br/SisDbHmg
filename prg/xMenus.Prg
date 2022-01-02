@@ -71,52 +71,52 @@ Function xMenuOp(aOp1 , nTop , nLeft )
 	DEFINE WINDOW Win_Menu1 AT nTop, nLeft WIDTH nColTamMenu HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight ,  300    ) TITLE 'Men1' ;
 		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR aCorSub1 VIRTUAL HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight+1 ,  (Len(aOp1) * nItemSubHeight)  ) ;
 		ON PAINT xPaintMenu( ThisWindow.Name , aOpz11 , nItemx2 , nItemZ1 , cOpy2 , 0 , 0 ,  .f. ,  .t. ,  ,  , .t. )
-END WINDOW
+	END WINDOW
 
 
-If  (Len(aOpz11) > XMAXITEM)
-	DEFINE WINDOW Win_Scroll1 AT nTop+GetProperty('Win_Menu1' , 'Height')   , nLeft WIDTH nColTamMenu HEIGHT 32 TITLE 'T1' ;
-		NOMAXIMIZE NOMINIMIZE NOSIZE CHILD NOSYSMENU NOCAPTION BACKCOLOR GRAY ;
-		ON PAINT xPaintScrool( ThisWindow.Name )
-END WINDOW
-End If
+	If  (Len(aOpz11) > XMAXITEM)
+		DEFINE WINDOW Win_Scroll1 AT nTop+GetProperty('Win_Menu1' , 'Height')   , nLeft WIDTH nColTamMenu HEIGHT 32 TITLE 'T1' ;
+			NOMAXIMIZE NOMINIMIZE NOSIZE CHILD NOSYSMENU NOCAPTION BACKCOLOR GRAY ;
+			ON PAINT xPaintScrool( ThisWindow.Name )
+		END WINDOW
+	End If
 
 
-If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventMenu1"  ) )  ) = 0
-	InstallEventHandler( "EventMenu1" )
-End If
+	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventMenu1"  ) )  ) = 0
+		InstallEventHandler( "EventMenu1" )
+	End If
 
-HMG_ChangeWindowStyle( Win_Menu1.Handle    , WS_BORDER, NIL, .F., .T.)
-HMG_ChangeWindowStyle( Win_Menu1.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
-
-
-ShowScrollBar( GetFormHandle( 'Win_Menu1' ), 0, .F. )
-ShowScrollBar( GetFormHandle( 'Win_Menu1' ), 1, .F. )
+	HMG_ChangeWindowStyle( Win_Menu1.Handle    , WS_EX_DLGMODALFRAME, , NIL, .F., .T.)
+	//HMG_ChangeWindowStyle( Win_Menu1.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
 
 
-//    nHandle1 := Win_Menu1.Handle
+	ShowScrollBar( GetFormHandle( 'Win_Menu1' ), 0, .F. )
+	ShowScrollBar( GetFormHandle( 'Win_Menu1' ), 1, .F. )
+
+
+	//    nHandle1 := Win_Menu1.Handle
 
 
 
-_ShowWindow("Win_Menu1")
+	_ShowWindow("Win_Menu1")
 
 
-BT_ClientAreaInvalidateAll(   'Win_Menu1'  )
+	BT_ClientAreaInvalidateAll(   'Win_Menu1'  )
 
-If  (Len(aOpz11) > XMAXITEM)
+	If  (Len(aOpz11) > XMAXITEM) .And. (_isWindowDefined(  'Win_Scroll1'   ))
 
-	HMG_ChangeWindowStyle( Win_Scroll1.Handle    , WS_BORDER, NIL, .F., .T.)
-	HMG_ChangeWindowStyle( Win_Scroll1.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
-
-
-	_ShowWindow( 'Win_Scroll1' )
-
-	BT_ClientAreaInvalidateAll(   'Win_Scroll1'  )
-
-	// nHandle2 := Win_Scroll1.Handle
+		HMG_ChangeWindowStyle( Win_Scroll1.Handle    , WS_BORDER, NIL, .F., .T.)
+		HMG_ChangeWindowStyle( Win_Scroll1.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
 
 
-End If
+		_ShowWindow( 'Win_Scroll1' )
+
+		BT_ClientAreaInvalidateAll(   'Win_Scroll1'  )
+
+		// nHandle2 := Win_Scroll1.Handle
+
+
+	End If
 
 
 

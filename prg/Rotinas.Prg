@@ -413,7 +413,7 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 	Local nRow := -(GetProperty( cForm    , "VscrollBar" , "Value"))
 
-	Local nLineSeta := GetProperty('fSplitSubMenu' , 'Height' )
+	Local nLineSeta := nTamSubMenuConsulta
 
 	Local nLinDrop := 0
 
@@ -501,7 +501,6 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 			lSeta1   := aMtrOp[n1][5]
 		End If 	
 
-
 		If ((nOpselx1 > 0) .And. (nOpSelx1 = n1) .And. aMtrOp[n1][3] ) .or. (   (lEnabled ) .And. (nOpselx1 > 0) .And. ( Alltrim(cTextSel) = Alltrim(cTexto) )  )
 
 			nTypeText    := BT_TEXT_TRANSPARENT
@@ -572,7 +571,7 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 		If (nItemDropedDown > 0) .and. (!lPopup)
 			If (nItemDropedDown == n1)
 				nLinDrop := nLine
-				nLine += Iif( !lSetas , nHeightDroped , (nTamSubMenuConsulta + ( 2 * nItemSubHeight))   )
+				nLine += Iif( !lSetas , nHeightDroped  , (nTamSubMenuConsulta + ( 2 * nItemSubHeight))   )
 			End If
 
 		Else 
@@ -592,7 +591,6 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 		//BT_STRETCH
 		BT_DrawBitmap (hDC2, nLinDrop + nLineSeta - 2                  ,   0   , nColTamMenu , 16 , 3 , hBit10)
 		BT_DrawBitmap (hDC2, nLinDrop + nLineSeta + nItemSubHeight - 4 ,   0   , nColTamMenu  , 16 , 3 , hBit11)
-
 
 
 		BT_BitmapRelease ( hBit10 )
@@ -761,6 +759,8 @@ Function xMove1()
 
 Return ar1
 
+/*
+
 Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred   )
 
 	Local nCol := 0
@@ -801,6 +801,7 @@ Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred   )
 	End If
 
 
+
 	If (lSetasDown)
 
 		nIa1 := (nItDopred * nItemSubHeight) + nTamSubMenuConsulta
@@ -820,6 +821,7 @@ Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred   )
 	End If
 
 Return nItem
+*/
 
 
 Function xRetLinha(  cJan )
