@@ -138,7 +138,7 @@ FUNCTION Main
 
 	Public lTelaToda := .f.
 
-
+/*
 	Private aOpx1 := {}
 
 	Private nItemx1 := 0
@@ -154,6 +154,8 @@ FUNCTION Main
 
 
 	Private cOpSely := ''
+
+	*/
 
 
 	PRIVATE lOnToolTipCustomDraw := .T.

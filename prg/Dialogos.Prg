@@ -555,6 +555,7 @@ FUNCTION RetColor1( nInd1, nModel )
 	LOCAL nFrColorD  := Rgb( 232, 232, 232 )
 
 	// { 9, 111, 137 }
+	
 
 	LOCAL nBkColorD1 := 0XE0E0E0
 	LOCAL nBkColorD2 := 0XE0E0E0

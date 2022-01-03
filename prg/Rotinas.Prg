@@ -279,97 +279,6 @@ Return (GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 1 )
 
 
 
-Function ScrollMenu( nDirecao , hWnd1 , nScr1 , nPonteiro , nTotal , lHtp , lHtb , nDrop , cJanela , nHeight1 , lInvalidate  )
-
-	Local lOk := .t.
-	Local nLineSeta := nHeight1
-	//GetProperty('fSplitSubMenu' , 'Height' )
-
-	Local nItens := Int(nTamSubMenuConsulta / nItemSubHeight)
-
-	Default lInvalidate := .t.
-
-	If nDirecao == 2
-      *// Baixo
-
-		If !lHtb
-
-
-			nScr1 += nItemSubHeight
-			nPonteiro++
-
-			lHtp := .f.
-
-
-			If lInvalidate
-				BT_ClientAreaInvalidateRect( cJanela  , ( (nDrop * nItemSubHeight) + nLineSeta +  16)   , 0 , ;
-				nColTamMenu , 16 , .t.  )
-			End If 	
-
-
-			If (nPonteiro = nTotal)
-				lHtb := .t.
-
-				If lInvalidate
-					BT_ClientAreaInvalidateRect( cJanela  , (nDrop * nitemSubHeight) + nLineSeta - 1   , 0 , ;
-						nColTamMenu , 16 , .t.  )
-				End If 		
-
-			End If
-
-		Else
-			yAviso( Hb_AnsitoOem("Opção Não Disponivel.") , .f. )
-			lOk := .f.
-		End If
-
-
-	Else
-
-      *// Cima
-
-
-
-		If !lHtp
-
-			nScr1 -= nItemSubHeight
-			nPonteiro--
-
-			lHtb := .f.
-
-			If lInvalidate
-				BT_ClientAreaInvalidateRect(cJanela  , (nDrop * nitemSubHeight) + nLineSeta - 1   , 0 , ;
-				nColTamMenu , 16 , .t.  )
-			End If 	
-
-
-			If (nPonteiro == nItens)
-				lHtp := .t.
-
-				If lInvalidate
-					BT_ClientAreaInvalidateRect( cJanela  , ( (nDrop * nItemSubHeight) + nLineSeta +  16)   , 0 , ;
-					nColTamMenu , 16 , .t.  )
-				End If 	
-
-			End If
-
-		Else
-			yAviso( Hb_AnsitoOem("Opção Não Disponivel.") , .f. )
-			lOk := .f.
-		End If
-
-	End If
-
-
-
-	If (lOk)
-		_HMG_PRINTER_SETVSCROLLVALUE(   hWnd1  , nScr1 )
-	End If
-
-
-
-Return
-
-
 Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDropedDown , nHeightDroped , lSetas , lSubMenu1 , lHitB , lHitT  , lPopup )
 
 	Local aRGBcolor := BACK1
@@ -413,6 +322,7 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 	Local nRow := -(GetProperty( cForm    , "VscrollBar" , "Value"))
 
+
 	Local nLineSeta := nTamSubMenuConsulta
 
 	Local nLinDrop := 0
@@ -420,6 +330,7 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 	Local lEnabled := .t.
 
 	Local cCor
+
 
 
 
@@ -455,6 +366,14 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 		End If
 
 	End If
+
+
+	//if cForm = 'JanMenuSub'
+	//	Altd()
+	//end If 
+
+
+
 
 
 	hBitMap2 := BT_BitmapCreateNew (nWidthBmp , nHeightBmp , BLACK)
@@ -536,6 +455,7 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 
 
+
 			nTypeText    := BT_TEXT_TRANSPARENT
 
 			cCor := FONTCOR
@@ -563,6 +483,7 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 			End If
 
 		End If
+
 
 
 		nLine += (nItemSubHeight)
