@@ -62,7 +62,7 @@ Function xMenuOp(aOp1 , nTop , nLeft )
 
 	nItemx2 := 1
 
-	nItemZ1 := 0
+	nItemZ1 := 1
 
 	cOpy2 := ''
 
@@ -85,11 +85,16 @@ Function xMenuOp(aOp1 , nTop , nLeft )
 	End If
 
 
-
 	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventMenu1"  ) )  ) = 0
 		InstallEventHandler( "EventMenu1" )
-		nIndexEventX := EventCreate (  { ||   xKeySubMen()   }  )
+		//nIndexEventX := EventCreate (  { ||   xKeySubMen()   }    )
+
+		nIndexEventX := 20050
+
+		 CREATE EVENT PROCNAME xKeySubMen() STOREINDEX nIndexEventX
+
 	End If
+
 
 	HMG_ChangeWindowStyle( Win_Menu1.Handle    , WS_EX_DLGMODALFRAME, , NIL, .F., .T.)
 
