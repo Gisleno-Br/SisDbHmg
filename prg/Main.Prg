@@ -449,7 +449,7 @@ FUNCTION Main
 
 	Private nOpSel := 0
 
-	Private aItens := { {"1-Clientes","Cadastro de Clientes" , .t.  , {  || xTesMenu()  }  , .f. } , ;
+	Private aItens := { {"1-Clientes","Cadastro de Clientes" , .t.  , {  || xTesMenu(200,200)  }  , .f. } , ;
 	 				{ "1-Fornecedores","Cadastro de Fornecedores" , .t.  , {||xFechaMen() }  , .t.  , { |a,b| xTesMenu(a,b)   }    } , ;
 	{ "1-Vendedores", "Cadastro de Vendedores" , .f.  , Nil , .f.  } , ; 
 	 {"1-Colaboradores","" , .f. } ,   {"1-Grupo Produtos","" , .f. , Nil  } , ;
@@ -571,9 +571,7 @@ FUNCTION Main
  
 	Private aButTop := {}
 
-	Public nIndexEventY := EventCreate (  { ||   xMainHandle( )   }  )
-
-
+	//Public nIndexEventY := EventCreate (  { ||   xMainHandle( )   }  )
 
 
 
@@ -585,7 +583,13 @@ FUNCTION Main
 
 	//_HMG_PRINTER_SETVSCROLLVALUE(   GetFormHandle('fSplit6')  , 0 )
 
-	xMenuMain( 70 , 1  , aOpcoes , aItens )
+
+
+	
+
+	//xMenuMain( 70 , 1  , aOpcoes , aItens )
+
+	xTesMenu(200,200) 
 
 
 	
@@ -1237,43 +1241,6 @@ Function xMenuPrin()
 Return
 
 
-Function xMainHandle( xMainJan )
-
-	LOCAL  nHWnd   := EventHWND()
-	LOCAL  nMsg    := EventMSG()
-	LOCAL  nWParam := EventWPARAM()
-	Local nContItens := 0
-	Local nQt        := 0
-	Local nRow       := 0
-	Local nindice
-
-	
-	If nMsg == WM_KEYDOWN
-
-		If nWParam = VK_RETURN
-
-			//msginfo('ok enter')
-
-		End If 
-
-
-		IF nWParam == VK_TAB
-			//msginfo('1')
-
-
-			SendMessage( GetProperty(  'fSplit6' , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
-			SysWait(.1)
-
-			//msginfo('1')
-
-		End If 
-
-	End If 		
-
-
-
-
-REturn 	
 
 
 

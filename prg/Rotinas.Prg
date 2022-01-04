@@ -445,7 +445,7 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 
 				If lSeta1 				
-					BT_DrawBitmapTransparent ( hDC2,  nLine  + nRow   , Width - 20    , 16 , 16 , BT_COPY   ,  hBitSeta , {7,101,125} )
+					BT_DrawBitmapTransparent ( hDC2,  nLine  + nRow - 3   , Width - 20    , 16 , 16 , BT_COPY   ,  hBitSeta , {7,101,125} )
 				End If 		
 
 			End If

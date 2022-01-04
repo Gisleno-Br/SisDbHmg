@@ -32,7 +32,7 @@
 
 Static aOpz11 := {}
 Static nItemx2 := 0
-Static nItemZ1 := 0
+Static nItemZ1 := 1
 Static cOpy2 := ''
 Static nItDrop1 := 1
 Static nHtDrop := 300
@@ -41,6 +41,8 @@ Static lHttb := .f.
 Static lHttp := .t.
 
 Static nAcumulador := 0
+
+Static nIndexEventX := 0
 
 Static nLinha1 := 0
 
@@ -58,13 +60,14 @@ Function xMenuOp(aOp1 , nTop , nLeft )
 
 	aOpz11 := Aclone(aOp1)
 
-	nItemx2 := 0
+	nItemx2 := 1
 
 	nItemZ1 := 0
 
 	cOpy2 := ''
 
 	nAcumulador := 0
+
 
 
 
@@ -82,21 +85,17 @@ Function xMenuOp(aOp1 , nTop , nLeft )
 	End If
 
 
+
 	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventMenu1"  ) )  ) = 0
 		InstallEventHandler( "EventMenu1" )
+		nIndexEventX := EventCreate (  { ||   xKeySubMen()   }  )
 	End If
 
 	HMG_ChangeWindowStyle( Win_Menu1.Handle    , WS_EX_DLGMODALFRAME, , NIL, .F., .T.)
-	//HMG_ChangeWindowStyle( Win_Menu1.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
 
 
 	ShowScrollBar( GetFormHandle( 'Win_Menu1' ), 0, .F. )
 	ShowScrollBar( GetFormHandle( 'Win_Menu1' ), 1, .F. )
-
-
-	//    nHandle1 := Win_Menu1.Handle
-
-
 
 	_ShowWindow("Win_Menu1")
 
@@ -112,8 +111,6 @@ Function xMenuOp(aOp1 , nTop , nLeft )
 		_ShowWindow( 'Win_Scroll1' )
 
 		BT_ClientAreaInvalidateAll(   'Win_Scroll1'  )
-
-		// nHandle2 := Win_Scroll1.Handle
 
 
 	End If
@@ -138,40 +135,40 @@ Function xFechaMen()
 
 		SendMessage( nHandle1, WM_SYSCOMMAND, SC_CLOSE , 0 )
 
-    	Do Events
-        Do Events
+		Do Events
+		Do Events
 
-        SendMessage( nHandle1, WM_SYSCOMMAND, WM_DESTROY , 0 )
+		SendMessage( nHandle1, WM_SYSCOMMAND, WM_DESTROY , 0 )
 
-        Do Events
-        
-
-        If (nHandle2 > 0)             
-
-            SendMessage( nHandle2, WM_SYSCOMMAND, SC_CLOSE , 0 )
-
-            Do Events
-            Do Events
-
-            SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )
-
-            Do Events   
+		Do Events
 
 
-        End If 
+		If (nHandle2 > 0)
 
-        
-        If !RemoveHandler( "EventMenu1"  )
-            msginfo("Erro ao remover Handle Event.")
-        End If
+			SendMessage( nHandle2, WM_SYSCOMMAND, SC_CLOSE , 0 )
 
+			Do Events
+			Do Events
+
+			SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )
+
+			Do Events
+
+
+		End If
+
+
+   
+		If !RemoveHandler( "EventMenu1"  )
+			Msginfo("Erro ao remover Handle Event.")
+		End If
+
+		If !EventRemove(nIndexEventx)
+			msginfo("Erro ao remover Handle Event 22 .")
+		End If
 
 
     End If
-
-//msginfo('ok2')
-
-
 
 
 Return
@@ -294,7 +291,6 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 
 				If (aOpz11[nItemx2][4] != Nil )
 					Eval( aOpz11[nItemx2][4]   )
-					//  xFechaMen()
 					Return
 				End If
 
@@ -310,15 +306,20 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 			//.And. (!lTracking42)
 
 
-			If (nItemx2 > 0)
+
+			If (nItemx2 > 0) .AND. (nWParam != 90)
 				If (nItemx2 = xOpSelPos( 'Win_Menu1' , 0 , Len(aOpz11) , 0 )	)
 					Return
 				End If
 			End If
 
-			nItemx2 := xOpSelPos( 'Win_Menu1', 0 , Len(aOpz11) , 0 )
-			nRow1 := -(GetProperty( 'Win_Menu1' , "VscrollBar" , "Value"))
 
+			If (nWParam != 90)
+				nItemx2 := xOpSelPos( 'Win_Menu1', 0 , Len(aOpz11) , 0 )
+			End If 	
+
+
+			nRow1 := -(GetProperty( 'Win_Menu1' , "VscrollBar" , "Value"))
 
 
 			If (nItemx2 <= Len(aOpz11))
@@ -329,8 +330,10 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 				End If
 			End If
 
+			If (nWParam != 90)
+				SetWindowCursor( nHWnd , CURSORHAND  )
+			End If 	
 
-			SetWindowCursor( nHWnd , CURSORHAND  )
 
 
 
@@ -358,12 +361,12 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 
 
 
-			If !Empty(    Alltrim(  aOpz11[nItemx2][2]  )   )
+			If !Empty(    Alltrim(  aOpz11[nItemx2][2]  )   ) .AND. (nWParam != 90)
 
 				cTp1 :=	  Alltrim( 	 aOpz11[nItemx2][2]  )
 
 				nRow1 := 0
-				
+
 
 				GetCursorPos (@nCol, @nRow1)
 
@@ -383,8 +386,11 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 			End If
 
 
-
-			lTracking192 := TrackMouseEvent(nHWnd)
+			If (nWParam != 90)
+				lTracking192 := TrackMouseEvent(nHWnd)
+			Else 
+				lTracking192 := .f. 
+			End If 	
 
 
 		End If
@@ -435,8 +441,113 @@ Function xPaintScrool( cForm )
 
 	BT_DeleteDC (BTstruct2 )
 
+Return
+
+Function xKeySubMen( nMsg1 , nwParam1 )
+
+	LOCAL  nHWnd   := EventHWND()
+	//EventWPARAM()
+	Local nContItens := 0
+	Local nQt        := 0
+	Local nRow       := 0
+	Local nindice
+	Local nMsg 
+	Local nWParam
+
+
+	DEFAULT nMsg1    := EventMSG()	
+	DEFAULT nWParam1 := EventWPARAM()
+
+
+	
+	nWParam := nwParam1
+	nMsg    := nMsg1 
+
+
+	If nMsg == WM_KEYDOWN
+
+
+		If (nWParam == VK_ESCAPE)
+			xFechaMen()
+		End If
+
+
+
+		If nWParam = VK_RETURN
+
+			lTracking42 := .f.
+			SendMessage( GetProperty(   'Win_Menu1' , "HANDLE" ) , WM_LBUTTONDOWN ,  90 ,0 )
+
+
+		End If
+
+
+
+		IF nWParam == VK_DOWN
+
+		//	 msginfo('down')
+
+
+			If nItemx2 < Len(aOpz11)
+
+				nItemx2++
+				lTracking192 := .f.
+				SendMessage( GetProperty(   'Win_Menu1' , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
+
+				SysWait(.1)
+
+
+			Else
+				MsgInfo('Hit Bottom!')
+			End If
+
+
+		End If
+
+
+
+
+		IF (nWParam == VK_UP)
+
+
+			If nItemx2 > 1
+
+				nItemx2--
+				lTracking192 := .f.
+				SendMessage( GetProperty(   'Win_Menu1' , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
+
+				SysWait(.1)
+
+
+			Else
+				MsgInfo('Hit Top')
+			End If
+
+
+
+		End If
+
+		/*
+
+		IF nWParam == VK_TAB
+
+			nMainSel := 1
+			lTracking42 := .f.
+			SendMessage( GetProperty(   'Win_Menu1' , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
+			SysWait(.1)
+
+
+		End If
+		*/
+
+
+
+	End If
+
+
 
 
 Return
+
 
 

@@ -1465,7 +1465,7 @@ Function yEfect(cFormName , lEfect)
 
 		If _isWindowDefined( 'fSplit2' )			
 			SetWindowControlsVisible(  'fSplit2' , .f. )
-			ShowButTop( .f. )
+		//	ShowButTop( .f. )
 		End If
 
 
