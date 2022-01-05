@@ -46,6 +46,14 @@ Static nIndexEventX := 0
 
 Static nLinha1 := 0
 
+
+
+Static nScrLin := 0
+
+Static nLinhaAtual := 0
+
+
+
 //Static nHandle1 := 0
 //Static nHandle2 := 0
 
@@ -69,6 +77,11 @@ Function xMenuOp(aOp1 , nTop , nLeft )
 	nAcumulador := 0
 
 
+	If _isWindowDefined( 'Win_Menu1')		
+		_ShowWindow("Win_Menu1")
+		SysWait(.1)
+		Return 
+	End If 
 
 
 	DEFINE WINDOW Win_Menu1 AT nTop, nLeft WIDTH nColTamMenu HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight ,  300    ) TITLE 'Men1' ;
@@ -91,9 +104,12 @@ Function xMenuOp(aOp1 , nTop , nLeft )
 
 		nIndexEventX := 20050
 
-		 CREATE EVENT PROCNAME xKeySubMen() STOREINDEX nIndexEventX
+		CREATE EVENT PROCNAME xKeySubMen() STOREINDEX nIndexEventX
+
+		nIndexEventX := Len(_HMG_EventData)
 
 	End If
+	
 
 
 	HMG_ChangeWindowStyle( Win_Menu1.Handle    , WS_EX_DLGMODALFRAME, , NIL, .F., .T.)
@@ -163,21 +179,44 @@ Function xFechaMen()
 		End If
 
 
+
+
    
 		If !RemoveHandler( "EventMenu1"  )
 			Msginfo("Erro ao remover Handle Event.")
 		End If
 
-		If !EventRemove(nIndexEventx)
+		If !xDelEvent(nIndexEventX)
 			msginfo("Erro ao remover Handle Event 22 .")
 		End If
 
 
+
     End If
+
+	//DoMethod('Main' , 'SetFocus')
 
 
 Return
 
+
+
+Function xDelEvent(   nIndex )
+
+	Local nInd := Ascan(  _HMG_EventData , { |a|  a[HMG_LEN(_HMG_EventData[1]) ] == nIndex    })
+	Local lOk  := .f. 
+	Local nTam := Len( _HMG_EventData   )
+
+	If nIndex <= Len(   _HMG_EventData )
+		//_HMG_EventData[ nIndex ] := Nil 
+		Adel(   _HMG_EventData , nIndex  )
+		Asize(  _HMG_EventData , nTam - 1  )
+		lOk := .t. 
+	End If 	
+		
+
+
+Return lOk 
 
 
 Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
@@ -335,11 +374,10 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 				End If
 			End If
 
+
 			If (nWParam != 90)
 				SetWindowCursor( nHWnd , CURSORHAND  )
 			End If 	
-
-
 
 
 			If nItemZ1 > 0
@@ -448,7 +486,7 @@ Function xPaintScrool( cForm )
 
 Return
 
-Function xKeySubMen( nMsg1 , nwParam1 )
+Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 
 	LOCAL  nHWnd   := EventHWND()
 	//EventWPARAM()
@@ -459,10 +497,13 @@ Function xKeySubMen( nMsg1 , nwParam1 )
 	Local nMsg 
 	Local nWParam
 
+	Local nMaxItem := Int(nTamSubMenuConsulta / nItemSubHeight)
+
 
 	DEFAULT nMsg1    := EventMSG()	
 	DEFAULT nWParam1 := EventWPARAM()
 
+	DEFAULT cJanela := 'Win_Menu1'
 
 	
 	nWParam := nwParam1
@@ -481,7 +522,7 @@ Function xKeySubMen( nMsg1 , nwParam1 )
 		If nWParam = VK_RETURN
 
 			lTracking42 := .f.
-			SendMessage( GetProperty(   'Win_Menu1' , "HANDLE" ) , WM_LBUTTONDOWN ,  90 ,0 )
+			SendMessage( GetProperty(   cJanela , "HANDLE" ) , WM_LBUTTONDOWN ,  90 ,0 )
 
 
 		End If
@@ -489,17 +530,32 @@ Function xKeySubMen( nMsg1 , nwParam1 )
 
 
 		IF nWParam == VK_DOWN
-
-		//	 msginfo('down')
-
+		
 
 			If nItemx2 < Len(aOpz11)
 
 				nItemx2++
 				lTracking192 := .f.
-				SendMessage( GetProperty(   'Win_Menu1' , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
 
-				SysWait(.1)
+
+				If (nItemx2 > nMaxItem)
+
+					If (nLinhaAtual == 0)
+						nLinhaAtual := Int(nTamSubMenuConsulta / nItemSubHeight)
+					End If
+
+					
+					ScrollMenu( 2 , GetProperty( cJanela , 'Handle' ) , @nScrLin , @nLinhaAtual , Len(aOpz11) , @lHttp , @lHttb , 1 , ;
+					'Win_Menu1' , GetProperty( cJanela , 'Height' )  )
+
+
+					BT_ClientAreaInvalidateAll( 'Win_Scroll1' )
+
+				Else 					
+					SendMessage( GetProperty(   cJanela , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
+
+				End If 
+
 
 
 			Else
@@ -519,9 +575,25 @@ Function xKeySubMen( nMsg1 , nwParam1 )
 
 				nItemx2--
 				lTracking192 := .f.
-				SendMessage( GetProperty(   'Win_Menu1' , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
+				
 
-				SysWait(.1)
+				If nItemX2 >= nMaxItem 
+
+				   	ScrollMenu( 1 , GetProperty( cJanela , 'Handle' ) , @nScrLin , @nLinhaAtual , Len(aOpz11) , @lHttp , @lHttb , 1 , ;
+					cJanela , GetProperty(cJanela , 'Height' )  )
+
+
+					If _IsWindowDefined('Win_Scroll1')
+						BT_ClientAreaInvalidateAll( 'Win_Scroll1' )
+					End If 	
+
+				Else 	
+
+					SendMessage( GetProperty(   cJanela , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
+
+				End If 	
+
+				//SysWait(.1)
 
 
 			Else

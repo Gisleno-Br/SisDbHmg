@@ -443,6 +443,7 @@ FUNCTION Main
 		{"3-Relatórios"				,   "Relatorios do Sistema"  ,   .t. }  ,;
 		{"4-Parametros"				,  	"Parametros e Configurações Gerais" , .t.  } }
 
+
 	//cOpMainSel  := aOpcoes[1][1]
 
 
@@ -454,10 +455,10 @@ FUNCTION Main
 	{ "1-Vendedores", "Cadastro de Vendedores" , .f.  , Nil , .f.  } , ; 
 	 {"1-Colaboradores","" , .f. } ,   {"1-Grupo Produtos","" , .f. , Nil  } , ;
 		{"1-Locais Estoque","" , .t.  , Nil } , {"1-Funções","" , .f. , Nil } , ;
-		{"1-Categoria Produto","" , .t. , Nil } , {"1-Unidades","" , .f. , Nil } , {"1-Tipo Produtos","",.t. , Nil  } ,;
-		{"1-Tipo Produto1s","" , .t. , Nil  },{"1-Tipo Produto2s","", .f. , Nil } ,{"1-Tipo Produt3os","" , .f. , Nil },{"1-Tipo Produt222os","", .t. , Nil  },{"1-Tipo 444Produtos","", .t. , Nil  }, ;
-		{ "1-Rotatividade","Rot" , .t. , Nil } , {"1-TES","TES1" , .f. , Nil  } , ;
-		{"2-Pedidos","Vendas" , .f.  , Nil } , {"2-Orçamento","Orçamento" , .f. , Nil }  , {"3-Listagem Clientes","Lista" , .t. , Nil  } ,    {"4-Configurações","" , .t. , Nil  } }
+		{"1-Categoria Produto","" , .t. , Nil } , {"1-Unidades","" , .t. , Nil } , {"1-Tipo Produtos","",.f. , Nil  } ,;
+		{"1-Tipo Produto1s","" , .t. , Nil  },{"1-Tipo Produto2s","", .t. , Nil } ,{"1-Tipo Produt3os","" , .t. , Nil },{"1-Tipo Produt222os","", .f. , Nil  },{"1-Tipo 444Produtos","", .f. , Nil  }, ;
+		{ "1-Rotatividade","Rot" , .f. , Nil } , {"1-TES","TES1" , .t. , Nil  } , ;
+		{"2-Pedidos","Vendas" , .t.  , Nil } , {"2-Orçamento","Orçamento" , .f. , Nil }  , {"3-Listagem Clientes","Lista" , .f. , Nil  } ,    {"4-Configurações","" , .f. , Nil  } }
 
 
 
@@ -587,9 +588,10 @@ FUNCTION Main
 
 	
 
-	//xMenuMain( 70 , 1  , aOpcoes , aItens )
+	xMenuMain( 70 , 1  , aOpcoes , aItens )
 
-	xTesMenu(200,200) 
+
+	//xTesMenu(200,200) 
 
 
 	
@@ -2618,12 +2620,14 @@ Return
 		}
 
 
+
 	HB_FUNC ( SETVSCROLLVALUE )
 	{
 
 	SendMessage ( (HWND) HMG_parnl (1), WM_VSCROLL ,  SB_LINEDOWN , 15 ) ;
 
 	}
+
 
 
 
