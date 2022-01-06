@@ -127,12 +127,14 @@ FUNCTION ConfirmAviso( cMsgx1,  cJanPadrao ,  lEfect )
 	n := 0
 
 	
-
+/*
 	While isWindowVisible( fDiaLogo.Handle )
 		  n++	
 		  Do Events 
 		  //fDialogo.SetFocus()
 	Enddo 
+
+	*/
 
 
 //	msginfo('Passou')

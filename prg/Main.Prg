@@ -69,12 +69,12 @@ MEMVAR _HMG_SYSDATA
 
 
 
-
-
 Static lSubOpen := .f. 
 
 
 DECLARE WINDOW fSplit10
+
+DECLARE WINDOW Win_MenuPrincipal
 
 
 
@@ -327,6 +327,8 @@ FUNCTION Main
 	Private hBit11      := 0
 	Private hBit12      := 0
 
+	Private hBit13      := 0
+
 	Private hBit20      := 0
 
 	Private GradDirE  := 0
@@ -448,6 +450,7 @@ FUNCTION Main
 
 
 
+
 	Private nOpSel := 0
 
 	Private aItens := { {"1-Clientes","Cadastro de Clientes" , .t.  , {  || xTesMenu(200,200)  }  , .f. } , ;
@@ -482,7 +485,7 @@ FUNCTION Main
 
 
 	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventHndMain"  ) )  ) = 0
-	//	InstallEventHandler( "EventHndMain" )
+		InstallEventHandler( "EventHndMain" )
 	End If
 
 
@@ -618,7 +621,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 	Local nCol2 := 0
 
 
-	Local nLhn := GetProperty( 'fSplitSubMenu' , 'Height')
+	//Local nLhn := GetProperty( 'fSplitSubMenu' , 'Height')
 
 	*// Eventos Sub menu.
 	*// Barra Superior 
@@ -660,8 +663,16 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 	If nHWnd == GetProperty(  'fSplit10' , "HANDLE" )
 
 
+		//SetWindowCursor( nHWnd , CURSORHAND)	
+
 		If (nMsg == WM_LBUTTONDOWN)
 			//msginfo('ok')
+
+			If ExitApp()
+				RELEASE WINDOW All
+				Quit 
+			End If 
+
 		End If
 
 		If ( nMsg == WM_MOUSEMOVE )
@@ -674,7 +685,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 	End If
 
 
-	*// Submenu Menu Principal.
+	/*
 
 	If nHWnd == GetProperty(  'fSplitSubMenu' , "HANDLE" )
 
@@ -710,6 +721,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 
 		End If
+
 
 
 
@@ -763,7 +775,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 				BT_ClientAreaInvalidateRect( 'fSplitSubMenu' ,  nRow1  +  ( ( nItemx1 - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )
 
 
-				*// Sub Menu
+				
 			    If Len(aOpx1[nItemx1]) >= 5
 
 					If aOpx1[nItemx1][5] 
@@ -831,7 +843,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 
 
-	*// Menu Principal
+	
 	If nHWnd == GetProperty(  'fSplit6' , "HANDLE" )
 
 
@@ -1080,12 +1092,6 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 			cOpcao := alltrim(  Right( aOpcoes[nMainSel][1]  , Len( aOpcoes[nMainSel][1] ) - 2  ) )
 
-			/*
-		    If (cUltOpcaoSel = cOpcao)
-				Return 
-			End If 	
-			*/
-
 
 
 			If (nClearSel > 0) .And. (nClearSel <= Len(aOpcoes))
@@ -1168,7 +1174,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 	End If
 
-	
+	*/
 
 
 Return
@@ -1306,17 +1312,26 @@ RETURN NIL
 
 
 
+
+
 Function CaptTelas(  cExtra )
 
 	hBit10 := BT_BitmapCaptureWindow ('fSplit5' , 0 , 0 , fSplit5.Width , fSplit5.Height)
 	hBit11 := BT_BitmapCaptureWindow ('fSplit2' , 0 , 0 , fSplit2.Width , fSplit2.Height)
 	hBit12 := BT_BitmapCaptureWindow ('fSplit10' , 0 , 0 , fSplit10.Width , fSplit10.Height)
 
+	hBit13 := BT_BitmapCaptureWindow ('Win_MenuPrincipal' , 0 , 0 , fSplit6.Width , fSplit6.Height)
+
+
 	Default cExtra := ''
+
+
 
 	BT_BitmapSaveFile (hBit10  , "hBit10.bmp")
 	BT_BitmapSaveFile (hBit11  , "hBit11.bmp")
 	BT_BitmapSaveFile (hBit12  , "hBit12.bmp")
+
+	BT_BitmapSaveFile (hBit13  , "hBit13.bmp")
 
 Return
 
@@ -2479,6 +2494,8 @@ Function D1Black(cJan,zBitMap)
 
 	If lAtivaBlack
 
+
+
 		hDC    = BT_CreateDC ( cJan  , BT_HDC_INVALIDCLIENTAREA, @BTstruct)
 		BT_DrawGradientFillVertical (hDC,  nRow  ,  nCol  ,  Width,  Height , BLACK , BLACK)
 
@@ -2486,9 +2503,20 @@ Function D1Black(cJan,zBitMap)
 
 		BT_DeleteDC ( BTstruct )
 
+		
+
+		If ( Alltrim(cJan) = 'fSplit6')
+			msginfo('l2')
+		End If 
+
 	Else
 
-		Proc_ON_PAINT(cJan)
+		If (cJan != 'fSplit6')
+			Proc_ON_PAINT(cJan)
+		Else
+			//msginfo(cJan)
+			
+		End If 	
 
 	End If
 
@@ -2530,10 +2558,33 @@ Function xTesMenu( nRow , nCol )
   Aadd(aZop1 , { "  Novo Arquivo18   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 
 
-  xMenuOp(aZop1 , nRow , nCol ) 
+  xMenuOp(aZop1 , nRow , nCol , .t.  ) 
 
 
 Return 
+
+
+Function ExitApp()
+
+	Local lOk := .f. 
+
+   yEfect(  'Main' , .t.    )
+
+   //MsgInfo('ok')
+
+
+
+   lOk := ConfirmAviso('Confirma Saida do Aplicativo?' , , .f. )
+
+      
+
+   
+   //lOk := .t. 
+
+   EfectEnd( 'Main' , {} )
+
+REturn lOk
+
 
 
 Function Box(CurSRow, CurSCol, LastSWidth, LastSHeight , NOSm , cJanela1 , cImgTab )

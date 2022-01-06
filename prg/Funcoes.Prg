@@ -444,6 +444,8 @@ FUNCTION xInit()
 
 	SetWindowCursor( GetFormHandle( 'Main'  ) , IDC_ARROW)  
 
+	SysWait(.2)
+
 	
 
 
@@ -613,13 +615,16 @@ Function Proc_ON_PAINT(wJanela)
 
 	End If 
 
-
 	
+
 
 	If wJanela = 'fSplit2'
 
+
+
 		hBitmap_aux2 := BT_BitmapLoadFile ("HOME1")  // load from resource
-        BT_DrawBitmapTransparent (hDC, 1, 2 , 32, 32   , BT_STRETCH , hBitmap_aux2, { 7 , 101 ,125 })
+		aBk2 := BT_DrawGetPixel (hDC, 2, 32)
+        BT_DrawBitmapTransparent (hDC, 1, 2 , 32, 32   , BT_SCALE , hBitmap_aux2, { 7 , 101,125 } )
      	BT_BitmapRelease (hBitmap_aux2)
 
 	End If 
@@ -1411,6 +1416,8 @@ Function yEfect(cFormName , lEfect)
 	cDiaName := 'fProgress'
 
 
+
+
 	//GetFormNameByHandle ( GetActiveWindow(), @cFormName )
 
 	lAtivaBlack := (Alltrim(cFormName) != "Main" )
@@ -1420,23 +1427,31 @@ Function yEfect(cFormName , lEfect)
 	BT_BitmapRelease (hBit12)
 	BT_BitmapRelease (hBit20)
 
-	CaptTelas()
+	//CaptTelas()
+
+	
 
 	If (lEfect)
 
 		Flag_AlphaBlend_Effect := .T.
 
-			
 		
 		If _isWindowDefined(cMenuName)
 			DoMethod( cMenuName , 'Hide')
 		End If 
 
-
-
 		If cFormName = 'Main'
 
-			hBitMain := BT_BitmapCaptureWindow (cActiveJan , 25 , 1 , yWidth, nDeskTopHeight)
+		//	msginfo('ok2')
+
+			hBitMain := BT_BitmapCaptureDesktop ( 25 , 1 , yWidth, nDeskTopHeight)
+			//BT_BitmapCaptureDesktop (Row, Col, Width, Height)
+			//BT_BitmapCaptureWindow(cActiveJan)
+
+			
+			BT_BitmapSaveFile (hBitMain  , "hBitMain.bmp")
+
+						
 
 			DoMethod("fSplit6","Hide")
 			DoMethod("fSplit2","Hide")
@@ -1444,11 +1459,24 @@ Function yEfect(cFormName , lEfect)
 			DoMethod("fSplit4","Hide")
 			DoMethod("fSplit5","Hide")
 			DoMethod("fSplit10","Hide")
+
+			DoMethod('Win_MenuPrincipal' , 'Hide')
+
+			If _IsWindowDefined( "Win_Menu1")
+			    DoMethod( "Win_Menu1" , "Hide"  )
+			End If 
+
+			If _IsWindowDefined( "Win_Scroll1")
+			    DoMethod( "Win_Scroll1" , "Hide"  )
+			End If 
 			
 	
 		Else
 	
 			hBit2 := BT_BitmapCaptureWindow ( cActiveJan , 0 , 0 , yWidth, nDeskTopHeight)
+
+
+
 			hBit11 := BT_BitmapCaptureWindow ('fSplit2' , 0 , 0 , fSplit2.Width , fSplit2.Height)
 			//lTelaToda := .t.
 	
@@ -1461,7 +1489,6 @@ Function yEfect(cFormName , lEfect)
 		If _isWindowDefined( 'fTop1' + Right(cActiveJan,5) )
 			DoMethod( 'fTop1' + Right(cActiveJan,5) , 'Hide')
 		End If
-    
 
 		If _isWindowDefined( 'fSplit2' )			
 			SetWindowControlsVisible(  'fSplit2' , .f. )
@@ -1469,12 +1496,15 @@ Function yEfect(cFormName , lEfect)
 		End If
 
 
+
+
 		lAtivaBlack := .t.		
 		BT_ClientAreaInvalidateAll ( cActiveJan  )
-		BT_ClientAreaInvalidateAll ( 'fSplit2'  )
+		//BT_ClientAreaInvalidateAll ( 'fSplit2'  )	
+		//BT_ClientAreaInvalidateAll ( 'fSplit6'  )	
 
-
-
+		
+		
 	Else
 		lativaBlack := .f.
 	End If

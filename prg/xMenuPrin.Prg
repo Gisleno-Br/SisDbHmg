@@ -37,7 +37,7 @@ Static lSetasDown := .f.
 Static l_Httb := .f.
 Static l_Http := .t.
 
-Static lModeTecla := .f. 
+Static lModeTecla := .f.
 
 Static aOpx1 := {}
 Static nItemx1 := 0
@@ -57,12 +57,8 @@ Static nScrLin := 0
 
 Static nLinhaAtual := 0
 
-//Static nItemClr := 0
-
-//	Private l_Httb := .f.
-//Private l_Http := .t.
-
-//Private cOpSely := ''
+Static lHttb := .f.
+Static lHttp := .t.
 
 
 
@@ -78,6 +74,7 @@ Function xMenuMain( nRow1 , nCol1 , aOpPrin , aSubOps )
 		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR WHITE VIRTUAL HEIGHT 521 ;
 		ON PAINT xPaintMenu( ThisWindow.Name , aOpcoes , nMainSel , nClearSel , cOpMainSel , nItemDrop1 , nHeightDrop , lSetasDown , .f. , l_Httb , l_Http )
 END WINDOW
+
 
 
 
@@ -184,9 +181,7 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 
 
 		If ( nMsg == WM_MOUSEMOVE )
-			//.And. (!lTracking42)
-
-			//msginfo('ok')
+			
 
 			If (nItemx1 > 0) .And. (nWParam != 90 )
 				If (nItemx1 = xOpSelPos( 'JanMenuSub' , 0 , Len(aOpx1) , 0 )	)
@@ -197,21 +192,21 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 
 			If (nWParam != 90 )
 				nItemx1 := xOpSelPos( 'JanMenuSub', 0 , Len(aOpx1) , 0 )
-			End If 	
+			End If
 
 			//msginfo('32')
-		
+
 
 			nRow1 := -(GetProperty( 'JanMenuSub' , "VscrollBar" , "Value"))
 
-			
+
 			If (nItemx1 <= Len(aOpX1))
 				If !aOpx1[nItemx1][3]
-						//MsgInfo( '321' )
+					//MsgInfo( '321' )
 					SetWindowCursor( nHWnd , IDC_ARROW)
 					Return
 				End If
-			End If	
+			End If
 
 
 
@@ -237,7 +232,7 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 			End If
 
 
-			If (nItemx1 > 0) 
+			If (nItemx1 > 0)
 
 				BT_ClientAreaInvalidateRect( 'JanMenuSub' ,  nRow1  +  ( ( nItemx1 - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )
 
@@ -245,17 +240,23 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 
 
 				*// Sub Menu
-				If (nItemx1 <= Len(aOpx1)) .And. (Len(aOpx1[nItemx1]) >= 5) .And. ( nWParam != 90 )
+				If (nItemx1 <= Len(aOpx1)) .And. (Len(aOpx1[nItemx1]) >= 5) 
 
 					If aOpx1[nItemx1][5]
 
 						nRow2 := 0
 						nCol2 := 0
+						If (nWParam != 90 )
 
-						GetCursorPos( @nCol2 , @nRow2)
+							GetCursorPos( @nCol2 , @nRow2)
 
-						Eval( aOpx1[nItemx1][6]  ,  (nRow2 - nItemSubHeight) + 15    , ;
-							GetProperty( 'JanMenuSub'  , 'Col') + nColTamMenu + 1  )
+							Eval( aOpx1[nItemx1][6]  ,  (nRow2 - nItemSubHeight) + 15    , ;
+								GetProperty( 'JanMenuSub'  , 'Col') + nColTamMenu + 1  )
+						Else 
+
+
+						End If 	
+
 
 						nIdMenu1 := nItemx1
 						lSubOpen := .t.
@@ -291,16 +292,17 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 				Else
 
 					xHideHint()
+
 				End If
-			End If 
+			End If
 
 
 			If (nWParam != 90)
 				lTracking142 := TrackMouseEvent(nHWnd)
-			End If 	
+			End If
 
 
-		//	msginfo('ok  ')
+			//	msginfo('ok  ')
 
 
 
@@ -689,39 +691,39 @@ Function xCloseMPrin()
 
 		SendMessage( nHandle1, WM_SYSCOMMAND, SC_CLOSE , 0 )
 
-		Do Events
-		Do Events
+	Do Events
+Do Events
 
-		SendMessage( nHandle1, WM_SYSCOMMAND, WM_DESTROY , 0 )
-
-
-		If (nHandle2 > 0)
-
-			SendMessage( nHandle2, WM_SYSCOMMAND, SC_CLOSE , 0 )
-
-			Do Events
-			Do Events
-
-			SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )
-
-			Do Events
+SendMessage( nHandle1, WM_SYSCOMMAND, WM_DESTROY , 0 )
 
 
-		End If
+If (nHandle2 > 0)
+
+	SendMessage( nHandle2, WM_SYSCOMMAND, SC_CLOSE , 0 )
+
+Do Events
+Do Events
+
+SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )
+
+Do Events
 
 
-		If !RemoveHandler( "EventMenu1"  )
-			msginfo("Erro ao remover Handle Event.")
-		End If
-
-		
-		If !EventRemove(nIndexEventY)
-			msginfo("Erro ao remover Handle Event 22 .")
-		End If 
+End If
 
 
+If !RemoveHandler( "EventMenu1"  )
+	msginfo("Erro ao remover Handle Event.")
+End If
 
-	End If
+
+If !EventRemove(nIndexEventY)
+	msginfo("Erro ao remover Handle Event 22 .")
+End If
+
+
+
+End If
 
 //msginfo('ok2')
 
@@ -916,14 +918,10 @@ Function ScrollMenu( nDirecao , hWnd1 , nScr1 , nPonteiro , nTotal , lHtp , lHtb
 
 	Default lInvalidate := .t.
 
-
-
-
 	If nDirecao == 2
 		// Baixo
 
 		If !lHtb
-
 
 			nScr1 += nItemSubHeight
 			nPonteiro++
@@ -995,7 +993,7 @@ Function ScrollMenu( nDirecao , hWnd1 , nScr1 , nPonteiro , nTotal , lHtp , lHtb
 
 
 	If (lOk)
-		_HMG_PRINTER_SETVSCROLLVALUE(   hWnd1  , nScr1 )		
+		_HMG_PRINTER_SETVSCROLLVALUE(   hWnd1  , nScr1 )
 	End If
 
 
@@ -1010,49 +1008,166 @@ Function xTeclasMenu()
 	Local nQt        := 0
 	Local nRow       := 0
 	Local nindice
+	Local nRow2 
+	Local nCol2 
+	Local cTp1       := ''
 
-	
+	//xFechaMen
+
 	Local nMaxItem := Int(nTamSubMenuConsulta / nItemSubHeight)
-
-
-
-	
-	//If (nHWnd != GetProperty(   'Win_MenuPrincipal' , "HANDLE" ) )
-	//	Return  
-	//End If 
-
-
 
 
 	If nMsg == WM_KEYDOWN
 
-		
-		If (lSetasDown)
+		If (nWParam == VK_LEFT)
 
-			If (nWParam == VK_UP)
+			If (nIdMenu1 = 999)
+				nIdMenu1 := nItemx1
+				xFechaMen()
+			End If 
 
+		End If 
 
+		If (nWParam == VK_RIGHT)
+
+			If (nIdMenu1 = 999) 
+			    //.And. ( nItemx1 != nIdMenu1  )
+				yaviso( Hb_AnsiToOem("SubMenu Já Ativo.") , .f. )					
+				Return 
+			End If 
+				
+
+			If (nIdMenu1 != nItemx1)
+				yaviso( Hb_AnsiToOem("Este Item do Menu não Possui SubMenu Associado.") , .f. )					
+			Else 
+
+				nRow2 := GetProperty( 'JanMenuSub'  , 'Row') + ( (nItemx1 - 1) * nItemSubHeight)
+
+				Eval( aOpx1[nItemx1][6]  , nRow2   , ;
+				GetProperty( 'JanMenuSub'  , 'Col') + nColTamMenu + 1  )                   
+
+				nIdMenu1 := 999
+                  
 
 			End If 
 
 
+		End If 
+
+
+
+		If (lSetasDown)			
 			
+
+			If (nWParam == VK_ESCAPE)
+				nIdMenu1 := nItemx1
+				//xHideHint()
+				xFechaMen()
+			End If
+
+
+			If (nWParam == VK_UP)
+
+				
+				If (nIdMenu1 > 0)
+					xHideHint()
+				End If 
+
+				If nIdMenu1 = 999				
+					//xHideHint()
+					Return 
+				End If 
+
+				
+				
+				
+
+				If (nItemx1 > 1)
+
+					nDiff := nItemx1
+
+					nItemx1--
+
+					While ( nItemx1 > 1 ) .And. (!aOpx1[nItemx1][3])
+						nItemx1--					
+					Enddo
+
+					lTracking142 := .F.
+
+
+					If (nItemx1 > nMaxItem)
+
+						If (nLinhaAtual == 0)
+							nLinhaAtual := Int(nTamSubMenuConsulta / nItemSubHeight)
+						End If
+
+						ScrollMenu( 1 , GetProperty( 'JanMenuSub' , 'Handle' ) , @nScrLin , @nLinhaAtual , Len(aOpx1) , @lHttp , @lHttb , 1 , ;
+							'Win_MenuPrincipal' , GetProperty( 'JanMenuSub', 'Height' )  )
+
+					Else
+
+						If (nDiff > nMaxItem)
+							
+							nScrLin -= (nItemSubHeight)							
+
+							ScrollMenu( 1 , GetProperty( 'JanMenuSub' , 'Handle' ) , @nScrLin , @nLinhaAtual , Len(aOpx1) , @lHttp , @lHttb , 1 , ;
+							'Win_MenuPrincipal' , GetProperty( 'JanMenuSub', 'Height' )  )							
+
+						End If 
+
+						SendMessage( GetProperty(   'JanMenuSub' , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
+
+					End If
+
+					
+					xHintSetaD()
+
+
+				Else
+					yaviso( 'Hit Top' , .f. )
+				End If
+
+				REturn 
+
+
+
+			End If
+
+
+
 			If (nWParam == VK_DOWN)
+
+
+				If (nIdMenu1 > 0)
+					xHideHint()
+				End If 
+
+				If nIdMenu1 = 999							
+					Return 
+				End If 
+
+
 
 				If (nItemx1 < Len(aOpx1))
 
 					nItemx1++
 
 					While ( nItemx1 <= Len(aOpx1) ) .And. (!aOpx1[nItemx1][3])
-						nItemx1++	
-					Enddo 
+						nItemx1++					
+					Enddo
+
+					nDiff := Len(aOpx1) - nItemx1 
+
+					If nDiff == 0					
+						nScrLin += nItemSubHeight
+					End If 
 
 					If (nItemx1 > Len(aOpx1) )
 						yAviso( Hb_AnsitoOem("Não há Itens a Navegar. " )  , .f.)
-						Return 					
-					End If 
+						Return
+					End If
 
-					lTracking142 := .F. 		
+					lTracking142 := .F.
 
 
 					If (nItemx1 > nMaxItem)
@@ -1063,12 +1178,34 @@ Function xTeclasMenu()
 
 						
 						ScrollMenu( 2 , GetProperty( 'JanMenuSub' , 'Handle' ) , @nScrLin , @nLinhaAtual , Len(aOpx1) , @lHttp , @lHttb , 1 , ;
-						'Win_MenuPrincipal' , GetProperty( 'JanMenuSub', 'Height' )  )					
+							'Win_MenuPrincipal' , GetProperty( 'JanMenuSub', 'Height' )  )
 
 
-					Else 					
+					Else
 						SendMessage( GetProperty(   'JanMenuSub' , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
+					End If
+
+
+					xHintSetaD()
+
+					/*
+					If nIdMenu1 == nItemx1
+						
+						cTp1 := "Seta para a Direita Abre Mais Opções"
+						nRow2 := GetProperty( 'JanMenuSub'  , 'Row') + ( (nItemx1 - 1) * nItemSubHeight) - 18
+
+
+
+						If !_isWindowDefined("Win_Msg")
+							CrieJanTip( nRow2  , GetProperty(  'JanMenuSub', 'Width') - 25 ,   Alltrim(cTp1)      ,, 0.5 )
+						Else
+							xDispHint( cTp1 , nRow2  , GetProperty( 'JanMenuSub', 'Col') + GetProperty( 'JanMenuSub', 'Width') + 10   )
+						End If
+
+						xDispUpTam(cTp1 )	
+
 					End If 
+					*/
 
 
 
@@ -1076,33 +1213,34 @@ Function xTeclasMenu()
 					MsgInfo('Hit Bottom!')
 				End If
 
-			End If 
-			
-			Return 
+			End If
 
-		End If 
+			Return
+
+		End If
 
 
 		If (nWParam == VK_ESCAPE)
 
-			lModeTecla := .f. 			
+			lModeTecla := .f.
 
 			nMainSel   := 0
 			nClearSel   := 0
 			nItemx1 	:= 0
+			nIdMenu1 	:= 0
 			BT_ClientAreaInvalidateAll(   'Win_MenuPrincipal'  )
 
-		End If 
+		End If
 
 
 
 		If nWParam = VK_RETURN
 
-			
+
 			If !lModeTecla
 				yaviso("Modo Tecla não Ativado" , .f. )
-				Return 
-			End If 
+				Return
+			End If
 
 			nItemx1  := 1
 			nItemClr := 1
@@ -1120,23 +1258,25 @@ Function xTeclasMenu()
 
 			If !lModeTecla
 				yaviso("Modo Tecla não Ativado" , .f. )
-				Return 
-			End If 
+				Return
+			End If
 
 
 			If nMainSel < Len(aOpcoes)
 
 				nMainSel++
 
-				
+				nIdMenu1 := 0
+
+
 				While ( nMainSel <= Len(aOpcoes) ) .And. (!aOpcoes[nMainSel][3])
-					   nMainSel++	
-				Enddo 
+					nMainSel++
+				Enddo
 
 				If (nMainSel > Len(aOpcoes) )
 					yAviso( Hb_AnsitoOem("Não há Itens a Navegar. " )  , .f.)
-					Return 					
-				End If 
+					Return
+				End If
 
 
 				lTracking42 := .f.
@@ -1158,9 +1298,9 @@ Function xTeclasMenu()
 
 			If !lModeTecla
 				yaviso("Modo Tecla não Ativado" , .f. )
-				Return 
-			End If 
-			
+				Return
+			End If
+
 
 			If nMainSel > 1
 
@@ -1168,7 +1308,12 @@ Function xTeclasMenu()
 				lTracking42 := .f.
 				SendMessage( GetProperty(   'Win_MenuPrincipal' , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
 
-				SysWait(.1)
+				//SysWait(.1)
+
+
+
+
+				nIdMenu1 := 0
 
 
 			Else
@@ -1189,21 +1334,24 @@ Function xTeclasMenu()
 			If (lModeTecla)
 				nMainSel := 1
 				lTracking42 := .f.
+				nIdMenu1 := 0
+
 				SendMessage( GetProperty(   'Win_MenuPrincipal' , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
 				SysWait(.1)
 
 				//msginfo('ok333k')
-			Else 
+			Else
 
 				nMainSel := 0
 				nClearSel := 0
+				nIdMenu1 := 0
 				BT_ClientAreaInvalidateAll(   'Win_MenuPrincipal'  )
 
 
 				//msginfo('okk')
 
 
-			End If 	
+			End If
 
 
 
@@ -1220,5 +1368,28 @@ Return
 
 
 
+Function xHintsetaD()
 
+		Local cTp1 := ''
+		Local nRow2 := 0
+		Local lOk := .f. 
+
+  		If (nIdMenu1 == nItemx1)
+						
+			cTp1 := "Seta para a Direita Abre Mais Opções"
+			nRow2 := GetProperty( 'JanMenuSub'  , 'Row') + ( (nItemx1 - 1) * nItemSubHeight) - 18
+
+
+
+			If !_isWindowDefined("Win_Msg")
+				CrieJanTip( nRow2  , GetProperty(  'JanMenuSub', 'Width') - 25 ,   Alltrim(cTp1)      ,, 0.5 )
+			Else
+				xDispHint( cTp1 , nRow2  , GetProperty( 'JanMenuSub', 'Col') + GetProperty( 'JanMenuSub', 'Width') + 10   )
+			End If
+			xDispUpTam(cTp1 )	
+			lOk := .t. 
+
+		End If 
+
+Return lOk 
 

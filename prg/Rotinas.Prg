@@ -367,15 +367,6 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 	End If
 
-
-	//if cForm = 'JanMenuSub'
-	//	Altd()
-	//end If 
-
-
-
-
-
 	hBitMap2 := BT_BitmapCreateNew (nWidthBmp , nHeightBmp , BLACK)
 
 	hDC := BT_CreateDC (hBitmap2, BT_HDC_BITMAP  , @BTstruct)
@@ -445,16 +436,13 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 
 				If lSeta1 				
-					BT_DrawBitmapTransparent ( hDC2,  nLine  + nRow - 3   , Width - 20    , 16 , 16 , BT_COPY   ,  hBitSeta , {7,101,125} )
+					BT_DrawBitmapTransparent ( hDC2,  nLine  + nRow   , Width - 20    , 16 , 16 , BT_COPY   ,  hBitSeta , {7,101,125} )
 				End If 		
 
 			End If
 
 
 		Else
-
-
-
 
 			nTypeText    := BT_TEXT_TRANSPARENT
 

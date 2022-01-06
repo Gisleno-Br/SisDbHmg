@@ -47,6 +47,7 @@ Static nIndexEventX := 0
 Static nLinha1 := 0
 
 
+Static l_Popup := .f. 
 
 Static nScrLin := 0
 
@@ -61,10 +62,14 @@ Static nLinhaAtual := 0
 
 STATIC lTracking192 := .f.
 
-Function xMenuOp(aOp1 , nTop , nLeft )
+Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
 
 	Local lOk     := .f.
 	Local nHeight := (Len(aOp1) * nItemSubHeight)+5
+
+	Default lPopUp := .f. 
+
+	l_Popup := lPopUp
 
 	aOpz11 := Aclone(aOp1)
 
@@ -321,6 +326,17 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 		End If
 
 
+		
+		If (nMsg == VK_LEFT)
+
+			If lPopUp 
+
+				//msginfo('popuip')
+			End If 
+
+		End If 
+
+
 		If (nMsg == WM_LBUTTONDOWN)
 
 
@@ -512,10 +528,11 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 
 	If nMsg == WM_KEYDOWN
 
-
+/*
 		If (nWParam == VK_ESCAPE)
 			xFechaMen()
 		End If
+		*/
 
 
 
@@ -531,7 +548,7 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 
 		IF nWParam == VK_DOWN
 		
-
+			xHideHint()
 			If nItemx2 < Len(aOpz11)
 
 				nItemx2++
@@ -568,8 +585,9 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 
 
 
-		IF (nWParam == VK_UP)
 
+		IF (nWParam == VK_UP)
+			xHideHint()
 
 			If nItemx2 > 1
 
