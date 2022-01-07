@@ -118,6 +118,8 @@ FUNCTION Main
 	Private  lTracking42 := .f.
 	Private  lTracking142 := .f.
 
+	PRIVATE nFontSize  := 9
+
 	SET SCROLLSTEP TO 10
 
 	PUBLIC cBackColor := { 166, 210, 210 }
@@ -2568,20 +2570,20 @@ Function ExitApp()
 
 	Local lOk := .f. 
 
-   yEfect(  'Main' , .t.    )
+    yEfect(  'Main' , .t.   )
+
+
+
+	lOk := xDialog(  'Confirma Saida do Aplicativo?'  , .t. )
 
    //MsgInfo('ok')
 
-
-
-   lOk := ConfirmAviso('Confirma Saida do Aplicativo?' , , .f. )
-
-      
-
+   //lOk := ConfirmAviso('Confirma Saida do Aplicativo?' , , .f. )
    
    //lOk := .t. 
 
-   EfectEnd( 'Main' , {} )
+  // EfectEnd( 'Main' , {} )
+
 
 REturn lOk
 

@@ -5,9 +5,15 @@
 
 //25-09
 
+Static nIndexDialog  := 0
+
 STATIC lTracking45 := .F.
 
+STATIC nIndexDlg22 := 0
+STATIC nIndexDlg23 := 0
+STATIC nIndexDlg24 := 0
 
+STATIC lRetx := .F.
 
 DEFINE WINDOW main
 DECLARE WINDOW fSplit6
@@ -69,7 +75,7 @@ FUNCTION yAviso( cMsgx1 , lEfect )
 	PRIVATE cMsg1 := cMsgx1
 	
 
-	Private nIndexDlg22 := 0
+	//Private nIndexDlg22 := 0
 
 
 	PRIVATE lRet := .F.
@@ -93,7 +99,7 @@ FUNCTION ConfirmAviso( cMsgx1,  cJanPadrao ,  lEfect )
 	
 	Local aMx := {}
 	Local n   := 0
-	PRIVATE lRetx := .F.
+	//PRIVATE lRetx := .F.
 
 //	PRIVATE nTipo := 2
 
@@ -109,7 +115,7 @@ FUNCTION ConfirmAviso( cMsgx1,  cJanPadrao ,  lEfect )
 
 
 
-	Private nIndexDlg22 := 0
+	//Private nIndexDlg22 := 0
 
 
 
@@ -176,7 +182,7 @@ FUNCTION MsgAviso( cMsg1, nTipo )
 
 	//nIndexDlg   := EventCreate (  { ||   EventDlg( )} , fDiaLogo.Handle   )
 
-	EventProcessAllHookMessage(nIndexDlg22   := EventCreate (  { ||   EventDlg( )} , fDialogo.Handle  ) , .t.)
+	//EventProcessAllHookMessage(nIndexDlg22   := EventCreate (  { ||   EventDlg( )} , fDialogo.Handle  ) , .t.)
 
 
 	Center Window fDialogo
@@ -277,7 +283,12 @@ RETURN lRet
 
 Function xFechaDlg()
 
-					
+	
+	Local nHandle1  := DoFindWin("xDialog1")
+	//Local nHandle2  := DoFindWin("T1")
+
+
+			/*		
 		DestroyWindow(   OBTN_Handle('fDialogo' , 6652)    )
 		DestroyWindow(   OBTN_Handle('fDialogo' , 6653)    )
 		DestroyWindow(   OBTN_Handle('fDialogo' , 6654)    )
@@ -285,6 +296,32 @@ Function xFechaDlg()
    	   fDialogo.Hide()
 
 	   RemoveHandler( "EventDlg" )
+
+	   */
+
+	xDelEvent(   nIndexDlg22)
+
+	If nIndexDlg23 > 0
+	   xDelEvent(   nIndexDlg23)
+	End If 	 
+
+	If nIndexDlg24 > 0
+		xDelEvent(   nIndexDlg24)
+	End If 	
+
+
+	If nHandle1 > 0
+
+		SendMessage( nHandle1, WM_SYSCOMMAND, SC_CLOSE , 0 )
+
+		Do Events
+		Do Events
+
+		SendMessage( nHandle1, WM_SYSCOMMAND, WM_DESTROY , 0 )
+
+		Do Events
+
+	End If 
 
 
 
@@ -338,6 +375,7 @@ RETURN
 
 
 
+
 //FUNCTION EventDlg( nHWnd, nMsg, nWParam, nLParam )
 FUNCTION EventDlg()
 
@@ -345,7 +383,7 @@ FUNCTION EventDlg()
 	LOCAL ButHnd
 	LOCAL nRow, nCol
 	LOCAL nind1
-	LOCAL cMenuName := 'fDialogo'
+	LOCAL cMenuName := 'Win_Dialog'
 	Local cForm
 	Local cControl
 	Local nIdBut := 0
@@ -359,6 +397,27 @@ FUNCTION EventDlg()
 	If !_IsWindowDefined ( cMenuName )
 		Return
 	End If
+
+
+		IF ( nMsg == WM_MOUSEMOVE ) .And. ;
+		   (nHWnd == GetProperty(  cMenuName, "HANDLE" ))
+
+			/*
+
+			lTracking45 := TrackMouseEvent( nHWnd ) // TME_LEAVE is default flag
+
+			OBTN_Color( cFormx, nIdBut, RetColor1( 2 ), .T. )
+
+			OBTN_Enable( cFormx, nIdBut, .T. )
+			OBTN_Visible( cFormx, nIdBut, .T. )
+			*/
+
+//			msginfo('ok2')
+
+
+		END IF
+
+
 
 
 	If nHWnd == GetProperty(  cMenuName, "HANDLE" )
@@ -405,6 +464,7 @@ FUNCTION EventDlg()
 			End If 
 
 
+
 			If nId == 6653
 
 				lRetx := .T.
@@ -439,7 +499,7 @@ FUNCTION InputEv2( cJan1 )
 	LOCAL  nWParam := EventWPARAM()
 	LOCAL  nLParam := EventLPARAM()
 
-	LOCAL cFormx := 'fDialogo'
+	LOCAL cFormx := 'Win_Dialog'
 
 
 	LOCAL nind1
@@ -453,7 +513,7 @@ FUNCTION InputEv2( cJan1 )
 	//DEFAULT cFormx := 'fDialogo'
 
 	// LOCAL n1
-	If (Alltrim(cJan1) = "fDialogo")
+	If (Alltrim(cJan1) = "Win_Dialog")
 		FOR n1 := 6652 TO 6659
 			IF ( OBTN_Handle( cFormx, n1 ) == nHWnd )
 				IF nIdBut == 0
@@ -464,7 +524,8 @@ FUNCTION InputEv2( cJan1 )
 	End If
 
 
-	If (alltrim(cJan1) != "fDialogo")
+
+	If (alltrim(cJan1) != "Win_Dialog")
 
 		FOR n1 := 1 TO 100
 			IF ( OBTN_Handle( cJan1, n1 ) == nHWnd )
@@ -479,12 +540,16 @@ FUNCTION InputEv2( cJan1 )
 
 
 
+ /*
+
 	If (Alltrim(cJan1) = "fProgress")
 		cFormx := cJan1
 		IF ( OBTN_Handle( 'fProgress' , 6670 ) == nHWnd )
 			nIdBut := 6670
 		End If
 	End If
+
+	*/
 
 
 
@@ -500,6 +565,7 @@ FUNCTION InputEv2( cJan1 )
 			OBTN_Visible( cFormx, nIdBut, .T. )
 
 		END IF
+
 
 
 		IF ( nMsg == WM_MOUSELEAVE )
@@ -685,10 +751,15 @@ FUNCTION xIniProgress( nTp )
 RETURN
 
 
-Function xProcDlg()
+Function xProcDlg(  cText   )
 
 	LOCAL Width     := BT_ClientAreaWidth  ( ThisWindow.Name ) 
 	Local aRGBcolor := { 9, 111, 137 }
+
+	Local nTypeText    := BT_TEXT_TRANSPARENT
+	//+ BT_TEXT_BOLD
+	Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
+	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
 
 	//LOCAL hDC2
 	Local BTstruct2	
@@ -701,12 +772,152 @@ Function xProcDlg()
 
 	BT_DrawGradientFillVertical ( hDC2 ,  195 ,  0 , 571 ,  55 ,   { 238,238,238}, {  244,244,244 } )
 
+	
+	BT_DrawText (hDC2 , 120 , 15 , alltrim(cText) , "arial", 9, BLACK ,  BLACK, nTypeText, nAlingText, nOrientation)
 
 
 	BT_DeleteDC ( BTstruct2 )
 
 
+
 REturn 
 
+Function xDialog( cMsg1 , lAsk1  )
+	
 
+	//ON PAINT xProcDlg()
+
+	Local lRet := .f. 
+
+	Default lAsk1 := .f. 
+
+	DEFINE WINDOW Win_Dialog AT 0, 0 WIDTH 450 HEIGHT 247 TITLE 'xDialog1' ;
+		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR WHITE VIRTUAL HEIGHT Nil ;
+		ON PAINT xProcDlg(  cMsg1 )	
+	END WINDOW
+
+/*
+	DEFINE LABEL LblMsg
+		PARENT Win_Dialog
+        ROW    120
+        COL    20
+        WIDTH  620
+        HEIGHT 85
+        VALUE cMsg1
+        FONTNAME "Arial"
+        FONTSIZE 9
+        TOOLTIP ""
+        FONTBOLD .F.
+        FONTITALIC .F.
+        FONTUNDERLINE .F.
+        FONTSTRIKEOUT .F.
+        HELPID Nil
+        VISIBLE .T.
+        TRANSPARENT .T.
+        ACTION Nil
+        AUTOSIZE .F.
+        BACKCOLOR NIL
+        FONTCOLOR NIL
+    END LABEL
+
+*/
+
+    DEFINE IMAGE Image_1
+		PARENT Win_Dialog
+        ROW    37
+        COL    20
+        WIDTH  48
+        HEIGHT 48
+        PICTURE "img\Exclamation3.Png"
+        HELPID Nil
+        VISIBLE .T.
+        STRETCH .T.
+        ACTION Nil
+    END IMAGE
+
+
+    DEFINE LABEL Label_1
+		PARENT Win_Dialog
+        ROW    95
+        COL    20
+        WIDTH  120
+        HEIGHT 24
+        VALUE Hb_AnsiToOem("Aviso Informação")
+        FONTNAME XFONT1
+        FONTSIZE 9
+        TOOLTIP ""
+        FONTBOLD .T.
+        FONTITALIC .F.
+        FONTUNDERLINE .F.
+        FONTSTRIKEOUT .F.
+        HELPID Nil
+        VISIBLE .T.
+        TRANSPARENT .T.
+        ACTION Nil
+        AUTOSIZE .F.
+        BACKCOLOR NIL
+        FONTCOLOR {150,150,150}
+    END LABEL
+
+
+	CENTER WINDOW Win_Dialog 
+
+	
+	HMG_ChangeWindowStyle( Win_Dialog.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
+	HMG_ChangeWindowStyle( Win_Dialog.Handle, WS_EX_STATICEDGE, NIL, .T., .T. )
+
+
+	xProcinit( lAsk1 )
+
+	
+	//While !IsWindowDefined(  'Win_Dialog')
+	Win_Dialog.Show()
+	//Enddo 		
+
+
+	//msginfo('ok2')
+
+Return .f.
+
+
+Function xProcinit( lPergunta )
+
+	
+	//InstallEventHandler( "EventDlg" )
+
+	
+	EventProcessAllHookMessage(nIndexDlg22   := EventCreate (  { ||   EventDlg( )} , Win_Dialog.Handle  ) , .t.)
+
+	
+
+	If (!lPergunta)
+
+		OBTN_Create( 'Win_Dialog', 6652, "Ok", 162, 215,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+		OBTN_Font( 'Win_Dialog', 6652,  { cFontName, nFontSize, .F., .F., .F., .F. } )
+
+		EventProcessAllHookMessage( nIndexDlg23 := EventCreate( {|| InputEv2('Win_Dialog' ) },    OBTN_Handle( 'Win_Dialog', 6652 )   ) ,  .T. )
+
+	Else 
+
+		OBTN_Create( 'Win_Dialog', 6653, "Sim", 162, 292,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+		OBTN_Create( 'Win_Dialog', 6654, hb_ANSIToOEM( "Não" ), 162, 355 ,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+
+		OBTN_Font( 'Win_Dialog', 6653,  { cFontName, nFontSize, .F., .F., .F., .F. } )
+		OBTN_Font( 'Win_Dialog', 6654,  { cFontName, nFontSize, .F., .F., .F., .F. } )
+
+		EventProcessAllHookMessage( nIndexDlg23   := EventCreate( {|| InputEv2('Win_Dialog' ) },    OBTN_Handle( 'Win_Dialog', 6653 )   ), .T. )
+		EventProcessAllHookMessage( nIndexDlg24   := EventCreate( {|| InputEv2('Win_Dialog' ) },    OBTN_Handle( 'Win_Dialog', 6654 )   ), .T. )
+
+
+	End If 	
+	
+
+
+	
+	nIndexDialog := Len(_HMG_EventData)	
+	BT_ClientAreaInvalidateAll('Win_Dialog')
+
+
+
+Return 
 
