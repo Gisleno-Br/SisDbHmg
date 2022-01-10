@@ -118,7 +118,8 @@ FUNCTION Main
 	Private  lTracking42 := .f.
 	Private  lTracking142 := .f.
 
-	PRIVATE nFontSize  := 9
+	PRIVATE nFontSize  := 8
+	
 
 	SET SCROLLSTEP TO 10
 
@@ -2572,17 +2573,14 @@ Function ExitApp()
 
     yEfect(  'Main' , .t.   )
 
+	lOk := xDialog(  'Confirma Saida do Aplicativo?'   )
+
+	If lok
+   		//MsgInfo('ok')
+	End If 	   
 
 
-	lOk := xDialog(  'Confirma Saida do Aplicativo?'  , .t. )
-
-   //MsgInfo('ok')
-
-   //lOk := ConfirmAviso('Confirma Saida do Aplicativo?' , , .f. )
-   
-   //lOk := .t. 
-
-  // EfectEnd( 'Main' , {} )
+   EfectEnd( 'Main' , {} )
 
 
 REturn lOk

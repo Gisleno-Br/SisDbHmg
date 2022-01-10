@@ -13,19 +13,18 @@ STATIC nIndexDlg22 := 0
 STATIC nIndexDlg23 := 0
 STATIC nIndexDlg24 := 0
 
-STATIC lRetx := .F.
+
 
 DEFINE WINDOW main
 DECLARE WINDOW fSplit6
 
 
+#define WM_DESTROY          0x0002
+#define SC_CLOSE            61536
+
+
 
 DECLARE WINDOW fDialogo
-//DECLARE WINDOW fCadCli
-
-// REQUEST HB_LANG_PT
-// REQUEST HB_CODEPAGE_PT850
-
 
 Function yAviso2( cMensagem , lEfect  )
 
@@ -96,6 +95,9 @@ Return
 
 FUNCTION ConfirmAviso( cMsgx1,  cJanPadrao ,  lEfect )
 
+return 
+/*
+
 	
 	Local aMx := {}
 	Local n   := 0
@@ -132,29 +134,22 @@ FUNCTION ConfirmAviso( cMsgx1,  cJanPadrao ,  lEfect )
 
 	n := 0
 
-	
-/*
-	While isWindowVisible( fDiaLogo.Handle )
-		  n++	
-		  Do Events 
-		  //fDialogo.SetFocus()
-	Enddo 
 
-	*/
 
 
 //	msginfo('Passou')
 
 
 
-	If lEfect
-		EfectEnd(cActiveJan , aMx )		
-	End If
+//	If lEfect
+//		EfectEnd(cActiveJan , aMx )		
+//	End If
 
 
-	//cDiaName := cSalvaD
 
 RETURN lRetx
+
+*/
 
 
 
@@ -281,51 +276,6 @@ FUNCTION MsgAviso( cMsg1, nTipo )
 
 RETURN lRet
 
-Function xFechaDlg()
-
-	
-	Local nHandle1  := DoFindWin("xDialog1")
-	//Local nHandle2  := DoFindWin("T1")
-
-
-			/*		
-		DestroyWindow(   OBTN_Handle('fDialogo' , 6652)    )
-		DestroyWindow(   OBTN_Handle('fDialogo' , 6653)    )
-		DestroyWindow(   OBTN_Handle('fDialogo' , 6654)    )
-		
-   	   fDialogo.Hide()
-
-	   RemoveHandler( "EventDlg" )
-
-	   */
-
-	xDelEvent(   nIndexDlg22)
-
-	If nIndexDlg23 > 0
-	   xDelEvent(   nIndexDlg23)
-	End If 	 
-
-	If nIndexDlg24 > 0
-		xDelEvent(   nIndexDlg24)
-	End If 	
-
-
-	If nHandle1 > 0
-
-		SendMessage( nHandle1, WM_SYSCOMMAND, SC_CLOSE , 0 )
-
-		Do Events
-		Do Events
-
-		SendMessage( nHandle1, WM_SYSCOMMAND, WM_DESTROY , 0 )
-
-		Do Events
-
-	End If 
-
-
-
-Return 
 
 Function RlesaBt()
 
@@ -467,14 +417,19 @@ FUNCTION EventDlg()
 
 			If nId == 6653
 
-				lRetx := .T.
+				lRetx := .T.			
+				
+				//PushButton( cMenuName , nId  )
 				xFechaDlg()			
 
 			End If 
 
 			If nId == 6654
+
+				//PushButton( cMenuName , nId  )
 				lRetx := .F.			
 				xFechaDlg()
+
 			End If
 
 			IF nId == 6601
@@ -488,7 +443,7 @@ FUNCTION EventDlg()
 
 Return 
 
-FUNCTION InputEv2( cJan1 )
+FUNCTION InputEv2()
 
 	//STATIC lTracking45 := .F.
 
@@ -513,18 +468,18 @@ FUNCTION InputEv2( cJan1 )
 	//DEFAULT cFormx := 'fDialogo'
 
 	// LOCAL n1
-	If (Alltrim(cJan1) = "Win_Dialog")
-		FOR n1 := 6652 TO 6659
-			IF ( OBTN_Handle( cFormx, n1 ) == nHWnd )
-				IF nIdBut == 0
+	If (Alltrim(cFormx) = "Win_Dialog")
+		For n1 := 6652 TO 6659
+			If ( OBTN_Handle( cFormx, n1 ) == nHWnd )
+				If nIdBut == 0
 					nIdBut := n1
-				END IF
-			END IF
-		NEXT
+				End If 
+			End If
+		Next
 	End If
 
 
-
+   /*
 	If (alltrim(cJan1) != "Win_Dialog")
 
 		FOR n1 := 1 TO 100
@@ -537,6 +492,7 @@ FUNCTION InputEv2( cJan1 )
 			END IF
 		NEXT
 	End If
+	*/
 
 
 
@@ -555,7 +511,7 @@ FUNCTION InputEv2( cJan1 )
 
 	IF ( nIdBut > 0 )
 
-		IF ( nMsg == WM_MOUSEMOVE ) .and. (!lTracking45)
+		If ( nMsg == WM_MOUSEMOVE ) .and. (!lTracking45)
 
 			lTracking45 := TrackMouseEvent( nHWnd ) // TME_LEAVE is default flag
 
@@ -564,22 +520,24 @@ FUNCTION InputEv2( cJan1 )
 			OBTN_Enable( cFormx, nIdBut, .T. )
 			OBTN_Visible( cFormx, nIdBut, .T. )
 
-		END IF
+		End If
 
 
 
-		IF ( nMsg == WM_MOUSELEAVE )
+		If ( nMsg == WM_MOUSELEAVE )
 
 			OBTN_Color( cFormx,  nIdBut, RetColor1( 1 ), .T. )
 			OBTN_Enable( cFormx, nIdBut, .T. )
 			OBTN_Visible( cFormx, nIdBut, .T. )
 
+
 			lTracking45 := .F.
 
-		END IF
-	ELSE
+		End IF
 
-	END IF
+	Else
+
+	End If 
 
 RETURN
 
@@ -714,6 +672,7 @@ FUNCTION xIniProgress( nTp )
 		If nTp == 1
 
 
+
 			OBTN_Create( cJanxDialog, 6652, "Ok", 185, 245,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 			OBTN_Font( cJanxDialog, 6652,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 
@@ -791,36 +750,28 @@ Function xDialog( cMsg1 , lAsk1  )
 
 	Default lAsk1 := .f. 
 
-	DEFINE WINDOW Win_Dialog AT 0, 0 WIDTH 450 HEIGHT 247 TITLE 'xDialog1' ;
-		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR WHITE VIRTUAL HEIGHT Nil ;
-		ON PAINT xProcDlg(  cMsg1 )	
+	Private lRetx := .F.
+
+  /*
+	DEFINE WINDOW Win_Dialog AT 0, 0 WIDTH 450 HEIGHT 247 TITLE 'xDialog1' 
+		 NOMAXIMIZE NOMINIMIZE NOSIZE  NOSYSMENU NOCAPTION CHILD BACKCOLOR WHITE ;
+		ON PAINT xProcDlg(  cMsg1 )
 	END WINDOW
 
-/*
-	DEFINE LABEL LblMsg
-		PARENT Win_Dialog
-        ROW    120
-        COL    20
-        WIDTH  620
-        HEIGHT 85
-        VALUE cMsg1
-        FONTNAME "Arial"
-        FONTSIZE 9
-        TOOLTIP ""
-        FONTBOLD .F.
-        FONTITALIC .F.
-        FONTUNDERLINE .F.
-        FONTSTRIKEOUT .F.
-        HELPID Nil
-        VISIBLE .T.
-        TRANSPARENT .T.
-        ACTION Nil
-        AUTOSIZE .F.
-        BACKCOLOR NIL
-        FONTCOLOR NIL
-    END LABEL
-
 */
+	
+
+
+	
+	DEFINE WINDOW Win_Dialog ;
+		AT 0,0 ;
+		WIDTH 450 HEIGHT 247 ;
+		TITLE 'xDialog1'  ;		
+		MODAL NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE ;
+		ON PAINT xProcDlg(  cMsg1 )
+	END WINDOW	
+
+
 
     DEFINE IMAGE Image_1
 		PARENT Win_Dialog
@@ -828,12 +779,13 @@ Function xDialog( cMsg1 , lAsk1  )
         COL    20
         WIDTH  48
         HEIGHT 48
-        PICTURE "img\Exclamation3.Png"
+        PICTURE Iif( !lAsk1 , "EXCLA1" , "INTERRO1" )
         HELPID Nil
         VISIBLE .T.
         STRETCH .T.
         ACTION Nil
     END IMAGE
+
 
 
     DEFINE LABEL Label_1
@@ -870,47 +822,57 @@ Function xDialog( cMsg1 , lAsk1  )
 	xProcinit( lAsk1 )
 
 	
-	//While !IsWindowDefined(  'Win_Dialog')
-	Win_Dialog.Show()
-	//Enddo 		
+	ACTIVATE WINDOW Win_Dialog
 
 
-	//msginfo('ok2')
+//	msginfo(' ok 22 '  )
 
-Return .f.
+
+Return (lRetx)
 
 
 Function xProcinit( lPergunta )
 
-	
-	//InstallEventHandler( "EventDlg" )
-
-	
-	EventProcessAllHookMessage(nIndexDlg22   := EventCreate (  { ||   EventDlg( )} , Win_Dialog.Handle  ) , .t.)
-
+	nIndexDlg22 := Len(_HMG_EventData) + 1	
+	CREATE EVENT PROCNAME EventDlg() HWND Win_Dialog.Handle STOREINDEX nIndexDlg22 
 	
 
 	If (!lPergunta)
 
-		OBTN_Create( 'Win_Dialog', 6652, "Ok", 162, 215,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+		OBTN_Create( 'Win_Dialog', 6652, "&Ok" , 162, 215,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 		OBTN_Font( 'Win_Dialog', 6652,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 
-		EventProcessAllHookMessage( nIndexDlg23 := EventCreate( {|| InputEv2('Win_Dialog' ) },    OBTN_Handle( 'Win_Dialog', 6652 )   ) ,  .T. )
+
+
+		nIndexDlg22 := Len(_HMG_EventData) + 1	
+		
+		CREATE EVENT PROCNAME InputEv2() HWND OBTN_Handle( 'Win_Dialog', 6652 )  STOREINDEX nIndexDlg22 
+		EventProcessAllHookMessage(nIndexDlg22 , .t.)
+
 
 	Else 
 
-		OBTN_Create( 'Win_Dialog', 6653, "Sim", 162, 292,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-		OBTN_Create( 'Win_Dialog', 6654, hb_ANSIToOEM( "Não" ), 162, 355 ,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+		OBTN_Create( 'Win_Dialog', 6653, "&Sim", 162, 292,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+		OBTN_Create( 'Win_Dialog', 6654, hb_ANSIToOEM( "&Não" ), 162, 355 ,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 
 		OBTN_Font( 'Win_Dialog', 6653,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 		OBTN_Font( 'Win_Dialog', 6654,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 
-		EventProcessAllHookMessage( nIndexDlg23   := EventCreate( {|| InputEv2('Win_Dialog' ) },    OBTN_Handle( 'Win_Dialog', 6653 )   ), .T. )
-		EventProcessAllHookMessage( nIndexDlg24   := EventCreate( {|| InputEv2('Win_Dialog' ) },    OBTN_Handle( 'Win_Dialog', 6654 )   ), .T. )
+		nIndexDlg22 := Len(_HMG_EventData) + 1	
+		//EventProcessAllHookMessage(nIndexDlg22   := EventCreate (  { ||   InputEv2( )} , OBTN_Handle( 'Win_Dialog', 6653 ) ) , .t.)
+	    CREATE EVENT PROCNAME InputEv2() HWND OBTN_Handle( 'Win_Dialog', 6653 )  STOREINDEX nIndexDlg22 
+
+		EventProcessAllHookMessage(nIndexDlg22 , .t.)
 
 
-	End If 	
-	
+		nIndexDlg22 := Len(_HMG_EventData) + 1	
+		//EventProcessAllHookMessage(nIndexDlg22   := EventCreate (  { ||   InputEv2( )} , OBTN_Handle( 'Win_Dialog', 6654 ) ) , .t.)
+		CREATE EVENT PROCNAME InputEv2() HWND OBTN_Handle( 'Win_Dialog', 6654 )  STOREINDEX nIndexDlg22 
+		EventProcessAllHookMessage(nIndexDlg22 , .t.)
+
+
+
+	End If 		
 
 
 	
@@ -920,4 +882,79 @@ Function xProcinit( lPergunta )
 
 
 Return 
+
+
+Function xFindEvent(  cEvent , nHandle1 )
+  Local nIndex1 := Ascan( _HMG_EventData  , { |a|  Iif( ( ValType(a[2]) == "N") .And. (a[2] > 0) , ;
+   ((a[1] ==  cEvent ) .And. (a[2] ==  nHandle1 )) , Nil )   })
+
+Return (nIndex1)
+
+Function xFechaDlg()
+
+	
+	Local nHandle1  := DoFindWin("xDialog1")
+
+
+	Local nIndex1 := xFindEvent(  'EventDlg()' ,  Win_Dialog.Handle) 
+	Local nIndex2 := xFindEvent(  'InputEv2()' ,  OBTN_Handle( 'Win_Dialog', 6653 )   ) 
+	Local nIndex3 := xFindEvent(  'InputEv2()' ,  OBTN_Handle( 'Win_Dialog', 6654 )   ) 
+
+	Local nIndex4 := xFindEvent(  'InputEv2()' ,  OBTN_Handle( 'Win_Dialog', 6652 )   ) 
+
+	
+	
+	If (nIndex1 > 0)
+		xDelEvent(   nIndex1 )
+	End If 	
+
+	If nIndex2 > 0
+	   xDelEvent(   nIndex2 )
+	End If 	 
+
+	If nIndex3 > 0
+		xDelEvent(   nIndex3 )
+	End If 	
+
+	
+	If nIndex4 > 0
+		xDelEvent(   nIndex4 )
+	End If 	
+
+
+
+	If nHandle1 > 0
+
+		
+		//AnimateWindow(nHandle1, (1*21500), (AW_BLEND + AW_HIDE))
+
+		nSeconds := 1
+		/*
+   		AnimateWindow(nHandle1, (nSeconds*300), AW_VER_NEGATIVE)
+   		hb_IdleSleep(nSeconds)
+   		AnimateWindow(nHandle1, (nSeconds*1500), (AW_BLEND + AW_HIDE))
+		   */
+
+
+
+		SendMessage( nHandle1, WM_SYSCOMMAND, SC_CLOSE , 0 )
+
+	//	Do Events
+	//	Do Events
+
+
+		SendMessage( nHandle1, WM_SYSCOMMAND, WM_DESTROY , 0 )
+
+	//	Do Events
+
+		//SysWait(.2)
+
+	//	Win_Dialog.Release()
+
+	End If 
+
+
+
+Return 
+
 

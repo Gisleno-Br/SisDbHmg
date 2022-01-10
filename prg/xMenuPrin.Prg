@@ -992,6 +992,7 @@ Function ScrollMenu( nDirecao , hWnd1 , nScr1 , nPonteiro , nTotal , lHtp , lHtb
 
 
 
+
 	If (lOk)
 		_HMG_PRINTER_SETVSCROLLVALUE(   hWnd1  , nScr1 )
 	End If
@@ -1222,6 +1223,15 @@ Function xTeclasMenu()
 
 		If (nWParam == VK_ESCAPE)
 
+
+			If !lModeTecla 
+				If ExitApp()
+					RELEASE WINDOW All
+					Quit 
+					REturn 
+				End If 				
+			End If 
+
 			lModeTecla := .f.
 
 			nMainSel   := 0
@@ -1339,7 +1349,7 @@ Function xTeclasMenu()
 				SendMessage( GetProperty(   'Win_MenuPrincipal' , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
 				SysWait(.1)
 
-				//msginfo('ok333k')
+				
 			Else
 
 				nMainSel := 0

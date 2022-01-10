@@ -73,6 +73,7 @@ Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
 
 	aOpz11 := Aclone(aOp1)
 
+
 	nItemx2 := 1
 
 	nItemZ1 := 1
@@ -89,18 +90,23 @@ Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
 	End If 
 
 
-	DEFINE WINDOW Win_Menu1 AT nTop, nLeft WIDTH nColTamMenu HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight ,  300    ) TITLE 'Men1' ;
-		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR aCorSub1 VIRTUAL HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight+1 ,  (Len(aOp1) * nItemSubHeight)  ) ;
+
+
+	DEFINE WINDOW Win_Menu1 AT nTop, nLeft+3 WIDTH nColTamMenu HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight ,  300 + 4    ) TITLE 'Men1' ;
+		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR aCorSub1 VIRTUAL HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight+1 ,  (Len(aOp1) * nItemSubHeight)+10  ) ;
 		ON PAINT xPaintMenu( ThisWindow.Name , aOpz11 , nItemx2 , nItemZ1 , cOpy2 , 0 , 0 ,  .f. ,  .t. ,  ,  , .t. )
 	END WINDOW
 
 
+
+
 	If  (Len(aOpz11) > XMAXITEM)
-		DEFINE WINDOW Win_Scroll1 AT nTop+GetProperty('Win_Menu1' , 'Height')   , nLeft WIDTH nColTamMenu HEIGHT 32 TITLE 'T1' ;
+		DEFINE WINDOW Win_Scroll1 AT nTop+GetProperty('Win_Menu1' , 'Height')+1   , nLeft+3 WIDTH nColTamMenu HEIGHT 32 TITLE 'T1' ;
 			NOMAXIMIZE NOMINIMIZE NOSIZE CHILD NOSYSMENU NOCAPTION BACKCOLOR GRAY ;
 			ON PAINT xPaintScrool( ThisWindow.Name )
 		END WINDOW
 	End If
+
 
 
 	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventMenu1"  ) )  ) = 0
@@ -117,7 +123,12 @@ Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
 	
 
 
-	HMG_ChangeWindowStyle( Win_Menu1.Handle    , WS_EX_DLGMODALFRAME, , NIL, .F., .T.)
+
+	//HMG_ChangeWindowStyle( Win_Menu1.Handle    , WS_EX_DLGMODALFRAME, , NIL, .F., .T.)
+
+	
+	HMG_ChangeWindowStyle( Win_Menu1.Handle  , WS_EX_DLGMODALFRAME, NIL, .T., .T. )
+	HMG_ChangeWindowStyle( Win_Menu1.Handle , WS_EX_STATICEDGE, NIL, .T., .T. )
 
 
 	ShowScrollBar( GetFormHandle( 'Win_Menu1' ), 0, .F. )
@@ -130,8 +141,15 @@ Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
 
 	If  (Len(aOpz11) > XMAXITEM) .And. (_isWindowDefined(  'Win_Scroll1'   ))
 
-		HMG_ChangeWindowStyle( Win_Scroll1.Handle    , WS_BORDER, NIL, .F., .T.)
+		//HMG_ChangeWindowStyle( Win_Scroll1.Handle    , WS_BORDER, NIL, .F., .T.)
 		HMG_ChangeWindowStyle( Win_Scroll1.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
+
+		
+
+	
+		//HMG_ChangeWindowStyle( Win_Scroll1.Handle , WS_EX_DLGMODALFRAME, NIL, .T., .T. )
+		//HMG_ChangeWindowStyle( Win_Scroll1.Handle, WS_EX_STATICEDGE, NIL, .T., .T. )
+
 
 
 		_ShowWindow( 'Win_Scroll1' )
@@ -212,16 +230,16 @@ Function xDelEvent(   nIndex )
 	Local lOk  := .f. 
 	Local nTam := Len( _HMG_EventData   )
 
-	If nIndex <= Len(   _HMG_EventData )
-		//_HMG_EventData[ nIndex ] := Nil 
+	If nIndex <= Len(   _HMG_EventData )		
 		Adel(   _HMG_EventData , nIndex  )
 		Asize(  _HMG_EventData , nTam - 1  )
 		lOk := .t. 
-	End If 	
-		
+	End If 		
 
 
 Return lOk 
+
+
 
 
 Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
@@ -293,12 +311,15 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 			End If
 
 
+
 			If (nLinha1 == 0)
 				nLinha1 := XMAXITEM
 			End If
 
+
+
 			If lCima
-				ScrollMenu( 1 , GetProperty(  'Win_Menu1' , "HANDLE" ) , @nAcumulador , @nLinha1 ,   Len(aOpz11)  , @lHttp , @lHttb , 1 , 'Win_Menu1' , 300 , .f.  )
+				ScrollMenu( 1 , GetProperty(  'Win_Menu1' , "HANDLE" ) , @nAcumulado , @nLinha1 ,   Len(aOpz11)  , @lHttp , @lHttb , 1 , 'Win_Menu1' , 300 , .f.  )
 			Else
 				ScrollMenu( 2 , GetProperty(  'Win_Menu1' , "HANDLE" ) , @nAcumulador , @nLinha1 ,   Len(aOpz11)  , @lHttp , @lHttb , 1 , 'Win_Menu1' , 300 , .f. )
 			End if
@@ -527,12 +548,6 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 
 
 	If nMsg == WM_KEYDOWN
-
-/*
-		If (nWParam == VK_ESCAPE)
-			xFechaMen()
-		End If
-		*/
 
 
 
