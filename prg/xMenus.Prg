@@ -141,8 +141,9 @@ Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
 
 	If  (Len(aOpz11) > XMAXITEM) .And. (_isWindowDefined(  'Win_Scroll1'   ))
 
-		//HMG_ChangeWindowStyle( Win_Scroll1.Handle    , WS_BORDER, NIL, .F., .T.)
-		HMG_ChangeWindowStyle( Win_Scroll1.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
+		HMG_ChangeWindowStyle( Win_Scroll1.Handle    , WS_BORDER, NIL, .F., .T.)
+		
+		//HMG_ChangeWindowStyle( Win_Scroll1.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
 
 		
 
