@@ -108,11 +108,20 @@ Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
 			ON PAINT xSombra( ThisWindow.Name , nTop + 5 , nLeft+5  )
 		END WINDOW
 	Else 
-
+                                                                                                                //+3
+																														/*
 		DEFINE WINDOW WinSombra1 AT nTop + 6 , nLeft+5 WIDTH nColTamMenu + 3 HEIGHT (Len(aOp1) * nItemSubHeight)+4 TITLE 'Sombra1' ;
 			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil ; 
-			ON PAINT xSombra( ThisWindow.Name , nTop + 5 , nLeft+5  )
+			ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+5  )
 		END WINDOW
+		*/
+
+		DEFINE WINDOW WinSombra1 AT nTop + 12 , nLeft+15 WIDTH nColTamMenu - 7 HEIGHT (Len(aOp1) * nItemSubHeight) - 2 TITLE 'Sombra1' ;
+			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil ; 
+			ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+5  )
+		END WINDOW
+	
+
 	
 	End If 	
 
@@ -181,17 +190,6 @@ Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
 
 	If  (Len(aOpz11) > XMAXITEM) .And. (_isWindowDefined(  'Win_Scroll1'   ))
 
-	//	HMG_ChangeWindowStyle( Win_Scroll1.Handle    , WS_BORDER, NIL, .F., .T.)
-		
-		//HMG_ChangeWindowStyle( Win_Scroll1.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
-
-		
-
-	
-		//HMG_ChangeWindowStyle( Win_Scroll1.Handle , WS_EX_DLGMODALFRAME, NIL, .T., .T. )
-		//HMG_ChangeWindowStyle( Win_Scroll1.Handle, WS_EX_STATICEDGE, NIL, .T., .T. )
-
-
 
 
 		_ShowWindow( 'Win_Scroll1' )
@@ -215,6 +213,7 @@ Function xSombra(  cJanela , nRow1  , nCol1  )
 	Local BTstruct
 
 	Local zBitMap 
+	Local zBitMap2 
 	
 
 	Local hDC := BT_CreateDC ( cJanela  , BT_HDC_INVALIDCLIENTAREA , @BTstruct)
@@ -225,42 +224,43 @@ Function xSombra(  cJanela , nRow1  , nCol1  )
 	zBitMap := BT_BitmapCaptureDesktop ( nRow1 , nCol1 , Width, Height)
 
 
-	//153
-	BT_DrawGradientFillHorizontal  (hDC,  0  , 0 ,  Width ,  Height , {89,89,89} , {89,89,89})
-
-
-	//BT_DrawGradientFillHorizontal  (hDC,  0  , 0 ,  Width ,  Height , BLACK ,  BLACK)
+	zBitMap2 := BT_BitmapCaptureDesktop ( nRow1+Width + 1 , nCol1 + Height + 1 , 5, 5)
 
 	
 
-	//BT_DrawGradientFillVertical (hDC,  0  ,  Height - 2  ,  Width,  Height , BLACK , WHITE)
+	BT_DrawGradientFillHorizontal  (hDC,  0  , 0 ,  Width  - 6,        Height - 5   , {89,89,89} , {89,89,89})
+	BT_DrawGradientFillHorizontal  (hDC,  0  ,      Width - 5  ,  1 ,  Height - 5 , {89,89,89} , {89,89,89} )
 
-	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width - 5  ,  1 ,  Height - 2 , {89,89,89} , {89,89,89})
-
-	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width - 4  ,  1 ,  Height  - 2, {143,143,143} , {143,143,143})
-	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width - 3  ,  1 ,  Height  - 2, {172,172,172} , {172,172,172})
-
-
-	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width  - 2 ,  1 ,  Height - 2 , {212,212,212} , {212,212,212})
-
-
-	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width  - 1 ,  1 ,  Height - 2 , {241,241,241} , {241,241,241})
-
-	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width  - 0 ,  1 ,  Height - 2 ,{252,252,252}  , {252,252,252})
-	//{252,252,252}
+	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width - 4  ,  1 	,  Height - 5 , {143,143,143} , {143,143,143}   ) 
+	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width - 3  ,  1 	,  Height - 5 , {172,172,172} , {172,172,172}  ) 
+	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width  - 2 ,  1 	,  Height - 5  , {212,212,212} , {212,212,212} )
+	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width  - 1 ,  1 	,  Height - 5  , {241,241,241} , {241,241,241}  )
+	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width  - 0 ,  1 	,  Height - 5  ,{252,252,252}  , {252,252,252}  )
+	
 
 
-	BT_DrawGradientFillHorizontal  (hDC,  Height - 4  ,  0  ,  Width - 4 ,  1  , {89,89,89} , {89,89,89})
-	BT_DrawGradientFillHorizontal  (hDC,  Height - 3  ,  0  ,  Width - 4,  1  ,{143,143,143} , {143,143,143} )
 
-	BT_DrawGradientFillHorizontal  (hDC,  Height - 2  ,  0  ,  Width - 4 ,  1  ,{212,212,212} , {212,212,212} )
+ 
 
-	BT_DrawGradientFillHorizontal  (hDC,  Height - 1   ,  0  ,  Width - 4 ,  1  ,{241,241,241} , {241,241,241})
-
-	BT_DrawGradientFillHorizontal  (hDC,  Height      ,  0  ,  Width - 4 ,  1  ,{252,252,252}  , {252,252,252})
+	BT_DrawGradientFillHorizontal  (hDC,  Height - 6  ,  0  ,  Width - 5 ,  1  , {89,89,89} , {89,89,89}  )
 
 
-	//BT_DrawBitmapAlphaBlend (hDC, 0 ,  0 , Width, Height, 100 , BT_COPY  , zBitmap)
+	BT_DrawGradientFillHorizontal  (hDC,  Height - 5  ,  0  ,  Width - 5  ,  1  , {89,89,89} , {89,89,89}   )
+
+
+	BT_DrawGradientFillHorizontal  (hDC,  Height - 4  ,  0  ,  Width - 5 ,  1  ,{143,143,143} , {143,143,143}  )
+	BT_DrawGradientFillHorizontal  (hDC,  Height - 3  ,  0  ,  Width - 5 ,  1  ,{172,172,172} , {172,172,172})
+	BT_DrawGradientFillHorizontal  (hDC,  Height - 2  ,  0  ,  Width - 5 ,  1  ,{212,212,212} , {212,212,212} )
+	BT_DrawGradientFillHorizontal  (hDC,  Height - 1   ,  0  , Width - 5  ,  1  ,{241,241,241} , {241,241,241})
+	BT_DrawGradientFillHorizontal  (hDC,  Height      ,  0  ,  Width - 5 ,  1  ,{252,252,252}  , {252,252,252})
+	
+	BT_DrawBitmapAlphaBlend (hDC, 0 ,  0 , Width, Height, 5 , BT_COPY  , zBitmap)
+
+	
+
+
+	BT_DrawBitmap (hDC, Height - 5  , Width - 5 , 5, 5, BT_COPY, zBitmap2)
+
 
 	BT_DeleteDC ( BTstruct )
 
@@ -275,6 +275,7 @@ Function xFechaMen()
 
 	Local nHandle1  := DoFindWin("Men1")
 	Local nHandle2  := DoFindWin("T1")
+	Local nHandle3  := DoFindWin("Sombra1")
 
 
 	If (nHandle1 > 0)
@@ -299,6 +300,21 @@ Function xFechaMen()
 			Do Events
 
 			SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )
+
+			Do Events
+
+
+		End If
+
+
+		If (nHandle3 > 0)
+
+			SendMessage( nHandle3, WM_SYSCOMMAND, SC_CLOSE , 0 )
+
+			Do Events
+			Do Events
+
+			SendMessage( nHandle3, WM_SYSCOMMAND, WM_DESTROY , 0 )
 
 			Do Events
 
