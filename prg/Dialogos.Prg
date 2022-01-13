@@ -746,6 +746,9 @@ Function xDialog( cMsg1 , lAsk1  )
 
 	//ON PAINT xProcDlg()
 
+	Local nTop  
+	Local nLeft
+
 	Local lRet := .f. 
 
 	Default lAsk1 := .f. 
@@ -762,6 +765,8 @@ Function xDialog( cMsg1 , lAsk1  )
 	
 
 
+
+
 	
 	DEFINE WINDOW Win_Dialog ;
 		AT 0,0 ;
@@ -771,6 +776,12 @@ Function xDialog( cMsg1 , lAsk1  )
 		ON PAINT xProcDlg(  cMsg1 )
 	END WINDOW	
 
+
+	
+
+	//sginfo( Str( GetProperty('Win_Dialog' , 'Row') )    )
+
+	
 
 
     DEFINE IMAGE Image_1
@@ -812,7 +823,22 @@ Function xDialog( cMsg1 , lAsk1  )
     END LABEL
 
 
-	CENTER WINDOW Win_Dialog 
+
+
+	CENTER WINDOW Win_Dialog 	
+
+	nTop  := GetProperTy('Win_Dialog' , 'Row')
+	nLeft := GetProperTy('Win_Dialog' , 'Col')
+
+
+	
+	
+
+	DEFINE WINDOW WinSombra2 AT nTop + 12 , nLeft+15 WIDTH 440 HEIGHT 240 TITLE 'Sombra2' ;
+			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
+			ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+5  )
+	END WINDOW
+	
 
 	
 	HMG_ChangeWindowStyle( Win_Dialog.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
@@ -821,11 +847,14 @@ Function xDialog( cMsg1 , lAsk1  )
 
 	xProcinit( lAsk1 )
 
+	WinSombra2.Show()
+
+	Bt_ClientAreaInvalidateAll('WinSombra2')
 	
 	ACTIVATE WINDOW Win_Dialog
 
 
-//	msginfo(' ok 22 '  )
+
 
 
 Return (lRetx)
@@ -895,6 +924,8 @@ Function xFechaDlg()
 	
 	Local nHandle1  := DoFindWin("xDialog1")
 
+	Local nHandle2  := DoFindWin("Sombra2")
+
 
 	Local nIndex1 := xFindEvent(  'EventDlg()' ,  Win_Dialog.Handle) 
 	Local nIndex2 := xFindEvent(  'InputEv2()' ,  OBTN_Handle( 'Win_Dialog', 6653 )   ) 
@@ -952,6 +983,28 @@ Function xFechaDlg()
 	//	Win_Dialog.Release()
 
 	End If 
+	
+
+
+	
+
+	If nHandle2 > 0
+
+//		msginfo('ok')
+		
+		SendMessage( nHandle2, WM_SYSCOMMAND, SC_CLOSE , 0 )
+
+	//	SysWait(.1)
+		SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )
+
+
+	//	SysWait(.1)
+
+		//msginfo('ok')
+
+
+	End If 
+
 
 
 

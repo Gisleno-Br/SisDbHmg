@@ -50,7 +50,7 @@ Static nIndexEventX := 0
 Static nLinha1 := 0
 
 
-Static l_Popup := .f. 
+Static l_Popup := .f.
 
 Static nScrLin := 0
 
@@ -70,7 +70,7 @@ Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
 	Local lOk     := .f.
 	Local nHeight := (Len(aOp1) * nItemSubHeight)+5
 
-	Default lPopUp := .f. 
+	Default lPopUp := .f.
 
 	l_Popup := lPopUp
 
@@ -86,52 +86,39 @@ Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
 	nAcumulador := 0
 
 
-	If _isWindowDefined( 'Win_Menu1')		
+	If _isWindowDefined( 'Win_Menu1')
 		_ShowWindow("Win_Menu1")
 		SysWait(.1)
-		Return 
-	End If 
+		Return
+	End If
 
 
 
-	//aBmp := xSombra()
-	
-	//BT_BitmapCaptureDesktop (nTop, nLeft+3, nColTamMenu, Iif(  Len(aOpz11) <=  XMAXITEM , nHeight ,  300 + 4    )  )
-
-	//Bt_BitmapSaveFile( aBmp , 'menu1.Bmp')
-
-
-
+	*//Janela Efeito Sombra.
 	If  (Len(aOpz11) > XMAXITEM)
-		DEFINE WINDOW WinSombra1 AT nTop + 5 , nLeft+5 WIDTH nColTamMenu + 3 HEIGHT 334 TITLE 'Sombra1' ;
-			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil ; 
+		DEFINE WINDOW WinSombra1 AT nTop + 12 , nLeft+15 WIDTH nColTamMenu - 7 HEIGHT 330 TITLE 'Sombra1' ;
+			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
 			ON PAINT xSombra( ThisWindow.Name , nTop + 5 , nLeft+5  )
 		END WINDOW
-	Else 
-                                                                                                                //+3
-																														/*
-		DEFINE WINDOW WinSombra1 AT nTop + 6 , nLeft+5 WIDTH nColTamMenu + 3 HEIGHT (Len(aOp1) * nItemSubHeight)+4 TITLE 'Sombra1' ;
-			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil ; 
-			ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+5  )
-		END WINDOW
-		*/
+	Else
+		//+3
 
 		DEFINE WINDOW WinSombra1 AT nTop + 12 , nLeft+15 WIDTH nColTamMenu - 7 HEIGHT (Len(aOp1) * nItemSubHeight) - 2 TITLE 'Sombra1' ;
-			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil ; 
+			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
 			ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+5  )
 		END WINDOW
-	
-
-	
-	End If 	
 
 
-	
+
+	End If
+
+
+
 	BT_ClientAreaInvalidateAll(   'WinSombra1'  )
 
 
 
-		
+
 	DEFINE WINDOW Win_Menu1 AT nTop, nLeft+3 WIDTH nColTamMenu HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight ,  300 + 4    ) TITLE 'Men1' ;
 		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR aCorSub1 VIRTUAL HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight+1 ,  (Len(aOp1) * nItemSubHeight)+10  ) ;
 		ON PAINT xPaintMenu( ThisWindow.Name , aOpz11 , nItemx2 , nItemZ1 , cOpy2 , 0 , 0 ,  .f. ,  .t. ,  ,  , .t. )
@@ -139,9 +126,10 @@ Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
 
 
 
+	*// Janelas com as Setas Navegação para baixo e cima.
 
 	If  (Len(aOpz11) > XMAXITEM)
-		DEFINE WINDOW Win_Scroll1 AT nTop+GetProperty('Win_Menu1' , 'Height')+1   , nLeft+3 WIDTH nColTamMenu - 1 HEIGHT 32 TITLE 'T1' ;
+		DEFINE WINDOW Win_Scroll1 AT nTop+GetProperty('Win_Menu1' , 'Height')   , nLeft+3 WIDTH nColTamMenu  HEIGHT 32 TITLE 'T1' ;
 			NOMAXIMIZE NOMINIMIZE NOSIZE CHILD NOSYSMENU NOCAPTION BACKCOLOR GRAY ;
 			ON PAINT xPaintScrool( ThisWindow.Name )
 		END WINDOW
@@ -160,15 +148,6 @@ Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
 		nIndexEventX := Len(_HMG_EventData)
 
 	End If
-	
-
-
-
-	//HMG_ChangeWindowStyle( Win_Menu1.Handle    , WS_EX_DLGMODALFRAME, , NIL, .F., .T.)
-
-	
-	//HMG_ChangeWindowStyle( Win_Menu1.Handle  , WS_EX_DLGMODALFRAME, NIL, .T., .T. )
-	//HMG_ChangeWindowStyle( Win_Menu1.Handle , WS_EX_STATICEDGE, NIL, .T., .T. )
 
 
 	ShowScrollBar( GetFormHandle( 'Win_Menu1' ), 0, .F. )
@@ -180,7 +159,7 @@ Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
 	//sysWait(.1)
 
 
-	_ShowWindow("Win_Menu1")	
+	_ShowWindow("Win_Menu1")
 
 
 
@@ -190,10 +169,7 @@ Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
 
 	If  (Len(aOpz11) > XMAXITEM) .And. (_isWindowDefined(  'Win_Scroll1'   ))
 
-
-
 		_ShowWindow( 'Win_Scroll1' )
-
 		BT_ClientAreaInvalidateAll(   'Win_Scroll1'  )
 
 
@@ -206,15 +182,15 @@ Return lOk
 
 Function xSombra(  cJanela , nRow1  , nCol1  )
 
-	
+
 	LOCAL Width  := BT_ClientAreaWidth  (cJanela)
 	LOCAL Height := BT_ClientAreaHeight (cJanela)
 
 	Local BTstruct
 
-	Local zBitMap 
-	Local zBitMap2 
-	
+	Local zBitMap
+	Local zBitMap2
+
 
 	Local hDC := BT_CreateDC ( cJanela  , BT_HDC_INVALIDCLIENTAREA , @BTstruct)
 
@@ -224,23 +200,24 @@ Function xSombra(  cJanela , nRow1  , nCol1  )
 	zBitMap := BT_BitmapCaptureDesktop ( nRow1 , nCol1 , Width, Height)
 
 
-	zBitMap2 := BT_BitmapCaptureDesktop ( nRow1+Width + 1 , nCol1 + Height + 1 , 5, 5)
+	zBitMap2 := BT_BitmapLoadFile('SOMBRA5')
 
-	
+
+
 
 	BT_DrawGradientFillHorizontal  (hDC,  0  , 0 ,  Width  - 6,        Height - 5   , {89,89,89} , {89,89,89})
 	BT_DrawGradientFillHorizontal  (hDC,  0  ,      Width - 5  ,  1 ,  Height - 5 , {89,89,89} , {89,89,89} )
 
-	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width - 4  ,  1 	,  Height - 5 , {143,143,143} , {143,143,143}   ) 
-	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width - 3  ,  1 	,  Height - 5 , {172,172,172} , {172,172,172}  ) 
+	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width - 4  ,  1 	,  Height - 5 , {143,143,143} , {143,143,143}   )
+	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width - 3  ,  1 	,  Height - 5 , {172,172,172} , {172,172,172}  )
 	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width  - 2 ,  1 	,  Height - 5  , {212,212,212} , {212,212,212} )
 	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width  - 1 ,  1 	,  Height - 5  , {241,241,241} , {241,241,241}  )
 	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width  - 0 ,  1 	,  Height - 5  ,{252,252,252}  , {252,252,252}  )
-	
 
 
 
- 
+
+
 
 	BT_DrawGradientFillHorizontal  (hDC,  Height - 6  ,  0  ,  Width - 5 ,  1  , {89,89,89} , {89,89,89}  )
 
@@ -253,20 +230,19 @@ Function xSombra(  cJanela , nRow1  , nCol1  )
 	BT_DrawGradientFillHorizontal  (hDC,  Height - 2  ,  0  ,  Width - 5 ,  1  ,{212,212,212} , {212,212,212} )
 	BT_DrawGradientFillHorizontal  (hDC,  Height - 1   ,  0  , Width - 5  ,  1  ,{241,241,241} , {241,241,241})
 	BT_DrawGradientFillHorizontal  (hDC,  Height      ,  0  ,  Width - 5 ,  1  ,{252,252,252}  , {252,252,252})
-	
-	BT_DrawBitmapAlphaBlend (hDC, 0 ,  0 , Width, Height, 5 , BT_COPY  , zBitmap)
 
-	
+	BT_DrawBitmapAlphaBlend (hDC, 0 ,  0 , Width, Height, 5 , BT_COPY  , zBitmap)
 
 
 	BT_DrawBitmap (hDC, Height - 5  , Width - 5 , 5, 5, BT_COPY, zBitmap2)
+
 
 
 	BT_DeleteDC ( BTstruct )
 
 
 
-Return 
+Return
 
 
 Function xFechaMen()
@@ -296,12 +272,12 @@ Function xFechaMen()
 
 			SendMessage( nHandle2, WM_SYSCOMMAND, SC_CLOSE , 0 )
 
-			Do Events
-			Do Events
+		Do Events
+		Do Events
 
-			SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )
+		SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )
 
-			Do Events
+		Do Events
 
 
 		End If
@@ -318,13 +294,12 @@ Function xFechaMen()
 
 			Do Events
 
-
 		End If
 
 
 
 
-   
+
 		If !RemoveHandler( "EventMenu1"  )
 			Msginfo("Erro ao remover Handle Event.")
 		End If
@@ -335,9 +310,9 @@ Function xFechaMen()
 
 
 
-    End If
+	End If
 
-	//DoMethod('Main' , 'SetFocus')
+//DoMethod('Main' , 'SetFocus')
 
 
 Return
@@ -347,17 +322,17 @@ Return
 Function xDelEvent(   nIndex )
 
 	Local nInd := Ascan(  _HMG_EventData , { |a|  a[HMG_LEN(_HMG_EventData[1]) ] == nIndex    })
-	Local lOk  := .f. 
+	Local lOk  := .f.
 	Local nTam := Len( _HMG_EventData   )
 
-	If nIndex <= Len(   _HMG_EventData )		
+	If nIndex <= Len(   _HMG_EventData )
 		Adel(   _HMG_EventData , nIndex  )
 		Asize(  _HMG_EventData , nTam - 1  )
-		lOk := .t. 
-	End If 		
+		lOk := .t.
+	End If
 
 
-Return lOk 
+Return lOk
 
 
 
@@ -467,15 +442,15 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 		End If
 
 
-		
+
 		If (nMsg == VK_LEFT)
 
-			If lPopUp 
+			If lPopUp
 
 				//msginfo('popuip')
-			End If 
+			End If
 
-		End If 
+		End If
 
 
 		If (nMsg == WM_LBUTTONDOWN)
@@ -517,7 +492,7 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 
 			If (nWParam != 90)
 				nItemx2 := xOpSelPos( 'Win_Menu1', 0 , Len(aOpz11) , 0 )
-			End If 	
+			End If
 
 
 			nRow1 := -(GetProperty( 'Win_Menu1' , "VscrollBar" , "Value"))
@@ -534,7 +509,7 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 
 			If (nWParam != 90)
 				SetWindowCursor( nHWnd , CURSORHAND  )
-			End If 	
+			End If
 
 
 			If nItemZ1 > 0
@@ -588,9 +563,9 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 
 			If (nWParam != 90)
 				lTracking192 := TrackMouseEvent(nHWnd)
-			Else 
-				lTracking192 := .f. 
-			End If 	
+			Else
+				lTracking192 := .f.
+			End If
 
 
 		End If
@@ -612,6 +587,10 @@ Function xPaintScrool( cForm )
 
 
 	hDC2 = BT_CreateDC ( cForm  , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
+
+
+	
+	BT_DrawGradientFillHorizontal  (hDC2,  0  , 0 ,  nColTamMenu , 32   , {89,89,89} , {89,89,89})
 
 
 	If !lHttb
@@ -651,20 +630,20 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 	Local nQt        := 0
 	Local nRow       := 0
 	Local nindice
-	Local nMsg 
+	Local nMsg
 	Local nWParam
 
 	Local nMaxItem := Int(nTamSubMenuConsulta / nItemSubHeight)
 
 
-	DEFAULT nMsg1    := EventMSG()	
+	DEFAULT nMsg1    := EventMSG()
 	DEFAULT nWParam1 := EventWPARAM()
 
 	DEFAULT cJanela := 'Win_Menu1'
 
-	
+
 	nWParam := nwParam1
-	nMsg    := nMsg1 
+	nMsg    := nMsg1
 
 
 	If nMsg == WM_KEYDOWN
@@ -682,7 +661,7 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 
 
 		IF nWParam == VK_DOWN
-		
+
 			xHideHint()
 			If nItemx2 < Len(aOpz11)
 
@@ -696,17 +675,17 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 						nLinhaAtual := Int(nTamSubMenuConsulta / nItemSubHeight)
 					End If
 
-					
+
 					ScrollMenu( 2 , GetProperty( cJanela , 'Handle' ) , @nScrLin , @nLinhaAtual , Len(aOpz11) , @lHttp , @lHttb , 1 , ;
-					'Win_Menu1' , GetProperty( cJanela , 'Height' )  )
+						'Win_Menu1' , GetProperty( cJanela , 'Height' )  )
 
 
 					BT_ClientAreaInvalidateAll( 'Win_Scroll1' )
 
-				Else 					
+				Else
 					SendMessage( GetProperty(   cJanela , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
 
-				End If 
+				End If
 
 
 
@@ -728,23 +707,23 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 
 				nItemx2--
 				lTracking192 := .f.
-				
 
-				If nItemX2 >= nMaxItem 
 
-				   	ScrollMenu( 1 , GetProperty( cJanela , 'Handle' ) , @nScrLin , @nLinhaAtual , Len(aOpz11) , @lHttp , @lHttb , 1 , ;
-					cJanela , GetProperty(cJanela , 'Height' )  )
+				If nItemX2 >= nMaxItem
+
+					ScrollMenu( 1 , GetProperty( cJanela , 'Handle' ) , @nScrLin , @nLinhaAtual , Len(aOpz11) , @lHttp , @lHttb , 1 , ;
+						cJanela , GetProperty(cJanela , 'Height' )  )
 
 
 					If _IsWindowDefined('Win_Scroll1')
 						BT_ClientAreaInvalidateAll( 'Win_Scroll1' )
-					End If 	
+					End If
 
-				Else 	
+				Else
 
 					SendMessage( GetProperty(   cJanela , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
 
-				End If 	
+				End If
 
 				//SysWait(.1)
 

@@ -11,7 +11,7 @@
     SETATRANSP  PNG     img\0001.Png 
     EXCLA1      PNG     img\Exclamation3.Png
     INTERRO1    PNG     img\Interrogacao.Png
-    
+    SOMBRA5     BITMAP  img\Sombra5.bmp
 
     
                         

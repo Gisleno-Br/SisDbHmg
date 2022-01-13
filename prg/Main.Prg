@@ -2537,6 +2537,8 @@ Function xTesMenu( nRow , nCol )
 
 
 
+
+
   Aadd(aZop1 , { "1-Impressão" , "Imp.Doc" , .t. , { || msginfo('k2' )   }    }    )
   Aadd(aZop1 , { "2-Visualizar Imp." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .t.    }   )
   Aadd(aZop1 , { "3-Novo Arquivo   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
@@ -2556,15 +2558,14 @@ Function xTesMenu( nRow , nCol )
   Aadd(aZop1 , { "  Novo Arquivo12   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 
   Aadd(aZop1 , { "  Novo Arquivo13   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-  /*
+  
   Aadd(aZop1 , { "  Novo Arquivo14   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
   Aadd(aZop1 , { "  Novo Arquivo15   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 
   Aadd(aZop1 , { "  Novo Arquivo16   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
   Aadd(aZop1 , { "  Novo Arquivo17   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
   Aadd(aZop1 , { "  Novo Arquivo18   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-  */
-
+    
 
   xMenuOp(aZop1 , nRow , nCol , .t.  ) 
 
@@ -2576,7 +2577,7 @@ Function ExitApp()
 
 	Local lOk := .f. 
 
-    yEfect(  'Main' , .t.   )
+   // yEfect(  'Main' , .t.   )
 
 	lOk := xDialog(  'Confirma Saida do Aplicativo?'   )
 
@@ -2585,7 +2586,7 @@ Function ExitApp()
 	End If 	   
 
 
-   EfectEnd( 'Main' , {} )
+ //  EfectEnd( 'Main' , {} )
 
 
 REturn lOk
