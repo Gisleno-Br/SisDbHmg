@@ -515,16 +515,23 @@ FUNCTION InputEv2()
 
 			lTracking45 := TrackMouseEvent( nHWnd ) // TME_LEAVE is default flag
 
+
+		//	OBTN_Focus( cFormx, nIdBut, .T. )
+
 			OBTN_Color( cFormx, nIdBut, RetColor1( 2 ), .T. )
 
 			OBTN_Enable( cFormx, nIdBut, .T. )
 			OBTN_Visible( cFormx, nIdBut, .T. )
+
 
 		End If
 
 
 
 		If ( nMsg == WM_MOUSELEAVE )
+
+			
+		//	OBTN_Focus( cFormx, nIdBut, .f. )
 
 			OBTN_Color( cFormx,  nIdBut, RetColor1( 1 ), .T. )
 			OBTN_Enable( cFormx, nIdBut, .T. )
@@ -572,8 +579,16 @@ FUNCTION RetColor1( nInd1, nModel )
 	LOCAL nTxColorE  := Rgb( 79, 79, 79 )
 	LOCAL nFrColorE  := Rgb( 207, 207, 207 )
 
+//	LOCAL nTxColorE  := WHITE 
+	//LOCAL nFrColorE  := RED
+
+
 	LOCAL nBkColorE1 := Rgb( 251, 251, 251 )
 	LOCAL nBkColorE2 := Rgb( 230, 230, 230 )
+
+	
+
+
 
 	LOCAL nGradDirE  := 0
 	LOCAL nTxColorD  := 0x808080
@@ -584,7 +599,9 @@ FUNCTION RetColor1( nInd1, nModel )
 	
 
 	LOCAL nBkColorD1 := 0XE0E0E0
+
 	LOCAL nBkColorD2 := 0XE0E0E0
+
 	LOCAL nGradDirD  := 0
 	LOCAL nTxColorF  := Rgb( 45, 55, 56 )
 	LOCAL nFrColorF  := nFrColorE
@@ -592,6 +609,11 @@ FUNCTION RetColor1( nInd1, nModel )
 
 	LOCAL nBkColorF1 :=  0xFFFFFF
 	LOCAL nBkColorF2 :=  Rgb( 192, 192, 192 )
+
+	//LOCAL nBkColorF1 :=  RED
+	//LOCAL nBkColorF2 :=  WHITE
+
+
 
 	LOCAL nGradDirF  := 0
 	LOCAL cFontName  := 'Arial'
@@ -603,7 +625,9 @@ FUNCTION RetColor1( nInd1, nModel )
 		{ { nTxColorE, nFrColorE, nBkColorE1, nBkColorE2, nGradDirE }, { nTxColorD, nFrColorD, nBkColorD1, nBkColorD2, nGradDirD }, { nTxColorF, nFrColorF, nBkColorF1, nBkColorF2,         nGradDirF } }
 
 	LOCAL aBtnSel := ;
-		{ { nTxColorF, nFrColorF, nBkColorF1, nBkColorF2, nGradDirF }, { nTxColorD, nFrColorD, nBkColorD1, nBkColorD2, nGradDirD }, { nTxColorF, nFrColorF, nBkColorF1, nBkColorF2,       nGradDirF } }
+	{ { nTxColorF, nFrColorF, nBkColorF1, nBkColorF2, nGradDirF }, { nTxColorD, nFrColorD, nBkColorD1, nBkColorD2, nGradDirD }, { nTxColorF, nFrColorF, nBkColorF1, nBkColorF2,       nGradDirF } }
+
+
 
 	DEFAULT nModel := 1
 
@@ -673,7 +697,7 @@ FUNCTION xIniProgress( nTp )
 
 
 
-			OBTN_Create( cJanxDialog, 6652, "Ok", 185, 245,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+			OBTN_Create( cJanxDialog, 6652,  Chr(31), 185, 245,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 			OBTN_Font( cJanxDialog, 6652,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 
 			EventProcessAllHookMessage( EventCreate( {|| InputEv2(cJanx ) },    OBTN_Handle( cJanx, 6652 )   ), .T. )
@@ -868,8 +892,9 @@ Function xProcinit( lPergunta )
 
 	If (!lPergunta)
 
-		OBTN_Create( 'Win_Dialog', 6652, "&Ok" , 162, 215,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+		OBTN_Create( 'Win_Dialog', 6652,  '&Ok'   , 160, 166 ,  75 ,  30,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont , 'img\closex.bmp'  , 6 )
 		OBTN_Font( 'Win_Dialog', 6652,  { cFontName, nFontSize, .F., .F., .F., .F. } )
+
 
 
 

@@ -118,6 +118,7 @@ FUNCTION Main
 	Private  lTracking42 := .f.
 	Private  lTracking142 := .f.
 
+	
 	PRIVATE nFontSize  := 8
 	
 
@@ -578,26 +579,11 @@ FUNCTION Main
  
 	Private aButTop := {}
 
-	//Public nIndexEventY := EventCreate (  { ||   xMainHandle( )   }  )
-
-
-
-	//BT_ClientAreaInvalidateAll('fSplit6')
-
-//SysWait(.1)
-
-
-
-	//_HMG_PRINTER_SETVSCROLLVALUE(   GetFormHandle('fSplit6')  , 0 )
-
-
 
 	
 
-	xMenuMain( 70 , 1  , aOpcoes , aItens )
+	xMenuMain( 70 , 1  , aOpcoes , aItens )	
 
-
-	//xTesMenu(200,200) 
 
 
 	

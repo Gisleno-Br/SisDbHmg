@@ -77,47 +77,45 @@ Function xMenuMain( nRow1 , nCol1 , aOpPrin , aSubOps )
 
 
 
-
-
-DEFINE WINDOW JanMenuSub AT 200, 200 WIDTH nColTamMenu HEIGHT 500 TITLE 'Tsub' ;
-	NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT Win_MenuPrincipal BACKCOLOR aCorSub1 VIRTUAL HEIGHT 15000 ;
-	ON PAINT xPaintMenu( ThisWindow.Name , aOpx1 , nItemx1 , nItemClr , cOpSely , 0 , 0 , .f. , .t.  )
-END WINDOW
-
-
-
-HideWindow(   GetFormHandle('JanMenuSub')     )
-
-///xPaintMenu( ThisWindow.Name , aOpx1 , nItemx1 , nItemClr , cOpSely , 0 , 0 , .f. , .t.  )
-
-
-If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventPrin1"  ) )  ) = 0
-	InstallEventHandler( "EventPrin1" )
-	nIndexEventY := EventCreate (  { ||   xTeclasMenu( )   }  )
-End If
-
-HMG_ChangeWindowStyle( Win_MenuPrincipal.Handle    , WS_EX_DLGMODALFRAME,, NIL, .T., .T.)
-HMG_ChangeWindowStyle( Win_MenuPrincipal.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
-
-HMG_ChangeWindowStyle( Win_MenuPrincipal.Handle  ,WS_EX_TOOLWINDOW  , NIL, .t., .t.)
-
-
-//    nHandle1 := Win_Menu1.Handle
+	DEFINE WINDOW JanMenuSub AT 200, 200 WIDTH nColTamMenu HEIGHT 500 TITLE 'Tsub' ;
+		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT Win_MenuPrincipal BACKCOLOR aCorSub1 VIRTUAL HEIGHT 15000 ;
+		ON PAINT xPaintMenu( ThisWindow.Name , aOpx1 , nItemx1 , nItemClr , cOpSely , 0 , 0 , .f. , .t.  )
+	END WINDOW
 
 
 
-HMG_ChangeWindowStyle( JanMenuSub.Handle    , WS_EX_DLGMODALFRAME,, NIL, .T., .T.)
-//HMG_ChangeWindowStyle( JanMenuSub.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
+	HideWindow(   GetFormHandle('JanMenuSub')     )
+
+	///xPaintMenu( ThisWindow.Name , aOpx1 , nItemx1 , nItemClr , cOpSely , 0 , 0 , .f. , .t.  )
 
 
-ShowScrollBar( GetFormHandle( 'Win_MenuPrincipal' ), 0, .F. )
-ShowScrollBar( GetFormHandle( 'Win_MenuPrincipal' ), 1, .F. )
+	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventPrin1"  ) )  ) = 0
+		InstallEventHandler( "EventPrin1" )
+		nIndexEventY := EventCreate (  { ||   xTeclasMenu( )   }  )
+	End If
+
+	HMG_ChangeWindowStyle( Win_MenuPrincipal.Handle    , WS_EX_DLGMODALFRAME,, NIL, .T., .T.)
+	HMG_ChangeWindowStyle( Win_MenuPrincipal.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
+
+	HMG_ChangeWindowStyle( Win_MenuPrincipal.Handle  ,WS_EX_TOOLWINDOW  , NIL, .t., .t.)
 
 
-_ShowWindow("Win_MenuPrincipal")
+	//    nHandle1 := Win_Menu1.Handle
 
 
-BT_ClientAreaInvalidateAll(   'Win_MenuPrincipal'  )
+
+	HMG_ChangeWindowStyle( JanMenuSub.Handle    , WS_EX_DLGMODALFRAME,, NIL, .T., .T.)
+	//HMG_ChangeWindowStyle( JanMenuSub.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
+
+
+	ShowScrollBar( GetFormHandle( 'Win_MenuPrincipal' ), 0, .F. )
+	ShowScrollBar( GetFormHandle( 'Win_MenuPrincipal' ), 1, .F. )
+
+
+	_ShowWindow("Win_MenuPrincipal")
+
+
+	BT_ClientAreaInvalidateAll(   'Win_MenuPrincipal'  )
 
 
 
