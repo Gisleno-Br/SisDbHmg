@@ -3055,6 +3055,7 @@ RETURN ( cTabela )
 
 
 
+
 Function DoFindWin(cTitle)
 LOCAL nWin := HMG_CallDLL( "User32.dll", DLL_OSAPI, "FindWindow", 0, cTitle)
 /*
