@@ -118,7 +118,9 @@ FUNCTION Main
 	Private  lTracking42 := .f.
 	Private  lTracking142 := .f.
 
-	PRIVATE nFontSize  := 9
+	
+	PRIVATE nFontSize  := 8
+	
 
 	SET SCROLLSTEP TO 10
 
@@ -577,26 +579,11 @@ FUNCTION Main
  
 	Private aButTop := {}
 
-	//Public nIndexEventY := EventCreate (  { ||   xMainHandle( )   }  )
-
-
-
-	//BT_ClientAreaInvalidateAll('fSplit6')
-
-//SysWait(.1)
-
-
-
-	//_HMG_PRINTER_SETVSCROLLVALUE(   GetFormHandle('fSplit6')  , 0 )
-
-
 
 	
 
-	xMenuMain( 70 , 1  , aOpcoes , aItens )
+	xMenuMain( 70 , 1  , aOpcoes , aItens )	
 
-
-	//xTesMenu(200,200) 
 
 
 	
@@ -2533,6 +2520,11 @@ Function xTesMenu( nRow , nCol )
   
 
 
+
+
+
+
+
   Aadd(aZop1 , { "1-Impressão" , "Imp.Doc" , .t. , { || msginfo('k2' )   }    }    )
   Aadd(aZop1 , { "2-Visualizar Imp." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .t.    }   )
   Aadd(aZop1 , { "3-Novo Arquivo   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
@@ -2552,13 +2544,14 @@ Function xTesMenu( nRow , nCol )
   Aadd(aZop1 , { "  Novo Arquivo12   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 
   Aadd(aZop1 , { "  Novo Arquivo13   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+  
   Aadd(aZop1 , { "  Novo Arquivo14   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
   Aadd(aZop1 , { "  Novo Arquivo15   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 
   Aadd(aZop1 , { "  Novo Arquivo16   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
   Aadd(aZop1 , { "  Novo Arquivo17   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
   Aadd(aZop1 , { "  Novo Arquivo18   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-
+    
 
   xMenuOp(aZop1 , nRow , nCol , .t.  ) 
 
@@ -2570,19 +2563,16 @@ Function ExitApp()
 
 	Local lOk := .f. 
 
-    yEfect(  'Main' , .t.   )
+   // yEfect(  'Main' , .t.   )
+
+	lOk := xDialog(  'Confirma Saida do Aplicativo?'   )
+
+	If lok
+   		//MsgInfo('ok')
+	End If 	   
 
 
-
-	lOk := xDialog(  'Confirma Saida do Aplicativo?'  , .t. )
-
-   //MsgInfo('ok')
-
-   //lOk := ConfirmAviso('Confirma Saida do Aplicativo?' , , .f. )
-   
-   //lOk := .t. 
-
-  // EfectEnd( 'Main' , {} )
+ //  EfectEnd( 'Main' , {} )
 
 
 REturn lOk

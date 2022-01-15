@@ -13,7 +13,7 @@ if ( hb_parl (12) )
 
 
 
-#define WM_VSCROLL          0x0115
+#define WM_VSCROLL          0x0115img
 #define SB_LINEDOWN         1
 #define WM_MOUSEMOVE        512
 
@@ -263,6 +263,9 @@ FUNCTION CadCli()
 
 	Private lOkCad := .f.
 
+	
+
+
 	Private nColSel := 0
 
 	Private nIndexEve1 := 0
@@ -464,13 +467,6 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 
 	PRIVATE aBtnSel := ;
 		{ { nTxColorF, nFrColorF, nBkColorF1, nBkColorF2, nGradDirF }, { nTxColorD, nFrColorD, nBkColorD1, nBkColorD2, nGradDirD }, { nTxColorF, nFrColorF, nBkColorF1, nBkColorF2, 						nGradDirF } }
-
-	PRIVATE aBtnG1 := ;
-		{ { Rgb(255,255,255) , Rgb( 178 , 178 , 178 ) , Rgb( 58 , 174 , 203 ) , Rgb( 58 , 174 , 203 ), nGradDirE }, { Rgb( 178 , 178 , 178 ) , nFrColorD, Rgb( 178 , 178 , 178 ), nBkColorD2, nGradDirD }, { RGB(255,255,255) , nFrColorF, Rgb( 54 , 100 , 109 )  , Rgb( 54 , 100 , 109 )  , 		 					nGradDirF } }
-
-	PRIVATE aBtnG2 := ;
-		{ { Rgb(255,255,255) , {54,100,109} , Rgb( 44 , 169 , 139 ) , Rgb( 20 , 158 , 192 ), nGradDirE }, { {255,255,255}  , nFrColorD, nBkColorD1, nBkColorD2, nGradDirD }, { RGB(255,255,255) , Rgb( 54 , 100 , 109 ) , Rgb( 54 , 100 , 109 ) ,  Rgb( 54 , 100 , 109 )  , 		 					nGradDirF } }
-
 
 
 	//PRIVATE aButtons := Aclone( aOpcoes )
@@ -5568,8 +5564,8 @@ REturn
 
 	INT i;
 
-	hBitMap2 = HMG_LoadPicture ( FileUp, -1, -1, NULL, 0, Transparent, -1, 0, -1 );
-		hBitMap3 = HMG_LoadPicture ( FileDown, -1, -1, NULL, 0, Transparent, -1, 0, -1 );
+		hBitMap2 = HMG_LoadPicture ( FileUp, -1, -1, NULL, 0, Transparent, -1 , 0, -1 );
+		hBitMap3 = HMG_LoadPicture ( FileDown, -1, -1, NULL, 0, Transparent, -1 , 0, -1 );
 
 	INT Col1 = 3;
 		INT Col2 = 0;
@@ -5684,8 +5680,7 @@ REturn
 						}
 
 
-
-						void DrawBitmapX( HDC hDC, HBITMAP hBitmap, WORD wRow, WORD wCol, WORD wWidth, WORD wHeight, DWORD dwRaster )
+							void DrawBitmapX( HDC hDC, HBITMAP hBitmap, WORD wRow, WORD wCol, WORD wWidth, WORD wHeight, DWORD dwRaster )
 						{
 						HDC      hDCmem = CreateCompatibleDC( hDC );
 							BITMAP   bitmap;
@@ -5699,11 +5694,14 @@ REturn
 								}
 						else
 							{
-							BitBlt( hDC, wCol, wRow, bitmap.bmWidth, bitmap.bmHeight, hDCmem, 0, 0, dwRaster );
+								BitBlt( hDC, wCol, wRow, bitmap.bmWidth, bitmap.bmHeight, hDCmem, 0, 0, dwRaster );								
 								}
 
 							DeleteDC( hDCmem );
 								}
+
+
+
 
 
 

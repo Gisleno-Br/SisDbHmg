@@ -72,16 +72,26 @@ aColor structure: {aColorEnabledButton, aColorDisabledButton, aColorFocusedButto
     nBackColor1 and nBackColor2 are used to draw the background in gradient colors.
 */
 
+STATIC cArqImg := ''
+STATIC nColx   := 0
+
+
 #include "hmg.ch"
 
-FUNCTION OBTN_Create( cForm, nID, cCaption, nRow, nCol, nWidth, nHeight, lEnabled, lVisible, lTabStop, nShape, aColor, aFont )
+FUNCTION OBTN_Create( cForm, nID, cCaption, nRow, nCol, nWidth, nHeight, lEnabled, lVisible, lTabStop, nShape, aColor, aFont , cImage , nColImg  )
 
    LOCAL nHButton := _OwnButtonCreate( GetFormHandle( cForm ), nID, cCaption, nRow, nCol, nWidth, nHeight, lEnabled, lVisible, lTabStop )
 
    LOCAL nTxColorE  := 0x000000
    LOCAL nFrColorE  := 0x000000
+
    LOCAL nBkColorE1 := 0xFFFFFF
    LOCAL nBkColorE2 := 0xFFFFFF
+
+
+
+
+
    LOCAL nGradDirE  := 0
    LOCAL nTxColorD  := 0x808080 
    LOCAL nFrColorD  := 0x808080
@@ -100,6 +110,14 @@ FUNCTION OBTN_Create( cForm, nID, cCaption, nRow, nCol, nWidth, nHeight, lEnable
    LOCAL lItalic    := .F.
    LOCAL lUnderline := .F.
    LOCAL lStrikeOut := .F.
+
+   DEFAULT cImage := ''
+   DEFAULT nColImg := 0
+
+   If !Empty(cImage)
+       cArqImg := cImage
+       nColx   := nColImg
+   End If    
 
    IF nHButton != 0
       IF ValType( aColor ) == "A"
@@ -181,7 +199,7 @@ FUNCTION OBTN_Create( cForm, nID, cCaption, nRow, nCol, nWidth, nHeight, lEnable
 
       OBTN_Shape( cForm, nID, If( ValType(nShape ) == "N", nShape, 0 ) )
       OBTN_Color( cForm, nID, { { nTxColorE, nFrColorE, nBkColorE1, nBkColorE2, nGradDirE }, { nTxColorD, nFrColorD, nBkColorD1, nBkColorD2, nGradDirD }, { nTxColorF, nFrColorF, nBkColorF1, nBkColorF2, nGradDirF } } )
-      OBTN_Font( cForm, nID, { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
+      OBTN_Font( cForm, nID, { 'Arial', 8 , lBold, lItalic, lUnderline, lStrikeOut } )
    ENDIF
 
 RETURN nHButton
@@ -456,7 +474,18 @@ FUNCTION OBTN_Draw( nHParent, nID, nDRAWITEMSTRUCT )
    LOCAL aColor := OBTN_Color( cForm, nID )
    LOCAL aFont  := OBTN_Font( cForm, nID )
 
-   _OwnButtonDraw( nDRAWITEMSTRUCT, nShape, aColor[ 1 ], aColor[ 2 ], aColor[ 3 ], aFont )
+   //LOCAL cArq1  := OBTN_Img( cForm, nID )
+
+   //msginfo( cArqImg )
+
+   If OBTN_Focus( cForm , nID)
+      //msginfo('ok')      
+
+   End If 
+
+
+
+   _OwnButtonDraw( nDRAWITEMSTRUCT, nShape, aColor[ 1 ], aColor[ 2 ], aColor[ 3 ], aFont , cArqImg , nColx )
 
 RETURN NIL
 
@@ -527,6 +556,9 @@ HB_FUNC( _OWNBUTTONDRAW )
   INT   nStrikeOut = hb_parvl(6, 6) ? 1 : 0;
 
   COLORREF TextColor;
+  int  Transparent = 1;
+
+  int ncolbmp = 5;
   COLORREF FrameColor;
   COLORREF FrameColor2 = 0xFFFFFFFF;
   COLORREF BackColor1;
@@ -535,12 +567,24 @@ HB_FUNC( _OWNBUTTONDRAW )
   HBRUSH   hBrush;
   HBRUSH   hBrush2;
   HBRUSH   hBrushOld;
+  HBITMAP hBitMap1;
   HPEN     hPen;
   HPEN     hPenOld;
   HFONT    hFont;
   HFONT    hFontOld;
   RECT     rcText;
   INT      nTextH;
+
+
+  
+	if (HMG_parc  (7) != NULL)
+   {
+   TCHAR *FileDown =  (TCHAR *) HMG_parc  (7);
+   ncolbmp = (INT) HMG_parnl(8);
+   hBitMap1 = HMG_LoadPicture (  FileDown, -1, -1, NULL, 0, Transparent, -1, 0, -1 );
+   } 
+
+   
 
   INT nTextLen = GetWindowTextLength(pDIS->hwndItem) + 1;
   TCHAR *Text  = (TCHAR *) hb_xgrab(nTextLen * sizeof(TCHAR));
@@ -623,7 +667,9 @@ HB_FUNC( _OWNBUTTONDRAW )
   SetTextColor(pDIS->hDC, TextColor);
   SetBkMode(pDIS->hDC, TRANSPARENT);
 
-  nTextH = DrawText(pDIS->hDC, Text, -1, &rcText, DT_CALCRECT | DT_NOCLIP);
+  //nTextH = DrawText(pDIS->hDC, Text, -1, &rcText, DT_CALCRECT | DT_NOCLIP);
+
+  nTextH = DrawText(pDIS->hDC, Text, -1, &rcText, DT_CALCRECT | DT_NOCLIP); 
 
   rcText.left  = pDIS->rcItem.left  + 3;
   rcText.right = pDIS->rcItem.right - 3;
@@ -639,7 +685,15 @@ HB_FUNC( _OWNBUTTONDRAW )
     rcText.bottom = pDIS->rcItem.bottom - 3;
   }
 
-  DrawText(pDIS->hDC, Text, -1, &rcText, DT_CENTER);
+   //Text = '.'
+  DrawText(pDIS->hDC, Text , -1, &rcText, DT_CENTER);
+
+
+ 
+   if (hBitMap1 > 0 )
+      {
+	      DrawBitmapX( pDIS->hDC, hBitMap1 , 6 ,  ncolbmp  , 16 , 16 , 0 );
+      }   
 
   SelectObject(pDIS->hDC, hBrushOld);
   SelectObject(pDIS->hDC, hPenOld);
@@ -649,7 +703,11 @@ HB_FUNC( _OWNBUTTONDRAW )
   DeleteObject(hPen);
   DeleteObject(hFont);
   hb_xfree(Text);
+
 }
+
+
+
 
 
 static HBRUSH CreateGradientBrush(HDC hDC, INT nWidth, INT nHeight, INT nShape, INT nDirection, COLORREF Color1, COLORREF Color2)

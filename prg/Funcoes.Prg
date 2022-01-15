@@ -1442,14 +1442,11 @@ Function yEfect(cFormName , lEfect)
 
 		If cFormName = 'Main'
 
-		//	msginfo('ok2')
-
+		
 			hBitMain := BT_BitmapCaptureDesktop ( 25 , 1 , yWidth, nDeskTopHeight)
-			//BT_BitmapCaptureDesktop (Row, Col, Width, Height)
-			//BT_BitmapCaptureWindow(cActiveJan)
-
+		
 			
-			BT_BitmapSaveFile (hBitMain  , "hBitMain.bmp")
+		//	BT_BitmapSaveFile (hBitMain  , "hBitMain.bmp")
 
 						
 
@@ -1474,11 +1471,8 @@ Function yEfect(cFormName , lEfect)
 		Else
 	
 			hBit2 := BT_BitmapCaptureWindow ( cActiveJan , 0 , 0 , yWidth, nDeskTopHeight)
-
-
-
 			hBit11 := BT_BitmapCaptureWindow ('fSplit2' , 0 , 0 , fSplit2.Width , fSplit2.Height)
-			//lTelaToda := .t.
+			
 	
 		End If
 		
@@ -1500,9 +1494,7 @@ Function yEfect(cFormName , lEfect)
 
 		lAtivaBlack := .t.		
 		BT_ClientAreaInvalidateAll ( cActiveJan  )
-		//BT_ClientAreaInvalidateAll ( 'fSplit2'  )	
-		//BT_ClientAreaInvalidateAll ( 'fSplit6'  )	
-
+	
 		
 		
 	Else
@@ -1534,11 +1526,11 @@ Function EfectEnd(cFname1 , aMtr1 )
 		lAtivaBlack := .f.				
 	
 
-		If _isWindowDefined( 'fSplit2' )	
-			ShowButTop( .t. )			
-			SetWindowControlsVisible(  'fSplit2' , .t. )
-			DoMethod( 'fsplit2' , "Show" )
-		End If
+		// If _isWindowDefined( 'fSplit2' )	
+		// 	ShowButTop( .t. )			
+		// 	SetWindowControlsVisible(  'fSplit2' , .t. )
+		// 	DoMethod( 'fsplit2' , "Show" )
+		// End If
 
 		
 		If _isWindowDefined( cActiveJan )
@@ -1555,13 +1547,6 @@ Function EfectEnd(cFname1 , aMtr1 )
 		End If
 
 
-		//'fMenu' + Right(cActiveJan,5)
-
-		//If _isWindowDefined( 'fMenu' + Right(cActiveJan,5) )
-		//	DoMethod( 'fMenu' + Right(cActiveJan,5) , 'Hide')
-			//msginfo('ok')
-		//End If
-
 
 		SetWindowControlsVisible(  cActiveJan , .t.  ,  aMtr1 , .t. )	
 
@@ -1575,18 +1560,32 @@ Function EfectEnd(cFname1 , aMtr1 )
 
 		
 		If (Alltrim(cActiveJan) == "Main")
+
 			DoMethod("fSplit6","Show")
 			DoMethod("fSplit2","Show")
 			DoMethod("fSplit10","Show")
 			DoMethod("fSplit3","Show")
 			DoMethod("fSplit4","Show")
 			DoMethod("fSplit5","Show")
+
+
+			DoMethod('Win_MenuPrincipal' , 'Show')
+
+			If _IsWindowDefined( "Win_Menu1")
+			    DoMethod( "Win_Menu1" , "Show"  )
+			End If 
+
+			If _IsWindowDefined( "Win_Scroll1")
+			    DoMethod( "Win_Scroll1" , "Show"  )
+			End If 
+
 		End If 	
 
 
 		Syswait(.1)
-		lInvalid := .f.
-		
+		lInvalid := .f.	
+
+
 
 		If _isWindowDefined( cMenuName)
 			DoMethod(cMenuName , 'Hide')
