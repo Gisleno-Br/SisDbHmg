@@ -72,13 +72,14 @@ aColor structure: {aColorEnabledButton, aColorDisabledButton, aColorFocusedButto
     nBackColor1 and nBackColor2 are used to draw the background in gradient colors.
 */
 
-STATIC cArqImg := ''
-STATIC nColx   := 0
+STATIC cArqImg  := ''
+STATIC cArqImg2 := ''
+STATIC nColx    := 0
 
 
 #include "hmg.ch"
 
-FUNCTION OBTN_Create( cForm, nID, cCaption, nRow, nCol, nWidth, nHeight, lEnabled, lVisible, lTabStop, nShape, aColor, aFont , cImage , nColImg  )
+FUNCTION OBTN_Create( cForm, nID, cCaption, nRow, nCol, nWidth, nHeight, lEnabled, lVisible, lTabStop, nShape, aColor, aFont , cImage , nColImg , cImage2  )
 
    LOCAL nHButton := _OwnButtonCreate( GetFormHandle( cForm ), nID, cCaption, nRow, nCol, nWidth, nHeight, lEnabled, lVisible, lTabStop )
 
@@ -113,11 +114,17 @@ FUNCTION OBTN_Create( cForm, nID, cCaption, nRow, nCol, nWidth, nHeight, lEnable
 
    DEFAULT cImage := ''
    DEFAULT nColImg := 0
+   DEFAULT cImage2 := ''
 
    If !Empty(cImage)
        cArqImg := cImage
-       nColx   := nColImg
+       nColx   := nColImg       
    End If    
+
+   
+   If !Empty(cImage2)   
+      cArqImg2 := cImage2
+   End If   
 
    IF nHButton != 0
       IF ValType( aColor ) == "A"
@@ -200,6 +207,7 @@ FUNCTION OBTN_Create( cForm, nID, cCaption, nRow, nCol, nWidth, nHeight, lEnable
       OBTN_Shape( cForm, nID, If( ValType(nShape ) == "N", nShape, 0 ) )
       OBTN_Color( cForm, nID, { { nTxColorE, nFrColorE, nBkColorE1, nBkColorE2, nGradDirE }, { nTxColorD, nFrColorD, nBkColorD1, nBkColorD2, nGradDirD }, { nTxColorF, nFrColorF, nBkColorF1, nBkColorF2, nGradDirF } } )
       OBTN_Font( cForm, nID, { 'Arial', 8 , lBold, lItalic, lUnderline, lStrikeOut } )
+
    ENDIF
 
 RETURN nHButton
@@ -467,25 +475,25 @@ FUNCTION OBTN_Color( cForm, nID, aColor, lRedraw )
 RETURN If( hb_HHasKey( hColor, cForm ) .AND. hb_HHasKey( hColor[ cForm ], nID ), hColor[ cForm ][ nID ], NIL )
 
 
-FUNCTION OBTN_Draw( nHParent, nID, nDRAWITEMSTRUCT )
+FUNCTION OBTN_Draw( nHParent, nID, nDRAWITEMSTRUCT , lFocus  )
 
    LOCAL cForm  := GetFormNameByIndex( GetFormIndexByHandle( nHParent ) )
+   Local cBmpFile := cArqImg
    LOCAL nShape := OBTN_Shape( cForm, nID )
    LOCAL aColor := OBTN_Color( cForm, nID )
    LOCAL aFont  := OBTN_Font( cForm, nID )
 
-   //LOCAL cArq1  := OBTN_Img( cForm, nID )
+   DEFAULT lFocus := .f. 
 
-   //msginfo( cArqImg )
-
-   If OBTN_Focus( cForm , nID)
-      //msginfo('ok')      
-
-   End If 
-
+   IF (lFocus)
+      If !Empty(cArqImg2)
+         cBmpFile := cArqImg2
+      End If    
+   End If     
 
 
-   _OwnButtonDraw( nDRAWITEMSTRUCT, nShape, aColor[ 1 ], aColor[ 2 ], aColor[ 3 ], aFont , cArqImg , nColx )
+
+   _OwnButtonDraw( nDRAWITEMSTRUCT, nShape, aColor[ 1 ], aColor[ 2 ], aColor[ 3 ], aFont , cBmpFile , nColx )
 
 RETURN NIL
 
@@ -671,7 +679,7 @@ HB_FUNC( _OWNBUTTONDRAW )
 
   nTextH = DrawText(pDIS->hDC, Text, -1, &rcText, DT_CALCRECT | DT_NOCLIP); 
 
-  rcText.left  = pDIS->rcItem.left  + 3;
+  rcText.left  = pDIS->rcItem.left  + 4;
   rcText.right = pDIS->rcItem.right - 3;
 
   if (nTextH < (pDIS->rcItem.bottom - pDIS->rcItem.top - 2 * 3))
@@ -685,14 +693,17 @@ HB_FUNC( _OWNBUTTONDRAW )
     rcText.bottom = pDIS->rcItem.bottom - 3;
   }
 
+
+
    //Text = '.'
   DrawText(pDIS->hDC, Text , -1, &rcText, DT_CENTER);
 
 
  
+
    if (hBitMap1 > 0 )
       {
-	      DrawBitmapX( pDIS->hDC, hBitMap1 , 6 ,  ncolbmp  , 16 , 16 , 0 );
+	      DrawBitmapX( pDIS->hDC, hBitMap1 , 3 ,  ncolbmp  , 25 , 25 , 0 );
       }   
 
   SelectObject(pDIS->hDC, hBrushOld);

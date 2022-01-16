@@ -370,12 +370,38 @@ FUNCTION EventDlg()
 
 
 
+
+
+
+
 	If nHWnd == GetProperty(  cMenuName, "HANDLE" )
 
 		If nMsg == WM_DRAWITEM
 
+
+
+
 			If ( nWParam >=  6652 ) .AND.  ( nWParam <=  6669 )
-				OBTN_Draw( nHWnd,  nwParam, nLParam )
+
+
+				nCol1:=0
+				nRow1 := 0
+
+				GetCursorPos (@nCol1, @nRow1)
+
+				hWnd1 := WindowFromPoint (nCol1, nRow1)
+
+				cFormName := ''
+//				GetFormNameByHandle (hWnd1, @cFormName )
+//				msginfo(cFormName)
+
+				cControl := ''	
+				cForm    := ''
+
+				GetControlNameByHandle(hWnd1, @cControl, @cForm)
+
+
+				OBTN_Draw( nHWnd,  nwParam, nLParam , .t.)
 			End If
 
 			If ( nWParam >=  50 ) .AND.  ( nWParam <=  360 )
@@ -514,6 +540,10 @@ FUNCTION InputEv2()
 		If ( nMsg == WM_MOUSEMOVE ) .and. (!lTracking45)
 
 			lTracking45 := TrackMouseEvent( nHWnd ) // TME_LEAVE is default flag
+
+
+			
+			
 
 
 		//	OBTN_Focus( cFormx, nIdBut, .T. )
@@ -786,7 +816,11 @@ Function xDialog( cMsg1 , lAsk1  )
 	END WINDOW
 
 */
-	
+
+
+
+
+
 
 
 
@@ -877,6 +911,9 @@ Function xDialog( cMsg1 , lAsk1  )
 	
 	ACTIVATE WINDOW Win_Dialog
 
+	
+
+
 
 
 
@@ -892,7 +929,8 @@ Function xProcinit( lPergunta )
 
 	If (!lPergunta)
 
-		OBTN_Create( 'Win_Dialog', 6652,  '&Ok'   , 160, 166 ,  75 ,  30,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont , 'img\closex.bmp'  , 6 )
+		OBTN_Create( 'Win_Dialog', 6652,  '&Ok'   , 160, 166 ,  75 ,  30,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont , 'OKVERDE1'  , 3 , 'OKVERDE2')
+
 		OBTN_Font( 'Win_Dialog', 6652,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 
 

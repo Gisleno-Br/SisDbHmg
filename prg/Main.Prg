@@ -468,6 +468,7 @@ FUNCTION Main
 		{"2-Pedidos","Vendas" , .t.  , Nil } , {"2-Orçamento","Orçamento" , .f. , Nil }  , {"3-Listagem Clientes","Lista" , .f. , Nil  } ,    {"4-Configurações","" , .f. , Nil  } }
 
 
+		
 
 
 	Private nRowIni := 10
@@ -475,15 +476,6 @@ FUNCTION Main
 	//HB_SETCODEPAGE("UTF8")
 
 	n := 1
-
-
-
-
-
-
-
-
-
 
 
 
@@ -574,6 +566,8 @@ FUNCTION Main
 		ACTION msginfo('ok')
 		//FONTBOLD .t.
 	END LABEL
+
+
 
 
  

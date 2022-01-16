@@ -12,6 +12,9 @@
     EXCLA1      PNG     img\Exclamation3.Png
     INTERRO1    PNG     img\Interrogacao.Png
     SOMBRA5     BITMAP  img\Sombra5.bmp
+    OKVERDE1    BITMAP  img\okverde1.bmp 
+    OKVERDE2    BITMAP  img\okverde2.bmp 
+    
 
     
                         
