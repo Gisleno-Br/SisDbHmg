@@ -160,6 +160,7 @@ FUNCTION Main
 	Private cOpSely := ''
 
 	*/
+	
 
 
 	PRIVATE lOnToolTipCustomDraw := .T.

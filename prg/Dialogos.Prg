@@ -14,13 +14,13 @@ STATIC nIndexDlg23 := 0
 STATIC nIndexDlg24 := 0
 
 
-
 DEFINE WINDOW main
 DECLARE WINDOW fSplit6
 
 
 #define WM_DESTROY          0x0002
 #define SC_CLOSE            61536
+
 
 
 
@@ -382,27 +382,10 @@ FUNCTION EventDlg()
 
 
 			If ( nWParam >=  6652 ) .AND.  ( nWParam <=  6669 )
-
-
-				nCol1:=0
-				nRow1 := 0
-
-				GetCursorPos (@nCol1, @nRow1)
-
-				hWnd1 := WindowFromPoint (nCol1, nRow1)
-
-				cFormName := ''
-//				GetFormNameByHandle (hWnd1, @cFormName )
-//				msginfo(cFormName)
-
-				cControl := ''	
-				cForm    := ''
-
-				GetControlNameByHandle(hWnd1, @cControl, @cForm)
-
-
-				OBTN_Draw( nHWnd,  nwParam, nLParam , .t.)
+				OBTN_Draw( nHWnd,  nwParam, nLParam , lFlagOk )
 			End If
+
+
 
 			If ( nWParam >=  50 ) .AND.  ( nWParam <=  360 )
 				OBTN_Draw( nHWnd,  nwParam, nLParam )
@@ -505,33 +488,6 @@ FUNCTION InputEv2()
 	End If
 
 
-   /*
-	If (alltrim(cJan1) != "Win_Dialog")
-
-		FOR n1 := 1 TO 100
-			IF ( OBTN_Handle( cJan1, n1 ) == nHWnd )
-				IF nIdBut == 0
-					cFormx := cJan1
-					//msginfo( Str(n1) )
-					nIdBut := n1
-				END IF
-			END IF
-		NEXT
-	End If
-	*/
-
-
-
- /*
-
-	If (Alltrim(cJan1) = "fProgress")
-		cFormx := cJan1
-		IF ( OBTN_Handle( 'fProgress' , 6670 ) == nHWnd )
-			nIdBut := 6670
-		End If
-	End If
-
-	*/
 
 
 
@@ -542,19 +498,19 @@ FUNCTION InputEv2()
 			lTracking45 := TrackMouseEvent( nHWnd ) // TME_LEAVE is default flag
 
 
-			
-			
-
-
-		//	OBTN_Focus( cFormx, nIdBut, .T. )
-
 			OBTN_Color( cFormx, nIdBut, RetColor1( 2 ), .T. )
 
 			OBTN_Enable( cFormx, nIdBut, .T. )
 			OBTN_Visible( cFormx, nIdBut, .T. )
 
+			//msginfo('ok')
+
+			lFlagOk := .t. 
+
 
 		End If
+
+
 
 
 
@@ -563,9 +519,15 @@ FUNCTION InputEv2()
 			
 		//	OBTN_Focus( cFormx, nIdBut, .f. )
 
+			
+			lFlagOk := .f. 
+
+
+
 			OBTN_Color( cFormx,  nIdBut, RetColor1( 1 ), .T. )
 			OBTN_Enable( cFormx, nIdBut, .T. )
 			OBTN_Visible( cFormx, nIdBut, .T. )
+	
 
 
 			lTracking45 := .F.
@@ -808,6 +770,8 @@ Function xDialog( cMsg1 , lAsk1  )
 	Default lAsk1 := .f. 
 
 	Private lRetx := .F.
+
+	Private lFlagOk := .f. 
 
   /*
 	DEFINE WINDOW Win_Dialog AT 0, 0 WIDTH 450 HEIGHT 247 TITLE 'xDialog1' 

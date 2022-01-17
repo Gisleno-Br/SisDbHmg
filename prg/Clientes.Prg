@@ -5680,6 +5680,7 @@ REturn
 						}
 
 
+
 							void DrawBitmapX( HDC hDC, HBITMAP hBitmap, WORD wRow, WORD wCol, WORD wWidth, WORD wHeight, DWORD dwRaster )
 						{
 						HDC      hDCmem = CreateCompatibleDC( hDC );
@@ -5694,7 +5695,8 @@ REturn
 								}
 						else
 							{
-								BitBlt( hDC, wCol, wRow, bitmap.bmWidth, bitmap.bmHeight, hDCmem, 0, 0, dwRaster );								
+							BitBlt( hDC, wCol, wRow, bitmap.bmWidth, bitmap.bmHeight, hDCmem, 0, 0, dwRaster );								
+							//StretchBlt( hDC, wCol, wRow, wWidth, wHeight, hDCmem, 0, 0, bitmap.bmWidth, bitmap.bmHeight, dwRaster );
 								}
 
 							DeleteDC( hDCmem );

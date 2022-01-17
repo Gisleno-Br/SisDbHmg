@@ -703,8 +703,13 @@ HB_FUNC( _OWNBUTTONDRAW )
 
    if (hBitMap1 > 0 )
       {
+
+
 	      DrawBitmapX( pDIS->hDC, hBitMap1 , 3 ,  ncolbmp  , 25 , 25 , 0 );
+
+
       }   
+
 
   SelectObject(pDIS->hDC, hBrushOld);
   SelectObject(pDIS->hDC, hPenOld);
