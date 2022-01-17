@@ -574,14 +574,18 @@ HB_FUNC( _OWNBUTTONDRAW )
   INT      nGradDir;
   HBRUSH   hBrush;
   HBRUSH   hBrush2;
+
+  HBRUSH   hBrush4;
+
   HBRUSH   hBrushOld;
-  HBITMAP hBitMap1;
+  HBITMAP  hBitMap1;
   HPEN     hPen;
   HPEN     hPenOld;
   HFONT    hFont;
   HFONT    hFontOld;
   RECT     rcText;
   INT      nTextH;
+  RECT     rcF;
 
 
   
@@ -707,6 +711,15 @@ HB_FUNC( _OWNBUTTONDRAW )
 
 	      DrawBitmapX( pDIS->hDC, hBitMap1 , 3 ,  ncolbmp  , 25 , 25 , 0 );
 
+         hBrush4  = CreateSolidBrush(  RGB(248,248,248)  );
+
+         rcF.top    = 1;
+         rcF.left   = 2;
+         rcF.right  = 27;
+         rcF.bottom = 4;
+
+         FillRect(pDIS->hDC , &rcF, hBrush4);  
+
 
       }   
 
@@ -716,6 +729,7 @@ HB_FUNC( _OWNBUTTONDRAW )
   SelectObject(pDIS->hDC, hFontOld);
 
   DeleteObject(hBrush);
+  DeleteObject(hBrush4);
   DeleteObject(hPen);
   DeleteObject(hFont);
   hb_xfree(Text);
