@@ -709,12 +709,13 @@ HB_FUNC( _OWNBUTTONDRAW )
       {
 
 
-	      DrawBitmapX( pDIS->hDC, hBitMap1 , 3 ,  ncolbmp  , 25 , 25 , 0 );
+
+	      DrawBitmapX( pDIS->hDC, hBitMap1 , 1 ,  ncolbmp  , 25 , 25 , 0 );
 
          hBrush4  = CreateSolidBrush(  RGB(248,248,248)  );
 
          rcF.top    = 1;
-         rcF.left   = 2;
+         rcF.left   = ncolbmp - 1;
          rcF.right  = 27;
          rcF.bottom = 4;
 
