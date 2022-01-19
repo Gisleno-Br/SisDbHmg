@@ -26,6 +26,7 @@ DECLARE WINDOW fSplit6
 
 DECLARE WINDOW fDialogo
 
+/*
 Function yAviso2( cMensagem , lEfect  )
 
 
@@ -91,237 +92,7 @@ FUNCTION yAviso( cMsgx1 , lEfect )
 
 Return 	
 
-
-
-FUNCTION ConfirmAviso( cMsgx1,  cJanPadrao ,  lEfect )
-
-return 
-/*
-
-	
-	Local aMx := {}
-	Local n   := 0
-	//PRIVATE lRetx := .F.
-
-//	PRIVATE nTipo := 2
-
-	PRIVATE cBmpx1 := "img\pergunta1.bmp" 
-	PRIVATE cMensagem := "Confirme Para Prosseguir" 
-
-	PRIVATE cJanxDialog := 'fDialogo'
-
-
-	PRIVATE cMsg1 := cMsgx1
-
-	PRIVATE lRet := .F.
-
-
-
-	//Private nIndexDlg22 := 0
-
-
-
-	
-	Default lEfect := .t.	
-
-	If lEfect	
-		aMx := yEfect(  cActiveJan  )	
-	End If 	
-
-
-
-	MsgAviso( cMsgx1, 2 )
-
-	n := 0
-
-
-
-
-//	msginfo('Passou')
-
-
-
-//	If lEfect
-//		EfectEnd(cActiveJan , aMx )		
-//	End If
-
-
-
-RETURN lRetx
-
 */
-
-
-
-FUNCTION MsgAviso( cMsg1, nTipo )
-
-
-	Local cSaveJan := cActiveJan
-	LOCAL nFontSize := 8
-	lOCAL cJanxDialog := 'fDialogo'
-
-
-
-	REQUEST HB_LANG_PT
-	REQUEST HB_CODEPAGE_PT850
-
-
-
-
-//	msginfo('232')
-
-	If !IsWindowDefined('fDialogo')
-		Load Window fDialogo
-	End If 	
-
-
-	//nIndexDlg   := EventCreate (  { ||   EventDlg( )} , fDiaLogo.Handle   )
-
-	//EventProcessAllHookMessage(nIndexDlg22   := EventCreate (  { ||   EventDlg( )} , fDialogo.Handle  ) , .t.)
-
-
-	Center Window fDialogo
-
-	//HB_SETCODEPAGE("UTF8")
-
-	HB_SETCODEPAGE("PT850")
-
-	InstallEventHandler( "EventDlg" )
-
-
-	
-	SetProperty( "fDialogo", "lblMsg", "Value",   cMsg1     )
-
-
-
-	SetProperty( "fDialogo", "Label_1", "Value",   Hb_AnsiToOem("Aviso\Informação")     )
-
-	If nTipo == 2
-		SetProperty( "fDialogo", "Label_1", "Value",   "Confirme"     )
-	End If 
-
-
-	//cActiveJan := 'fDialogo'
-
-	If nTipo == 2
-		SetProperty( "fDialogo", "Image_1","Picture" , "img\Interrogacao.png" )
-		SetProperty( "fDialogo", "Label_1","Value" , "Pergunta" )
-	End If
-
-
-	
-
-
-	If nTipo == 1
-
-
-		OBTN_Create( cJanxDialog, 6652, "&Ok", 205, 245,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-		OBTN_Font( cJanxDialog, 6652,  { cFontName , nFontSize, .F., .F., .F., .F. } )
-
-		EventProcessAllHookMessage( n20 := EventCreate( {|| InputEv2(cJanxDialog ) },    OBTN_Handle( cJanxDialog, 6652 )   ), .T. )
-
-
-		OBTN_Focus( cJanxDialog, 6652, .t. )
-
-	Else
-
-		HB_SetCodePage( "UTF8")
-
-		OBTN_Create( cJanxDialog, 6653, "&Sim", 205, 375,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-		OBTN_Create( cJanxDialog, 6654,  "&Nao" , 205 , 438,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-
-		OBTN_Font( cJanxDialog, 6653,  { cFontName, nFontSize, .F., .F., .F., .F. } )
-		OBTN_Font( cJanxDialog, 6654,  { cFontName, nFontSize, .F., .F., .F., .F. } )
-
-		EventProcessAllHookMessage( n20 := EventCreate( {|| InputEv2(cJanxDialog ) },    OBTN_Handle( cJanxDialog, 6653 )   ), .T. )
-		EventProcessAllHookMessage( n21 := EventCreate( {|| InputEv2(cJanxDialog ) },    OBTN_Handle( cJanxDialog, 6654 )   ), .T. )
-
-
-		OBTN_Focus( cJanxDialog, 6653, .t. )
-
-
-	End If 
-
-//	SysWait(.2)
-
-
-	fDialogo.Show()
-	
- 
-	If nTipo == 1
-		PushButton(   'fDialogo'  , 6652 )
-	Else 
-		PushButton(   'fDialogo'  , 6653 )
-		PushButton(   'fDialogo'  , 6654 )
-	End If 	
-
-	
-	HMG_ChangeWindowStyle( fDialogo.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
-	HMG_ChangeWindowStyle( fDialogo.Handle, WS_EX_STATICEDGE, NIL, .T., .T. )
-
-	//RefreshAll('fDialogo')
-
-	fDialogo.SetFocus()
-
-
-/*
-	If nTipo > 1
-		sysWait(.2)
-		PostMessage( OBTN_Handle( cJanxDialog, 6653 ) ,0,0,WM_MOUSEMOVE )		
-	End If 	
-
-	*/
-
-
-
-RETURN lRet
-
-
-Function RlesaBt()
-
-	Local n1
-
-	For n1 := 6652 to 6554
-		Obtn_Release('fDialogo',n1)
-	Next
-
-
-Return
-
-
-FUNCTION xIniDialog( nTp )
-
-	LOCAL cJanx := 'fDialogo'
-	LOCAL nFontSize := 8
-
-
-	IF nTp == 1
-
-
-
-		OBTN_Create( cJanxDialog, 6652, "&Ok", 205, 245,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-		OBTN_Font( cJanxDialog, 6652,  { cFontName, nFontSize, .F., .F., .F., .F. } )
-
-		EventProcessAllHookMessage( n20 := EventCreate( {|| InputEv2(cJanx ) },    OBTN_Handle( cJanx, 6652 )   ), .T. )
-
-	ELSE
-
-		HB_SetCodePage( "UTF8")
-
-		OBTN_Create( cJanx, 6653, "&Sim", 205, 375,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-		OBTN_Create( cJanx, 6654,  "&Nao" , 205 , 438,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-
-		OBTN_Font( cJanx, 6653,  { cFontName, nFontSize, .F., .F., .F., .F. } )
-		OBTN_Font( cJanx, 6654,  { cFontName, nFontSize, .F., .F., .F., .F. } )
-
-		EventProcessAllHookMessage( n20 := EventCreate( {|| InputEv2(cJanx ) },    OBTN_Handle( cJanx, 6653 )   ), .T. )
-		EventProcessAllHookMessage( n21 := EventCreate( {|| InputEv2(cJanx ) },    OBTN_Handle( cJanx, 6654 )   ), .T. )
-
-	END IF
-
-
-
-RETURN
 
 
 
@@ -473,6 +244,10 @@ FUNCTION InputEv2()
 	LOCAL ButHnd
 
 	lTracking45 := .F.
+
+	If !_isWindowDefined("Win_Dialog")
+		Return 
+	End If 
 
 	//DEFAULT cFormx := 'fDialogo'
 
@@ -631,7 +406,9 @@ RETURN Iif( nInd1 == 1, aBtnColor, aBtnSel )
 
 
 
-FUNCTION xMsgRun( cMsg1  , bBlock )
+FUNCTION xMsgRun( cMsg1  , bBlock , lSombra )
+
+	Local nTop , nLeft 
 
 	PRIVATE cJanxDialog := 'fDialogo'
 
@@ -640,26 +417,71 @@ FUNCTION xMsgRun( cMsg1  , bBlock )
 	DEFAULT cMsg1 := ''
 	//  DEFAULT nTipo := 1
 
+	DEFAULT lSombra := .t. 
+
 	PRIVATE cBmpx1 :=  "img\aviso1.bmp"
 
 	PRIVATE cMensagem := cMsg1
 
 	PRIVATE lRet := .F.
 
+	DEFINE WINDOW fProgress1 AT 0,0 WIDTH 450  HEIGHT 147 TITLE 'fProgress1' ;
+		NOMAXIMIZE NOMINIMIZE NOSIZE CHILD NOSYSMENU NOCAPTION BACKCOLOR WHITE  ;
+		ON PAINT xProcDlg(  cMsg1   , .t.  )
+	END WINDOW
 
-	Load Window fProgress
-
-
-	HMG_ChangeWindowStyle( fProgress.Handle    , WS_BORDER, NIL, .F., .T.)
-	HMG_ChangeWindowStyle( fProgress.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
-
-	SetProperty('fProgress','LblMsg','Value', cMsg1  )
+	Center Window fProgress1
 
 
-	Center Window fProgress
+
+	If (lSombra)
+		nTop  := GetProperTy('fProgress1' , 'Row')
+		nLeft := GetProperTy('fProgress1' , 'Col')
+
+		
+		DEFINE WINDOW WinSombra2 AT nTop + 12 , nLeft+15 WIDTH 440 HEIGHT 140 TITLE 'Sombra2' ;
+				NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
+				ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+5  )
+		END WINDOW	
+
+	
+		WinSombra2.Show()
+		Bt_ClientAreaInvalidateAll('WinSombra2')
 
 
-	Activate Window fProgress
+	End If 
+
+
+
+
+	
+	_ShowWindow("fProgress1")
+	BT_ClientAreaInvalidateAll(   'fProgress1'  )
+
+	
+
+	SysWait(.1)
+
+	Eval(bBlock)
+
+	//msginfo('lp2')
+
+
+
+
+//	Load Window fProgress
+
+
+	//HMG_ChangeWindowStyle( fProgress.Handle    , WS_BORDER, NIL, .F., .T.)
+	//HMG_ChangeWindowStyle( fProgress.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
+
+	//SetProperty('fProgress','LblMsg','Value', cMsg1  )
+
+
+	//Center Window fProgress
+
+
+	//Activate Window fProgress
 
 RETURN lRet
 
@@ -726,9 +548,12 @@ FUNCTION xIniProgress( nTp )
 RETURN
 
 
-Function xProcDlg(  cText   )
+Function xProcDlg(  cText , lMsgRun    )
 
 	LOCAL Width     := BT_ClientAreaWidth  ( ThisWindow.Name ) 
+
+	LOCAL Height    := BT_ClientAreaHeight  ( ThisWindow.Name ) 
+
 	Local aRGBcolor := { 9, 111, 137 }
 
 	Local nTypeText    := BT_TEXT_TRANSPARENT
@@ -736,26 +561,48 @@ Function xProcDlg(  cText   )
 	Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
 	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
 
+	Local hBitSeta := BT_BitmapLoadFile( 'OKVERDE3' )
+
 	//LOCAL hDC2
 	Local BTstruct2	
 	
 	Local hDC2 := BT_CreateDC ( ThisWindow.Name, BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
 
-	
-	BT_DrawGradientFillVertical ( hDC2 ,  0,  0,  Width, 20 , aRGBcolor , BLACK )
+	Default lMsgRun := .f. 
 
+
+	If lMsgRun
+		BT_DrawGradientFillVertical ( hDC2 ,  0 ,  0 , Width,  Height ,   { 255,255,255}, {  233,233,233 } )
+	End If 
+
+
+	BT_DrawGradientFillVertical ( hDC2 ,  0,  0,  Width, 20 , aRGBcolor , BLACK )
 
 	BT_DrawGradientFillVertical ( hDC2 ,  195 ,  0 , 571 ,  55 ,   { 238,238,238}, {  244,244,244 } )
 
-	
-	BT_DrawText (hDC2 , 120 , 15 , alltrim(cText) , "arial", 9, BLACK ,  BLACK, nTypeText, nAlingText, nOrientation)
+	If !lMsgRun
+		BT_DrawText (hDC2 , 120 , 15 , alltrim(cText) , "arial", 9, BLACK ,  WHITE , , nAlingText, nOrientation)
+	Else 
+
+		BT_DrawBitmapTransparent ( hDC2,   50   ,  15   , 25 , 25 , BT_COPY   ,  hBitSeta , WHITE )
+		BT_DrawText (hDC2 , 55 , 55 , alltrim(cText) , XFONT1 , 9  , BLACK ,  WHITE , BT_TEXT_TRANSPARENT , nAlingText, nOrientation)
+		
+	End If 	
+
+
+
 
 
 	BT_DeleteDC ( BTstruct2 )
 
 
-
 REturn 
+
+Function yAviso( cMsg )
+
+  xDialog(cMsg1)
+
+Return 
 
 Function xDialog( cMsg1 , lAsk1  )
 	
@@ -853,9 +700,6 @@ Function xDialog( cMsg1 , lAsk1  )
 	nLeft := GetProperTy('Win_Dialog' , 'Col')
 
 
-	
-	
-
 	DEFINE WINDOW WinSombra2 AT nTop + 12 , nLeft+15 WIDTH 440 HEIGHT 240 TITLE 'Sombra2' ;
 			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
 			ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+5  )
@@ -874,11 +718,6 @@ Function xDialog( cMsg1 , lAsk1  )
 	Bt_ClientAreaInvalidateAll('WinSombra2')
 	
 	ACTIVATE WINDOW Win_Dialog
-
-	
-
-
-
 
 
 
@@ -945,6 +784,47 @@ Function xFindEvent(  cEvent , nHandle1 )
    ((a[1] ==  cEvent ) .And. (a[2] ==  nHandle1 )) , Nil )   })
 
 Return (nIndex1)
+
+
+Function xCloseMsg()
+
+  
+	Local nHandle2  := DoFindWin("fProgress1")
+	Local nHandle1  := DoFindWin("Sombra2")
+
+	DO EVENTS
+
+	
+	If nHandle2 > 0
+		
+		SendMessage( nHandle2, WM_SYSCOMMAND, SC_CLOSE , 0 )
+		DO EVENTS
+		SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )	
+		DO EVENTS
+
+	//	msginfo('2')
+
+
+	End If 
+
+	DO EVENTS
+		
+
+	If nHandle1 > 0
+		
+		SendMessage( nHandle1, WM_SYSCOMMAND, SC_CLOSE , 0 )
+		DO EVENTS
+		SendMessage( nHandle1, WM_SYSCOMMAND, WM_DESTROY , 0 )	
+		DO EVENTS
+
+	//	msginfo('3')
+
+	End If 
+
+
+
+
+Return 
 
 Function xFechaDlg()
 

@@ -69,7 +69,7 @@ MEMVAR _HMG_SYSDATA
 
 
 
-Static lSubOpen := .f. 
+Static lSubOpen := .f.
 
 
 DECLARE WINDOW fSplit10
@@ -118,9 +118,9 @@ FUNCTION Main
 	Private  lTracking42 := .f.
 	Private  lTracking142 := .f.
 
-	
+
 	PRIVATE nFontSize  := 8
-	
+
 
 	SET SCROLLSTEP TO 10
 
@@ -160,7 +160,7 @@ FUNCTION Main
 	Private cOpSely := ''
 
 	*/
-	
+
 
 
 	PRIVATE lOnToolTipCustomDraw := .T.
@@ -169,7 +169,7 @@ FUNCTION Main
 
 
 
-	
+
 
 	SET TOOLTIPSTYLE BALLOON
 
@@ -431,7 +431,7 @@ FUNCTION Main
 
 	//Load Window fSplitSubMenu
 
-	
+
 
 	Private aRotinas := {}
 
@@ -456,12 +456,13 @@ FUNCTION Main
 
 
 
+
 	Private nOpSel := 0
 
-	Private aItens := { {"1-Clientes","Cadastro de Clientes" , .t.  , {  || xTesMenu(200,200)  }  , .f. } , ;
-	 				{ "1-Fornecedores","Cadastro de Fornecedores" , .t.  , {||xFechaMen() }  , .t.  , { |a,b| xTesMenu(a,b)   }    } , ;
-	{ "1-Vendedores", "Cadastro de Vendedores" , .f.  , Nil , .f.  } , ; 
-	 {"1-Colaboradores","" , .f. } ,   {"1-Grupo Produtos","" , .f. , Nil  } , ;
+	Private aItens := { {"1-Clientes","Cadastro de Clientes" , .t.  , {  ||xCliente()  }  , .f. } , ;
+		{ "1-Fornecedores","Cadastro de Fornecedores" , .t.  , {||xFechaMen() }  , .t.  , { |a,b| xTesMenu(a,b)   }    } , ;
+		{ "1-Vendedores", "Cadastro de Vendedores" , .f.  , Nil , .f.  } , ;
+		{"1-Colaboradores","" , .f. } ,   {"1-Grupo Produtos","" , .f. , Nil  } , ;
 		{"1-Locais Estoque","" , .t.  , Nil } , {"1-Funções","" , .f. , Nil } , ;
 		{"1-Categoria Produto","" , .t. , Nil } , {"1-Unidades","" , .t. , Nil } , {"1-Tipo Produtos","",.f. , Nil  } ,;
 		{"1-Tipo Produto1s","" , .t. , Nil  },{"1-Tipo Produto2s","", .t. , Nil } ,{"1-Tipo Produt3os","" , .t. , Nil },{"1-Tipo Produt222os","", .f. , Nil  },{"1-Tipo 444Produtos","", .f. , Nil  }, ;
@@ -469,7 +470,7 @@ FUNCTION Main
 		{"2-Pedidos","Vendas" , .t.  , Nil } , {"2-Orçamento","Orçamento" , .f. , Nil }  , {"3-Listagem Clientes","Lista" , .f. , Nil  } ,    {"4-Configurações","" , .f. , Nil  } }
 
 
-		
+
 
 
 	Private nRowIni := 10
@@ -492,7 +493,7 @@ FUNCTION Main
 
 
 
-	
+
 
 
 	HMG_ChangeWindowStyle( fSplit3.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
@@ -507,82 +508,82 @@ FUNCTION Main
 	//HMG_ChangeWindowStyle(fSplitsubMenu.Handle    , 0x00010200 , NIL, .F., .F.)
 //	HMG_ChangeWindowStyle(fSplitSubMenu.Handle  ,WS_EX_TOOLWINDOW  , NIL, .t., .t.)
 
-   
+
 
 	DEFINE LABEL fLabel1Dt
-		PARENT    fSplit3
-		ROW       18
-		COL       51
-		WIDTH     140
-		HEIGHT    16
-		VALUE     Alltrim(Dtoc(dDataBase))
-		ALIGNMENT LEft
-		FONTCOLOR {102,102,102}
-		BACKCOLOR {255,255,255}
-		FONTBOLD .f.
-	END LABEL
+	PARENT    fSplit3
+	ROW       18
+	COL       51
+	WIDTH     140
+	HEIGHT    16
+	VALUE     Alltrim(Dtoc(dDataBase))
+	ALIGNMENT LEft
+	FONTCOLOR {102,102,102}
+	BACKCOLOR {255,255,255}
+	FONTBOLD .f.
+END LABEL
 
-	DEFINE LABEL fLabelUser
-		PARENT    fSplit4
-		ROW       03
-		COL       10
-		WIDTH     140
-		HEIGHT    16
-		VALUE     Alltrim(cUserName)
-		ALIGNMENT Left
-		FONTCOLOR {102,102,102}
-		BACKCOLOR {255,255,255}
-		//TRANSPARENT .T.
-		ACTION xMenuPrin()
-		FONTBOLD .f.
-	END LABEL
-
-
-
-	DEFINE LABEL fUserDb
-		PARENT    fSplit4
-		ROW       32
-		COL       10
-		WIDTH     140
-		HEIGHT    16
-		VALUE     Alltrim(cUserDb)
-		ALIGNMENT Left
-		FONTCOLOR {102,102,102}
-		BACKCOLOR {255,255,255}
-		ACTION msginfo('ok')
-	END LABEL
-
-
-	DEFINE LABEL fServerDb
-		PARENT    fSplit4
-		ROW       51
-		COL       10
-		WIDTH     140
-		HEIGHT    16
-		VALUE     ""
-		ALIGNMENT Left
-		FONTCOLOR FONTCOR
-		BACKCOLOR BACK1
-		TRANSPARENT .T.
-		ACTION msginfo('ok')
-		//FONTBOLD .t.
-	END LABEL
+DEFINE LABEL fLabelUser
+PARENT    fSplit4
+ROW       03
+COL       10
+WIDTH     140
+HEIGHT    16
+VALUE     Alltrim(cUserName)
+ALIGNMENT Left
+FONTCOLOR {102,102,102}
+BACKCOLOR {255,255,255}
+//TRANSPARENT .T.
+ACTION xMenuPrin()
+FONTBOLD .f.
+END LABEL
 
 
 
+DEFINE LABEL fUserDb
+PARENT    fSplit4
+ROW       32
+COL       10
+WIDTH     140
+HEIGHT    16
+VALUE     Alltrim(cUserDb)
+ALIGNMENT Left
+FONTCOLOR {102,102,102}
+BACKCOLOR {255,255,255}
+ACTION msginfo('ok')
+END LABEL
 
- 
-	Private aButTop := {}
+
+DEFINE LABEL fServerDb
+PARENT    fSplit4
+ROW       51
+COL       10
+WIDTH     140
+HEIGHT    16
+VALUE     ""
+ALIGNMENT Left
+FONTCOLOR FONTCOR
+BACKCOLOR BACK1
+TRANSPARENT .T.
+ACTION msginfo('ok')
+//FONTBOLD .t.
+END LABEL
 
 
-	
-
-	xMenuMain( 70 , 1  , aOpcoes , aItens )	
 
 
 
-	
-	Main.Activate
+Private aButTop := {}
+
+
+
+
+xMenuMain( 70 , 1  , aOpcoes , aItens )
+
+
+
+
+Main.Activate
 
 
 
@@ -601,7 +602,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 //	Local nCol := 0
 	Local nRow1 := 0
 
-	Local nRow2 :=0				
+	Local nRow2 :=0
 	Local nCol2 := 0
 
 
@@ -647,15 +648,15 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 	If nHWnd == GetProperty(  'fSplit10' , "HANDLE" )
 
 
-		//SetWindowCursor( nHWnd , CURSORHAND)	
+		//SetWindowCursor( nHWnd , CURSORHAND)
 
 		If (nMsg == WM_LBUTTONDOWN)
 			//msginfo('ok')
 
 			If ExitApp()
 				RELEASE WINDOW All
-				Quit 
-			End If 
+				Quit
+			End If
 
 		End If
 
@@ -1216,7 +1217,7 @@ Function xMenuPrin()
 
 
 	If nHanSelected > 0
-	//	EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, nHanSelected  ), .T.)
+		//	EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, nHanSelected  ), .T.)
 		PostMessage( nHanSelected   , WM_MOUSELEAVE , 0, 0)
 	End If
 
@@ -1433,7 +1434,7 @@ Function ButtonsTop( lCria )
 
 			SetProperty( 'fSplit2' , cLabelx , 'BACKCOLOR' , {9,111,137} )
 
-		//	EventProcessAllHookMessage(EventCreate({ || LabelEventHandler() },  GetControlHandle( cLabelx  ,  'fSplit2')   ), .T.)
+			//	EventProcessAllHookMessage(EventCreate({ || LabelEventHandler() },  GetControlHandle( cLabelx  ,  'fSplit2')   ), .T.)
 
 
 			Aadd( aCords  , { cLabelx , nCol ,nCol+110  , "F" + Left(  Alltrim(  aButTop[n1][2] ) , 5)  }  )
@@ -1605,7 +1606,7 @@ Function FechaJan(  cJanela  , lExclBut , nI1 , nI2)
 	If  (nIndx == 0)
 		//EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, nHanSelected  ), .T.)
 	Else
-	//	EventStop( nIndx , .f. )
+		//	EventStop( nIndx , .f. )
 	End If
 
 
@@ -2357,6 +2358,34 @@ Function OpenOpcao( cCadastro , cTitulo , nHandle1 )
 
 REturn
 
+
+Function xCliente()
+
+	If ( FindWindowEx( ,, , "Clientes"  ) > 0 )
+		yAviso( 'Este Cadastro ja esta Ativo.' ,, .f. )
+		RefreshAll('fSplitSubMenu')
+	Else
+
+		If Len(aButTop) > 0
+			ReleaseTeto()
+		End If
+
+
+		cActiveJan := "FClien"
+
+		aAdd( aButTop ,  { 0 ,  "Clientes" , .t.  }     )
+		nCol1 := ButtonsTop( .t. )
+
+		cControl := ''
+		cForm    := ''
+		CadCli()
+
+
+	End If
+
+
+Return
+
 Function xHighSubMenu(  cForm , cControl )
 
 	SetProperty(cForm, cControl, "BACKCOLOR", {216,228,236} )
@@ -2487,11 +2516,11 @@ Function D1Black(cJan,zBitMap)
 
 		BT_DeleteDC ( BTstruct )
 
-		
+
 
 		If ( Alltrim(cJan) = 'fSplit6')
 			msginfo('l2')
-		End If 
+		End If
 
 	Else
 
@@ -2499,8 +2528,8 @@ Function D1Black(cJan,zBitMap)
 			Proc_ON_PAINT(cJan)
 		Else
 			//msginfo(cJan)
-			
-		End If 	
+
+		End If
 
 	End If
 
@@ -2511,8 +2540,7 @@ Return
 
 Function xTesMenu( nRow , nCol )
 
-  Local aZop1 := {}
-  
+	Local aZop1 := {}
 
 
 
@@ -2520,54 +2548,55 @@ Function xTesMenu( nRow , nCol )
 
 
 
-  Aadd(aZop1 , { "1-Impressão" , "Imp.Doc" , .t. , { || msginfo('k2' )   }    }    )
-  Aadd(aZop1 , { "2-Visualizar Imp." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .t.    }   )
-  Aadd(aZop1 , { "3-Novo Arquivo   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-  Aadd(aZop1 , { "4-Novo Arquivo2   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-  Aadd(aZop1 , { "  Novo Arquivo3   " , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
-  Aadd(aZop1 , { "  Novo Arquivo4   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-  Aadd(aZop1 , { "  Novo Arquivo5   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-  Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+
+	Aadd(aZop1 , { "1-Impressão" , "Imp.Doc" , .t. , { || TestBrow()  }    }    )
+	Aadd(aZop1 , { "2-Visualizar Imp." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .t.    }   )
+	Aadd(aZop1 , { "3-Novo Arquivo   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "4-Novo Arquivo2   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo3   " , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo4   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo5   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 
 
 
-  Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-  Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-  Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 
 
-  Aadd(aZop1 , { "  Novo Arquivo12   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo12   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 
-  Aadd(aZop1 , { "  Novo Arquivo13   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-  
-  Aadd(aZop1 , { "  Novo Arquivo14   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-  Aadd(aZop1 , { "  Novo Arquivo15   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo13   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 
-  Aadd(aZop1 , { "  Novo Arquivo16   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-  Aadd(aZop1 , { "  Novo Arquivo17   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-  Aadd(aZop1 , { "  Novo Arquivo18   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-    
+	Aadd(aZop1 , { "  Novo Arquivo14   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo15   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 
-  xMenuOp(aZop1 , nRow , nCol , .t.  ) 
+	Aadd(aZop1 , { "  Novo Arquivo16   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo17   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo18   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 
 
-Return 
+	xMenuOp(aZop1 , nRow , nCol , .t.  )
+
+
+Return
 
 
 Function ExitApp()
 
-	Local lOk := .f. 
+	Local lOk := .f.
 
-   // yEfect(  'Main' , .t.   )
+	// yEfect(  'Main' , .t.   )
 
 	lOk := xDialog(  'Confirma Saida do Aplicativo?'   )
 
 	If lok
-   		//MsgInfo('ok')
-	End If 	   
+		//MsgInfo('ok')
+	End If
 
 
- //  EfectEnd( 'Main' , {} )
+	//  EfectEnd( 'Main' , {} )
 
 
 REturn lOk

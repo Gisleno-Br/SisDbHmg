@@ -428,7 +428,7 @@ FUNCTION GrvClien( lNovo )
    END IF
 
 
-   IF !Confirmaviso( cMsg, cActiveJan, .F. )
+   IF !xDialog( cMsg, .t. )
 
 
 // DoMethod( 'fCadCli' , 'SetFocus' )
@@ -920,7 +920,7 @@ RETURN
 
 FUNCTION xGrvCli()
 
-   IF !ConfirmAviso( 'Confirma Cadastro desse Cliente?' )
+   IF !xDialog( 'Confirma Cadastro desse Cliente?' , .t.  )
       RETURN
    END IF
 
@@ -1106,7 +1106,7 @@ FUNCTION xBloquear(  cCodCli, cStatus )
 
    LOCAL cSql  := "update " + AllTrim( cTabela ) + " set status = '" + cStatus + "' , dtbloqueio = " + Quotedstr( ConvDt( dDataBase ) )  + " where codigo = '" + cCodCli + "'"
 
-   IF !Confirmaviso( 'Confirma Mudança de Status(' + cStatus + ') Para Este Registro?', cActiveJan, .T. )
+   IF !xdialog( 'Confirma Mudança de Status(' + cStatus + ') Para Este Registro?', .T. )
       RETURN .F.
    END IF
 

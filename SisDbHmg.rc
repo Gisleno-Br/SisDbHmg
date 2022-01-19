@@ -14,6 +14,8 @@
     SOMBRA5     BITMAP  img\Sombra5.bmp
     OKVERDE1    BITMAP  img\okverde1.bmp 
     OKVERDE2    BITMAP  img\okverde2.bmp 
+    OKVERDE3    BITMAP  img\okverde3.bmp 
+    OKMARK      PNG     img\ngi.png
     
 
     

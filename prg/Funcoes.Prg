@@ -7,6 +7,7 @@
 #define WM_SETFOCUS 7
 
 Declare window fSplit6
+Declare window fSplit10
 Declare window fSplit2
 Declare window Main
 
@@ -1440,24 +1441,37 @@ Function yEfect(cFormName , lEfect)
 			DoMethod( cMenuName , 'Hide')
 		End If 
 
+		
+
+		hBit11 := BT_BitmapCaptureWindow ('fSplit2' , 0 , 0 , fSplit2.Width , fSplit2.Height)
+		hBit12 := BT_BitmapCaptureWindow ('fSplit10' , 0 , 0 , fSplit10.Width , fSplit10.Height)
+
+		//bt_BitMapSaveFile(  hBit11 , 'Buit11.bmp'  )
+
+		DoMethod("fSplit6","Hide")
+
+
+		//DoMethod("fSplit2","Hide")
+
+
+
+
+		DoMethod("fSplit3","Hide")
+		DoMethod("fSplit4","Hide")
+		DoMethod("fSplit5","Hide")
+
+		//DoMethod("fSplit10","Hide")
+
+		DoMethod('Win_MenuPrincipal' , 'Hide')
+
 		If cFormName = 'Main'
 
-		
-			hBitMain := BT_BitmapCaptureDesktop ( 25 , 1 , yWidth, nDeskTopHeight)
-		
-			
-		//	BT_BitmapSaveFile (hBitMain  , "hBitMain.bmp")
 
-						
-
-			DoMethod("fSplit6","Hide")
 			DoMethod("fSplit2","Hide")
-			DoMethod("fSplit3","Hide")
-			DoMethod("fSplit4","Hide")
-			DoMethod("fSplit5","Hide")
 			DoMethod("fSplit10","Hide")
 
-			DoMethod('Win_MenuPrincipal' , 'Hide')
+			hBitMain := BT_BitmapCaptureDesktop ( 25 , 1 , yWidth, nDeskTopHeight)
+								
 
 			If _IsWindowDefined( "Win_Menu1")
 			    DoMethod( "Win_Menu1" , "Hide"  )
@@ -1466,13 +1480,10 @@ Function yEfect(cFormName , lEfect)
 			If _IsWindowDefined( "Win_Scroll1")
 			    DoMethod( "Win_Scroll1" , "Hide"  )
 			End If 
-			
 	
 		Else
 	
 			hBit2 := BT_BitmapCaptureWindow ( cActiveJan , 0 , 0 , yWidth, nDeskTopHeight)
-			hBit11 := BT_BitmapCaptureWindow ('fSplit2' , 0 , 0 , fSplit2.Width , fSplit2.Height)
-			
 	
 		End If
 		
@@ -1485,16 +1496,14 @@ Function yEfect(cFormName , lEfect)
 		End If
 
 		If _isWindowDefined( 'fSplit2' )			
-			SetWindowControlsVisible(  'fSplit2' , .f. )
-		//	ShowButTop( .f. )
+			SetWindowControlsVisible(  'fSplit2' , .f. )	
 		End If
 
 
-
-
-		lAtivaBlack := .t.		
-		BT_ClientAreaInvalidateAll ( cActiveJan  )
-	
+		lAtivaBlack := .t.				
+		BT_ClientAreaInvalidateAll ( cActiveJan  )		
+		BT_ClientAreaInvalidateAll ( 'fSplit2'  )
+		BT_ClientAreaInvalidateAll ( 'fSplit10'  )	
 		
 		
 	Else

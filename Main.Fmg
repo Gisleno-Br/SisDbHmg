@@ -41,7 +41,7 @@ DEFINE WINDOW TEMPLATE AT nMaximizedWindowRow , nMaximizedWindowCol WIDTH nMaxim
         WIDTH  10
         HEIGHT 28
 
-        ACTION ConfirmAviso( 'Confirma Cadastro Dessa Consulta?' , cActiveJan )
+        ACTION xDialog( 'Confirma Cadastro Dessa Consulta?' , .t. )
         CAPTION "Button_1"
         
         FONTNAME "Arial"

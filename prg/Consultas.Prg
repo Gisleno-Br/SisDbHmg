@@ -1793,7 +1793,7 @@ FUNCTION GrvConsul( cTab  , nId1)
 
 	//SaveBmpDialog('fCriaConsulta' )
 
-	If !Confirmaviso( 'Confirma Cadastro dessa Consulta?' , cActiveJan , .f. )
+	If !xDialog( 'Confirma Cadastro dessa Consulta?' , .t. )
 		//_FechaJan('fCriaConsulta' )
 		Return .F.
 	End If

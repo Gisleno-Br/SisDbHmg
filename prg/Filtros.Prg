@@ -165,7 +165,7 @@ FUNCTION xExclFiltro()
    LOCAL oServer
    LOCAL oQuery
 
-   If Confirmaviso( hb_ANSIToOEM("Confirma Exclusão desse Filtro? ") , , .F. )
+   If xDialog( Hb_AnsiToOem("Confirma Exclusão desse Filtro? ") , .t. )
 
 
       cSqlx1 := "delete from filtros where tabela = '" + cTabx + "' and idfiltros = " +  AllTrim( aMtr[ 1 ] )
@@ -848,7 +848,7 @@ STATIC FUNCTION SaveFiltro( lNovo, nIdFiltro1 )
    xFechay()      
 
 
-   If Confirmaviso( hb_AnsiToOem("Confirma Gravação desse Filtro ? ") , , .F. )   
+   If xDialog( hb_AnsiToOem("Confirma Gravação desse Filtro ? ") , .T. )   
      
       If lNovo
          lOk := GrvFiltro( cTabx, AllTrim( fFiltro .Titulo. Value ), AllTrim( fFiltro .EdtFiltro. Value ),  fFiltro .CmbOrdem. DisplayValue, ;

@@ -173,8 +173,7 @@ FUNCTION CadCli()
 		{  '3-opções' , { || msginfo('ok5') } } }
 
 
-
-
+	
 	Private nItMax := Int(nTamSubMenuConsulta / nItemSubHeight)
 	Private nItx1  := nItMax
 
@@ -324,6 +323,7 @@ FUNCTION CadCli()
 
 
 
+
 RETURN
 
 
@@ -352,6 +352,7 @@ Function EnchMtrConsul(cTab1)
 	oServer := Nil
 
 Return
+
 
 FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOpx1 ,aOpx2 , aOpcoes )
 
@@ -520,6 +521,11 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 
 	Load Window fClientes as &cFormPrin
 
+
+
+
+
+
 	SetWindowCursor( GetFormHandle( cFormPrin )  , HOURGLASS  )
 
 
@@ -541,7 +547,7 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 
 	cActiveJan := cFormPrin
 
-	cTitle := cTitulo
+	//cTitle := cTitulo
 
 	SetProperty( cFormPrin , "Title" , cTitle)
 
@@ -556,18 +562,20 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 	SetProperty( cFormPrin, "col", 0 )
 
 
-
 	SetProperty( cFormPrin, "Height", nDeskTopHeight - 90 )
 	SetProperty( cFormPrin, "Width", nDeskTopWidth )
 
 	
-	ShowScrollBar( GetFormHandle(cMenuName ), 0, .F. )
-	ShowScrollBar( GetFormHandle( cMenuName), 1, .F. )
+	//ShowScrollBar( GetFormHandle(cMenuName ), 0, .F. )
+	//ShowScrollBar( GetFormHandle( cMenuName), 1, .F. )
 
-
-
-
+	
 	Activate Window &cFormPrin
+
+
+	//DoMethod(  cFormPrin , "Show"  )
+
+	//msginfo('ok')
 
 
 
@@ -1025,7 +1033,7 @@ Function ResButSel()
 Return lOk
 
 Function InitTela(  lIni1  , nColz1)
-
+/*
 	Local i
 	Default lIni1 := .f.
 	Default nColz1 := 1
@@ -1045,7 +1053,7 @@ Function InitTela(  lIni1  , nColz1)
 		CrieMenuLabel(aOpz1)
 	End If
 
-					*//Critico
+
 
 //RefreshAll(cFormPrin)
 
@@ -1068,7 +1076,6 @@ Function InitTela(  lIni1  , nColz1)
 		CREATE EVENT PROCNAME EventButton() STOREINDEX nEveButton
 		EventProcessAllHookMessage ( nEveButton, .t. )
 
-		//EventProcessAllHookMessage( EventCreate( {|| EventButton() },    GetFormHandle( cMenuName  )   ), .T. )
 	
 	End If
 
@@ -1076,13 +1083,42 @@ Function InitTela(  lIni1  , nColz1)
 	lInitCompleto := .t.
 	IntCli()
 
+	*/
 
-	//xInvalidate()
-	//EnableWindow( GetControlHandle( 'br_grid', cActiveJan )   , .f. )
-	//SetWindowLongPtr (GetControlHandle( 'br_grid', cActiveJan ), nIndex, dwNewLong) 
+
+
+	aMtrDados := {}
+
+
+
+	
+	aMz1 := yEfect(  cActiveJan , .t.   )
+	
+	xMsgRun( "Aguarde Criando Estrutura .... "  , { || aMtrDados := TestBrow( cActiveJan    ) }   , .f.  )
+
+	//xCloseMsg()
+
+
+
+
+//	msginfo( Str(  Len(aMtrDados)   )   )
+
+
+	xCloseMsg()
+	SysWait(.1)
+
+
+
+	EfectEnd(cActiveJan , aMz1 )
+	
+	SetWindowCursor( GetFormHandle( cFormPrin )  , IDC_ARROW  )
+
+
+	xBrowser( aMtrDados , cFormPrin )
 
 	   
 Return
+
 
 
 
@@ -1331,6 +1367,7 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 
 	// Local aTams := {}
 
+
 	Local am1 := {}
 
 
@@ -1360,7 +1397,7 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 	Default cFiltro2 := ''
 
 
-	SetWindowCursor( GetFormHandle(  cActiveJan ) , HOURGLASS )
+	//SetWindowCursor( GetFormHandle(  cActiveJan ) , HOURGLASS )
 
 	aCampos  := GetCamposDic( cTabela, 'S' , .t. , .t. )
 	//Local aCabec  := GetCamposDic( cTabela, 'S' , .f. , .t. )
@@ -2505,7 +2542,7 @@ Function xAbreOpMenu( cF1 , cContrl1 )
 	Local nLinha 
 	Local lSalto := .f. 
 
-	SetWindowCursor( GetFormHandle( cActiveJan ) , HOURGLASS)
+//	SetWindowCursor( GetFormHandle( cActiveJan ) , HOURGLASS)
 
 	//SET AUTOSCROLL ON
 
@@ -2973,6 +3010,7 @@ Function UpScrool( nDir , nTamanho )
 	//SysWait(.1)
 
 
+
 	If nClear > 0 
 
 	
@@ -3221,6 +3259,7 @@ FUNCTION IntCli(  lSoConsulta )
 					End If 
 					
 
+
 					
 					OBTN_Visible( cFormPrin , 5457 , .f.)
 
@@ -3271,27 +3310,7 @@ FUNCTION IntCli(  lSoConsulta )
 		SetProperty( cFormPrin , "LblQtConsu","Row", nLinBut+30 )
 		SetProperty( cFormPrin , "Label1","Row", nLinBut+30 )
 
-		/*
-
-		OBTN_Create( cFormPrin , 5457, "&Incluir" ,  nLinBut ,4,  56,  24 ,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
-		OBTN_Font( cFormPrin , 5457,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
-
-		OBTN_Create( cFormPrin , 5458, "&Editar" ,  nLinBut,62,  56,  24 ,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
-		OBTN_Font( cFormPrin , 5458,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
-
-		OBTN_Create( cFormPrin , 5459, "&Excluir" ,  nLinBut, 120 ,  56,  24 ,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
-		OBTN_Font( cFormPrin , 5459,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
-
-		*/
-
-		//EventProcessAllHookMessage( EventCreate( {|| EventButton() },    OBTN_Handle( cFormPrin , 5457 )   ), .T. )
-		//EventProcessAllHookMessage( EventCreate( {|| EventButton() },    OBTN_Handle( cFormPrin , 5458 )   ), .T. )
-		//EventProcessAllHookMessage( EventCreate( {|| EventButton() },    OBTN_Handle( cFormPrin , 5459 )   ), .T. )
-
-
-		//msginfo('pl1')
-
-
+	
 
 		OBTN_Visible( cFormPrin , 5457 , .t.)
 
@@ -3306,21 +3325,6 @@ FUNCTION IntCli(  lSoConsulta )
 
 		IF OBTN_Handle(cFormPrin , 5457) > 0
 
-//			ReleaseButton(cFormPrin , 5457)
-//			ReleaseButton(cFormPrin , 5458)
-//			ReleaseButton(cFormPrin , 5459)
-
-			/*
-			OBTN_Visible( cFormPrin , 5457 , .f.)
-			OBTN_Visible( cFormPrin , 5458 , .f.)
-			OBTN_Visible( cFormPrin , 5459 , .f.)
-
-
-
-
-			SetProperty( cFormPrin , "LblQtConsu","Visible", .f. )
-			SetProperty( cFormPrin , "Label1","Visible", .f.  )
-			*/
 
 			xButConsul(.f. )
 
@@ -4226,7 +4230,7 @@ Function xManutSub1( lNovo )
 	Default lNovo := .t. 
 
 
-	SetWindowCursor( GetFormHandle(cActiveJan ) , HOURGLASS)
+	//SetWindowCursor( GetFormHandle(cActiveJan ) , HOURGLASS)
 
 
 	If lNovo 
@@ -4410,7 +4414,7 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 				nIdConsulta := GetId(  'consultas' , Alltrim(cSubMenuSel)  )
 
 
-				If (nIdConsulta > 0) .And.  (Confirmaviso( Hb_AnsiToOem("Confirma Exclusão dessa Consulta ? ")  , cActiveJan , .f. ))
+				If (nIdConsulta > 0) .And.  (xDialog( Hb_AnsiToOem("Confirma Exclusão dessa Consulta ? ")  ,.t. ))
 
 				
 					ExcluiConsulta(nIdConsulta)
@@ -5331,6 +5335,7 @@ Function PutImagem(nColx , cTexto , cSeq1 )
 
 
 Return
+
 
 
 fUNCTION DrawTransp(cJan , zBitMap , cTitulo , nQreg , cTitConsu , cTitFltr )

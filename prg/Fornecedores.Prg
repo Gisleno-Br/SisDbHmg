@@ -581,7 +581,7 @@ Function GrvForne(lNovo1)
 	End If
 
 
-	IF !Confirmaviso( cMsg  , cActiveJan , .f. )
+	IF !xDialog( cMsg  , .t. )
 
 
 		SendMessage( OBTN_Handle(  'fCadForne' , 353 )  , WM_MOUSEMOVE , 0, 0)
