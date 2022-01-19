@@ -1101,11 +1101,13 @@ Function InitTela(  lIni1  , nColz1)
 
 
 
+
 //	msginfo( Str(  Len(aMtrDados)   )   )
 
 
 	xCloseMsg()
 	SysWait(.1)
+
 
 
 
