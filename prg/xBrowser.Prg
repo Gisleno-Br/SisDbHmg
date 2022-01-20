@@ -8,8 +8,12 @@
 #include <hmg.ch>
 #include <dll.ch>
 
+ #include "hbthread.ch"
+
 
 #define XQUEBRA Chr(13)+Chr(10)
+
+
 
 
 Static aOpx1 := {}
@@ -19,7 +23,58 @@ Static lHitB := .f.
 Static lHitT := .t. 
 
 
-Function TestBrow( cParent1 )
+
+Static lTermino := .f.
+Static aThread2 := Nil 
+Static aMResult := {}
+
+Static cAndamento := ''
+
+
+
+
+//DECLARE WINDOW Win_Browser
+
+
+Function xRodaImp()
+
+
+    While !lTermino 
+
+		//  If ValType(cAndamento) = 'C'	
+		 // 	XMsgAltere( cAndamento )
+		  //End If 			  
+
+
+
+	      Do Events 
+
+		//hb_IdleSleep(0.2)
+
+
+	Enddo 
+
+
+
+	  
+	hb_threadDetach( aThread2 )   // close thread handle
+	hb_threadQuitRequest( aThread2 ) 
+
+//	msginfo(  'Feito : ' + Str(   Len(aMResult) )   )
+
+
+Return (aMResult )
+
+
+
+Function DoMatriz( cParentx , cTabela )
+
+  		aThread2 := hb_threadStart( HB_THREAD_INHERIT_PUBLIC, @TestBrow(),  cParentx , cTabela  )
+  
+REturn 
+
+ 
+Function TestBrow( cParent1 , cTabx  )
 
 
 
@@ -39,10 +94,7 @@ Function TestBrow( cParent1 )
 	Local calias  := "TMP"
 	local cTab1
 	local aCabex:={}
-    Local cTabela := 'clientes'
-
-
-
+    Local cTabela := cTabx
 
 
 	Local nIndx1 := 0
@@ -75,14 +127,20 @@ Function TestBrow( cParent1 )
 
 	Local oServer
 
+	Local nTamLargura := 0
+
 	Local cLabelx := 'Lblx01'
+
+	Local i 
+
+	Local nX1 
 
 
 	aMtrHeader := {}
 
 
 
-	SetWindowCursor( GetFormHandle(  cActiveJan ) , HOURGLASS )
+	//SetWindowCursor( GetFormHandle(  cActiveJan ) , HOURGLASS )
 
 	aCampos  := GetCamposDic( cTabela, 'S' , .t. , .t. )
 	//Local aCabec  := GetCamposDic( cTabela, 'S' , .f. , .t. )
@@ -108,7 +166,9 @@ Function TestBrow( cParent1 )
 		cSq2 := GetSql( cTabela  , .f. )
 	End If
 
-    cSq2 += " order by codigo desc limit 6000 "
+    cSq2 += " order by codigo desc limit 800"
+
+	
 
 
 	If (Select(calias) > 0)
@@ -116,13 +176,17 @@ Function TestBrow( cParent1 )
 		Use
 	End If
 
+
 	cSqlx2 := cSqlx1 
 
 	SaveLog("st121.txt" , cSq2 + XQUEBRA )
 
-  //  msginfo( cSq2 )
+    //msginfo( cSq2 )
+
+
 
     
+
 
 
 	aItens := {}
@@ -170,6 +234,9 @@ Function TestBrow( cParent1 )
 		aM1 	 := {}
 		aDynFont := {}
 
+
+
+
 		oRow := oQuery:GetRow( i )
 
 		For nx1 := 1 To Len(oRow[1])
@@ -202,7 +269,7 @@ Function TestBrow( cParent1 )
 
 			End If
 
-
+             /*
 			If (lNum)
 				Aadd(aDynFont , {|| ARRAY FONT "Courier"   SIZE 12 ITALIC UNDERLINE } )
 			Else
@@ -214,24 +281,41 @@ Function TestBrow( cParent1 )
 				End If
 
 			End If
+			*/
 
-			Aadd(aM1 , cValor )
-
+			Aadd(aM1 , { cValor , (aTams[nx1]  *  GetTextoTam( ''  , cParent1 ) )    }  )
+			//msginfo('1')
 
 		Next
 
-		Aadd(aItens , aM1 )
+		c1 := ''
+
+
+		Aeval(aM1 , { |a|  c1 += (Padr( a[1] , a[2] ) )   })
+
+		If (nTamLargura == 0)
+
+		   Aeval(aM1 , { |a|  nTamLargura += a[2]   })
+
+		End If 
+
+
+		//Aadd(aItens , aM1 )
+
+		cAndamento := 'Andamento : '  + Alltrim(Str(I)) + "/" + Alltrim(Str(   oQuery:LastRec() ))
+
+	//	Do Events 
+		Aadd(aItens , c1 )
 
 		//Dbskip()
+
 
 	Next
 
 
-    //msginfo( Str(   Len(aItens)     )   )
-
-
 	oServer:Destroy()
 	oServer := Nil
+
 
 
 
@@ -240,12 +324,23 @@ Function TestBrow( cParent1 )
 
 
 
-//    xBrowser( aItens , cParent1 )
+    //xBrowser( aItens , cParent1 , nTamLargura )
+
+
+
 
 
     //xBrowser( aDatas1 , cParent )
-	//msginfo(' l232 ')
+	//msginfo(' Acabou ')
 
+	aMResult := Aclone(aItens)
+
+	
+   // msginfo( ' f' + Str(   Len(aMResult)     )   )
+
+
+	
+	lTermino := .t. 
 
 
 
@@ -254,21 +349,28 @@ Return aItens
 
 
 
-Function xBrowser( aDatas1 , cParent )
+Function xBrowser( aDatas1 , cParent  , nTamWidth )
 
 
-    Private aMt1 := Aclone(aDatas1)
-  
+   // Private aMt1 := Aclone(aDatas1)
+
+	 //Len(aDatas1) * nItemSubHeight 
+	 // VIRTUAL HEIGHT 1024 VIRTUAL WIDTH  Nil ;
+
+	 //PARENT &cParent ;
+
+
+
 	DEFINE WINDOW Win_Browser ;
-		AT 45,15 ;
-        PARENT &cParent ;
-		WIDTH 850 HEIGHT 547 ;
-		TITLE 'xBrowser' + Left(cParent,4)  ;		
-		PANEL NOSIZE NOSYSMENU NOCAPTION BACKCOLOR RED VIRTUAL HEIGHT Len(aDatas1) * nItemSubHeight 
-		//ON PAINT xPaintBrowser( ThisWindow.Name , aMt1 ,  nOpselx1 , nClear1 , lHitB , lHitT  )
+		AT 145,15 ;      			
+		PARENT &cParent ; 
+		PANEL ; 	
+		WIDTH 210 HEIGHT 547 ;
+		TITLE 'xBrowser' + Left(cParent,4)  	;		
+		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR BLUE 
+	//	ON PAINT xPaintBrowser( ThisWindow.Name , aMt1 ,  nOpselx1 , nClear1 , lHitB , lHitT  )
 	END WINDOW	
 
-    
 
     DEFINE LABEL Labelx1
 		PARENT Win_Browser
@@ -293,8 +395,20 @@ Function xBrowser( aDatas1 , cParent )
         FONTCOLOR {150,150,150}
     END LABEL
 
+   // SetProperty( "Win_Browser" , "Height" , 250 )
 
-    Win_Browser.Show()
+//    Win_Browser.Show()
+
+    
+	_ShowWindow("Win_Browser")
+
+	//BT_ClientAreaInvalidateAll('Win_Browser')
+
+  
+	SysWait(.2)
+
+
+
 
 
 
@@ -303,9 +417,9 @@ Return
 
 
 
-function GetTextoTam( cMsg  )
+function GetTextoTam( cMsg  , cParent )
 
-	Local  FontHandle := _SetFont (GetControlHandle( 'Label_1' , 'Win_Browser' ), XFONT1, 9 , .f. , .f. ,.f. ,.f. )
+	Local  FontHandle := _SetFont ( GetControlHandle( 'LblMsg1' , cParent ), XFONT1, 9 , .f. , .f. ,.f. ,.f. )
 
 Return (GetTextWidth(  0,  'L' , FontHandle  )  + 1 )
 
@@ -413,41 +527,26 @@ Function xPaintBrowser( cForm , aMtrOp , aMtrTam ,  nOpselx1 , nClear1 , lHitB ,
 
 		cTexto := alltrim(  Right( aMtrOp[n1][1]  , Len(  aMtrOp[n1][1] ) - 2  ) )
 
-		lEnabled := aMtrOp[n1][3]
 
 		lSeta1   := .f.
 
 
-		If Len(aMtrOp[n1]) >= 5
-			lSeta1   := aMtrOp[n1][5]
-		End If 	
-
-		If ((nOpselx1 > 0) .And. (nOpSelx1 = n1) .And. aMtrOp[n1][3] ) .or. (   (lEnabled ) .And. (nOpselx1 > 0) .And. ( Alltrim(cTextSel) = Alltrim(cTexto) )  )
+		If (nOpselx1 > 0) .And. (nOpSelx1 = n1) 
+		//.And. aMtrOp[n1][3] ) .or. (   (lEnabled ) .And. (nOpselx1 > 0) .And. ( Alltrim(cTextSel) = Alltrim(cTexto) )  )
 
 			nTypeText    := BT_TEXT_TRANSPARENT
 
-			If !lSubMenu1
-				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , WHITE  , BACK1  )
+		
+			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , WHITE  , BACK1  )
 
-				BT_DrawText ( hDC2 , nLine + nRow  , 25 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  {132,134,200}   , ;
-					Iif( Alltrim(cTextSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ;
-					nAlingText, nOrientation )
-
-
-				BT_DrawBitmap (hDC2  , nLine  + nRow    , 1   , 20  , 20 , BT_STRETCH, hBitOk)
-
-			Else
-
-				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , WHITE  , aCorSub1  )
-				
-
-				BT_DrawText ( hDC2 , nLine + nRow  , 35 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  FONTCOR ,  aCorSub1  , ;
-					Iif( Alltrim(cTextSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ;
-					nAlingText, nOrientation )
+			BT_DrawText ( hDC2 , nLine + nRow  , 25 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR ,  {132,134,200}   , ;
+				Iif( Alltrim(cTextSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ;
+				nAlingText, nOrientation )
 
 
-			
-			End If
+			BT_DrawBitmap (hDC2  , nLine  + nRow    , 1   , 20  , 20 , BT_STRETCH, hBitOk)
+
+		
 
 
 		Else
@@ -455,6 +554,8 @@ Function xPaintBrowser( cForm , aMtrOp , aMtrTam ,  nOpselx1 , nClear1 , lHitB ,
 			nTypeText    := BT_TEXT_TRANSPARENT
 
 			cCor := FONTCOR
+
+			/*
 
 			If !aMtrOp[n1][3]
 
@@ -466,8 +567,10 @@ Function xPaintBrowser( cForm , aMtrOp , aMtrTam ,  nOpselx1 , nClear1 , lHitB ,
 
 			End If
 
+			*/
 		
 			BT_DrawText ( hDC2 , nLine + nRow  , 25 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  cCor , WHITE , nTypeText, nAlingText, nOrientation )
+			
 		
 		End If
 

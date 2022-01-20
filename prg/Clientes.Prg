@@ -2,14 +2,21 @@
 #require "sddmy"
 
 
+
+
+
 /*
 if ( hb_parl (12) )
       style = LVS_SHAREIMAGELISTS | WS_CHILD | WS_TABSTOP | WS_VISIBLE | LVS_EX_TRACKSELECT | LVS_REPORT|LVS_NOSORTHEADER ; 
    else
       style = LVS_SHAREIMAGELISTS | WS_CHILD | WS_TABSTOP | WS_VISIBLE  | LVS_SINGLESEL| LVS_EX_TRACKSELECT | LVS_REPORT|LVS_NOSORTHEADER;
+	  #include "hbthread.ch"
 	  */
 	  
    
+
+
+
 
 
 
@@ -508,6 +515,8 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 	Private cFormJan := cAuxName
 
 
+	Private cBrowName := 'fBrow' + cAlias
+
 	cMenuName := 'fMenu' + cAlias
 
 	If ascan(aOpx1, 'Consultas') > 0
@@ -515,14 +524,11 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 	End If
 
 
-
+	//xBrowser()
 
 	Private cFiltroDlg := 'fFiltro' + Left(cActiveJan,5)
 
 	Load Window fClientes as &cFormPrin
-
-
-
 
 
 
@@ -541,7 +547,7 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 
   
 	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventHndCli"  ) )  ) = 0
-		InstallEventHandler( "EventHndCli" )
+	//	InstallEventHandler( "EventHndCli" )
 	End If
 
 
@@ -568,6 +574,8 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 	
 	//ShowScrollBar( GetFormHandle(cMenuName ), 0, .F. )
 	//ShowScrollBar( GetFormHandle( cMenuName), 1, .F. )
+
+	
 
 	
 	Activate Window &cFormPrin
@@ -1093,20 +1101,33 @@ Function InitTela(  lIni1  , nColz1)
 
 	
 	aMz1 := yEfect(  cActiveJan , .t.   )
+
+	//aMtrDados := TestBrow( cActiveJan    )
+
+//	msginfo('klp')
 	
-	xMsgRun( "Aguarde Criando Estrutura .... "  , { || aMtrDados := TestBrow( cActiveJan    ) }   , .f.  )
-
-	//xCloseMsg()
+	DoMatriz( cActiveJan , cTabela ) 
 
 
 
+	xMsgRun( "Aguarde Criando Estrutura .... "  , { || aMtrDados := xRodaImp()   }   , .f.  )
+
+	//aMtrDados := TestBrow( cActiveJan    )
 
 
-//	msginfo( Str(  Len(aMtrDados)   )   )
-
+	//xMsgRun( "Aguarde Criando Estrutura .... "  , { ||  .t.  }   , .f.  )
 
 	xCloseMsg()
-	SysWait(.1)
+
+
+//	SysWait(.2)
+
+
+//	DoMethod(cActiveJan , "SetFocus")
+
+	//SysWait(.2)
+
+
 
 
 
@@ -1115,8 +1136,14 @@ Function InitTela(  lIni1  , nColz1)
 	
 	SetWindowCursor( GetFormHandle( cFormPrin )  , IDC_ARROW  )
 
+	
+//	SysWait(.2)
+	
 
 	xBrowser( aMtrDados , cFormPrin )
+
+
+	
 
 	   
 Return
@@ -5069,7 +5096,7 @@ Function xGetScrol( lMouseMove )
 
 	Default lMouseMove := .f.
 
-
+	
 	If (nLineImg == 0)
 		Return
 	End If

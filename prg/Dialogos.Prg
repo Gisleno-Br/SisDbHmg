@@ -405,6 +405,27 @@ FUNCTION RetColor1( nInd1, nModel )
 RETURN Iif( nInd1 == 1, aBtnColor, aBtnSel )
 
 
+Function XMsgAltere( cMsg1 )
+
+
+	If (_isWindowDefined('fProgress1'))
+		SetProperty(  'fProgress1' ,   'LblMsg01' , Alltrim(cMsg1) ) 
+
+		//DoMethod('fProgress1' ,   'LblMsg01' , 'Refresh')
+
+		Do Events
+		
+		
+		//msginfo('ok ' + cMsg1 )
+
+	End If 
+
+
+
+
+Return 
+
+
 
 FUNCTION xMsgRun( cMsg1  , bBlock , lSombra )
 
@@ -429,6 +450,35 @@ FUNCTION xMsgRun( cMsg1  , bBlock , lSombra )
 		NOMAXIMIZE NOMINIMIZE NOSIZE CHILD NOSYSMENU NOCAPTION BACKCOLOR WHITE  ;
 		ON PAINT xProcDlg(  cMsg1   , .t.  )
 	END WINDOW
+
+	
+
+    DEFINE LABEL LblMsg01
+		PARENT fProgress1
+        ROW    35
+        COL    60
+        WIDTH  520
+        HEIGHT 24
+        VALUE '               '
+        FONTNAME XFONT1
+        FONTSIZE 9
+        TOOLTIP ""
+        FONTBOLD .T.
+        FONTITALIC .F.
+        FONTUNDERLINE .F.
+        FONTSTRIKEOUT .F.
+        HELPID Nil
+        VISIBLE .T.
+        TRANSPARENT .T.
+        ACTION Nil
+        AUTOSIZE .F.
+        BACKCOLOR NIL
+        FONTCOLOR {150,150,150}
+    END LABEL
+
+
+
+
 
 	Center Window fProgress1
 
@@ -460,13 +510,17 @@ FUNCTION xMsgRun( cMsg1  , bBlock , lSombra )
 
 	
 
-	SysWait(.1)
+//	SysWait(.1)
 
 	Eval(bBlock)
 
 	//msginfo('lp2')
 
 
+
+
+//	msginfo('ter')	
+	//SysWait(.2)
 
 
 //	Load Window fProgress
@@ -802,7 +856,7 @@ Function xCloseMsg()
 		SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )	
 		DO EVENTS
 
-	//	msginfo('2')
+		//msginfo('2')
 
 
 	End If 
@@ -817,11 +871,9 @@ Function xCloseMsg()
 		SendMessage( nHandle1, WM_SYSCOMMAND, WM_DESTROY , 0 )	
 		DO EVENTS
 
-	//	msginfo('3')
+		//msginfo('3')
 
 	End If 
-
-
 
 
 Return 
