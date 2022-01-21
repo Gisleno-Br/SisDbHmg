@@ -616,6 +616,7 @@ Function xPaintSub()
 
 		cTexto := aSubOp[n1]
 
+
 		//cTexto := strzero(n1,3) + ' ' + aSubOp[n1]
 
 		If ((nOpselx > 0) .And. (nOpSelx = n1) ) .or. (   (nOpselx > 0) .And. ( Alltrim(cSubMenuSel) = Alltrim(cTexto) )  )
@@ -631,8 +632,10 @@ Function xPaintSub()
 
 		Else
 
+
+
 			nTypeText    := BT_TEXT_TRANSPARENT
-			BT_DrawText ( hDC2 , nLine + nRow  , 05 ,  hb_ANSIToOEM( cTexto ), XFONT1, 9,  FONTCOR , BACK1 , nTypeText, nAlingText, nOrientation )
+			BT_DrawText ( hDC2 , nLine + nRow  , 05 ,  Hb_AnsiToOem(cTexto)   , XFONT1, 9,  FONTCOR , BACK1 , nTypeText, nAlingText, nOrientation )
 
 		End If
 

@@ -16,6 +16,8 @@
     OKVERDE2    BITMAP  img\okverde2.bmp 
     OKVERDE3    BITMAP  img\okverde3.bmp 
     OKMARK      PNG     img\ngi.png
+    BACK1       ARRAY   {229,237,242}
+    FONTCOR     ARRAY   {0,106,133}
     
 
     

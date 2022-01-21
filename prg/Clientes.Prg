@@ -1041,6 +1041,8 @@ Function ResButSel()
 Return lOk
 
 Function InitTela(  lIni1  , nColz1)
+
+	Local nLarg
 /*
 	Local i
 	Default lIni1 := .f.
@@ -1117,7 +1119,16 @@ Function InitTela(  lIni1  , nColz1)
 
 	//xMsgRun( "Aguarde Criando Estrutura .... "  , { ||  .t.  }   , .f.  )
 
+
+	
+	//msginfo( Str(  xRetLargura()   )       )
+
+	nLarg := xRetLargura()
+
+
 	xCloseMsg()
+
+
 
 
 //	SysWait(.2)
@@ -1130,22 +1141,21 @@ Function InitTela(  lIni1  , nColz1)
 
 
 
-
-
 	EfectEnd(cActiveJan , aMz1 )
 	
 	SetWindowCursor( GetFormHandle( cFormPrin )  , IDC_ARROW  )
 
 	
 //	SysWait(.2)
-	
-
-	xBrowser( aMtrDados , cFormPrin )
-
 
 	
 
-	   
+	//msginfo( ' 3 ' + Str(  Len( aMtrDados )   )       )
+
+
+	xBrowser( aMtrDados , cFormPrin , nLarg)
+
+		   
 Return
 
 
@@ -5364,6 +5374,7 @@ Function PutImagem(nColx , cTexto , cSeq1 )
 
 
 Return
+
 
 
 

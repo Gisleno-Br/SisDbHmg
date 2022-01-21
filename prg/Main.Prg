@@ -188,6 +188,7 @@ FUNCTION Main
 
 	Public XFONT1  := 'Arial Unicode MS'
 
+
 	Public BACKVERDE1 := {233,246,237}
 
 	Private nSec1 := 0
@@ -2581,6 +2582,8 @@ Function xTesMenu( nRow , nCol )
 
 
 Return
+
+
 
 
 Function ExitApp()
