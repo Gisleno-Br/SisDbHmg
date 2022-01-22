@@ -279,6 +279,8 @@ Return (GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 1 )
 
 
 
+
+
 Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDropedDown , nHeightDroped , lSetas , lSubMenu1 , lHitB , lHitT  , lPopup )
 
 	Local aRGBcolor := BACK1
