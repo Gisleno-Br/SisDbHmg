@@ -27,6 +27,8 @@
 
 
 
+
+
 Static aOpx1 := 0
 Static nItemx1 := 0
 
@@ -49,6 +51,11 @@ Static nTamPag := 35
 Static nItemBrwHeight := 0
 
 Static aMt1 := {}
+
+Static nClearSel := 0 
+Static cOpMainSel  := ''
+
+Static nSelLine := 0
 
 
 
@@ -387,8 +394,8 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 		CHILD ;
 		WIDTH 1650 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) VIRTUAL WIDTH nTamWidth+1000 ;
 		TITLE 'xBrowser' + Left(cParent,4)  	;
-		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR BLUE ;  
-		ON PAINT xPaintBrowser( ThisWindow.Name , aMt1 ,  aOpx1  , nItemx1 , lHitB , lHitT  )
+		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR WHITE ;  
+		ON PAINT xPaintBrowser( ThisWindow.Name , aMt1 , nItemx1 ,     nClearSel ,  lHitB , lHitT  )
 	END WINDOW
 
 //xPaintBrowser( cForm , aMtrOp , aMtrTam ,  nOpselx1 , nClear1 , lHitB , lHitT  )
@@ -447,14 +454,13 @@ Return
 
 
 
-
 function GetTextoTam( cMsg  , cParent )
 
 	Local  FontHandle := _SetFont ( GetControlHandle( 'LblMsg1' , cParent ), FONTBROWSER, 9 , .f. , .f. ,.f. ,.f. )
 
 Return (GetTextWidth(  0,  'L' , FontHandle  )  + 1 )
 
-
+                   //   xPaintBrowser( , aMt1 , nItemx1 ,     nClearSel ,  lHitB , lHitT  )
 Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lHitB , lHitT  )
 
 	Local aRGBcolor := 'BACK1'
@@ -477,7 +483,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lHitB , lHitT  )
 	Local hBit11
 
 
-	Local nHeightBmp := nItemSubHeight * Len(aMtrOp)
+	Local nHeightBmp := nItemBrwHeight * Len(aMtrOp)
 
 	Local hBitmap2
 
@@ -541,9 +547,10 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lHitB , lHitT  )
 	End If
 
 	If nClear1 > 0
-		BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemSubHeight)    , 0  , nColTamMenu ,    nHeightBmp    ,  WHITE  , WHITE  )
+		BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemBrwHeight)    , 0  , Width  ,    nHeightBmp     ,  WHITE  , WHITE  )
 
 	End If
+
 
 
 
@@ -557,8 +564,6 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lHitB , lHitT  )
 
 		cTexto := Hb_Utf8ToStr(aMtrOp[n1][1])
 
-		lSeta1   := .f.
-
 
 
 		If (nOpselx1 > 0) .And. (nOpSelx1 = n1)
@@ -567,17 +572,13 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lHitB , lHitT  )
 			nTypeText    := BT_TEXT_TRANSPARENT
 
 
-			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , WHITE  , BACK1  )
+			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , BLACK  , GRAY   )
 
-			BT_DrawText ( hDC2 , nLine + nRow  , 25 ,   cTexto , xFont2, 8 ,  FONTCOR ,  {132,134,200}   , ;
-				Iif( Alltrim(cTextSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ;
-				nAlingText, nOrientation )
-
-
-			BT_DrawBitmap (hDC2  , nLine  + nRow    , 1   , 20  , 20 , BT_STRETCH, hBitOk)
+			BT_DrawText ( hDC2 , nLine + nRow  , 15 ,   cTexto , xFont2, 9 ,  FONTCOR ,  {132,134,200}   , ;
+				 BT_TEXT_BOLD+BT_TEXT_TRANSPARENT   ,	nAlingText, nOrientation )
 
 
-
+			//BT_DrawBitmap (hDC2  , nLine  + nRow    , 1   , 20  , 20 , BT_STRETCH, hBitOk)
 
 
 		Else
@@ -714,23 +715,105 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 
     *// Menu Principal
+	//nItemx1 ,     nClearSel ,
 
 
 	If (nHWnd == GetProperty(  'Win_Browser' , "HANDLE" )) 
 
 
-		If nMsg == WM_MOUSEMOVE	
-		//	msginfo('ok')
+		If nMsg == WM_MOUSELEAVE
+			nClearSel := 0
+			nitemx1   := 0
 
+			BT_ClientAreaInvalidateAll('Win_Browser')
 
+			//msginfo('Leave')
+		
 		End If 	
 
 
+		If nMsg == WM_MOUSEMOVE	
+
+
+			If nSelLine > 0 
+				Return 
+			End If 
+			 
+
+			 If (nItemx1 > 0) .And. (nWParam != 90 )
+				If (nItemx1 = xOpSelPos( 'Win_Browser' ,  0,0,0 ,  nItemBrwHeight )   )
+					Return
+				End If
+			End If
+
+
+			If (nWParam != 90 )
+				nItemx1 = xOpSelPos( 'Win_Browser' ,  0,0,0 ,  nItemBrwHeight )
+			End If
+
+			//msginfo('32')
+
+
+			nRow1 := -(GetProperty( 'Win_Browser' , "VscrollBar" , "Value"))
+
+
+
+			If (nItemx1 <= Len(aMt1 ))
+				If !aMt1[nItemx1][2]					
+					SetWindowCursor( nHWnd , IDC_ARROW)
+					Return
+				End If
+			End If
+
+			SetWindowCursor( nHWnd , CURSORHAND)			
+
+			If nClearSel > 0
+				xLimpSub( 'Win_Browser' ,  @nClearSel ,  @nItemx1 , 0 ,   nItemBrwHeight , GetProperty(  'Win_Browser','Width') )
+			End If
+
+
+			If nItemx1 > 0
+				nClearSel := nItemx1
+			Else
+				Return
+			End If
+
+
+			If (nItemx1 > 0)
+				//msginfo(Str( nItemx1  ) + '   ' + Str(nClearSel)   )
+				BT_ClientAreaInvalidateRect( 'Win_Browser' ,  nRow1  +  ( ( nItemx1 - 1 ) * nItemBrwHeight)  , 0 , GetProperty(  'Win_Browser','Width')  ,  nItemBrwHeight   , .t. )
+			End If 		
+
+
+		End If 	
+		
+
+
+
 		If nMsg == WM_LBUTTONDOWN
-			//msginfo('ok')
+
 			nItem := xOpSelPos( 'Win_Browser' ,  0,0,0 ,  nItemBrwHeight )
 
-			msginfo(Str( nItem ) + '   ' + aMt1[nItem][1] )
+			
+			nRow1 := -(GetProperty( 'Win_Browser' , "VscrollBar" , "Value"))
+
+			nClearSel := nItemx1
+
+			If nClearSel > 0
+				xLimpSub( 'Win_Browser' ,  @nClearSel ,  @nItemx1 , 0 ,   nItemBrwHeight , GetProperty(  'Win_Browser','Width') )
+			End If
+
+
+			nItemx1 := 	nItem
+
+			If (nItemx1 > 0)				
+				BT_ClientAreaInvalidateRect( 'Win_Browser' ,  nRow1  +  ( ( nItemx1 - 1 ) * nItemBrwHeight)  , 0 , GetProperty(  'Win_Browser','Width')  ,  nItemBrwHeight   , .t. )
+			End If 		
+
+
+			nSelLine := nItem 
+
+
 		End If 	
 		
 

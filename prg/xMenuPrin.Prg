@@ -887,7 +887,7 @@ Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred  , nHeightCalc )
 	End If
 
 
-	
+
 
 	If (lSetasDown) .And. (cJan != "Win_Browser")
 
