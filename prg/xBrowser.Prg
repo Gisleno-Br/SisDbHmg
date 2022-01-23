@@ -19,12 +19,12 @@
 
 
 
+
 #define FONTCOR {0,106,133}
 
 
 
 
-Static aMt1 := {}
 
 
 Static aOpx1 := 0
@@ -43,6 +43,13 @@ Static nLArgura := 0
 
 Static cAndamento := ''
 
+Static nTamPag := 35
+
+
+Static nItemBrwHeight := 0
+
+Static aMt1 := {}
+
 
 
 
@@ -53,16 +60,13 @@ Function xRodaImp()
 
 
 	While !lTermino
-	Do Events
-
-	//hb_IdleSleep(0.2)
-
-Enddo
+			Do Events
+	Enddo
 
 
 
-hb_threadDetach( aThread2 )   // close thread handle
-hb_threadQuitRequest( aThread2 )
+	hb_threadDetach( aThread2 )   // close thread handle
+	hb_threadQuitRequest( aThread2 )
 
 
 
@@ -91,6 +95,9 @@ Function TestBrow( cParent1 , cTabx  )
 	//Local aCabec  := GetCamposDic( cTabela, 'S' , .f. , .t. )
 
 	LOCAL aCabec
+
+		
+	Local nTam := 0
 
 	Local aTams
 
@@ -182,6 +189,7 @@ Function TestBrow( cParent1 , cTabx  )
 	End If
 
 	cSq2 += " order by codigo desc limit 1000"
+
 
 
 
@@ -285,19 +293,28 @@ Function TestBrow( cParent1 , cTabx  )
 
 
 
+
 			If (Alltrim(cValor) = 'Inativo')
 				lAtivo := .f.
 			End If
+
 
 			//nTam1 := 1
 
 			//Aadd(aM1 , { Padr(cValor , Int( (aTams[nx1]+3) * 1.03)  )   ,  Int( (aTams[nx1]+3) * 1.03)           }  )
 
-			Aadd(aM1 , { Padr( (cValor) , aTams[nx1] )   , aTams[nx1]          }  )
+			nQAcento := QtAcento(cValor)
+
+			nTam := If( (nQAcento =  0)   , aTams[nx1] ,  aTams[nx1] + nQAcento ) 
+
+
+			Aadd(aM1 , { Padr( (cValor) ,nTam )  ,  nTam          }  )
 
 			Do Events
 
 		Next
+
+
 
 
 		c1 := ''
@@ -354,15 +371,23 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 
 
 	aMt1 := Aclone(aDatas1)
+	nItemBrwHeight := nItemSubHeight - 5
+
+	//lSetasDown := .f. 
+
+
+
+
+	//	PARENT &cParent ;
+//		PANEL ;
 
 
 	DEFINE WINDOW Win_Browser ;
 		AT 145,15 ;
-		PARENT &cParent ;
-		PANEL ;
-		WIDTH 1650 HEIGHT 547 VIRTUAL HEIGHT (Len(aMt1) * nItemSubHeight) VIRTUAL WIDTH nTamWidth+1000 ;
+		CHILD ;
+		WIDTH 1650 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) VIRTUAL WIDTH nTamWidth+1000 ;
 		TITLE 'xBrowser' + Left(cParent,4)  	;
-		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR BLUE ;
+		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR BLUE ;  
 		ON PAINT xPaintBrowser( ThisWindow.Name , aMt1 ,  aOpx1  , nItemx1 , lHitB , lHitT  )
 	END WINDOW
 
@@ -394,16 +419,30 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 
 
 
-
 	_ShowWindow("Win_Browser")
 
-	//BT_ClientAreaInvalidateAll('Win_Browser')
+
+	BT_ClientAreaInvalidateAll('Win_Browser')
+
+	
+	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventBrowser"  ) )  ) = 0
+		InstallEventHandler( "EventBrowser" )
+		//nIndexEventY := EventCreate (  { ||   xTeclasMenu( )   }  )
+	End If
 
 
-	SysWait(.1)
+
+
+
+	//msginfo('ok')
+
+
+//	SysWait(.1)
 
 
 Return
+
+
 
 
 
@@ -512,11 +551,14 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lHitB , lHitT  )
 
 	For n1 := 1 To Len(aMtrOp)
 
-		cTexto := Hb_UTF8TOSTR(alltrim(  Right( aMtrOp[n1][1]  , Len(  aMtrOp[n1][1] ) - 2  ) ))
+		//cTexto := Hb_UTF8TOSTR(alltrim(  Right( aMtrOp[n1][1]  , Len(  aMtrOp[n1][1] ) - 2  ) ))
 
-		//cTexto := Alltrim( aMtrOp[n1][1] )
+		//cTexto := NoAcento(   Upper(aMtrOp[n1][1])   ) 
+
+		cTexto := Hb_Utf8ToStr(aMtrOp[n1][1])
 
 		lSeta1   := .f.
+
 
 
 		If (nOpselx1 > 0) .And. (nOpSelx1 = n1)
@@ -527,7 +569,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lHitB , lHitT  )
 
 			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , WHITE  , BACK1  )
 
-			BT_DrawText ( hDC2 , nLine + nRow  , 25 ,  hb_ANSIToOEM( cTexto ), xFont2, 9 ,  FONTCOR ,  {132,134,200}   , ;
+			BT_DrawText ( hDC2 , nLine + nRow  , 25 ,   cTexto , xFont2, 8 ,  FONTCOR ,  {132,134,200}   , ;
 				Iif( Alltrim(cTextSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ;
 				nAlingText, nOrientation )
 
@@ -559,6 +601,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lHitB , lHitT  )
 
 			*/
 
+
 			BT_DrawText ( hDC2 , nLine + nRow  , 15 ,  cTexto , xFont2, 9 ,  cCor , WHITE , nTypeText, nAlingText, nOrientation )
 
 
@@ -569,7 +612,8 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lHitB , lHitT  )
 
 
 
-		nLine += (nItemSubHeight)
+		nLine += nItemBrwHeight 
+
 
 
 	Next
@@ -582,7 +626,9 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lHitB , lHitT  )
 
 REturn
 
-static FUNCTION NoAcento(cString)
+
+
+static FUNCTION  QtAcento(cString)
 	Local cChar  := ""
 	Local nX     := 0
 	Local nY     := 0
@@ -595,45 +641,105 @@ static FUNCTION NoAcento(cString)
 	Local cCecid := "çÇ"
 	Local cMaior := "&lt;"
 	Local cMenor := "&gt;"
+	Local lOk    := .f. 
+	Local nQt1   := 0
+	Local aResult := { }
 
 	For nX:= 1 To Len(cString)
 		cChar:=SubStr(cString, nX, 1)
 		IF cChar$cAgudo+cCircu+cTrema+cCecid+cTio+cCrase
 			nY:= At(cChar,cAgudo)
 			If nY > 0
-				cString := StrTran(cString,cChar,SubStr(cVogal,nY,1))
+				lOk    := .t.
+				nQt1++
 			EndIf
 			nY:= At(cChar,cCircu)
 			If nY > 0
-				cString := StrTran(cString,cChar,SubStr(cVogal,nY,1))
+				lOk    := .t.
+				nQt1++
 			EndIf
 			nY:= At(cChar,cTrema)
 			If nY > 0
-				cString := StrTran(cString,cChar,SubStr(cVogal,nY,1))
+				lOk    := .t.
+				nQt1++
 			EndIf
 			nY:= At(cChar,cCrase)
 			If nY > 0
-				cString := StrTran(cString,cChar,SubStr(cVogal,nY,1))
+				lOk    := .t.
+				nQt1++
 			EndIf
 			nY:= At(cChar,cTio)
 			If nY > 0
-				cString := StrTran(cString,cChar,SubStr("aoAO",nY,1))
+				lOk    := .t.
+				nQt1++
 			EndIf
 			nY:= At(cChar,cCecid)
 			If nY > 0
-				cString := StrTran(cString,cChar,SubStr("cC",nY,1))
+				lOk    := .t.
+				nQt1++
 			EndIf
 		Endif
 	Next
 
 	If cMaior$ cString
-		cString := strTran( cString, cMaior, "" )
+		lOk    := .t.
+		nQt1++
 	EndIf
 	If cMenor$ cString
-		cString := strTran( cString, cMenor, "" )
+		lOk    := .t.
+		nQt1++
 	EndIf
 
 	//cString := StrTran( cString, CRLF, " " )
 
-Return cString
+Return nQt1
+
+
+
+Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
+
+	Local cOpcao := ''
+	Local nCol   := 0
+	Local nRow   := 0
+	Local aR1
+	Local nInd2  := 0
+	Local cTp1   := ''
+//	Local nCol := 0
+	Local nRow1 := 0
+
+	Local nRow2 :=0
+	Local nCol2 := 0
+	Local nItem := 0
+
+
+
+    *// Menu Principal
+
+
+	If (nHWnd == GetProperty(  'Win_Browser' , "HANDLE" )) 
+
+
+		If nMsg == WM_MOUSEMOVE	
+		//	msginfo('ok')
+
+
+		End If 	
+
+
+		If nMsg == WM_LBUTTONDOWN
+			//msginfo('ok')
+			nItem := xOpSelPos( 'Win_Browser' ,  0,0,0 ,  nItemBrwHeight )
+
+			msginfo(Str( nItem ) + '   ' + aMt1[nItem][1] )
+		End If 	
+		
+
+
+	End If 	
+
+
+Return  	
+
+
+
 
