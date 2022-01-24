@@ -70,6 +70,7 @@ Function xMenuMain( nRow1 , nCol1 , aOpPrin , aSubOps )
 	aSubOps := {}
 
 
+
 	DEFINE WINDOW Win_MenuPrincipal AT nRow1, nCol1 WIDTH nColTamMenu HEIGHT 520 TITLE 'MenPrincipal1' ;
 		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR WHITE VIRTUAL HEIGHT 521 ;
 		ON PAINT xPaintMenu( ThisWindow.Name , aOpcoes , nMainSel , nClearSel , cOpMainSel , nItemDrop1 , nHeightDrop , lSetasDown , .f. , l_Httb , l_Http )
@@ -81,6 +82,7 @@ Function xMenuMain( nRow1 , nCol1 , aOpPrin , aSubOps )
 		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT Win_MenuPrincipal BACKCOLOR aCorSub1 VIRTUAL HEIGHT 15000 ;
 		ON PAINT xPaintMenu( ThisWindow.Name , aOpx1 , nItemx1 , nItemClr , cOpSely , 0 , 0 , .f. , .t.  )
 	END WINDOW
+
 
 
 
@@ -841,7 +843,7 @@ Function xRestMenu(  cJsanSub1  , nHandle , lZeraVars  )
 REturn
 
 
-Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred   )
+Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred  , nHeightCalc )
 
 	Local nCol := 0
 	Local nRow := 0
@@ -854,8 +856,11 @@ Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred   )
 
 
 
+
 	DEFAULT nHeit2 := 0
 	DEFAULT nItDopred := 0
+
+	DEFAULT nHeightCalc := nItemSubHeight
 
 	GetCursorPos (@nCol, @nRow)
 
@@ -865,16 +870,16 @@ Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred   )
 	NewPos := GetScrollPos( GetFormHandle(  cJan  ), 1 )
 
 	If NewPos > 0
-		nItem := (Int( (NewPos+Ar1[1])     / nItemSubHeight)+1)
+		nItem := (Int( (NewPos+Ar1[1])     / nHeightCalc)+1)
 	Else
 		//nItem := (Int(Ar1[1] / nItemSubHeight)+1)
-		nItem := (Int(  Ar1[1]  / nItemSubHeight)+1)
+		nItem := (Int(  Ar1[1]  / nHeightCalc)+1)
 	End If
 
 
 
-	If (nHeit2 > 0) .and. (nHeit2 < ar1[1] ) .And. (nHeit2 >= nItemSubHeight) .And. (ar1[1] > (nItMax * nItemSubHeight)   )
-		nItem := (Int( NewPos + (Ar1[1] - nHeit2) / nItemSubHeight)+1)
+	If (nHeit2 > 0) .and. (nHeit2 < ar1[1] ) .And. (nHeit2 >= nHeightCalc) .And. (ar1[1] > (nItMax * nHeightCalc)   )
+		nItem := (Int( NewPos + (Ar1[1] - nHeit2) / nHeightCalc)+1)
 	End If
 
 	If (Ar1[1] - nHeit2) == 1
@@ -883,15 +888,16 @@ Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred   )
 
 
 
-	If (lSetasDown)
 
-		nIa1 := (nItDopred * nItemSubHeight) + nTamSubMenuConsulta
+	If (lSetasDown) .And. (cJan != "Win_Browser")
+
+		nIa1 := (nItDopred * nHeightCalc) + nTamSubMenuConsulta
 		nIa2 := nIa1 + (nItemSubHeight * 2)
 
 		If (Ar1[1] >= nIa1) .And. (  Ar1[1] <= nIa2 )
 
 
-			If Ar1[1] <  (nIa1 + nItemSubHeight )
+			If Ar1[1] <  (nIa1 + nHeightCalc )
 				nItem := 1000
 			Else
 				nItem := 2000

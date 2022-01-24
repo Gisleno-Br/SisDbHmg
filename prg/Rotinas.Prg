@@ -279,6 +279,8 @@ Return (GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 1 )
 
 
 
+
+
 Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDropedDown , nHeightDroped , lSetas , lSubMenu1 , lHitB , lHitT  , lPopup )
 
 	Local aRGBcolor := BACK1
@@ -516,17 +518,21 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 REturn
 
-Function xLimpSub(cJan , nOpsely , nClr , nHeight1 )
+Function xLimpSub(cJan , nOpsely , nClr , nHeight1 , nitemH1 , nColTam1 )
 
 	Local nRow1 := -(GetProperty( cJan , "VscrollBar" , "Value"))
 
 	DEFAULT nHeight1 := 0
 
+	DEFAULT nitemH1 := nItemSubHeight
+
+	DEFAULT nColTam1 := nColTamMenu
+
 
 
 	If nOpsely > 0
 
-		BT_ClientAreaInvalidateRect( cJan , ( nHeight1  + nRow1 + ( (nOpsely - 1) * nItemSubHeight)) , 0 , nColTamMenu ,  nItemSubHeight   , .t. )
+		BT_ClientAreaInvalidateRect( cJan , ( nHeight1  + nRow1 + ( (nOpsely - 1) * nitemH1)) , 0 , nColTam1 ,  nitemH1   , .t. )
 
 	End If
 

@@ -627,6 +627,11 @@ Return
 
 
 
+
+
+
+
+
 Function RemoveHandler( cProcName )
 
 	Local nind := Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( cProcName  ) )  )
@@ -1154,6 +1159,17 @@ Function InitTela(  lIni1  , nColz1)
 
 
 	xBrowser( aMtrDados , cFormPrin , nLarg)
+
+	DoMethod('Win_Browser' , 'Activate')
+
+
+	DoMethod( cFormPrin , 'Activate')
+	DoMethod( cFormPrin , 'SetFocus')
+
+	//msginfo('2')
+
+
+
 
 		   
 Return
