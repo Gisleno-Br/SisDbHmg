@@ -256,12 +256,10 @@ Function TestBrow( cParent1 , cTabx  )
 
 
 			If Alltrim(aTips[nx1]) == 'C'
-				cValor := oRow:FieldGet(nx1)
-				//	msginfo( cValor )
+				cValor := oRow:FieldGet(nx1)				
 			End If
 
 			//msginfo( fieldName(nx1) )
-
 
 
 
