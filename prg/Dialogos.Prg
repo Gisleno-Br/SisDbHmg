@@ -666,6 +666,8 @@ Function xDialog( cMsg1 , lAsk1  )
 	Local nTop  
 	Local nLeft
 
+	Local zBitMap , zBitMap2
+
 	Local lRet := .f. 
 
 	Default lAsk1 := .f. 
@@ -746,20 +748,36 @@ Function xDialog( cMsg1 , lAsk1  )
     END LABEL
 
 
-
-
 	CENTER WINDOW Win_Dialog 	
 
-	nTop  := GetProperTy('Win_Dialog' , 'Row')
+
+	nTop  := GetProperTy('Win_Dialog' , 'Row') 
 	nLeft := GetProperTy('Win_Dialog' , 'Col')
+
+
+
+	zBitMap := BT_BitmapCaptureDesktop ( nTop + 12 , nLeft + GetProperTy('Win_Dialog' , 'Width')  + 2 , 5 , GetProperTy('Win_Dialog' , 'Height') - 7  )
+
+	zBitMap2 := BT_BitmapCaptureDesktop ( nTop + GetProperTy('Win_Dialog' , 'Height') + 1 , ;
+	 nLeft+5 , GetProperTy('Win_Dialog' , 'Width')   , 6 )
+
+
+	Bt_BitMapSaveFile(  zBitMap , 'y0133.bmp')
+	Bt_BitMapSaveFile(  zBitMap2 , 'y0134.bmp')
+	
+
+
+
 
 
 	DEFINE WINDOW WinSombra2 AT nTop + 12 , nLeft+15 WIDTH 440 HEIGHT 240 TITLE 'Sombra2' ;
 			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
-			ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+5  )
+			ON PAINT xSombra( ThisWindow.Name , nTop  , nLeft  , zBitMap )
 	END WINDOW
-	
 
+
+	//ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+5  )
+	
 	
 	HMG_ChangeWindowStyle( Win_Dialog.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
 	HMG_ChangeWindowStyle( Win_Dialog.Handle, WS_EX_STATICEDGE, NIL, .T., .T. )

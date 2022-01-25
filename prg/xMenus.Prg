@@ -98,15 +98,18 @@ Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
 	If  (Len(aOpz11) > XMAXITEM)
 		DEFINE WINDOW WinSombra1 AT nTop + 12 , nLeft+15 WIDTH nColTamMenu - 7 HEIGHT 330 TITLE 'Sombra1' ;
 			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
-			ON PAINT xSombra( ThisWindow.Name , nTop + 5 , nLeft+5  )
+			ON PAINT xSombra( ThisWindow.Name , nTop + 15 , nLeft+17  )
 		END WINDOW
 	Else
 		//+3
 
 		DEFINE WINDOW WinSombra1 AT nTop + 12 , nLeft+15 WIDTH nColTamMenu - 7 HEIGHT (Len(aOp1) * nItemSubHeight) - 2 TITLE 'Sombra1' ;
 			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
-			ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+5  )
+			ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+9  )
 		END WINDOW
+
+
+		//ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+9  )
 
 
 
@@ -175,7 +178,7 @@ Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
 Return lOk
 
 
-Function xSombra(  cJanela , nRow1  , nCol1  )
+Function xSombra(  cJanela , nRow1  , nCol1   )
 
 
 	LOCAL Width  := BT_ClientAreaWidth  (cJanela)
@@ -183,20 +186,33 @@ Function xSombra(  cJanela , nRow1  , nCol1  )
 
 	Local BTstruct
 
-	Local zBitMap
+	//Local zBitMap
 	Local zBitMap2
+	Local zBmp1 
+
+	Local zBmp2
 
 
 	Local hDC := BT_CreateDC ( cJanela  , BT_HDC_INVALIDCLIENTAREA , @BTstruct)
 
 
 
+	//zBitMap := BT_BitmapCaptureDesktop ( nRow1 , nCol1 , Width + 15 , Height + 25 )
 
-	zBitMap := BT_BitmapCaptureDesktop ( nRow1 , nCol1 , Width, Height)
+	
+
+
 
 
 	zBitMap2 := BT_BitmapLoadFile('SOMBRA5')
 
+
+
+	zBmp1 := BT_BitmapLoadFile('y0133.Bmp')
+	zBmp2 := BT_BitmapLoadFile('y0134.Bmp')
+
+	//BT_BitmapLoadFile ( 'img\setab2.png')
+	//BT_BitmapLoadFile('y0133.Bmp')
 
 
 
@@ -206,6 +222,8 @@ Function xSombra(  cJanela , nRow1  , nCol1  )
 	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width - 4  ,  1 	,  Height - 5 , {143,143,143} , {143,143,143}   )
 	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width - 3  ,  1 	,  Height - 5 , {172,172,172} , {172,172,172}  )
 	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width  - 2 ,  1 	,  Height - 5  , {212,212,212} , {212,212,212} )
+
+
 	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width  - 1 ,  1 	,  Height - 5  , {241,241,241} , {241,241,241}  )
 	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width  - 0 ,  1 	,  Height - 5  ,{252,252,252}  , {252,252,252}  )
 
@@ -213,8 +231,7 @@ Function xSombra(  cJanela , nRow1  , nCol1  )
 
 
 
-
-	BT_DrawGradientFillHorizontal  (hDC,  Height - 6  ,  0  ,  Width - 5 ,  1  , {89,89,89} , {89,89,89}  )
+	BT_DrawGradientFillHorizontal  (hDC,  Height - 6  ,  0   , Width - 5 ,  1  , {89,89,89} , {89,89,89}  )
 
 
 	BT_DrawGradientFillHorizontal  (hDC,  Height - 5  ,  0  ,  Width - 5  ,  1  , {89,89,89} , {89,89,89}   )
@@ -224,12 +241,23 @@ Function xSombra(  cJanela , nRow1  , nCol1  )
 	BT_DrawGradientFillHorizontal  (hDC,  Height - 3  ,  0  ,  Width - 5 ,  1  ,{172,172,172} , {172,172,172})
 	BT_DrawGradientFillHorizontal  (hDC,  Height - 2  ,  0  ,  Width - 5 ,  1  ,{212,212,212} , {212,212,212} )
 	BT_DrawGradientFillHorizontal  (hDC,  Height - 1   ,  0  , Width - 5  ,  1  ,{241,241,241} , {241,241,241})
+
+
 	BT_DrawGradientFillHorizontal  (hDC,  Height      ,  0  ,  Width - 5 ,  1  ,{252,252,252}  , {252,252,252})
 
-	BT_DrawBitmapAlphaBlend (hDC, 0 ,  0 , Width, Height, 5 , BT_COPY  , zBitmap)
 
 
-	BT_DrawBitmap (hDC, Height - 5  , Width - 5 , 5, 5, BT_COPY, zBitmap2)
+	BT_DrawBitmapAlphaBlend (hDC,  0 ,   Width - 3 ,  5  , Height + 1  , 105 , BT_COPY  , zBmp1)
+
+
+	BT_DrawBitmapAlphaBlend (hDC,  Height - 4 ,   5  , Width + 10     , 5           , 105 , BT_COPY  , zBmp2)
+
+
+
+
+
+	BT_DrawBitmap (hDC, Height - 5  , Width - 5 , 5, 105, BT_COPY, zBitmap2 )
+
 
 
 
