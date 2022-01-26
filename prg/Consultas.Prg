@@ -3070,3 +3070,16 @@ LOCAL nWin := HMG_CallDLL( "User32.dll", DLL_OSAPI, "FindWindow", 0, cTitle)
 
 RETURN nWin 
 
+
+
+Function BringTop(cTitle)
+LOCAL nWin := HMG_CallDLL( "User32.dll", DLL_OSAPI, "FindWindow", 0, cTitle)
+
+   If !EMPTY(nWin)
+       HMG_CallDLL( "User32.dll", DLL_OSAPI, "BringWindowToTop", nWin )
+   End If 
+
+
+
+RETURN nWin 
+

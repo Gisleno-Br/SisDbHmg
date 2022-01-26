@@ -18,6 +18,17 @@
     OKMARK      PNG     img\ngi.png
     BACK1       ARRAY   {229,237,242}
     FONTCOR     ARRAY   {0,106,133}
+
+
+    SCRDOWN1    PNG  img\scr_down1.png
+    SCRDOWN2    PNG  img\scr_down2.png 
+    SCRDOWN3    PNG  img\scr_down3.png
+
+
+    SCRUP1      PNG  img\scr_up1.png
+    SCRUP2      PNG  img\scr_up2.png 
+    SCRUP3      PNG  img\scr_up3.png
+    
     
 
     
