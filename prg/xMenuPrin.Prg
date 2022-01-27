@@ -1020,7 +1020,13 @@ Function xTeclasMenu()
 	//xFechaMen
 
 	Local nMaxItem := Int(nTamSubMenuConsulta / nItemSubHeight)
+	
 
+	If (cActiveJan != "Main")
+	//	MSGINFO(cActivejan )
+		Return 
+	End If
+	
 
 	If nMsg == WM_KEYDOWN
 

@@ -801,6 +801,8 @@ Function xProcinit( lPergunta )
 	nIndexDlg22 := Len(_HMG_EventData) + 1	
 	CREATE EVENT PROCNAME EventDlg() HWND Win_Dialog.Handle STOREINDEX nIndexDlg22 
 	
+	
+
 
 	If (!lPergunta)
 
@@ -846,6 +848,14 @@ Function xProcinit( lPergunta )
 	nIndexDialog := Len(_HMG_EventData)	
 	BT_ClientAreaInvalidateAll('Win_Dialog')
 
+/*
+	PostMessage( OBTN_Handle( 'Win_Dialog', 6652   ) , WM_MOUSEMOVE , 0,0)
+	SysWait(.1)
+
+
+	PostMessage( OBTN_Handle( 'Win_Dialog', 6652   ) , WM_MOUSELEAVE , 0,0)
+	SysWait(.2)
+	*/
 
 
 Return 
