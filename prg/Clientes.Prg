@@ -1144,6 +1144,7 @@ Function InitTela(  lIni1  , nColz1)
 
 	DoMethod( cFormPrin , 'SetFocus')
 
+
 	
 
 

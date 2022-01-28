@@ -2694,7 +2694,7 @@ Return
 		}
 
 
-
+/*
 	HB_FUNC ( SETVSCROLLVALUE )
 	{
 
@@ -2702,6 +2702,7 @@ Return
 
 	}
 
+*/
 
 
 
@@ -2713,6 +2714,51 @@ Return
 
 	EnableScrollBar (hWnd, nBar, nAction);
 		}
+
+
+		
+HB_FUNC ( SETVSCROLLVALUE )
+{
+
+//	SendMessage ( (HWND) HMG_parnl (1), WM_VSCROLL , (WPARAM) MAKEWPARAM (SB_THUMBPOSITION , hb_parni(2) ) , 0 ) ;
+
+
+	HWND hwnd;
+	HDC hdc; 
+	PAINTSTRUCT ps; 
+	TEXTMETRIC tm; 
+	SCROLLINFO si; 
+	 
+	static int yPos;        // current vertical scrolling position 
+	 
+	int yChar;       // vertical scrolling unit 
+
+	hwnd = (HWND) HMG_parnl (1);
+	yChar = hb_parni(2);
+
+	 // Get all the vertial scroll bar information.
+	si.cbSize = sizeof (si);
+	//si.nTrackPos = yChar;
+	si.fMask  = SIF_ALL;
+	//si.fMask  = SIF_TRACKPOS;
+
+
+
+	SetScrollInfo (hwnd, SB_VERT, &si, TRUE);
+	GetScrollInfo (hwnd, SB_VERT, &si);
+
+	// Save the position for comparison later on.
+	//yPos = si.nPos;
+	//si.nPos -= 1;
+	//ScrollWindow(hwnd, 0, yChar * (yPos - si.nPos), NULL, NULL);
+	ScrollWindow(hwnd, 0, yChar , NULL, NULL);
+	UpdateWindow (hwnd);
+
+
+
+
+}
+
 
 
 
