@@ -118,7 +118,7 @@ FUNCTION Main
 	Private  lTracking42 := .f.
 	Private  lTracking142 := .f.
 
-
+	
 	PRIVATE nFontSize  := 8
 
 
@@ -589,6 +589,7 @@ xMenuMain( 70 , 1  , aOpcoes , aItens )
 
 
 Main.Activate
+
 
 
 

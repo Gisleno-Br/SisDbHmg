@@ -63,7 +63,7 @@ Static lHitT := .f.
 
 
 
-Static lTermino := .f.
+//Static lTermino := .f.
 Static aThread2 := Nil
 Static aMResult := {}
 
@@ -84,6 +84,10 @@ Static cOpMainSel  := ''
 Static nSelLine := 0
 
 Static nIndexEventZ := 0 
+
+
+Static lTermino := .f.
+
 
 Static lColor1 := .f.
 
@@ -114,13 +118,14 @@ Function xRodaImp()
 
 
 	While !lTermino
-		Do Events
+		  Do Events
 	Enddo
 
 
 
 	hb_threadDetach( aThread2 )   // close thread handle
 	hb_threadQuitRequest( aThread2 )
+
 
 	aThread2 := Nil
 
@@ -135,15 +140,20 @@ REturn nLargura
 
 
 
+
 Function DoMatriz( cParentx , cTabela )
 
 	aThread2 := hb_threadStart( HB_THREAD_INHERIT_PUBLIC, @TestBrow(),  cParentx , cTabela  )
 
-REturn
+	
+
+REturn Nil 
+//(TestBrow(  cParentx , cTabela  ))
 
 
 
 Function TestBrow( cParent1 , cTabx  )
+
 
 
 
@@ -246,7 +256,7 @@ Function TestBrow( cParent1 , cTabx  )
 		cSq2 := GetSql( cTabela  , .f. )
 	End If
 
-	cSq2 += " order by codigo desc limit 1000"
+	cSq2 += " order by codigo desc limit 500"
 
 
 
@@ -428,6 +438,7 @@ Function TestBrow( cParent1 , cTabx  )
 	oQuery := Nil
 
 
+
 	aMResult := Aclone(aItens)
 
 	//msginfo(Str(  Len(aMResult)  ))
@@ -462,7 +473,6 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 	//msginfo(Str(   nLarg1  )   + '    ' + Str(   nLargTotal ))
 
 	//nLinScrool := nItemBrwHeight * nTamPag
-
 	
 
     If (nLarg1 < nLargTotal)
@@ -687,6 +697,9 @@ Function xTeclasBrow()
 
 			 //msginfo('ojk2222')
 
+			
+
+
 			nItemx1++
 			lHitt := .f. 
 
@@ -698,6 +711,7 @@ Function xTeclasBrow()
 				nLinhaBarra++				
 			End If 
 
+
 					
 			If (nItemx1 < nMaxItem1 )
 
@@ -705,12 +719,14 @@ Function xTeclasBrow()
 
 					nLinhaBarra := nTamPag
 
-
 					
 					xSelItem( nItemx1  , .t.  )		
-					ScrolUp1(.f.)				
+				//	msginfo('ok')
 
-					SysWait(.02)
+				
+					ScrolUp1(.f.)				
+				//	msginfo('ok')
+		
 
 
 			
@@ -796,12 +812,18 @@ Function ScrolUp1( lUpDir )
 		Else
 
 			
-			Do Events
+//			Do Events
 
 			nLinScrool -= nItemBrwHeight
 
+		//	SysWait(.04)
+
 	
 			_HMG_PRINTER_SETVSCROLLVALUE( GetFormHandle(  'Win_Browser'  )  , nLinScrool )
+
+			
+
+
 
 			//SysWait(.1)
 
@@ -1065,17 +1087,26 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 		//msginfo(cTexto)
 
 
+		If At('009762' , cTexto) > 0
+		    Altd()	
+
+		End If 
+
+
 
 		If (nOpselx1 > 0) .And. (nOpSelx1 = n1)
 
-			nTypeText    := BT_TEXT_TRANSPARENT
+			nTypeText    := BT_TEXT_ITALIC
+			//BT_TEXT_TRANSPARENT
+
 
 
 			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , SELCOR  , SELCOR   )
 
 		
 			BT_DrawText ( hDC2 , nLine + nRow  , 17+nCol ,   cTexto , xFont2, 9 ,  WHITE ,  SELCOR   , ;
-				BT_TEXT_BOLD+BT_TEXT_TRANSPARENT   ,	nAlingText, nOrientation )
+				BT_TEXT_BOLD+BT_TEXT_TRANSPARENT  ,	nAlingText, nOrientation )
+
 
 			If (nSelLine == n1) .And. (nCol == 0)
 				BT_DrawBitmap (hDC2  , nLine  + nRow    , 0   , 15  , nItemBrwHeight , BT_STRETCH, hBitOk)
@@ -1086,18 +1117,21 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 			nTypeText    := BT_TEXT_TRANSPARENT
 
 
+
+               
 			If (Mod( nLine , 2 ) = 0)
 				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , WHITE  , WHITE   )
 			Else
 				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , CORBROWSE  , CORBROWSE   )
 			End If
-
+			
 
 			cCor := FONTCOR
 
 			If !aMtrOp[n1][2]
 				cCor := CorDisabled
-				nTypeText    := BT_TEXT_TRANSPARENT + BT_TEXT_BOLD
+				nTypeText    :=  BT_TEXT_BOLD
+				//BT_TEXT_TRANSPARENT
 			End If
 
 			BT_DrawText ( hDC2 , nLine + nRow  , nCol+17 ,  cTexto , xFont2, 9 ,  cCor , WHITE , nTypeText, nAlingText, nOrientation )
@@ -1106,6 +1140,8 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 		End If
 
 		nLine += nItemBrwHeight
+
+		Do Events 
 
 	Next
 
@@ -1522,9 +1558,12 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 	nSelLine := nItemx1
 
 
+
 	If (nItemx1 > 0)		
 		BT_ClientAreaInvalidateRect( 'Win_Browser' ,  nRow1  +  ( ( nItemx1 - 1 ) * nItemBrwHeight)  , 0 , GetProperty(  'Win_Browser','Width')  ,  nItemBrwHeight   , .t. )	
 	End If
+
+
 
 
 Return

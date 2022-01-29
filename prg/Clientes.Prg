@@ -1111,28 +1111,29 @@ Function InitTela(  lIni1  , nColz1)
 
 	
 	DoMatriz( cActiveJan , cTabela ) 
+	
 
 
 
 	xMsgRun( "Aguarde Criando Estrutura .... "  , { || aMtrDados := xRodaImp()   }   , .f.  )
 
 
+	//aMtrDados := xRodaImp()
 
 	nLarg := xRetLargura()
 
 
-	xCloseMsg()
-
-
-
-
+	//xCloseMsg()
 
 
 	EfectEnd(cActiveJan , aMz1 )
 	
 	SetWindowCursor( GetFormHandle( cFormPrin )  , IDC_ARROW  )
 
+
 	
+
+
 
 
 	xBrowser( aMtrDados , cFormPrin , nLarg)
