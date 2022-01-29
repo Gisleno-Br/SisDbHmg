@@ -53,6 +53,8 @@
 
 
 
+
+
 Static aOpx1 := 0
 Static nItemx1 := 1
 
@@ -119,6 +121,8 @@ Function xRodaImp()
 
 	hb_threadDetach( aThread2 )   // close thread handle
 	hb_threadQuitRequest( aThread2 )
+
+	aThread2 := Nil
 
 
 Return aMResult
@@ -459,8 +463,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 
 	//nLinScrool := nItemBrwHeight * nTamPag
 
-
-
+	
 
     If (nLarg1 < nLargTotal)
 		DEFINE WINDOW Win_Browser ;
@@ -692,16 +695,26 @@ Function xTeclasBrow()
 				lHitB := .t. 			
 				//msginfo('ojk2222')
 			Else
-				nLinhaBarra++
-				
+				nLinhaBarra++				
 			End If 
 
 					
 			If (nItemx1 < nMaxItem1 )
+
 				If (lHitB)
+
 					nLinhaBarra := nTamPag
-					xSelItem( nItemx1  , .t.  )
-					ScrolUp1(.f.)					
+
+
+					
+					xSelItem( nItemx1  , .t.  )		
+					ScrolUp1(.f.)				
+
+					SysWait(.02)
+
+
+			
+					
 				Else
 					xSelItem( nItemx1  , .f.  )
 				End If 
@@ -813,9 +826,14 @@ Function ScrolUp1( lUpDir )
 
 			//SysWait(.1)
 	
-			SETVSCROLLVALUE( GetFormHandle(  'Win_Browser'  )  , nLinScrool )
-			
+			SETVSCROLLVALUE( GetFormHandle(  'Win_Browser'  )  , -(nItemBrwHeight) )
 
+
+			
+			//_HMG_PRINTER_SETVSCROLLVALUE( GetFormHandle(  'Win_Browser'  )  , nLinScrool )
+
+	
+			
 
 
 			//SysWait(.1)
@@ -830,7 +848,7 @@ Function ScrolUp1( lUpDir )
             //PostMessage ( hwnd, WM_VSCROLL, SB_VERT , 0 )
 
 
-//
+//			
 		//	NewVPos := GetScrollPos ( hwnd, SB_VERT )
 
 			//SetScrollPos ( hwnd, SB_VERT,   nLinScrool , 1 )
@@ -972,6 +990,8 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 
 	Local nIndice := 0
 
+	nRow := -(nLinScrool)
+
 
 
 
@@ -991,9 +1011,10 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 
 
 
-	hBitMap2 := BT_BitmapCreateNew (nWidthBmp , nHeightBmp , BLACK)
+	//hBitMap2 := BT_BitmapCreateNew (nWidthBmp , nHeightBmp , BLACK)
 
-	hDC := BT_CreateDC (hBitmap2, BT_HDC_BITMAP  , @BTstruct)
+	//hDC := BT_CreateDC (hBitmap2, BT_HDC_BITMAP  , @BTstruct)
+
 
 
 	hDC2 = BT_CreateDC ( cForm  , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
@@ -1016,11 +1037,25 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 
 		BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemBrwHeight)    , 0  , Width  ,    nHeightBmp     ,  nCor  , nCor   )
 
+	//	SysWait(.1)
+
+
 	End If
 
 	nIndice := -9999
 
 
+
+
+
+
+
+
+	//if nRow > 0
+	//	msginfo('ok')	
+  //  End if 	
+  
+  // msginfo(Str(nRow))
 
 
 	For n1 := 1 To Len(aMtrOp)
@@ -1038,11 +1073,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 
 			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , SELCOR  , SELCOR   )
 
-			//	BT_DrawText ( hDC2 , nLine + nRow  , 15 ,   cTexto , xFont2, 9 ,  FONTCOR ,  {132,134,200}   , ;
-				//		 BT_TEXT_BOLD+BT_TEXT_TRANSPARENT   ,	nAlingText, nOrientation )
-
-		//	cTexto := StrZero(n1,5)	
-
+		
 			BT_DrawText ( hDC2 , nLine + nRow  , 17+nCol ,   cTexto , xFont2, 9 ,  WHITE ,  SELCOR   , ;
 				BT_TEXT_BOLD+BT_TEXT_TRANSPARENT   ,	nAlingText, nOrientation )
 
@@ -1079,7 +1110,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 	Next
 
 
-	BT_DeleteDC (BTstruct )
+//	BT_DeleteDC (BTstruct )
 	BT_DeleteDC (BTstruct2 )
 	//bt_Bit
 
@@ -1471,7 +1502,7 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 
 
 	If nClearSel > 0
-		xLimpSub( 'Win_Browser' ,  @nClearSel ,  @nItemx1 , 0 ,   nItemBrwHeight , GetProperty(  'Win_Browser','Width') )
+		xLimpSub( 'Win_Browser' ,  @nClearSel ,  @nItemx1 , 0 ,   nItemBrwHeight , GetProperty(  'Win_Browser','Width') , -(nLinScrool) )
 	End If
 
 	nItemx1 := nItem
@@ -1482,9 +1513,10 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 	Else
 		Return
 	End If
-
 	
-	nRow1 := -(GetProperty( 'Win_Browser' , "VscrollBar" , "Value"))
+	//nRow1 := -(GetProperty( 'Win_Browser' , "VscrollBar" , "Value"))
+
+	nRow1 := -(nLinScrool)
 
 	
 	nSelLine := nItemx1

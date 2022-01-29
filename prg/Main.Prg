@@ -2738,7 +2738,7 @@ HB_FUNC ( SETVSCROLLVALUE )
 
 	 // Get all the vertial scroll bar information.
 	si.cbSize = sizeof (si);
-	//si.nTrackPos = yChar;
+	si.nTrackPos = yChar;
 	si.fMask  = SIF_ALL;
 	//si.fMask  = SIF_TRACKPOS;
 
