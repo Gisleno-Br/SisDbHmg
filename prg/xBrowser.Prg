@@ -743,13 +743,13 @@ Function xTeclasBrow()
 					xSelItem( nItemx1  , .t.  )		
 
 					if nitemx1 > 80 	
-						msginfo('ok1')
+					//	msginfo('ok1')
 					End If 	
 
 					ScrolUp1(.f.)				
 
 					if nitemx1 > 80 	
-						msginfo('ok2')
+					//	msginfo('ok2')
 					End If 	
 					
 							
