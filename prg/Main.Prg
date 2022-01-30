@@ -586,7 +586,7 @@ Private aButTop := {}
 xMenuMain( 70 , 1  , aOpcoes , aItens )
 
 
-
+//SysWait(.3)
 
 Main.Activate
 
@@ -2749,18 +2749,18 @@ HB_FUNC ( SETVSCROLLVALUE )
 	GetScrollInfo (hwnd, SB_VERT, &si);
 
 	// Save the position for comparison later on.
-	//yPos = si.nPos;
-	//si.nPos -= 1;
-	//ScrollWindow(hwnd, 0, yChar * (yPos - si.nPos), NULL, NULL);
-	ScrollWindow(hwnd, 0, yChar , NULL, NULL);
-	UpdateWindow (hwnd);
+	yPos = si.nPos;
+	si.nPos -= 1;
+	ScrollWindow(hwnd, 0, yChar * (yPos - si.nPos)   , NULL, NULL);
 
+//	ScrollWindowEx(hwnd, 0, yChar * (yPos - si.nPos)   , NULL, NULL , NULL, NULL , SW_ERASE );
+	UpdateWindow(hwnd);
+	//ScrollWindow(hwnd, 0, yChar   , NULL, NULL);
 
-
-
+	
 }
-
-
+	
+	
 
 
 
@@ -2769,3 +2769,5 @@ HB_FUNC ( SETVSCROLLVALUE )
 
 
 
+
+	

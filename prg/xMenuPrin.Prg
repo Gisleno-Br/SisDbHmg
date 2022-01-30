@@ -69,10 +69,13 @@ Function xMenuMain( nRow1 , nCol1 , aOpPrin , aSubOps )
 
 	aSubOps := {}
 
+	//DEpois resolver
+	//PANEL PARENT Main;
 
 
-	DEFINE WINDOW Win_MenuPrincipal AT nRow1, nCol1 WIDTH nColTamMenu HEIGHT 520 TITLE 'MenPrincipal1' ;
-		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR WHITE VIRTUAL HEIGHT 521 ;
+
+	DEFINE WINDOW Win_MenuPrincipal AT nRow1, nCol1 WIDTH nColTamMenu HEIGHT 520 TITLE 'MenPrincipal1' ;		
+		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION  CHILD  BACKCOLOR WHITE VIRTUAL HEIGHT 521 ;
 		ON PAINT xPaintMenu( ThisWindow.Name , aOpcoes , nMainSel , nClearSel , cOpMainSel , nItemDrop1 , nHeightDrop , lSetasDown , .f. , l_Httb , l_Http )
 	END WINDOW
 
@@ -119,6 +122,8 @@ Function xMenuMain( nRow1 , nCol1 , aOpPrin , aSubOps )
 
 	BT_ClientAreaInvalidateAll(   'Win_MenuPrincipal'  )
 
+
+	//DoMethod('Win_MenuPrincipal'  , 'Activate')
 
 
 Return
