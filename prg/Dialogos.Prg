@@ -24,7 +24,8 @@ DECLARE WINDOW fSplit6
 
 
 
-DECLARE WINDOW fDialogo
+//DECLARE WINDOW fDialogo
+
 
 /*
 Function yAviso2( cMensagem , lEfect  )
@@ -957,17 +958,21 @@ Function xFechaDlg()
 
 		SendMessage( nHandle1, WM_SYSCOMMAND, SC_CLOSE , 0 )
 
-	//	Do Events
-	//	Do Events
-
+	
 
 		SendMessage( nHandle1, WM_SYSCOMMAND, WM_DESTROY , 0 )
 
-	//	Do Events
+	
 
-		//SysWait(.2)
+		SysWait(.1)
 
-	//	Win_Dialog.Release()
+		DoMethod( cActiveJan , 'SetFocus')
+
+		
+		
+		BringTop('xBrowser' + Left(cActiveJan,4) )			
+
+	
 
 	End If 
 	
@@ -977,17 +982,22 @@ Function xFechaDlg()
 
 	If nHandle2 > 0
 
-//		msginfo('ok')
+
 		
 		SendMessage( nHandle2, WM_SYSCOMMAND, SC_CLOSE , 0 )
 
-	//	SysWait(.1)
+
 		SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )
 
+		SysWait(.1)
 
-	//	SysWait(.1)
+		DoMethod( cActiveJan , 'SetFocus')
 
-		//msginfo('ok')
+		
+		BringTop('xBrowser' + Left(cActiveJan,4) )	
+
+
+
 
 
 	End If 

@@ -2737,6 +2737,18 @@ HB_FUNC ( SETVSCROLLVALUE )
 	hwnd = (HWND) HMG_parnl (1);
 	yChar = hb_parni(2);
 
+	RECT rect3;
+
+	RECT rect4;
+
+	
+
+
+	SetRect(&rect3, 0,0 ,  3000  ,7500 );
+
+	SetRect(&rect4, 0, 0 , 1200  , 700 );
+
+
 	 // Get all the vertial scroll bar information.
 	si.cbSize = sizeof (si);
 	si.nTrackPos = yChar;
@@ -2751,7 +2763,7 @@ HB_FUNC ( SETVSCROLLVALUE )
 	// Save the position for comparison later on.
 	yPos = si.nPos;
 	si.nPos -= 1;
-	ScrollWindow(hwnd, 0, yChar * (yPos - si.nPos)   , NULL, NULL);
+	ScrollWindow(hwnd, 0, yChar * (yPos - si.nPos)   , NULL , NULL );
 
 //	ScrollWindowEx(hwnd, 0, yChar * (yPos - si.nPos)   , NULL, NULL , NULL, NULL , SW_ERASE );
 	UpdateWindow(hwnd);

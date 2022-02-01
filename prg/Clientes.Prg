@@ -1140,20 +1140,31 @@ Function InitTela(  lIni1  , nColz1)
 
 	DoMethod('Win_Browser' , 'Activate')
 
-
 	DoMethod( cFormPrin , 'Activate')
 
 	DoMethod( cFormPrin , 'SetFocus')
 
-
-	
-
+	//ShowBrowser()
 
 
 
 		   
 Return
 
+function ShowBrowser()
+
+
+	If _IsWindowDefined('Win_Browser')
+		DoMethod('Win_Browser' , 'Activate')
+	End If 	
+
+	//DoMethod( cFormPrin , 'Activate')
+
+	//DoMethod( cFormPrin , 'SetFocus')
+
+	SysWait(.1)
+
+Return 
 
 
 
@@ -5649,6 +5660,7 @@ REturn
 	//RECT rect;
 
 	//SetRect(&rect2, 0 , 0 , (INT) hb_parvni(5, 1) ,  GetDeviceCaps( hDC , VERTRES)    );
+
 
 	for ( i=1; i <= Tam1; i++ )
 

@@ -650,6 +650,7 @@ FUNCTION GetCamposInf( cTabela, cInf  ,cCampo )
 	LOCAL cSql  := "Select * from dicionario where tabela = '" + AllTrim( cTabela ) + "' order by Ordem"
 
 	Default cCampo := ''
+	
 
 
 	If !Empty(cCampo)
@@ -657,12 +658,6 @@ FUNCTION GetCamposInf( cTabela, cInf  ,cCampo )
 	End If
 
 	oQuery      := oServ:Query( cSql )
-
-	//  saveLog('Sql11.txt' , cSql )
-
-	// msginfo( Str(oQuery:LastRec() )   )
-
-
 
 	FOR i := 1 TO oQuery:LastRec()
 
