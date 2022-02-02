@@ -630,6 +630,8 @@ return
 Function xLostFocus()
 
  Local i := 1
+ 
+
 
 	if nItemx5 > 5000
   //		msginfo(Str( nSave1 ) + ' -  ' + Str(nItemx5))
@@ -750,7 +752,7 @@ Function xTeclasBrow()
 			lHitt := .f. 
 
 				
-				
+
 
 
 
