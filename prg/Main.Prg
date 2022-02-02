@@ -134,6 +134,8 @@ FUNCTION Main
 	PUBLIC fColor := {|| iif( ( LastRec() > 0 ) .AND. ( AllTrim(Status ) == 'Ativo' ), { 78,78,78 },  { 255, 0, 0 } )  }
 
 	Public HOURGLASS := 'IMG\HourGlass.Cur'
+	
+	Private lFlagOk := .f. 
 
 
 	Public bColorGrid := {|| iif( ( LastRec() > 0 ) .AND. ( RecNo() / 2 == Int(RecNo() / 2 ) ), { 235,243,242 }, {211,231,230} ) }
@@ -332,6 +334,9 @@ FUNCTION Main
 	Private hBit2      := 0
 	Private hBitMain   := 0
 
+	
+
+
 	Private hBit10      := 0
 	Private hBit11      := 0
 	Private hBit12      := 0
@@ -359,6 +364,10 @@ FUNCTION Main
 	Private hBitmap3 := 0
 	Private hBitmap4 := 0
 	Private hBitmap5 := 0
+
+	
+	
+
 
 	Private hBitmap25 := 0
 
@@ -2354,6 +2363,8 @@ Function OpenOpcao( cCadastro , cTitulo , nHandle1 )
 
 			cControl := ''
 			cForm    := ''
+
+			//xBrowser
 			CadCli()
 
 

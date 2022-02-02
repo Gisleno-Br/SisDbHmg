@@ -8,8 +8,8 @@ DrawTransp(cActiveJan , hBit2 )
         LOAD WINDOW fCad1 as &cAuxName
         LOAD WINDOW fMenuConsulta as &cMenuName
     END SPLITBOX
-    */
 
+    */
     
 
     DEFINE IMAGE Image_cima
