@@ -676,69 +676,6 @@ Function xMove1()
 
 Return ar1
 
-/*
-
-Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred   )
-
-	Local nCol := 0
-	Local nRow := 0
-	Local ar1
-	Local NewPos
-	Local nRow1 := -(GetProperty( cJan , "VscrollBar" , "Value"))
-	Local nIa1 , nIa2
-
-	Local nItem := 0
-
-
-	DEFAULT nHeit2 := 0
-	DEFAULT nItDopred := 0
-
-	GetCursorPos (@nCol, @nRow)
-
-	aR1 := GetPos_ScreenToClient(   GetFormHandle(  cJan  )  , nRow, nCol )
-
-
-	NewPos := GetScrollPos( GetFormHandle(  cJan  ), 1 )
-
-	If NewPos > 0
-		nItem := (Int( (NewPos+Ar1[1])     / nItemSubHeight)+1)
-	Else
-		//nItem := (Int(Ar1[1] / nItemSubHeight)+1)
-		nItem := (Int(  Ar1[1]  / nItemSubHeight)+1)
-	End If
-
-
-
-	If (nHeit2 > 0) .and. (nHeit2 < ar1[1] ) .And. (nHeit2 >= nItemSubHeight) .And. (ar1[1] > (nItMax * nItemSubHeight)   )
-		nItem := (Int( NewPos + (Ar1[1] - nHeit2) / nItemSubHeight)+1)
-	End If
-
-	If (Ar1[1] - nHeit2) == 1
-		nItem := nItDopred+1
-	End If
-
-
-
-	If (lSetasDown)
-
-		nIa1 := (nItDopred * nItemSubHeight) + nTamSubMenuConsulta
-		nIa2 := nIa1 + (nItemSubHeight * 2)
-
-		If (Ar1[1] >= nIa1) .And. (  Ar1[1] <= nIa2 )
-
-
-			If Ar1[1] <  (nIa1 + nItemSubHeight )
-				nItem := -1
-			Else
-				nItem := -2
-			End If
-
-		End If
-
-	End If
-
-Return nItem
-*/
 
 
 Function xRetLinha(  cJan )

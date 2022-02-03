@@ -5339,6 +5339,7 @@ Function PutImagem(nColx , cTexto , cSeq1 )
 
 
 
+
 		//msginfo('cr')
 
 
@@ -5387,6 +5388,7 @@ Function PutImagem(nColx , cTexto , cSeq1 )
 
 
 Return
+
 
 
 

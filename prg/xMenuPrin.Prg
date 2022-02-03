@@ -848,7 +848,7 @@ Function xRestMenu(  cJsanSub1  , nHandle , lZeraVars  )
 REturn
 
 
-Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred  , nHeightCalc )
+Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred  , nHeightCalc , nScroolPos  )
 
 	Local nCol := 0
 	Local nRow := 0
@@ -860,19 +860,22 @@ Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred  , nHeightCalc )
 	Local nItem := 0
 
 
-
-
 	DEFAULT nHeit2 := 0
 	DEFAULT nItDopred := 0
 
 	DEFAULT nHeightCalc := nItemSubHeight
+
+	DEFAULT nScroolPos := GetScrollPos( GetFormHandle(  cJan  ), 1 )
 
 	GetCursorPos (@nCol, @nRow)
 
 	aR1 := GetPos_ScreenToClient(   GetFormHandle(  cJan  )  , nRow, nCol )
 
 
-	NewPos := GetScrollPos( GetFormHandle(  cJan  ), 1 )
+	//NewPos := GetScrollPos( GetFormHandle(  cJan  ), 1 )
+
+	NewPos := nScroolPos
+
 
 	If NewPos > 0
 		nItem := (Int( (NewPos+Ar1[1])     / nHeightCalc)+1)
@@ -1005,6 +1008,7 @@ Function ScrollMenu( nDirecao , hWnd1 , nScr1 , nPonteiro , nTotal , lHtp , lHtb
 	If (lOk)
 		_HMG_PRINTER_SETVSCROLLVALUE(   hWnd1  , nScr1 )
 	End If
+
 
 
 Return
