@@ -10,6 +10,7 @@
     NEXT        PNG     img\go-next.Png 
     SETATRANSP  PNG     img\0001.Png 
     EXCLA1      PNG     img\Exclamation3.Png
+    ROLAGEM     PNG     img\Rolagem1.Png
     INTERRO1    PNG     img\Interrogacao.Png
     SOMBRA5     BITMAP  img\Sombra5.bmp
     OKVERDE1    BITMAP  img\okverde1.bmp 

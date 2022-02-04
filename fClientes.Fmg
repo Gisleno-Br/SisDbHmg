@@ -210,7 +210,7 @@ DrawTransp(cActiveJan , hBit2 )
     END IMAGE
 
     DEFINE LABEL LblUser1
-        ROW    610
+        ROW    785
         COL    365
         WIDTH  120
         HEIGHT 24

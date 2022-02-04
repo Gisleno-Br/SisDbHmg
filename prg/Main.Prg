@@ -2740,10 +2740,14 @@ HB_FUNC ( SETVSCROLLVALUE )
 	PAINTSTRUCT ps; 
 	TEXTMETRIC tm; 
 	SCROLLINFO si; 
+
+	int nBt1 ; 
 	 
 	static int yPos;        // current vertical scrolling position 
 	 
 	int yChar;       // vertical scrolling unit 
+
+	int yTipo =  hb_parni(3);;
 
 	hwnd = (HWND) HMG_parnl (1);
 	yChar = hb_parni(2);
@@ -2752,40 +2756,63 @@ HB_FUNC ( SETVSCROLLVALUE )
 
 	RECT rect4;
 
+	GetClientRect(hwnd, &rect3);
+
+	rect3.right -= 35;
+
 	
 
+	if (yTipo == 1)
+		{
 
-	SetRect(&rect3, 0,0 ,  3000  ,7500 );
-
-	SetRect(&rect4, 0, 0 , 1200  , 700 );
-
-
-	 // Get all the vertial scroll bar information.
-	si.cbSize = sizeof (si);
-	si.nTrackPos = yChar;
-	si.fMask  = SIF_ALL;
-	//si.fMask  = SIF_TRACKPOS;
+		// Get all the vertial scroll bar information.
+		si.cbSize = sizeof (si);
+		si.nTrackPos = yChar;
+		si.fMask  = SIF_ALL;
+		//si.fMask  = SIF_TRACKPOS;
 
 
 
-	SetScrollInfo (hwnd, SB_VERT, &si, TRUE);
-	GetScrollInfo (hwnd, SB_VERT, &si);
+		SetScrollInfo (hwnd, SB_VERT, &si, TRUE);
+		GetScrollInfo (hwnd, SB_VERT, &si);
 
-	// Save the position for comparison later on.
-	yPos = si.nPos;
-	si.nPos -= 1;
-	ScrollWindow(hwnd, 0, yChar * (yPos - si.nPos)   , NULL , NULL );
+		
+		yPos = si.nPos;
+		si.nPos -= 1;
+		ScrollWindow(hwnd, 0, yChar   , NULL , NULL );
 
-//	ScrollWindowEx(hwnd, 0, yChar * (yPos - si.nPos)   , NULL, NULL , NULL, NULL , SW_ERASE );
-	UpdateWindow(hwnd);
-	//ScrollWindow(hwnd, 0, yChar   , NULL, NULL);
+		} 
+	 else 
+
+	 { 
+
+		si.cbSize = sizeof (si);
+		si.nTrackPos = yChar;
+		si.fMask  = SIF_ALL;
+		//si.fMask  = SIF_TRACKPOS;
+
+
+
+		SetScrollInfo (hwnd, SB_HORZ, &si, TRUE);
+		GetScrollInfo (hwnd, SB_HORZ, &si);
+
+		
+		yPos = si.nPos;
+		si.nPos -= 1;
+
+		ScrollWindow(hwnd, yChar * (yPos - si.nPos),  0   , NULL , NULL );
+
+
+	 }
+
+	// * (yPos - si.nPos)
+
+
+	UpdateWindow(hwnd);	
 
 	
 }
-	
-	
-
-
+		
 
 	#pragma ENDDUMP
 

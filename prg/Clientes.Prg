@@ -5945,6 +5945,7 @@ REturn
 									SelectObject( hDcBmp, hOldBmp1 );
 										DeleteDC( hDcBmp );
 										}
+										
 
 
 
