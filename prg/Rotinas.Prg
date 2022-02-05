@@ -209,21 +209,21 @@ Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds)
 	DEFINE WINDOW Win_Msg AT nTop, nLeft WIDTH nWidth HEIGHT nHeight TITLE 'xHint'  ;
 		NOMAXIMIZE NOMINIMIZE NOSIZE CHILD NOSYSMENU NOCAPTION BACKCOLOR aBcolor
 
-	DEFINE LABEL Label_1
-	ROW         0
-	COL         1
-	WIDTH       450
-	HEIGHT      15
-	VALUE       Hb_AnsiToOem(cMsg)
-	FONTNAME    XFONT1
-	FONTSIZE    8
-	FONTBOLD    .F.
-	BACKCOLOR   aBcolor
-	FONTCOLOR   BLACK
-	CENTERALIGN .f.
-END LABEL
+		DEFINE LABEL Label_1
+			ROW         0
+			COL         1
+			WIDTH       450
+			HEIGHT      15
+			VALUE       Hb_AnsiToOem(cMsg)
+			FONTNAME    XFONT1
+			FONTSIZE    8
+			FONTBOLD    .F.
+			BACKCOLOR   aBcolor
+			FONTCOLOR   BLACK
+			CENTERALIGN .f.
+		END LABEL
 
-END WINDOW
+	END WINDOW
 
 
 //SetProperty( "Win_msg" , "Label_1" , "Value" , cMsg )
@@ -248,6 +248,21 @@ hWnd := GetFormHandle("Win_Msg")
    */
 
 Return hWnd
+
+
+Function xFecheAnimate( hWnd)
+
+	
+	Local nSeconds := 1
+
+	AnimateWindow(hWnd, (nSeconds*300), AW_VER_NEGATIVE)
+	hb_IdleSleep(nSeconds)
+	AnimateWindow(hWnd, (nSeconds*1500), (AW_BLEND + AW_HIDE))
+	SendMessage( hWnd, WM_SYSCOMMAND, SC_CLOSE, 0 )
+
+
+
+Return
 
 
 Function xHidehint()

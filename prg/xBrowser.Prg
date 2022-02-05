@@ -1,5 +1,8 @@
 
 #include <hmg.ch>
+
+
+#include "inkey.ch"
 #include <minigui.ch>
 
 
@@ -77,6 +80,8 @@ Static cAndamento := ''
 Static nTamPag := 35
 
 Static nItemBrwHeight := 0
+
+
 
 
 
@@ -743,9 +748,101 @@ Function xTeclasBrow()
 
 
 						
+
 			End If 
 
 		End If 
+
+		
+
+		IF (GetKeyState ( VK_CONTROL ) < 0)
+			//msginfo('ok2')	
+
+			IF (nWParam == VK_HOME)				
+
+				//SetWindowCursor( nHWnd , HOURGLASS)
+				xGoTop()	
+
+				SysWait(.1)
+				
+
+
+
+				cTp1 := "Inicio do Navegador Atingido..."
+
+
+				If !_isWindowDefined("Win_Msg")
+					nHan1 := CrieJanTip(  GetProperty('Win_Browser' , 'Row') - 10  , GetProperty('Win_Browser' , 'Col') + 150   ,   Alltrim(cTp1)      ,, 0.5 )
+					//xFecheAnimate(  nHan1 )	
+				Else
+					xDispHint( cTp1 , GetProperty('Win_Browser' , 'Row') - 10 ,  GetProperty('Win_Browser' , 'Col') + 150  )
+										
+				End If
+				
+				SysWait(.1)
+
+
+
+				xDispUpTam(  cTp1 )			
+
+				Do Events 
+
+				xFecheAnimate(  GetFormHandle('Win_Msg') )	
+
+			
+
+
+
+			End If 	
+
+			IF (nWParam == VK_END)
+
+				xGoBottom()
+
+				SysWait(.1)
+				
+
+
+				cTp1 := "Final do Navegador Atingido..."
+
+
+				If !_isWindowDefined("Win_Msg")
+					nHan1 := CrieJanTip(  GetProperty('Win_Browser' , 'Row') - 10  , GetProperty('Win_Browser' , 'Col') + 150   ,   Alltrim(cTp1)      ,, 0.5 )
+					//xFecheAnimate(  nHan1 )	
+				Else
+					xDispHint( cTp1 , GetProperty('Win_Browser' , 'Row') - 10 ,  GetProperty('Win_Browser' , 'Col') + 150  )
+										
+				End If
+				
+				SysWait(.1)
+
+
+
+				xDispUpTam(  cTp1 )			
+
+				Do Events 
+
+				xFecheAnimate(  GetFormHandle('Win_Msg') )	
+				
+				
+			End If 	
+		END IF 	
+
+		
+		IF (GetKeyState ( VK_SHIFT ) < 0)
+			//msginfo('ok2')	
+
+			IF (nWParam == VK_LEFT)
+				
+			//	msginfo('ok44442')	
+			End If 	
+
+			IF (nWParam == VK_RIGHT)
+				
+			//	msginfo('ok2444442')	
+			End If 	
+		END IF 	
+
 
 
 		If (nWParam == VK_DOWN)
@@ -800,7 +897,7 @@ Function xTeclasBrow()
 
 			Else 
 
-				xDialog('Maximo Atingido! ' + Str(nItemx5) + '  ' + Str(nMaxItem1))
+				xDialog('Maximo Atingido! ' + Str(nItemx5) + '  ' + Str(nMaxItem1) + '   '  + Str(nLinScrool)  )
 
 				nLinhaBarra := nTamPag
 
@@ -846,6 +943,8 @@ Function xTeclasBrow()
 				Else
 					nLinhaBarra--
 				End If     
+
+
 
 				If (lHitt)
 					
@@ -895,6 +994,9 @@ Function xTeclasBrow()
 
 
 			End If 	
+
+			sysWait(0.05)			
+
 
 
 
@@ -1725,6 +1827,7 @@ Function xPaintScroll( cJanela )
 	BT_DrawBitmap (hDC  , 43  , 0   , 20  , 20 , BT_STRETCH,  yBmp1)
 
 
+
 	 // 63
 
 	If (nItemX5 == 1)
@@ -1791,20 +1894,82 @@ Static Function xGetPos( cJanela )
 
 Return Abs(nItem)
 
+Function xGoBottom()
 
 
-Function xGoTop()
+	Local nPos1 := (Len(aMt1) * nItemBrwHeight) - (nTamPAg * nItemBrwHeight)	
+
+    nItemX5     := nMaxItem1
+	nClearIt2   := nItemX5
+	nClear1     := nItemX5
+	nLinhaBarra := nTamPag
+
+	lHitB := .t.
+
+	lHitt := .f.
+
+	_HMG_PRINTER_SETVSCROLLVALUE(   GetFormHandle('Win_Browser')  , nPos1 )
+
+	nLinScrool := nPos1
 
 
-    nItemX5     := 1
-	nLinhaBarra := 1
+
+	//nLinScrool := 0
+	//nColScrool := 0
+
+	//(Len(aMt1) * nItemBrwHeight) 
 
 	
 
 	EncheMVis( nTamPag )
 
+	xSelItem(nItemX5)
+
 	BT_ClientAreaInvalidateAll('Win_Browser')
 	BT_ClientAreaInvalidateAll('Win_Role1')
+
+
+	SysWait(.1)
+
+
+	
+
+
+REturn 
+
+
+
+
+
+Function xGoTop()
+
+
+
+    nItemX5     := 1
+	nClearIt2   := 1
+	nClear1     := 1
+	nLinhaBarra := 1
+
+	lHitB := .f.
+
+	lHitt := .t.
+
+
+	nLinScrool := 0
+	nColScrool := 0
+
+	//(Len(aMt1) * nItemBrwHeight) 
+
+	
+
+	EncheMVis( nTamPag )
+
+	
+
+	BT_ClientAreaInvalidateAll('Win_Browser')
+	BT_ClientAreaInvalidateAll('Win_Role1')
+
+	//SysWait(.1)
 
 	
 
