@@ -134,6 +134,8 @@ FUNCTION Main
 	PUBLIC fColor := {|| iif( ( LastRec() > 0 ) .AND. ( AllTrim(Status ) == 'Ativo' ), { 78,78,78 },  { 255, 0, 0 } )  }
 
 	Public HOURGLASS := 'IMG\HourGlass.Cur'
+	
+	Private lFlagOk := .f. 
 
 
 	Public bColorGrid := {|| iif( ( LastRec() > 0 ) .AND. ( RecNo() / 2 == Int(RecNo() / 2 ) ), { 235,243,242 }, {211,231,230} ) }
@@ -332,6 +334,9 @@ FUNCTION Main
 	Private hBit2      := 0
 	Private hBitMain   := 0
 
+	
+
+
 	Private hBit10      := 0
 	Private hBit11      := 0
 	Private hBit12      := 0
@@ -359,6 +364,10 @@ FUNCTION Main
 	Private hBitmap3 := 0
 	Private hBitmap4 := 0
 	Private hBitmap5 := 0
+
+	
+	
+
 
 	Private hBitmap25 := 0
 
@@ -2354,6 +2363,8 @@ Function OpenOpcao( cCadastro , cTitulo , nHandle1 )
 
 			cControl := ''
 			cForm    := ''
+
+			//xBrowser
 			CadCli()
 
 
@@ -2729,40 +2740,79 @@ HB_FUNC ( SETVSCROLLVALUE )
 	PAINTSTRUCT ps; 
 	TEXTMETRIC tm; 
 	SCROLLINFO si; 
+
+	int nBt1 ; 
 	 
 	static int yPos;        // current vertical scrolling position 
 	 
 	int yChar;       // vertical scrolling unit 
 
+	int yTipo =  hb_parni(3);;
+
 	hwnd = (HWND) HMG_parnl (1);
 	yChar = hb_parni(2);
 
-	 // Get all the vertial scroll bar information.
-	si.cbSize = sizeof (si);
-	si.nTrackPos = yChar;
-	si.fMask  = SIF_ALL;
-	//si.fMask  = SIF_TRACKPOS;
+	RECT rect3;
+
+	RECT rect4;
+
+	GetClientRect(hwnd, &rect3);
+
+	rect3.right -= 35;
+
+	
+
+	if (yTipo == 1)
+		{
+
+		// Get all the vertial scroll bar information.
+		si.cbSize = sizeof (si);
+		si.nTrackPos = yChar;
+		si.fMask  = SIF_ALL;
+		//si.fMask  = SIF_TRACKPOS;
 
 
 
-	SetScrollInfo (hwnd, SB_VERT, &si, TRUE);
-	GetScrollInfo (hwnd, SB_VERT, &si);
+		SetScrollInfo (hwnd, SB_VERT, &si, TRUE);
+		GetScrollInfo (hwnd, SB_VERT, &si);
 
-	// Save the position for comparison later on.
-	yPos = si.nPos;
-	si.nPos -= 1;
-	ScrollWindow(hwnd, 0, yChar * (yPos - si.nPos)   , NULL, NULL);
+		
+		yPos = si.nPos;
+		si.nPos -= 1;
+		ScrollWindow(hwnd, 0, yChar   , NULL , NULL );
 
-//	ScrollWindowEx(hwnd, 0, yChar * (yPos - si.nPos)   , NULL, NULL , NULL, NULL , SW_ERASE );
-	UpdateWindow(hwnd);
-	//ScrollWindow(hwnd, 0, yChar   , NULL, NULL);
+		} 
+	 else 
+
+	 { 
+
+		si.cbSize = sizeof (si);
+		si.nTrackPos = yChar;
+		si.fMask  = SIF_ALL;
+		//si.fMask  = SIF_TRACKPOS;
+
+
+
+		SetScrollInfo (hwnd, SB_HORZ, &si, TRUE);
+		GetScrollInfo (hwnd, SB_HORZ, &si);
+
+		
+		yPos = si.nPos;
+		si.nPos -= 1;
+
+		ScrollWindow(hwnd, yChar * (yPos - si.nPos),  0   , NULL , NULL );
+
+
+	 }
+
+	// * (yPos - si.nPos)
+
+
+	UpdateWindow(hwnd);	
 
 	
 }
-	
-	
-
-
+		
 
 	#pragma ENDDUMP
 

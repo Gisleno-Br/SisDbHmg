@@ -217,6 +217,8 @@ FUNCTION CadCli()
 
 	Private nOpBak := 0
 
+	Private cBrowName := ''
+
 
 	Private nColOrder  := 0
 
@@ -270,6 +272,8 @@ FUNCTION CadCli()
 	Private lOkCad := .f.
 
 	
+
+
 
 
 	Private nColSel := 0
@@ -1110,12 +1114,12 @@ Function InitTela(  lIni1  , nColz1)
 	aMz1 := yEfect(  cActiveJan , .t.   )
 
 	
-	DoMatriz( cActiveJan , cTabela ) 
+	aMtrDados := DoMatriz( cActiveJan , cTabela ) 
 	
 
 
 
-	xMsgRun( "Aguarde Criando Estrutura .... "  , { || aMtrDados := xRodaImp()   }   , .f.  )
+	//xMsgRun( "Aguarde Criando Estrutura .... "  , { || aMtrDados := xRodaImp()   }   , .f.  )
 
 
 	//aMtrDados := xRodaImp()
@@ -1131,29 +1135,42 @@ Function InitTela(  lIni1  , nColz1)
 	SetWindowCursor( GetFormHandle( cFormPrin )  , IDC_ARROW  )
 
 
-	
-
-
 
 
 	xBrowser( aMtrDados , cFormPrin , nLarg)
 
 	DoMethod('Win_Browser' , 'Activate')
 
-
-	DoMethod( cFormPrin , 'Activate')
+	//DoMethod( cFormPrin , 'Activate')
 
 	DoMethod( cFormPrin , 'SetFocus')
 
 
 	
+	DoMethod('Win_Browser' , 'SetFocus')
 
+
+	//ShowBrowser()
 
 
 
 		   
 Return
 
+function ShowBrowser()
+
+
+	If _IsWindowDefined('Win_Browser')
+		DoMethod('Win_Browser' , 'Activate')
+	End If 	
+
+	//DoMethod( cFormPrin , 'Activate')
+
+	//DoMethod( cFormPrin , 'SetFocus')
+
+	SysWait(.1)
+
+Return 
 
 
 
@@ -5322,6 +5339,7 @@ Function PutImagem(nColx , cTexto , cSeq1 )
 
 
 
+
 		//msginfo('cr')
 
 
@@ -5370,6 +5388,7 @@ Function PutImagem(nColx , cTexto , cSeq1 )
 
 
 Return
+
 
 
 
@@ -5650,6 +5669,7 @@ REturn
 
 	//SetRect(&rect2, 0 , 0 , (INT) hb_parvni(5, 1) ,  GetDeviceCaps( hDC , VERTRES)    );
 
+
 	for ( i=1; i <= Tam1; i++ )
 
 	{
@@ -5925,6 +5945,7 @@ REturn
 									SelectObject( hDcBmp, hOldBmp1 );
 										DeleteDC( hDcBmp );
 										}
+										
 
 
 

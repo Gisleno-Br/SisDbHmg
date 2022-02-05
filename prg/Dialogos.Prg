@@ -14,6 +14,8 @@ STATIC nIndexDlg23 := 0
 STATIC nIndexDlg24 := 0
 
 
+
+
 DEFINE WINDOW main
 DECLARE WINDOW fSplit6
 
@@ -23,76 +25,6 @@ DECLARE WINDOW fSplit6
 
 
 
-
-DECLARE WINDOW fDialogo
-
-/*
-Function yAviso2( cMensagem , lEfect  )
-
-
-	Local aMx := {}
-	Local n   := 0
-
-	
-	
-	Default lEfect := .t.
-
-
-	If lEfect	
-		aMx := yEfect(  cActiveJan  )	
-	End If 	
-
-	MsgAviso( cMensagem , 1)	
-
-	n := 0
-
-	SysWait(.2)
-
-	While isWindowVisible( fDiaLogo.Handle )
-		  n++	
-		  Do Events 
-	Enddo 
-
-	
-	If lEfect	
-		EfectEnd(cActiveJan , aMx )
-    End If		
-
-
-Return 	
-
-
-FUNCTION yAviso( cMsgx1 , lEfect )
-
-	//PRIVATE nTipo := 1
-
-	PRIVATE cBmpx1 :=  "img\aviso1.bmp"
-	PRIVATE cMensagem := "Aviso"
-
-	PRIVATE cJanxDialog := 'fDialogo'
-
-	
-	PRIVATE cMsg1 := cMsgx1
-	
-
-	//Private nIndexDlg22 := 0
-
-
-	PRIVATE lRet := .F.
-
-	Private cDiaName := 'fDialogo'
-
-	
-	Private n20 := 0
-	Private n21 := 0
-
-
-  
-	yAviso2( cMsgx1 , lEfect  )
-
-Return 	
-
-*/
 
 
 
@@ -191,7 +123,11 @@ FUNCTION EventDlg()
 
 			If nId == 6652
 				 xFechaDlg()
+				 //DoMethod('Win_Dialog' , 'Hide')
+				 //DoMethod('WinSombra2' , 'Hide')
 			End If 
+
+
 
 
 
@@ -508,34 +444,10 @@ FUNCTION xMsgRun( cMsg1  , bBlock , lSombra )
 	_ShowWindow("fProgress1")
 	BT_ClientAreaInvalidateAll(   'fProgress1'  )
 
-	
-
-//	SysWait(.1)
 
 	Eval(bBlock)
 
-	//msginfo('lp2')
 
-
-
-
-//	msginfo('ter')	
-	//SysWait(.2)
-
-
-//	Load Window fProgress
-
-
-	//HMG_ChangeWindowStyle( fProgress.Handle    , WS_BORDER, NIL, .F., .T.)
-	//HMG_ChangeWindowStyle( fProgress.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
-
-	//SetProperty('fProgress','LblMsg','Value', cMsg1  )
-
-
-	//Center Window fProgress
-
-
-	//Activate Window fProgress
 
 RETURN lRet
 
@@ -674,7 +586,7 @@ Function xDialog( cMsg1 , lAsk1  )
 
 	Private lRetx := .F.
 
-	Private lFlagOk := .f. 
+	
 
   /*
 	DEFINE WINDOW Win_Dialog AT 0, 0 WIDTH 450 HEIGHT 247 TITLE 'xDialog1' 
@@ -688,16 +600,15 @@ Function xDialog( cMsg1 , lAsk1  )
 
 
 
-
-
-
-
+	If _IsWindowDefined('Win_Dialog')
+		Return .t. 
+	End If 
 	
 	DEFINE WINDOW Win_Dialog ;
-		AT 0,0 ;
+		AT 0,0  ;
 		WIDTH 450 HEIGHT 247 ;
-		TITLE 'xDialog1'  ;		
-		MODAL NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE ;
+		CHILD TITLE 'xDialog1'  ;		
+		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE ;
 		ON PAINT xProcDlg(  cMsg1 )
 	END WINDOW	
 
@@ -762,8 +673,8 @@ Function xDialog( cMsg1 , lAsk1  )
 	 nLeft+5 , GetProperTy('Win_Dialog' , 'Width')   , 6 )
 
 
-	Bt_BitMapSaveFile(  zBitMap , 'y0133.bmp')
-	Bt_BitMapSaveFile(  zBitMap2 , 'y0134.bmp')
+	//Bt_BitMapSaveFile(  zBitMap , 'y0133.bmp')
+//	Bt_BitMapSaveFile(  zBitMap2 , 'y0134.bmp')
 	
 
 
@@ -789,7 +700,10 @@ Function xDialog( cMsg1 , lAsk1  )
 
 	Bt_ClientAreaInvalidateAll('WinSombra2')
 	
-	ACTIVATE WINDOW Win_Dialog
+	//ACTIVATE WINDOW Win_Dialog
+
+	_ShowWindow('Win_Dialog')
+
 
 
 
@@ -954,20 +868,22 @@ Function xFechaDlg()
 		   */
 
 
-
+		DO EVENTS
 		SendMessage( nHandle1, WM_SYSCOMMAND, SC_CLOSE , 0 )
 
-	//	Do Events
-	//	Do Events
+
+		DO EVENTS
+		DO EVENTS
+
+	
 
 
 		SendMessage( nHandle1, WM_SYSCOMMAND, WM_DESTROY , 0 )
 
-	//	Do Events
+		DO EVENTS
 
-		//SysWait(.2)
 
-	//	Win_Dialog.Release()
+	
 
 	End If 
 	
@@ -976,18 +892,18 @@ Function xFechaDlg()
 	
 
 	If nHandle2 > 0
-
-//		msginfo('ok')
 		
+		
+		DO EVENTS
 		SendMessage( nHandle2, WM_SYSCOMMAND, SC_CLOSE , 0 )
 
-	//	SysWait(.1)
+		DO EVENTS
+		DO EVENTS
+
+
 		SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )
+		DO EVENTS
 
-
-	//	SysWait(.1)
-
-		//msginfo('ok')
 
 
 	End If 
