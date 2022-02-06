@@ -895,9 +895,10 @@ Function xTeclasBrow()
 			 End If 
 
 			
-			HMG_CleanLastVirtualKeyDown() 
+		//	HMG_CleanLastVirtualKeyDown() 
 
 			nItemx5++
+
 
 
 
@@ -916,10 +917,16 @@ Function xTeclasBrow()
 					nLinhaBarra := nTamPag
 
 					nSav2 := nItemx5
+
+					//Do Events
 					
 					xSelItem( nItemx5  , .t.  )				
+
+
+					//Do Events	
 					ScrolUp1(.f.)				
-				//	sysWait(0.05)		
+					
+					sysWait(0.05)		
 
 
 					
@@ -961,7 +968,7 @@ Function xTeclasBrow()
 				
 			End If 
 
-		//	sysWait(0.05)
+			sysWait(0.05)
 	
 		End If 
 
@@ -970,7 +977,7 @@ Function xTeclasBrow()
 
 		If (nWParam == VK_UP)
 			
-			HMG_CleanLastVirtualKeyUp() 
+			//HMG_CleanLastVirtualKeyUp() 
 
 			
 					
@@ -991,8 +998,13 @@ Function xTeclasBrow()
 
 				If (lHitt)
 					
+					
 					xSelItem( nItemx5  , .t. , .f.  )
+
+				//	Do Events 
+
 					ScrolUp1(.t.)
+					
 					sysWait(0.05)			
 
 					
@@ -1000,11 +1012,13 @@ Function xTeclasBrow()
 	 				EncheMVis( nItemx5  , .t. )
 
 
+
 				Else
 					xSelItem( nItemx5  , .f.  , .f. )
+					sysWait(0.05)			
 				End If 
 
-				xSaveVars()
+				//xSaveVars()
 
 			Else 
 
@@ -1738,19 +1752,6 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 	If nClearIt2 > 0
         xLimpSub( 'Win_Browser' ,  @nClearIt2 ,  @nItemx5 , 0 ,   nItemBrwHeight , GetProperty(  'Win_Browser','Width') , -(nLinScrool) )
 
-	//	if nLinScrool > 0
-	//		msginfo('ok')	
-
-	//	End If 	
-
-
-//		Do Events
-		//sysWait(0.06)
-
-		//BT_ClientAreaInvalidateRect( cJan , ( nHeight1  + nRow1 + ( (nOpsely - 1 ) * nitemH1)) , 0 , nColTam1 ,  nitemH1   , .t. )		
-
-		
-
 
 	End If
 
@@ -1777,7 +1778,11 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 
 
 	If (nItemx5 > 0)		
+		
+
 		BT_ClientAreaInvalidateRect( 'Win_Browser' ,  nRow1  +  ( ( nItemx5 - 1 ) * nItemBrwHeight)  , 0 , GetProperty(  'Win_Browser','Width')  ,  nItemBrwHeight   , .t. )	
+	
+
 	End If
 
 	nPerCent := ( nItemx5 / nMaxItem1) * 100
