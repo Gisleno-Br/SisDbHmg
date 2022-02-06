@@ -4962,6 +4962,9 @@ REturn
 
 
 
+
+
+
 Function LimpaLabels( lDest )
 
 	Local nx1 := 1
@@ -5107,6 +5110,9 @@ Function OrdeneCol( nIndice )
 Return
 
 Function xGetScrol( lMouseMove )
+
+
+
 
 
 	Local nCol1 := 0

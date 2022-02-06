@@ -274,7 +274,7 @@ Function TestBrow( cParent1 , cTabx  )
 		cSq2 := GetSql( cTabela  , .f. )
 	End If
 
-	cSq2 += " order by codigo desc limit 500"
+	cSq2 += " order by codigo limit 500"
 
 
 
@@ -763,8 +763,10 @@ Function xTeclasBrow()
 				//SetWindowCursor( nHWnd , HOURGLASS)
 				xGoTop()	
 
-				SysWait(.1)
+			//	SysWait(.1)
 				
+
+
 
 
 
@@ -779,15 +781,17 @@ Function xTeclasBrow()
 										
 				End If
 				
-				SysWait(.1)
+			//	SysWait(.1)
 
 
 
 				xDispUpTam(  cTp1 )			
 
-				Do Events 
+				
 
 				xFecheAnimate(  GetFormHandle('Win_Msg') )	
+
+				Do Events 
 
 			
 
@@ -799,7 +803,7 @@ Function xTeclasBrow()
 
 				xGoBottom()
 
-				SysWait(.1)
+				//SysWait(.1)
 				
 
 
@@ -814,7 +818,7 @@ Function xTeclasBrow()
 										
 				End If
 				
-				SysWait(.1)
+			//	SysWait(.1)
 
 
 
@@ -828,24 +832,62 @@ Function xTeclasBrow()
 			End If 	
 		END IF 	
 
+
 		
 		IF (GetKeyState ( VK_SHIFT ) < 0)
 			//msginfo('ok2')	
 
 			IF (nWParam == VK_LEFT)
+
+
 				
-			//	msginfo('ok44442')	
+				If  lNoHorzScr
+					xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))
+					REturn 			
+				End If 
+	
+				
+	
+				nColScrool := 0
+				//nLargTotal - GetProperty('Win_Browser' , 'Width')
+				SETVSCROLLVALUE( GetFormHandle(  'Win_Browser'  )  , 0 , 2 )			
+
+				BT_ClientAreaInvalidateAll('Win_Browser')
+
+			
+			
 			End If 	
 
 			IF (nWParam == VK_RIGHT)
+
+			//	msginfo('ok')	
+
+
+				If  lNoHorzScr
+					xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))
+					REturn 			
+				End If 
+	
 				
-			//	msginfo('ok2444442')	
+	
+				nColScrool := nLargTotal - GetProperty('Win_Browser' , 'Width')
+				SETVSCROLLVALUE( GetFormHandle(  'Win_Browser'  )  , -(nColScrool) , 2 )			
+
+				BT_ClientAreaInvalidateAll('Win_Browser')
+			
+			
 			End If 	
+
+
 		END IF 	
 
 
 
+
 		If (nWParam == VK_DOWN)
+
+			
+			lHitt := .f. 		
 
 			 If (lHitt)
 				nItemx5 := 1
@@ -858,7 +900,6 @@ Function xTeclasBrow()
 
 
 
-			lHitt := .f. 		
 
 			If nLinhaBarra >= nTamPag 
 				lHitB := .t. 			
@@ -930,7 +971,8 @@ Function xTeclasBrow()
 			
 			HMG_CleanLastVirtualKeyUp() 
 
-		
+			
+					
 			If nItemx5 > 1
 
 
@@ -1023,7 +1065,6 @@ Function ScrolUp1( lUpDir )
 		Else			
 			nLinScrool -= nItemBrwHeight			
 			SETVSCROLLVALUE( GetFormHandle(  'Win_Browser'  )  , (nItemBrwHeight) , 1 )			
-
 		End If
 
 	Else
@@ -1192,6 +1233,8 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 
 
 
+	
+
 
 //6
 	If nClear1 > 0
@@ -1203,7 +1246,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 		End If
 
 
-		BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemBrwHeight)    , 0  , Width  ,    nHeightBmp     ,  nCor  , nCor   )
+	//	BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemBrwHeight)    , 0  , Width  ,    nHeightBmp     ,  nCor  , nCor   )
 
 
 	End If
@@ -1237,9 +1280,6 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 
 			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight      , SELCOR  , SELCOR   )
 
-			//cTexto := StrZero(n1,6) + '    ' + StrZero(nItemx5,5) + '   ' + StrZero(nLinhaBarra,6)
-
-			//BT_TEXT_TRANSPARENT
 
 			BT_DrawText ( hDC2 , nLine + nRow  , 17+nCol ,   cTexto , xFont2, 9 ,  WHITE ,  SELCOR   , ;
 			BT_TEXT_BOLD  ,	nAlingText, nOrientation )
@@ -1536,6 +1576,8 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 
 		End If 
+
+
 
 
 		If nMsg == WM_MOUSEMOVE

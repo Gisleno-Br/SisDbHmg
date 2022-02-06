@@ -253,7 +253,7 @@ Return hWnd
 Function xFecheAnimate( hWnd)
 
 	
-	Local nSeconds := 1
+	Local nSeconds := 0.5
 
 	AnimateWindow(hWnd, (nSeconds*300), AW_VER_NEGATIVE)
 	hb_IdleSleep(nSeconds)
