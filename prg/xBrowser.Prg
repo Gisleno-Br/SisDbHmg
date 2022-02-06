@@ -658,6 +658,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 	_ShowWindow("Win_Role1")
 
 
+	
 
 Return
 
@@ -918,7 +919,7 @@ Function xTeclasBrow()
 					
 					xSelItem( nItemx5  , .t.  )				
 					ScrolUp1(.f.)				
-					sysWait(0.05)		
+				//	sysWait(0.05)		
 
 
 					
@@ -960,7 +961,7 @@ Function xTeclasBrow()
 				
 			End If 
 
-			sysWait(0.05)
+		//	sysWait(0.05)
 	
 		End If 
 
@@ -1201,6 +1202,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 
 
 
+
 /*
 	DEFAULT nItemDropedDown := 0
 	DEFAULT nHeightDroped   := 0
@@ -1245,8 +1247,19 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 			nCor := CORBROWSE
 		End If
 
+		/*
+		If aBmpSv1 != Nil
+			BT_DrawBitmap (hDC2  ,  (nClear1  * nItemBrwHeight)     , 0   , Width  , nItemBrwHeight , BT_STRETCH, aBmpSv1)
 
-	//	BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemBrwHeight)    , 0  , Width  ,    nHeightBmp     ,  nCor  , nCor   )
+			Bt_BitmapSaveFile( aBmpSv1 , 'Rect1.bmp' )
+
+		End If 	
+		*/
+
+
+		//BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemBrwHeight)    , 0  , Width  ,    nHeightBmp     ,  nCor  , nCor   )
+
+
 
 
 	End If
@@ -1272,13 +1285,14 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 		End If 
 
 
+
 		If (nOpselx1 > 0) .And. (nOpSelx1 = n1)
 
 			nTypeText    := BT_TEXT_ITALIC
 			//BT_TEXT_TRANSPARENT
 
 
-			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight      , SELCOR  , SELCOR   )
+			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow - Iif( nLinScrool > 0 ,0,0)    , 00  , Width ,    nItemBrwHeight      , SELCOR  , SELCOR   )
 
 
 			BT_DrawText ( hDC2 , nLine + nRow  , 17+nCol ,   cTexto , xFont2, 9 ,  WHITE ,  SELCOR   , ;
@@ -1288,6 +1302,8 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 			If (nSelLine == n1) .And. (nCol == 0)
 				BT_DrawBitmap (hDC2  , nLine  + nRow    , 0   , 15  , nItemBrwHeight , BT_STRETCH, hBitOk)
 			End If
+
+			//Do Events 
 
 		Else
 
@@ -1714,62 +1730,28 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 	Local nI := 0
 
 	Default lFrente := .t. 
-	/*
+	
 
-	If (lFrente)
-		If (nItem <= Len(aMt1 ))
-			While (nItem <= Len(aMt1 )) .And. (!aMt1[nItem][2]) 
-				nItem++		
-				nLinhaBarra++
-
-				lHitt := .f. 
-
-				If lScr1
-					ScrolUp1(  .f.  )				
-				End If 
-
-			Enddo 
-		End If
-	Else 
-
-
-
-		If (nItem > 1)
-
-			While (nItem > 1) .And. (!aMt1[nItem][2]) 
-
-
-				nItem--
-				nLinhaBarra--
-
-
-				lHitb := .f. 
-			
-
-			//	MSGINFO('ok')
-
-				If (lHitt)
-				    //msginfo('ok2')
-					
-					ScrolUp1(  .t. )				
-					
-				//	msginfo('ok2' + str(nItem ) + '  ' +  str(nLinhaBarra ) )
-				End If 
-
-				
-
-			Enddo 
-
-		End If 
-
-	End If 
-
-	*/
 
 
 
 	If nClearIt2 > 0
-		xLimpSub( 'Win_Browser' ,  @nClearIt2 ,  @nItemx5 , 0 ,   nItemBrwHeight , GetProperty(  'Win_Browser','Width') , -(nLinScrool) )
+        xLimpSub( 'Win_Browser' ,  @nClearIt2 ,  @nItemx5 , 0 ,   nItemBrwHeight , GetProperty(  'Win_Browser','Width') , -(nLinScrool) )
+
+	//	if nLinScrool > 0
+	//		msginfo('ok')	
+
+	//	End If 	
+
+
+//		Do Events
+		//sysWait(0.06)
+
+		//BT_ClientAreaInvalidateRect( cJan , ( nHeight1  + nRow1 + ( (nOpsely - 1 ) * nitemH1)) , 0 , nColTam1 ,  nitemH1   , .t. )		
+
+		
+
+
 	End If
 
 	nItemx5 := nItem
@@ -1780,10 +1762,14 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 	Else
 		Return
 	End If
+
 	
 	//nRow1 := -(GetProperty( 'Win_Browser' , "VscrollBar" , "Value"))
 
-	nRow1 := -(nLinScrool)
+
+	If nLinScrool > 0
+		nRow1 := -(nLinScrool)
+	End If	
 
 	
 	nSelLine := nItemx5
@@ -2017,6 +2003,7 @@ Function xGoTop()
 
 
 REturn 
+
 
 
 

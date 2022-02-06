@@ -118,6 +118,8 @@ FUNCTION Main
 	Private  lTracking42 := .f.
 	Private  lTracking142 := .f.
 
+	Private aBmpSv1 := Nil 
+
 	
 	PRIVATE nFontSize  := 8
 
