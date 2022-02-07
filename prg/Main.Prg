@@ -2763,7 +2763,7 @@ HB_FUNC ( SETVSCROLLVALUE )
 	rect3.right -= 35;
 
 	
-
+   // VERT 
 	if (yTipo == 1)
 		{
 
@@ -2781,7 +2781,7 @@ HB_FUNC ( SETVSCROLLVALUE )
 		
 		yPos = si.nPos;
 		si.nPos -= 1;
-		ScrollWindow(hwnd, 0, yChar   , NULL , NULL );
+		ScrollWindow(hwnd, 0, yChar * (yPos - si.nPos)   , NULL , NULL );
 
 		} 
 	 else 

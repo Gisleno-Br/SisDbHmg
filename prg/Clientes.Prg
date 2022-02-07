@@ -5942,6 +5942,8 @@ REturn
 									BitBlt( hDcBmp, 0, 0, bm.bmWidth, bm.bmHeight, hDC, wRow, wCol, SRCCOPY );
 
 									//
+									
+
 
 									SelectObject( hDcMask, hOldBmp2 );
 										DeleteObject( hBmpMask );

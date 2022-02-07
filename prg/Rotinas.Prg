@@ -545,13 +545,14 @@ Function xLimpSub(cJan , nOpsely , nClr , nHeight1 , nitemH1 , nColTam1 , nRow1 
 	DEFAULT nRow1 := -(GetProperty( cJan , "VscrollBar" , "Value"))
 	
 
-	If nOpsely > 0
+
+	If nOpsely > 0	
 		BT_ClientAreaInvalidateRect( cJan , ( nHeight1  + nRow1 + ( (nOpsely - 1 ) * nitemH1)) , 0 , nColTam1 ,  nitemH1   , .t. )		
-
-		//aBmpSv1 := BT_BitmapCaptureClientArea( cJan , ( nHeight1  + nRow1 + ( (nOpsely - 1 ) * nitemH1)) , 0 , nColTam1 ,  nitemH1   )		
-
-		
+				
 	End If
+
+
+
 
 Return
 
