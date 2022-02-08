@@ -2,8 +2,11 @@
 #include <hmg.ch>
 
 
+
+
 #include "inkey.ch"
 #include <minigui.ch>
+
 
 
 #require "hbxpp"
@@ -99,7 +102,7 @@ Static hBitOk
 
 Static cBrowserName := ''
 
-Static nSelLine := 0
+Static nSelLine := 1
 
 Static nIndexEventZ := 0
 
@@ -108,10 +111,10 @@ Static lTermino := .f.
 
 Static nModeBrw := 1
 
-Static lFundo := .f. 
+Static lFundo := .t.
 
 
-Static lFlagPaint := .t. 
+Static lFlagPaint := .t.
 
 
 Static lColor1 := .f.
@@ -522,6 +525,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 
 
 
+
 	aMt1 := Aclone(aDatas1)
 
 	nMaxItem1 := Len(aDatas1)
@@ -536,6 +540,8 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 
 	hBitOk := BT_BitmapLoadFile ('OKMARK')
 
+
+
 	//msginfo(Str(   nLarg1  )   + '    ' + Str(   nLargTotal ))
 
 	//nLinScrool := nItemBrwHeight * nTamPag
@@ -549,24 +555,33 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 
 	cBrowserName := 'Win_Browser'
 
+	
+	//Private hBitmap := BT_BitmapLoadFile ('Browser.Bmp' ) 
+
 
 
 	//If (nLarg1 < nLargTotal)
 
 	//xPrepFundo( ThisWindow.Name , aMt1 )
-/*
+
+	/*
+ 
 	DEFINE WINDOW Win_Back1 ;
 		AT 145,10 ;
 		CHILD ;
 		PANEL ;
 		PARENT &cParent ;
-		WIDTH nLarg1 HEIGHT (nTamPag * nItemBrwHeight) ;
+		WIDTH nLarg1 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) ;
 		TITLE 'xFundo1r' + Left(cActiveJan,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR WHITE ;
-		ON PAINT xPrepFundo( ThisWindow.Name , aMt1 )
+		ON PAINT (xPaintBrowser( ThisWindow.Name , aMt1 , nItemx5 ,     nClearIt2 )  )
+
+
+		//ON PAINT xPrepFundo( ThisWindow.Name , aMt1 )
 		// (xPaintBrowser( ThisWindow.Name , aMt1 , nItemx5 ,     nClearIt2 ) ,xPaintBrowser( ThisWindow.Name , aMt1 , nItemx5 ,     nClearIt2 ) )
 	END WINDOW
-*/
+
+    */
 
 
 
@@ -577,86 +592,70 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 		PARENT &cParent ;
 		WIDTH nLarg1 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) VIRTUAL WIDTH nLargTotal  ;
 		TITLE 'xBrowser' + Left(cActiveJan,4)  	;
-		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR RED ;
-		ON PAINT xPaintBrowser( ThisWindow.Name , aMt1 , nItemx5 ,     nClearIt2 )
+		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR Nil  ;		
+		ON PAINT (xPaintBrowser( ThisWindow.Name , aMt1 , nItemx5 ,     nClearIt2  , .t.  )  )
+		//xPrepFundo( ThisWindow.Name , aMt1 , lFundo  ) 		
+
+		//xPaintBrowser( ThisWindow.Name , aMt1 , nItemx5 ,     nClearIt2 )
 		// (xPaintBrowser( ThisWindow.Name , aMt1 , nItemx5 ,     nClearIt2 ) ,xPaintBrowser( ThisWindow.Name , aMt1 , nItemx5 ,     nClearIt2 ) )
 	END WINDOW
 
-	SET WINDOW Win_Browser TRANSPARENT TO COLOR RED
-
-	//SET WINDOW &cBrowserName TRANSPARENT TO 0
-
-	
 
 
 
-	//100 - Disable 
-
-	//SET WINDOW &cBrowserName TRANSPARENT TO 23
-
-	//SET REGION OF Win_Browser TRANSPARENT COLOR RED
-
-
-
-		/*
-	Else 
-
-		DEFINE WINDOW Win_Browser ;
-			AT 145,10 ;
-			CHILD ;
-			WIDTH nLarg1 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) VIRTUAL WIDTH Nil  ;
-			TITLE 'xBrowser' + + Left(cActiveJan,4)   	;
-			NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR WHITE ;
-			ON PAINT xPaintBrowser( ThisWindow.Name , aMt1 , nItemx5 ,     nClearIt2 )
-		END WINDOW
-
-		lNoHorzScr := .t. 
-
-	End If 
-	*/
+	DEFINE WINDOW Win_Espelho ;
+		AT 145,10 ;
+		CHILD ;
+		PANEL ;
+		PARENT &cParent ;
+		WIDTH nLarg1 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) VIRTUAL WIDTH nLargTotal  ;
+		TITLE 'xEspelho' + Left(cActiveJan,4)  	;
+		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR BLACK 
+		
+		// (xPaintBrowser( ThisWindow.Name , aMt1 , nItemx5 ,     nClearIt2 ) ,xPaintBrowser( ThisWindow.Name , aMt1 , nItemx5 ,     nClearIt2 ) )
+	END WINDOW
 
 
-			DEFINE LABEL Labelx1
-				PARENT Win_Browser
-				ROW    720
-				COL    20
-				WIDTH  120
-				HEIGHT 24
-				VALUE " adsadasd  "
-				FONTNAME FONTBROWSER
-				FONTSIZE 9
-				TOOLTIP ""
-				FONTBOLD .T.
-				FONTITALIC .F.
-				FONTUNDERLINE .F.
-				FONTSTRIKEOUT .F.
-				HELPID Nil
-				VISIBLE .f.
-				TRANSPARENT .f.
-				ACTION Nil
-				AUTOSIZE .F.
-				BACKCOLOR NIL
-				FONTCOLOR {150,150,150}
-			END LABEL
+
+	//SET WINDOW Win_Browser TRANSPARENT TO COLOR RED
+
+	SET WINDOW Win_Browser TRANSPARENT TO 0
 
 
+
+
+
+
+	// 100 - Disabled
+
+
+
+	DEFINE LABEL Labelx1
+		PARENT Win_Browser
+		ROW    720
+		COL    20
+		WIDTH  120
+		HEIGHT 24
+		VALUE " adsadasd  "
+		FONTNAME FONTBROWSER
+		FONTSIZE 9
+		TOOLTIP ""
+		FONTBOLD .T.
+		FONTITALIC .F.
+		FONTUNDERLINE .F.
+		FONTSTRIKEOUT .F.
+		HELPID Nil
+		VISIBLE .f.
+		TRANSPARENT .f.
+		ACTION Nil
+		AUTOSIZE .F.
+		BACKCOLOR NIL
+		FONTCOLOR {150,150,150}
+	END LABEL
 
 
 	nCol11 := GetDeskTopWidth() - 32
 
-	/*
-
-		DEFINE WINDOW Win_Role1 ;
-			AT 145,nCol11  ;
-			CHILD ;
-			WIDTH 20 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) VIRTUAL WIDTH Nil  ;
-			TITLE 'xScroxRoleol1' + Left(cParent,4)  	;
-			NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR WHITE   ;
-			ON SCROLLDOWN ScrolUp1( .f.  ) ; 
-			ON SCROLLUP ScrolUp1( .t.  )  ;
-			ON VSCROLLBOX vScrolBox() 
-		END WINDOW
-		*/
 
 
 	DEFINE WINDOW Win_Role1 ;
@@ -672,11 +671,19 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 	END WINDOW
 
 
+
 	_ShowWindow("Win_Browser")
 
 
 	SHOWSCROLLBAR (GetFormHandle("Win_Browser") , 0, .f.)
 	SHOWSCROLLBAR (GetFormHandle("Win_Browser") , 1, .f.)
+
+
+	
+	SHOWSCROLLBAR (GetFormHandle("Win_Espelho") , 0, .f.)
+	SHOWSCROLLBAR (GetFormHandle("Win_Espelho") , 1, .f.)
+
+
 
 
 
@@ -689,20 +696,13 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 	HMG_ChangeWindowStyle( Win_Role1.Handle, WS_BORDER, NIL, .t., .T. )
 	HMG_ChangeWindowStyle( Win_Role1.Handle, NIL, WS_EX_STATICEDGE, .T., .T. )
 
-	
+
 
 	//BT_ClientAreaInvalidateAll('Win_Back1')
-
-	
-	
 	//_ShowWindow("Win_Back1")
-
+//
 
 	BT_ClientAreaInvalidateAll('Win_Browser')
-
-	
-
-	
 
 
 
@@ -714,11 +714,23 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 	_ShowWindow("Win_Role1")
 
 	
-	
+	_ShowWindow("Win_Espelho")
+
+	//BringTop( 'xEspelho' + Left(cActiveJan,4) )
+
+
+
+	//SysWait(.1)
+
+	//BT_ClientAreaInvalidateAll('Win_Espelho')
 
 
 
 
+
+	xDcToDc()
+
+	//SysWait(.1)
 
 
 Return
@@ -787,6 +799,12 @@ Function xTeclasBrow()
 				SETVSCROLLVALUE( GetFormHandle(  'Win_Browser'  )  , -(nHSCrool) , 2 )
 
 
+				xDcToDc()
+			Else 
+
+			    xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida."))
+
+
 			End If
 
 		End If
@@ -802,15 +820,15 @@ Function xTeclasBrow()
 			End If
 
 
-
 			If (nColScrool > 0)
 
 				nColScrool -= nHSCrool
 				SETVSCROLLVALUE( GetFormHandle(  'Win_Browser'  )  , nHSCrool , 2 )
 
+				xDcToDc()
 
-
-
+			Else				
+				 xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida."))
 			End If
 
 		End If
@@ -822,80 +840,67 @@ Function xTeclasBrow()
 
 			IF (nWParam == VK_HOME)
 
-				//SetWindowCursor( nHWnd , HOURGLASS)
+				
 				xGoTop()
 
-				//	SysWait(.1)
-
-
-
-
-
-
+				
 				cTp1 := "Inicio do Navegador Atingido..."
 
 
 				If !_isWindowDefined("Win_Msg")
 					nHan1 := CrieJanTip(  GetProperty('Win_Browser' , 'Row') - 10  , GetProperty('Win_Browser' , 'Col') + 150   ,   Alltrim(cTp1)      ,, 0.5 )
-					//xFecheAnimate(  nHan1 )
+					
 				Else
 					xDispHint( cTp1 , GetProperty('Win_Browser' , 'Row') - 10 ,  GetProperty('Win_Browser' , 'Col') + 150  )
 
 				End If
 
-				//	SysWait(.1)
-
+				Do Events
 
 
 				xDispUpTam(  cTp1 )
-
-
-
 				xFecheAnimate(  GetFormHandle('Win_Msg') )
 
-			Do Events
 
+				xDcToDc()
 
-
-
-
-		End If
-
-		IF (nWParam == VK_END)
-
-			xGoBottom()
-
-			//SysWait(.1)
-
-
-
-			cTp1 := "Final do Navegador Atingido..."
-
-
-			If !_isWindowDefined("Win_Msg")
-				nHan1 := CrieJanTip(  GetProperty('Win_Browser' , 'Row') - 10  , GetProperty('Win_Browser' , 'Col') + 150   ,   Alltrim(cTp1)      ,, 0.5 )
-				//xFecheAnimate(  nHan1 )
-			Else
-				xDispHint( cTp1 , GetProperty('Win_Browser' , 'Row') - 10 ,  GetProperty('Win_Browser' , 'Col') + 150  )
+				Do Events
 
 			End If
 
-			//	SysWait(.1)
+			IF (nWParam == VK_END)
+
+				xGoBottom()
+
+		
+				cTp1 := "Final do Navegador Atingido..."
 
 
+				If !_isWindowDefined("Win_Msg")
+					nHan1 := CrieJanTip(  GetProperty('Win_Browser' , 'Row') - 10  , GetProperty('Win_Browser' , 'Col') + 150   ,   Alltrim(cTp1)      ,, 0.5 )
+		
+				Else
+					xDispHint( cTp1 , GetProperty('Win_Browser' , 'Row') - 10 ,  GetProperty('Win_Browser' , 'Col') + 150  )
 
-			xDispUpTam(  cTp1 )
+				End If
 
-			Do Events
+				Do Events
 
-			xFecheAnimate(  GetFormHandle('Win_Msg') )
+				xDispUpTam(  cTp1 )	
 
+				xFecheAnimate(  GetFormHandle('Win_Msg') )
+
+				xDcToDc()
+
+				Do Events
+
+
+			End If
 
 		End If
 
-	END IF
 
-
+	End If 
 
 	IF (GetKeyState ( VK_SHIFT ) < 0)
 		//msginfo('ok2')
@@ -903,12 +908,10 @@ Function xTeclasBrow()
 		IF (nWParam == VK_LEFT)
 
 
-
 			If  lNoHorzScr
 				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))
-				Return 
+				Return
 			End If
-
 
 
 			nColScrool := 0
@@ -916,6 +919,9 @@ Function xTeclasBrow()
 			SETVSCROLLVALUE( GetFormHandle(  'Win_Browser'  )  , 0 , 2 )
 
 			BT_ClientAreaInvalidateAll('Win_Browser')
+
+		
+			xDcToDc()
 
 
 
@@ -937,6 +943,9 @@ Function xTeclasBrow()
 			SETVSCROLLVALUE( GetFormHandle(  'Win_Browser'  )  , -(nColScrool) , 2 )
 
 			BT_ClientAreaInvalidateAll('Win_Browser')
+
+			
+			xDcToDc()
 
 
 		End If
@@ -977,15 +986,12 @@ Function xTeclasBrow()
 				nSav2 := nItemx5
 
 
-
 				xSelItem( nItemx5  , .t.  )
 
-
-
-
+			
 				ScrolUp1(.f.)
 
-				SysWait(0.06)
+				
 
 
 				EncheMVis( nItemx5 )
@@ -997,7 +1003,7 @@ Function xTeclasBrow()
 
 			Else
 				xSelItem( nItemx5  , .f.  )
-				SysWait(0.06)
+			//	SysWait(0.06)
 
 			End If
 
@@ -1023,112 +1029,74 @@ Function xTeclasBrow()
 			Enddo
 
 
-			//DoMethod('Win_Browser' , 'SetFocus')
-			//SysWait(.1)
-
+		
 		End If
 
-	//sysWait(0.05)
+		Do Events
+		xDcToDc()		
+		Do Events
 
+	
 
 	End If
 
 
 
 
-If (nWParam == VK_UP)
+	If (nWParam == VK_UP)
 
-	//HMG_CleanLastVirtualKeyUp()
+		HMG_CleanLastVirtualKeyUp()
+
+		If nItemx5 > 1
+
+			nItemx5--
+
+			lHitB := .f.
+
+			If (nLinhaBarra = 1)
+				lHitt := .t.
+			Else
+				nLinhaBarra--
+			End If
 
 
 
-	If nItemx5 > 1
+			If (lHitt)
+
+				xSelItem( nItemx5  , .t. , .f.  )
+				ScrolUp1(.t.)				
+				EncheMVis( nItemx5  , .t. )
+
+			Else
+				xSelItem( nItemx5  , .f.  , .f. )				
+			End If
+
+					
+
+		Else
 
 
-		nItemx5--
-
-		lHitB := .f.
-
-		If (nLinhaBarra = 1)
 			lHitt := .t.
-		Else
-			nLinhaBarra--
-		End If
 
 
-
-		If (lHitt)
-
-
-			xSelItem( nItemx5  , .t. , .f.  )
-
-			sysWait(0.02)
-
-			
-			ScrolUp1(.t.)
-
-			
-
-			sysWait(0.05)
-
-			//SysWait(.1)
+			nItemx5 := 1
+			nClearIt2 := 1
+			nLinScrool := 0
+			nLinhaBarra := 1
 
 
-
-			EncheMVis( nItemx5  , .t. )
-
-
-
-		Else
-			xSelItem( nItemx5  , .f.  , .f. )
-			
-			sysWait(0.05)
-			//SysWait(.1)
-		End If
-
-		Do Events 
-
-		//xSaveVars()
-
-	Else
-
-
-		//SysWait(.3)
-
-		lHitt := .t.
-
-
-		nItemx5 := 1
-		nClearIt2 := 1
-		nLinScrool := 0
-		nLinhaBarra := 1
-
-		xSaveVars()
-
-
-		//DoMethod('Win_Browser' , 'SetFocus')
-		//SysWait(.1)
-
-
-		xDialog('Top Atingido!' , .f.  )
-
-		While _isWindowDefined('Win_Dialog')
-			Do Events
-		Enddo
-
-
-	//DoMethod('Win_Browser' , 'SetFocus')
+			xDialog('Top Atingido!' , .f.  )
 
 
 		End If
+
+
+
+		//End If
 
 
 
 	End If
-
-
-
-End If
 
 
 Return
@@ -1216,16 +1184,17 @@ function GetTextoTam( cMsg  , cParent )
 Return (GetTextWidth(  0,  'L' , FontHandle  )  + 1 )
 
 	//   xPaintBrowser( , aMt1 , nItemx1 ,     nClearIt2 ,  lHitB , lHitT  )
-Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
+Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 	Local aRGBcolor := 'BACK1'
 
 	Local nWidthBmp := 170
 
 
+
 	Local nHandle1
 	Local nHandle2
-	Local hWnd
+	//Local hWnd
 	Local BTstruct
 	Local BTstruct2
 	Local hDc
@@ -1279,10 +1248,19 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 
 	Local nLinB := 0
 
-	Local lPar := .t. 
+	Local lPar := .t.
+
+	Local hWnd 
 
 
 	Local nIndice := 0
+
+	Local hBitmap 
+	//:= BT_BitmapLoadFile ('img\exclamation1.Bmp' ) 
+
+	DEFAULT lBrwEnable := .t. 
+
+
 
 	nRow := -(nLinScrool)
 	nCol := -(nColScrool)
@@ -1313,30 +1291,27 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 	*/
 
 
+	hBitMap2 := BT_BitmapCreateNew (Width  , Height , WHITE )
+
+	//hDC2 = BT_CreateDC ( cForm  ,  BT_HDC_BITMAP , @BTstruct2 )
+
+	//hDC2 := BT_CreateDC (hBitmap2,   BT_HDC_BITMAP , @BTstruct2)
 
 
-	hDC2 = BT_CreateDC ( cForm  ,  BT_HDC_INVALIDCLIENTAREA , @BTstruct2 )
+	hDC2 := BT_CreateDC (cForm ,   BT_HDC_INVALIDCLIENTAREA  , @BTstruct)
 
-/*
-	If !lFundo 
-		hBitmap5 := BT_BitmapLoadFile ( 'Browser.Bmp' )
-		lFundo := .t. 
-		 BT_DrawBitmap (hDC2, 0, 0   , Width, Height, BT_STRETCH, hBitmap5 )
-		
-	End If
-	*/
+
+	//BT_HDC_INVALIDCLIENTAREA 
+
+
 
 
 	If (nOpselx1 = 0)
 		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , WHITE , WHITE  )
 	End If
 
-	//BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , WHITE , WHITE  )
 
 
-	//SetBkMode( hDC2, 1 )
-
-	//6
 
 	If nClear1 > 0
 
@@ -1344,24 +1319,25 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 			nCor := WHITE
 		Else
 			nCor := CORBROWSE
-		End If 	
+		End If
 
 
-		//BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemBrwHeight)    , 0  , Width  ,    nHeightBmp     ,  RED  , RED   )
+		BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemBrwHeight)    , 0  , Width  ,    nHeightBmp     ,  nCor  , nCor   )
+
 
 	End If
+
+
+
 
 	nIndice := -9999
 
 
-	For n1 := 1 To Len(aMtrOp)
+	For n1 := 1 To Len(aMtrOp) 
 
 
 		cTexto := Hb_Utf8ToStr(aMtrOp[n1][1])
-
-
 		//msginfo(cTexto)
-
 		nLinb++
 
 
@@ -1372,46 +1348,40 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 		End If
 
 
+		If (nOpselx1 > 0) .And. (nOpSelx1 = n1)   
 
-		If (nOpselx1 > 0) .And. (nOpSelx1 = n1)
-
-			If (lPar) 
-			
-				nCorBk := WHITE
-				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , nCorBk  , nCorBk   )		
-
-				lPar := .f. 
-				
-			Else
-				nCorBk := CORBROWSE
-				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , nCorBk  , nCorBk   )			
-
-				lPar := .t. 
-				
-				//CORBROWSE
-			End If
-
-			nTypeText    := BT_TEXT_ITALIC 
+			nTypeText    := BT_TEXT_BOLD
 			//+BT_TEXT_TRANSPARENT
 
 
-			//BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow - Iif( nLinScrool > 0 ,0,0)    , 00  , Width ,    nItemBrwHeight      , SELCOR  , SELCOR   )
+			//SysWait(0.05)
+
+		//	BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow - Iif( nLinScrool > 0 ,0,0)    , 00  , Width ,    nItemBrwHeight      , ;
+		//	SELCOR , SELCOR  , BLACK   )
+			
+			//SetBkMode( hDC2, 1 )
+
+			nFontCor := WHITE	
 
 
-			//BT_DrawText ( hDC2 , nLine + nRow  , 17+nCol ,   cTexto , xFont2, 9 ,  WHITE ,  SELCOR   , ;
-			//	BT_TEXT_BOLD  ,	nAlingText, nOrientation )
+
+
+			If !lBrwEnable
+				nTypeText    := BT_TEXT_TRANSPARENT				
+				nFontCor 	 := BLACK
+			End If 	
+
+			BT_DrawText ( hDC2 , nLine + nRow  , 17+nCol ,   cTexto , xFont2  , 9 , nFontCor ,  SELCOR   , ;
+				nTypeText ,	nAlingText, nOrientation )
 
 
 
 
-			If (nSelLine == n1) .And. (nCol == 0)
-			//	BT_DrawBitmap (hDC2  , nLine  + nRow    , 0   , 15  , nItemBrwHeight , BT_STRETCH, hBitOk)
-
-
+			If (nSelLine == n1) .And. (nColScrool == 0)
+				BT_DrawBitmap (hDC2  , nLine  + nRow    , 0   , 15  , nItemBrwHeight , BT_STRETCH, hBitOk)
 			End If
 
-		//	Do Events
-
+			//	Do Events
 
 
 		Else
@@ -1420,27 +1390,22 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 
 			//nTypeText := BT_TEXT_OPAQUE
 
-			
-
-			If (lPar) 
-			//(Mod( nLine + nRow  , 2 ) = 0)
+			If (Mod( n1 , 2 ) = 0)
+				//(Mod( nLine + nRow  , 2 ) = 0)
 				nCorBk := WHITE
-				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , nCorBk  , nCorBk   )		
+				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , nCorBk  , nCorBk   )
 
-				lPar := .f. 
-				
+				lPar := .f.
+
 			Else
 				nCorBk := CORBROWSE
-				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , nCorBk  , nCorBk   )			
+				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , nCorBk  , nCorBk   )
 
-				lPar := .t. 
-				
-				//CORBROWSE
+				lPar := .t.
+
 			End If
+						
 
-			Do Events 
-
-			
 
 			cCor := FONTCOR
 
@@ -1450,30 +1415,39 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 )
 				//BT_TEXT_TRANSPARENT
 			End If
 
-		//	BT_DrawText ( hDC2 , nLine + nRow  , nCol+17 ,  cTexto , xFont2, 9 ,  cCor , nCorBk , nTypeText, nAlingText, nOrientation )
+			BT_DrawText ( hDC2 , nLine + nRow  , nCol+17 ,  cTexto , xFont2, 9 ,  cCor , nCorBk , nTypeText, nAlingText, nOrientation )
 
 		End If
 
 		nLine += nItemBrwHeight
 
 
-
 	Next
 
-
-	//BT_BitMapSaveFile(    hBitmap2 , 'Browser.bmp')
-
-	
-//	BT_BitMapSaveFile(    hBitmap2  , 'Browserx1.bmp')
-
-	lFlagPaint := .f. 
+//BT_BitMapSaveFile(    hBitmap2 , 'Browser.bmp')
 
 
+	//BT_BitMapSaveFile(    hBitmap2  , 'Browser' +  Right(time(),2)  +  '.bmp')
 
-	//BT_DeleteDC (BTstruct )
-	BT_DeleteDC (BTstruct2 )
 
-	//bt_Bit
+	//BT_DrawBitmap (hDC  , 0   , 0   ,  Width  , Height , BT_COPY, hBitMap2 )
+
+  //  SysWait(.1)
+
+	//BT_DrawDCtoDC (hDC2, 0, 0, Width, Height, BT_SCALE, hDC, 0, 0, Width, Height)
+
+	//SysWait(.1)
+
+
+	//BT_BitmapRelease (hBitmap2)
+
+	BT_DeleteDC (BTstruct )
+	//BT_DeleteDC (BTstruct2  )
+
+
+
+
+//bt_Bit
 
 Return
 
@@ -1570,6 +1544,9 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
     *// Menu Principal
 	//nItemx1 ,     nClearIt2 ,
+
+
+	//If (nHWnd == GetProperty(  'Win_e1' , "HANDLE" ))
 
 
 
@@ -1686,41 +1663,26 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	End If
 
 
-	If (nHWnd == GetProperty(  'Win_Browser' , "HANDLE" ))
+	If (nHWnd == GetProperty(  'Win_Espelho' , "HANDLE" ))
 
 
 		//msginfo('lp2')
+
 		If nMsg == WM_MOUSELEAVE
 			nClearIt2 := 0
 			nitemx5   := 0
 
 			BT_ClientAreaInvalidateAll('Win_Browser')
 
-			//msginfo('Leave')
-
+	
 		End If
 
-		If nMsg == WM_VSCROLL
-
-			If LoWord(nWParam) == SB_LINEDOWN
-
-				//	NewPos := GetScrollPos(nHWnd,SB_VERT) + _HMG_SYSDATA [ 345 ]
-				//SetScrollPos ( nHWnd , SB_VERT , NewPos , .T. )
-
-			End If
-
-
-
-
-		End If
-
-
-
-
+	        /*
 		If nMsg == WM_MOUSEMOVE
 
 
 			//msginfo('ok')
+
 
 			SetWindowCursor( nHWnd , CURSORHAND)
 
@@ -1730,7 +1692,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			End If
 
 			If (nItemx5 > 0) .And. (nWParam != 90 )
-				If (nItemx5 = xGetPos('Win_Browser') )
+				If (nItemx5 = xGetPos('Win_Espelho') )
 					//xOpSelPos( 'Win_Browser' ,  0,0,0 ,  nItemBrwHeight , nLinScrool )   )
 					Return
 				End If
@@ -1740,11 +1702,9 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			If (nWParam != 90 )
 
 				//nItemx5 := xOpSelPos( 'Win_Browser' ,  0,0,0 ,  nItemBrwHeight , nLinScrool )
-
-				nItemX5 := xGetPos('Win_Browser')
+				nItemX5 := xGetPos('Win_Espelho')
 
 			End If
-
 
 
 			nRow1 := -(nLinScrool)
@@ -1782,8 +1742,16 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				BT_ClientAreaInvalidateRect( 'Win_Browser' ,  nRow1  +  ( ( nItemx5 - 1 ) * nItemBrwHeight)  , 0 , GetProperty(  'Win_Browser','Width')  ,  nItemBrwHeight   , .t. )
 			End If
 
+			//SysWait(0.04)
+
+
+			//xDcToDc()
+
 
 		End If
+
+			*/
+
 
 
 		If nMsg == WM_LBUTTONDOWN
@@ -1791,10 +1759,14 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 			//nItem := xOpSelPos( 'Win_Browser' ,  0,0,0 ,  nItemBrwHeight , -(nLinScrool) )
 
-			nItem := xGetPos('Win_Browser')
+			nItem := xGetPos('Win_Espelho')
+
 
 
 			//nRow1 := -(GetProperty( 'Win_Browser' , "VscrollBar" , "Value"))
+
+
+			//msginfo(Str(   nItem ))
 
 			nRow1 := -(nLinScrool)
 
@@ -1830,11 +1802,19 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			lHitb := (nLinhaBarra = nTamPag)
 			lHitt := (nLinhaBarra = 1)
 
+			
+			Do Events
+
+
+
+			xDcToDc()
+
+
+			
+			Do Events
 
 
 		End If
-
-
 
 	End If
 
@@ -1863,6 +1843,7 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 	nItemx5 := nItem
 
 
+
 	If nItemx5 > 0
 		nClearIt2 := nItemx5
 	Else
@@ -1878,12 +1859,8 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 	nSelLine := nItemx5
 
 
-
 	If (nItemx5 > 0)
-
-	
-		//	BT_ClientAreaInvalidateRect( 'Win_Browser' ,  nRow1  +  ( ( nItemx5 - 1 ) * nItemBrwHeight)  , 0 , GetProperty(  'Win_Browser','Width')  ,  nItemBrwHeight   , .t. )
-
+		BT_ClientAreaInvalidateRect( 'Win_Browser' ,  nRow1  +  ( ( nItemx5 - 1 ) * nItemBrwHeight)  , 0 , GetProperty(  'Win_Browser','Width')  ,  nItemBrwHeight   , .t. )
 	End If
 
 
@@ -1902,11 +1879,17 @@ Return
 
 
 
-Function xPrepFundo(cJanela , aMtrOp)
+Function xPrepFundo(cJanela , aMtrOp , lnFundo )
 
 	Local aRGBcolor := 'BACK1'
 
 	Local nWidthBmp := 170
+
+
+	
+
+	Local xFont2 := FONTBROWSER
+
 
 
 	Local nHandle1
@@ -1923,63 +1906,112 @@ Function xPrepFundo(cJanela , aMtrOp)
 	Local hBit10
 	Local hBit11
 
+	
+
+	Local nTypeText    := BT_TEXT_TRANSPARENT  //+ BT_TEXT_BOLD
+	Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
+	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
+	Local cTexto := ''
+
 
 	Local nHeightBmp := nItemBrwHeight * Len(aMtrOp)
 
-	Local hBitmap
-
-
+	
 	LOCAL Width  := BT_ClientAreaWidth  (cJanela)
 	LOCAL Height := BT_ClientAreaHeight (cJanela)
 
 	Local nRow := 0
+	Local nCol := 0
 
 
+	Local hBitmap 
+	//:= BT_BitmapLoadFile ('Browser.Bmp' ) 
 
-	hDC2 = BT_CreateDC ( cJanela  ,  BT_HDC_INVALIDCLIENTAREA , @BTstruct2 )
+	nRow := -(nLinScrool)
+	nCol := -(nColScrool)
+
+
 
 	
-	hBitmap := BT_BitmapCreateNew ( Width,  Height, WHITE )
+	hDC2 := BT_CreateDC (hBitmap2, BT_HDC_BITMAP  , @BTstruct)
 
-	hDC := BT_CreateDC ( hBitmap, BT_HDC_BITMAP, @BTstruct )
 
+
+	//hBitmap := BT_BitmapLoadFile ('Browser.Bmp' ) 
+	//hWnd := GetFormHandle ('Win_Browser')	   
+	//BMP_PAINT (hWnd, hBitMap   ,  3 , 0 ,  0   , ( nTamPag * nItemBrwHeight)  , nLargTotal  )		
+
+
+	
+	//hDC2 = BT_CreateDC ( cJanela  ,  BT_HDC_INVALIDCLIENTAREA   , @BTstruct2 )
+	
+
+	
+
+//	Do Events
+
+
+	lPar := .t. 
+	
+
+	
+
+
+
+	n1:= 1
 
 
 	For n1 := 1 To Len(aMtrOp)
 
 
-		If (Mod( nLine , 2 ) = 0)
-			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , WHITE  , WHITE   )
+		cTexto := Hb_Utf8ToStr(aMtrOp[n1][1])
+		//msginfo(cTexto)
+		//nLinb++
 
-			BT_DrawGradientFillVertical ( hDC ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , WHITE  , WHITE   )
 
+		If (lPar)
+				//(Mod( nLine + nRow  , 2 ) = 0)
 			nCorBk := WHITE
+			
+				lPar := .f.
+
 		Else
-			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , CORBROWSE  , CORBROWSE   )
+				nCorBk := CORBROWSE
+		//	BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , nCorBk  , nCorBk   )
 
-			BT_DrawGradientFillVertical ( hDC ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , CORBROWSE  , CORBROWSE   )
+				lPar := .t.
 
-			nCorBk := CORBROWSE
+				//CORBROWSE
 		End If
-		
+						
+
+		     //nCorBk := WHITE
+
+			
+
+
+
+			cCor := FONTCOR
+
+			If !aMtrOp[n1][2]
+				cCor := CorDisabled
+				nTypeText    :=  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT
+				//BT_TEXT_TRANSPARENT
+			End If
+
+			nTypeText    :=  BT_TEXT_TRANSPARENT
+
+		BT_DrawText ( hDC2 , nLine + nRow  , nCol+17 ,  cTexto , xFont2, 9 ,  cCor , nCorBk , nTypeText, nAlingText, nOrientation )
+
+
 		nLine += nItemBrwHeight
+		
 
-	Next
-
-
-	//hBitMap2 := BT_BitmapCreateNew (Width , Height , WHITE)
-
-	BT_BitMapSaveFile(    hBitmap , 'Browser.bmp')
+	Next 	
 
 
-	BT_DeleteDC (BTstruct )
-	BT_DeleteDC (BTstruct2 )
-	//bt_Bit
-
-	lFlagPaint := .f. 
-
-	msginfo('ok')
 	
+	BT_DeleteDC (BTstruct2 )
 
 
 
@@ -2132,21 +2164,18 @@ Function xGoBottom()
 
 	nLinScrool := nPos1
 
-
-
 	//nLinScrool := 0
 	//nColScrool := 0
 
 	//(Len(aMt1) * nItemBrwHeight)
-
-
-
 	EncheMVis( nTamPag )
 
 	xSelItem(nItemX5)
 
 	BT_ClientAreaInvalidateAll('Win_Browser')
 	BT_ClientAreaInvalidateAll('Win_Role1')
+
+	xDcToDc()
 
 
 	//SysWait(.1)
@@ -2196,11 +2225,44 @@ Function xGoTop()
 
 REturn
 
+
+
+Function xDcToDc()
+
+   Local Width1  := BT_ClientAreaWidth  ("Win_Browser")
+   Local Height1 := BT_ClientAreaHeight ("Win_Browser")
+
+   LOCAL hDC1, BTstruct1
+	LOCAL hDC2, BTstruct2
+
+
+   Local Width2  := BT_ClientAreaWidth  ("Win_Espelho")
+   Local Height2 := BT_ClientAreaHeight ("Win_Espelho")
+
+   hDC1 = BT_CreateDC ("Win_Browser", BT_HDC_ALLCLIENTAREA, @BTstruct1)
+   hDC2 = BT_CreateDC ("Win_Espelho", BT_HDC_ALLCLIENTAREA, @BTstruct2)
+
+
+
+    BT_DrawDCtoDC (hDC2, 0, 0, Width2, Height2, BT_SCALE, hDC1, 0, 0, Width1, Height1)
+//    BT_DrawDCtoDCAlphaBlend (hDC2, 0, 0, Width2, Height2, 50, BT_SCALE, hDC1, 0, 0, Width1, Height1)
+
+
+    nTypeText    := BT_TEXT_TRANSPARENT    
+    nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP 
+    nOrientation := BT_TEXT_DIAGONAL_ASCENDANT
+    BT_DrawText (hDC2, 300, 50, "Mirror of the Win1", "Times", 42, YELLOW, BLACK, nTypeText, nAlingText, nOrientation)
+
+   BT_DeleteDC (BTstruct1)
+   BT_DeleteDC (BTstruct2)
+   BT_ClientAreaInvalidateAll ("Win_Espelho")
+
+Return 
+
 Function xSaveBmp()
 
-  Local hDc := GetDc('Win_Browser')
+	Local hDc := GetDc('Win_Browser')
 
-
-REturn 
+Return
 
 

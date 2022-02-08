@@ -1,5 +1,7 @@
 // VERSAO 25/09/2021
 
+
+
 #include <hmg.ch>
 #include <minigui.ch>
 
@@ -2814,6 +2816,106 @@ HB_FUNC ( SETVSCROLLVALUE )
 
 	
 }
+
+
+#define BMP_ERASE        0     // Borra la imagen de fondo de la ventana
+#define BMP_COPY_NORMAL  1     // Pega la imagen al fondo con el tamaño original de la misma
+#define BMP_COPY_SCALE   2     // Ajusta proporcionalmente la imagen para que se vea completa en la ventana
+#define BMP_COPY_STRETCH 3     // Aju
+
+
+HB_FUNC (BMP_LOAD_FILE)
+{   
+   HBITMAP hBitmap;    
+   char *cFileName;
+
+   cFileName = (char *) hb_parcx (1);
+    
+   hBitmap = (HBITMAP)LoadImage(NULL, cFileName, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+          
+   if (hBitmap == NULL)
+       hBitmap = (HBITMAP)LoadImage(GetModuleHandle(NULL), cFileName, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
+                          
+   hb_retnl( (LONG) hBitmap );      
+}
+
+//*************************************************************************************************
+// BMP_RELEASE_HANDLE (hBitmap)
+//*************************************************************************************************
+HB_FUNC (BMP_RELEASE_HANDLE)
+{   
+   hb_retni ((int) DeleteObject ((HBITMAP) hb_parnl (1)));
+}
+
+
+
+HB_FUNC (BMP_PAINT)
+{
+   HWND hWnd;
+   HBITMAP hBitmap;
+   HDC memDC, hDC;
+   RECT rect;
+   BITMAP bm;
+   int nMode;
+
+   
+   hWnd     = (HWND)  hb_parnl (1);
+   hBitmap  = (HBITMAP) hb_parnl  (2);
+   nMode    = hb_parni (3);
+
+
+   
+   GetClientRect(hWnd, &rect);
+
+   hDC = GetDC (hWnd);   // obtine un hDC para toda el area del cliente (se puede pintar en cualquier lugar del area del cliente)
+   PAINTSTRUCT ps;   
+   hDC = BeginPaint (hWnd, &ps);  // obtiene un hDC solo para el area invalida (area que debe ser repintada) en un mensaje WM_PAINT    
+		
+   if (nMode == BMP_ERASE)
+       FillRect(hDC,&rect,(HBRUSH) GetSysColorBrush(COLOR_BTNFACE));    
+   else
+   {
+       FillRect(hDC,&rect,(HBRUSH) GetSysColorBrush(COLOR_BTNFACE)); // borra la imagen anterior antens de asignar otra
+     
+       memDC = CreateCompatibleDC(hDC);
+              
+       SelectObject(memDC, hBitmap);
+       
+       rect.top    = hb_parnl (4);
+       rect.left   = hb_parnl (5);
+ 
+       if (nMode == BMP_COPY_NORMAL)           
+	   {    
+	       rect.bottom = hb_parnl (6);	   
+           rect.right  = hb_parnl (7);
+		   BitBlt(hDC, rect.left, rect.top, rect.right, rect.bottom, memDC, 0, 0, SRCCOPY);
+	   }
+     
+		
+       GetObject(hBitmap, sizeof(BITMAP), (LPSTR)&bm);
+                
+       if (nMode == BMP_COPY_SCALE)
+       {  if ((int) bm.bmWidth * rect.bottom / bm.bmHeight <= rect.right)
+		      rect.right= (int) bm.bmWidth * rect.bottom / bm.bmHeight;
+	      else		
+		      rect.bottom = (int) bm.bmHeight * rect.right / bm.bmWidth;
+                 
+          StretchBlt(hDC, rect.left, rect.top, rect.right, rect.bottom, memDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
+       }
+                
+       if (nMode == BMP_COPY_STRETCH)
+           StretchBlt(hDC, rect.left, rect.top, rect.right, rect.bottom, memDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
+                        
+       DeleteDC(memDC);     
+   }
+
+
+   //EndPaint (hWnd, hDC); //Elimina el hDC y Valida el area pintada    
+   ReleaseDC(hWnd, hDC);   //Elimina el hDC pero NO Valida el area pintada
+                           //Al no validar el area pintada permite que los procesos de pintura siguientes encadenados puedan usar hDC = BeginPaint (hWnd, &ps); 
+
+}
+
 		
 
 	#pragma ENDDUMP
