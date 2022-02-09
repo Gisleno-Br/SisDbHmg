@@ -247,10 +247,8 @@ Function xSombra(  cJanela , nRow1  , nCol1   )
 
 
 
-	BT_DrawBitmapAlphaBlend (hDC,  0 ,   Width - 3 ,  5  , Height + 1  , 105 , BT_COPY  , zBmp1)
-
-
-	BT_DrawBitmapAlphaBlend (hDC,  Height - 4 ,   5  , Width + 10     , 5           , 105 , BT_COPY  , zBmp2)
+	//BT_DrawBitmapAlphaBlend (hDC,  0 ,   Width - 3 ,  5  , Height + 1  , 105 , BT_COPY  , zBmp1)
+	//BT_DrawBitmapAlphaBlend (hDC,  Height - 4 ,   5  , Width + 10     , 5           , 105 , BT_COPY  , zBmp2)
 
 
 

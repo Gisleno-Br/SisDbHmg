@@ -141,6 +141,9 @@ Static nLargTotal := 0
 Static lNoHorzScr := .f.
 
 
+Static lControlOk := .f. 
+
+
 
 //DECLARE WINDOW Win_Browser
 
@@ -771,6 +774,10 @@ Function xTeclasBrow()
 	Local nC
 	Local w1
 	Local w2
+	Local cControl := ''
+	Local cForm    := ''
+
+	Local lCtrl := .f. 
 
 	Local nLarg1 := GetDeskTopWidth() - 45
 	Local nDiff := nLargTotal - nLarg1
@@ -784,6 +791,13 @@ Function xTeclasBrow()
 
 	If nMsg == WM_KEYDOWN
 
+
+		
+		//GetControlNameByHandle(nHWnd, @cControl, @cForm)
+
+		//msginfo( cControl  )
+
+
 		If (nWParam == VK_RIGHT)
 
 
@@ -791,6 +805,8 @@ Function xTeclasBrow()
 				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))
 				REturn
 			End If
+
+			HMG_CleanLastVirtualKeyDown()
 
 
 			If (nColScrool < nDiff )
@@ -819,6 +835,8 @@ Function xTeclasBrow()
 				Return
 			End If
 
+			HMG_CleanLastVirtualKeyDown()
+
 
 			If (nColScrool > 0)
 
@@ -833,12 +851,14 @@ Function xTeclasBrow()
 
 		End If
 
+		lCtrl := (GetKeyState ( VK_CONTROL ) < 0) .or. (lControlOk)
 
-
-		IF (GetKeyState ( VK_CONTROL ) < 0)
+		IF (lCtrl)
 			//msginfo('ok2')
 
 			IF (nWParam == VK_HOME)
+
+				HMG_CleanLastVirtualKeyDown()
 
 				
 				xGoTop()
@@ -872,6 +892,8 @@ Function xTeclasBrow()
 
 				xGoBottom()
 
+				HMG_CleanLastVirtualKeyDown()
+
 		
 				cTp1 := "Final do Navegador Atingido..."
 
@@ -885,6 +907,7 @@ Function xTeclasBrow()
 				End If
 
 				Do Events
+
 
 				xDispUpTam(  cTp1 )	
 
@@ -909,7 +932,10 @@ Function xTeclasBrow()
 
 
 			If  lNoHorzScr
-				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))
+				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))				
+				xWaitDlg()
+
+
 				Return
 			End If
 
@@ -933,7 +959,10 @@ Function xTeclasBrow()
 
 
 			If  lNoHorzScr
-				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))
+				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))				
+				xWaitDlg()
+
+
 				REturn
 			End If
 
@@ -966,7 +995,8 @@ Function xTeclasBrow()
 		End If
 
 
-		//	HMG_CleanLastVirtualKeyDown()
+		HMG_CleanLastVirtualKeyDown()
+
 
 		nItemx5++
 
@@ -989,9 +1019,7 @@ Function xTeclasBrow()
 				xSelItem( nItemx5  , .t.  )
 
 			
-				ScrolUp1(.f.)
-
-				
+				ScrolUp1(.f.)				
 
 
 				EncheMVis( nItemx5 )
@@ -1023,10 +1051,8 @@ Function xTeclasBrow()
 
 			lHtt := .f.
 
+			xWaitDlg()
 
-			While _isWindowDefined('Win_Dialog')
-				Do Events
-			Enddo
 
 
 		
@@ -1084,13 +1110,23 @@ Function xTeclasBrow()
 			nLinScrool := 0
 			nLinhaBarra := 1
 
+			Do Events
+			Do Events
 
-			xDialog('Top Atingido!' , .f.  )
+
+			xDialog('Top Atingido!' , .f.  )			
+
+			//xWaitDlg()
+				
+
+		//	Do Events
 
 
 		End If
 
-
+		Do Events
+		xDcToDc()		
+		Do Events
 
 		//End If
 
@@ -1556,6 +1592,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 		If nMsg == WM_MOUSELEAVE
 			//msginfo('ok2')
+			nModeBrw := 0
 		End If
 
 
@@ -1649,11 +1686,50 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 		End If
 
 
+		
+		If nMsg == WM_LBUTTONUP			
+			nModeBrw := -1
+			SendMessage( GetFormHandle('Win_Browser')  , WM_MOUSELEAVE , 0 , 0 )			
+	    	HMG_CleanLastMouseMessage ()
+		End If 
 
 
-		If nMsg == WM_LBUTTONDOWN
+
+
+		If (nMsg == WM_LBUTTONDOWN) .And. (nModeBrw >= 1)
 
 			//msginfo(Str( nModeBrw   ))
+
+			// Go Top 
+
+			If nModeBrw = 1
+				lControlOk := .t. 
+				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_HOME , 0 )
+				lControlOk := .f. 
+			//	msginfo('up')
+			End If 
+
+
+			If nModeBrw = 4
+				lControlOk := .t. 
+				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_END , 0 )
+				lControlOk := .f. 
+			End If 
+
+	
+
+			While( nModeBrw = 3)
+				lControlOk := .f. 
+				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_UP , 0 )				
+			End If 
+
+			
+
+			While (nModeBrw = 6)
+				lControlOk := .f. 
+				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_DOWN , 0 )				
+			End If 
+
 
 		End If
 
@@ -1677,96 +1753,12 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	
 		End If
 
-	        /*
-		If nMsg == WM_MOUSEMOVE
-
-
-			//msginfo('ok')
-
-
-			SetWindowCursor( nHWnd , CURSORHAND)
-
-
-			If nSelLine > 0
-				Return
-			End If
-
-			If (nItemx5 > 0) .And. (nWParam != 90 )
-				If (nItemx5 = xGetPos('Win_Espelho') )
-					//xOpSelPos( 'Win_Browser' ,  0,0,0 ,  nItemBrwHeight , nLinScrool )   )
-					Return
-				End If
-			End If
-
-
-			If (nWParam != 90 )
-
-				//nItemx5 := xOpSelPos( 'Win_Browser' ,  0,0,0 ,  nItemBrwHeight , nLinScrool )
-				nItemX5 := xGetPos('Win_Espelho')
-
-			End If
-
-
-			nRow1 := -(nLinScrool)
-
-
-
-
-			If (nItemx5 <= Len(aMt1 ))
-				If !aMt1[nItemx5][2]
-					SetWindowCursor( nHWnd , IDC_ARROW)
-					Return
-				End If
-			End If
-
-			SetWindowCursor( nHWnd , CURSORHAND)
-
-
-
-
-			SetWindowCursor( nHWnd , CURSORHAND)
-
-			If nClearIt2 > 0
-				xLimpSub( 'Win_Browser' ,  @nClearIt2 ,  nItemx5 , 0 ,   nItemBrwHeight , GetProperty(  'Win_Browser','Width') , -(nLinScrool) )
-			End If
-
-
-			If nItemx5 > 0
-				nClearIt2 := nItemx5
-			Else
-				Return
-			End If
-
-
-			If (nItemx5  > 0)
-				BT_ClientAreaInvalidateRect( 'Win_Browser' ,  nRow1  +  ( ( nItemx5 - 1 ) * nItemBrwHeight)  , 0 , GetProperty(  'Win_Browser','Width')  ,  nItemBrwHeight   , .t. )
-			End If
-
-			//SysWait(0.04)
-
-
-			//xDcToDc()
-
-
-		End If
-
-			*/
-
-
+	        
 
 		If nMsg == WM_LBUTTONDOWN
 
-
-			//nItem := xOpSelPos( 'Win_Browser' ,  0,0,0 ,  nItemBrwHeight , -(nLinScrool) )
-
 			nItem := xGetPos('Win_Espelho')
 
-
-
-			//nRow1 := -(GetProperty( 'Win_Browser' , "VscrollBar" , "Value"))
-
-
-			//msginfo(Str(   nItem ))
 
 			nRow1 := -(nLinScrool)
 
@@ -2146,10 +2138,40 @@ Static Function xGetPos( cJanela )
 
 Return Abs(nItem)
 
+Function xGoPgUp()
+
+
+        
+
+
+Return 
+
+
+
+Function xGoPgDn()
+
+
+Return 
+
+
+
+
 Function xGoBottom()
 
 
 	Local nPos1 := (Len(aMt1) * nItemBrwHeight) - (nTamPAg * nItemBrwHeight)
+
+	
+	Do Events
+
+	
+	SetWindowCursor('Win_Browser' , 'CURSOR1')
+	
+	SetWindowCursor('Win_Role1' , 'CURSOR1')
+
+	Do Events
+	
+	Do Events
 
 	nItemX5     := nMaxItem1
 	nClearIt2   := nItemX5
@@ -2177,6 +2199,10 @@ Function xGoBottom()
 
 	xDcToDc()
 
+	
+	
+	SetWindowCursor('Win_Browser' , IDC_ARROW )
+
 
 	//SysWait(.1)
 
@@ -2194,6 +2220,10 @@ Function xGoTop()
 
 
 
+	SetWindowCursor('Win_Browser' , 'CURSOR1')
+
+	Do Events
+
 	nItemX5     := 1
 	nClearIt2   := 1
 	nClear1     := 1
@@ -2207,10 +2237,6 @@ Function xGoTop()
 	nLinScrool := 0
 	nColScrool := 0
 
-	//(Len(aMt1) * nItemBrwHeight)
-
-
-
 	EncheMVis( nTamPag )
 
 
@@ -2218,9 +2244,9 @@ Function xGoTop()
 	BT_ClientAreaInvalidateAll('Win_Browser')
 	BT_ClientAreaInvalidateAll('Win_Role1')
 
-	//SysWait(.1)
 
-
+	
+	SetWindowCursor('Win_Browser' , IDC_ARROW )
 
 
 REturn

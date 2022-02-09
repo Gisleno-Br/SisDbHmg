@@ -15,7 +15,6 @@ STATIC nIndexDlg24 := 0
 
 
 
-
 DEFINE WINDOW main
 DECLARE WINDOW fSplit6
 
@@ -122,9 +121,11 @@ FUNCTION EventDlg()
 			End If 
 
 			If nId == 6652
-				 xFechaDlg()
+				 //xFechaDlg()
 				 //DoMethod('Win_Dialog' , 'Hide')
 				 //DoMethod('WinSombra2' , 'Hide')
+				 lExit := .t.
+				 Do Events 
 			End If 
 
 
@@ -586,6 +587,11 @@ Function xDialog( cMsg1 , lAsk1  )
 
 	Private lRetx := .F.
 
+
+	
+	Private lExit := .f. 
+
+
 	
 
   /*
@@ -605,11 +611,11 @@ Function xDialog( cMsg1 , lAsk1  )
 	End If 
 	
 	DEFINE WINDOW Win_Dialog ;
-		AT 0,0  ;
+		AT 0,0  ;				
 		WIDTH 450 HEIGHT 247 ;
 		CHILD TITLE 'xDialog1'  ;		
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE ;
-		ON PAINT xProcDlg(  cMsg1 )
+		ON PAINT xProcDlg(  cMsg1 ) 	
 	END WINDOW	
 
 
@@ -702,12 +708,36 @@ Function xDialog( cMsg1 , lAsk1  )
 	
 	//ACTIVATE WINDOW Win_Dialog
 
+	
 	_ShowWindow('Win_Dialog')
+
+	xWaitDlg()
+
+
+	
+	xFechaDlg()
 
 
 
 
 Return (lRetx)
+
+
+Function xIndiDlg()
+
+		//msginfo('ok')
+
+	//SysWait(.2)	
+
+	PostMessage( OBTN_Handle( 'Win_Dialog', 6652   ) , WM_MOUSEMOVE , 0,0)
+	
+
+	PostMessage( OBTN_Handle( 'Win_Dialog', 6652   ) , WM_MOUSELEAVE , 0,0)
+
+	//SysWait(.2)
+
+Return 
+
 
 
 Function xProcinit( lPergunta )
@@ -723,8 +753,6 @@ Function xProcinit( lPergunta )
 		OBTN_Create( 'Win_Dialog', 6652,  '&Ok'   , 160, 166 ,  75 ,  30,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont , 'OKVERDE1'  , 3 , 'OKVERDE2')
 
 		OBTN_Font( 'Win_Dialog', 6652,  { cFontName, nFontSize, .F., .F., .F., .F. } )
-
-
 
 
 		nIndexDlg22 := Len(_HMG_EventData) + 1	
@@ -913,4 +941,31 @@ Function xFechaDlg()
 
 Return 
 
+
+
+Function xWaitDlg()
+
+	Local i
+
+
+	For i := 1 To 255
+		GetAsyncKeyState(i)
+	Next i
+
+	xIndiDlg()
+   
+    Do Events
+	Do Events
+
+	Do While .Not. lExit
+		Do Events 
+		For i := 1 To 255
+			If (GetAsyncKeyState(VK_RETURN) != 0)
+				lExit := .T.
+				Exit			
+			EndIf
+		Next i
+	EndDo
+
+Return 
 
