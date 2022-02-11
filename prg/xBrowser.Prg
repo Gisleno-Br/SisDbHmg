@@ -95,6 +95,8 @@ Static nItemx5 := 1
 Static nClearIt2 := 1
 Static cOpMainSel  := ''
 
+Static nPageNumber := 1
+
 
 
 
@@ -490,6 +492,7 @@ Function EncheMVis( nRec , lFrente )
 
 
 	aMVisible := {}
+
 
 	If !lFrente
 
@@ -983,6 +986,22 @@ Function xTeclasBrow()
 	END IF
 
 
+	If (nWPAram == 34)
+
+		//SysWait(.1)
+		xGoPgDn()
+		//SysWait(.1)
+
+	End If 
+
+	
+	If (nWPAram == 33)
+
+		//SysWait(.1)
+		xGoPgUp()
+		//SysWait(.1)
+
+	End If 
 
 
 	If (nWParam == VK_DOWN)
@@ -995,7 +1014,8 @@ Function xTeclasBrow()
 		End If
 
 
-		HMG_CleanLastVirtualKeyDown()
+		//HMG_CleanLastVirtualKeyDown()
+
 
 
 		nItemx5++
@@ -1028,12 +1048,16 @@ Function xTeclasBrow()
 				nItemx5 := nSav2
 
 				nSelLine := nItemx5
+				SysWait(0.06)
+
 
 			Else
 				xSelItem( nItemx5  , .f.  )
-			//	SysWait(0.06)
+				SysWait(0.06)
+
 
 			End If
+							
 
 
 			xSaveVars()
@@ -1092,9 +1116,12 @@ Function xTeclasBrow()
 				xSelItem( nItemx5  , .t. , .f.  )
 				ScrolUp1(.t.)				
 				EncheMVis( nItemx5  , .t. )
+				SysWait(0.06)
+
 
 			Else
 				xSelItem( nItemx5  , .f.  , .f. )				
+				SysWait(0.06)
 			End If
 
 					
@@ -1115,11 +1142,6 @@ Function xTeclasBrow()
 
 
 			xDialog('Top Atingido!' , .f.  )			
-
-			//xWaitDlg()
-				
-
-		//	Do Events
 
 
 		End If
@@ -1377,7 +1399,8 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 		nLinb++
 
 
-		//cTexto := StrZero(n1,6) + '    ' + StrZero(nItemx5,5) + '   ' + StrZero(nLinB,6)
+		cTexto := StrZero(n1,6) + '    ' + StrZero(nItemx5,5) + '   ' + StrZero(nLinB,6)
+
 
 		IF (nLinb > nTamPag)
 			nLinB := 0
@@ -1721,19 +1744,35 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			While( nModeBrw = 3)
 				lControlOk := .f. 
 				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_UP , 0 )				
-			End If 
+			End 
 
 			
 
 			While (nModeBrw = 6)
 				lControlOk := .f. 
 				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_DOWN , 0 )				
+			End 
+			
+
+			While (nModeBrw = 5)
+				xGoPgDn()
+				Do Events 
+				Do Events 
+				//sysWait(.1)
+			End If 
+
+			While (nModeBrw = 2)
+				xGoPgUp()
+				Do Events 
+				Do Events 
+				//sysWait(.1)
 			End If 
 
 
+
+
+
 		End If
-
-
 
 
 	End If
@@ -1977,9 +2016,7 @@ Function xPrepFundo(cJanela , aMtrOp , lnFundo )
 		End If
 						
 
-		     //nCorBk := WHITE
-
-			
+		     //nCorBk := WHITE		
 
 
 
@@ -2138,18 +2175,117 @@ Static Function xGetPos( cJanela )
 
 Return Abs(nItem)
 
+
+
 Function xGoPgUp()
 
+	Local nPos1 := ( (nPageNumber *  nTamPag) * nItemBrwHeight)
 
-        
+	Local nLast1 
 
+
+	If (nPageNumber = 1 )
+		xDialog("Inicio das informações Atingido." , .f. )
+		Return 
+	End If 	
+
+
+	lHitB := .f.
+
+	lHitt := .f.
+
+	nPos1 := nLinScrool - (nTamPag * nItemBrwHeight  )
+
+
+	nLinScrool -= (nTamPag * nItemBrwHeight  )
+
+	_HMG_PRINTER_SETVSCROLLVALUE(   GetFormHandle('Win_Browser')  , nPos1 )
+
+	
+	nPageNumber--
+
+	nLast1 := nPageNumber * nTamPag
+
+
+	nItemX5-=(nTamPag)
+
+
+	nClearIt2   := nItemX5
+	nClear1     := nItemX5
+
+	
+	EncheMVis( nLast1 , .f.  )
+
+
+	BT_ClientAreaInvalidateAll('Win_Browser')
+	BT_ClientAreaInvalidateAll('Win_Role1')
+
+	SysWait(.1)
+
+
+	xDcToDc()	
+	SetWindowCursor('Win_Browser' , IDC_ARROW )
+
+	
 
 Return 
 
 
 
+
+
 Function xGoPgDn()
 
+	Local nPos1 := ( (nPageNumber *  nTamPag) * nItemBrwHeight)
+
+	Local nLast1 
+
+
+
+	If ( (nItemX5+nTamPag+1) < nMaxItem1)
+		//nItemX5 += nTamPag+1 
+		
+	Else 
+		xDialog("Final das informações Atingido." , .f. )
+		Return 
+	End If 	
+
+
+
+	lHitB := .f.
+
+	lHitt := .f.
+
+	_HMG_PRINTER_SETVSCROLLVALUE(   GetFormHandle('Win_Browser')  , nPos1 - nItemSubHeight  )
+
+	nLinScrool := nPos1
+
+	nPageNumber++
+
+	nLast1 := nPageNumber * nTamPag
+
+
+	nItemX5+=(nTamPag)
+
+
+	nClearIt2   := nItemX5
+	nClear1     := nItemX5
+
+
+	
+	EncheMVis( nLast1 , .f.  )
+
+
+	BT_ClientAreaInvalidateAll('Win_Browser')
+	BT_ClientAreaInvalidateAll('Win_Role1')
+
+	SysWait(.1)
+
+
+	xDcToDc()	
+	SetWindowCursor('Win_Browser' , IDC_ARROW )
+
+	
 
 Return 
 
@@ -2160,6 +2296,10 @@ Function xGoBottom()
 
 
 	Local nPos1 := (Len(aMt1) * nItemBrwHeight) - (nTamPAg * nItemBrwHeight)
+
+	
+	
+
 
 	
 	Do Events
@@ -2217,7 +2357,6 @@ REturn
 
 
 Function xGoTop()
-
 
 
 	SetWindowCursor('Win_Browser' , 'CURSOR1')

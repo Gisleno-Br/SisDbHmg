@@ -711,7 +711,7 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 
 
 			Else
-				MsgInfo('Hit Bottom!')
+				//MsgInfo('Hit Bottom!')
 			End If
 
 
@@ -750,7 +750,7 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 
 
 			Else
-				MsgInfo('Hit Top')
+			//	MsgInfo('Hit Top')
 			End If
 
 
