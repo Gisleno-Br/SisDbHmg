@@ -111,6 +111,8 @@ FUNCTION Main
 
 	Public cJanx
 
+	Private lExit := .f. 
+
 	Public CURSORHAND := "img\Hand_Cursor.cur"
 
 	Private aCords := {}
@@ -2372,7 +2374,9 @@ Function OpenOpcao( cCadastro , cTitulo , nHandle1 )
 			CadCli()
 
 
+			
 		End If
+		
 
 	End If
 
@@ -2381,6 +2385,8 @@ REturn
 
 
 Function xCliente()
+
+
 
 	If ( FindWindowEx( ,, , "Clientes"  ) > 0 )
 		yAviso( 'Este Cadastro ja esta Ativo.' ,, .f. )

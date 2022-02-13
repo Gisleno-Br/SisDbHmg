@@ -13,6 +13,10 @@ STATIC nIndexDlg22 := 0
 STATIC nIndexDlg23 := 0
 STATIC nIndexDlg24 := 0
 
+//STATIC lExit := .f. 
+
+
+
 
 
 DEFINE WINDOW main
@@ -587,9 +591,11 @@ Function xDialog( cMsg1 , lAsk1  )
 
 	Private lRetx := .F.
 
+	lExit := .f. 
+
 
 	
-	Private lExit := .f. 
+	
 
 
 	
@@ -861,7 +867,6 @@ Function xFechaDlg()
 	Local nIndex3 := xFindEvent(  'InputEv2()' ,  OBTN_Handle( 'Win_Dialog', 6654 )   ) 
 
 	Local nIndex4 := xFindEvent(  'InputEv2()' ,  OBTN_Handle( 'Win_Dialog', 6652 )   ) 
-
 	
 	
 	If (nIndex1 > 0)
@@ -879,7 +884,7 @@ Function xFechaDlg()
 	
 	If nIndex4 > 0
 		xDelEvent(   nIndex4 )
-	End If 	
+	End If 
 
 
 

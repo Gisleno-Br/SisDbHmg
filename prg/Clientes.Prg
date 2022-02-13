@@ -1052,57 +1052,6 @@ Return lOk
 Function InitTela(  lIni1  , nColz1)
 
 	Local nLarg
-/*
-	Local i
-	Default lIni1 := .f.
-	Default nColz1 := 1
-
-
-	DoMethod(cMenuName,"Hide")
-
-
-	SetProperty( cAuxName , 'Width' , GetDeskTopWidth() )
-	SetProperty( cAuxName , 'Height' , 52)
-
-
-	aLinhas := OpenReg( , ,   nColz1 )
-
-
-	If (!lIni1) .And. (nColz1 > 1)
-		CrieMenuLabel(aOpz1)
-	End If
-
-
-
-//RefreshAll(cFormPrin)
-
-	nIndexEvent4 := 0
-
-	//CREATE EVENT PROCNAME Check_Grid_Events() STOREINDEX nIndexEvent4
-
-
-	SetProperty(cFormPrin , 'Frame_1' , 'Visible' , .f. )
-	SetProperty(cFormPrin , 'Frame_2' , 'Visible' , .f. )
-
-
-	
-	//If ( Ascan(    _HMG_EventData , { |a| a[1] == 'EventButton()' } ) == 0)
-
-	If (xIndexEvent('EventButton()' , 'C'  ) = 0)
-
-		nEveButton := 4565
-
-		CREATE EVENT PROCNAME EventButton() STOREINDEX nEveButton
-		EventProcessAllHookMessage ( nEveButton, .t. )
-
-	
-	End If
-
-
-	lInitCompleto := .t.
-	IntCli()
-
-	*/
 
 
 
@@ -1131,6 +1080,7 @@ Function InitTela(  lIni1  , nColz1)
 
 
 	EfectEnd(cActiveJan , aMz1 )
+
 	
 	SetWindowCursor( GetFormHandle( cFormPrin )  , IDC_ARROW  )
 
@@ -5394,6 +5344,9 @@ Function PutImagem(nColx , cTexto , cSeq1 )
 
 
 Return
+
+
+
 
 
 
