@@ -1059,10 +1059,9 @@ Function xTeclasBrow()
 	If (nWPAram == 33)
 
 	
-		SysWait(0.06)
+		//SysWait(0.06)
 		xGoPgUp()
-		SysWait(0.06)
-	
+		//SysWait(0.06)
 
 	
 
@@ -1337,6 +1336,8 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 	Local nHeightBmp := nItemBrwHeight * Len(aMtrOp)
 
+	Local nTam1 := GetTextoTam( ''  , cActiveJan )
+
 	Local hBitmap2
 
 
@@ -1405,39 +1406,11 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 
 
-/*
-	DEFAULT nItemDropedDown := 0
-	DEFAULT nHeightDroped   := 0
-	DEFAULT lSetas          := .f.
-
-	DEFAULT lSubMenu1       := .f.
-
-	DEFAULT lHitB := .f.
-	DEFAULT lHitT := .f.
-
-	DEFAULT lPopup := .f. 
-	*/
-
-
-
-/*
-	hBitMap2 := BT_BitmapCreateNew (nWidthBmp , nHeightBmp , BLACK)
-
-	hDC2 := BT_CreateDC (hBitmap2, BT_HDC_BITMAP  , @BTstruct)
-	*/
-
-
 	hBitMap2 := BT_BitmapCreateNew (Width  , Height , WHITE )
 
-	//hDC2 = BT_CreateDC ( cForm  ,  BT_HDC_BITMAP , @BTstruct2 )
-
-	//hDC2 := BT_CreateDC (hBitmap2,   BT_HDC_BITMAP , @BTstruct2)
 
 
 	hDC2 := BT_CreateDC (cForm ,   BT_HDC_INVALIDCLIENTAREA  , @BTstruct)
-
-
-	//BT_HDC_INVALIDCLIENTAREA 
 
 
 
@@ -1445,9 +1418,6 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 	If (nOpselx1 = 0)
 		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , WHITE , WHITE  )
 	End If
-
-
-
 
 	If nClear1 > 0
 
@@ -1491,8 +1461,10 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 		If (nPg = nPageTotal)
            cTexto := cTexto := StrZero(n1,6) + '    ' + StrZero(nItemx5,5) + '   Ultimo '
 
+		   n12 := (Len(cTexto) * nTam1 )+5
+
 		   If !lPaint 				
-				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 0  , Width  ,    (nTamPag+2) * nItemBrwHeight     ,  RED  , RED   )	
+				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 0  , n12  ,    (nTamPag+2) * nItemBrwHeight     ,  RED  , RED   )	
 		   End If 	
 
 
@@ -1534,18 +1506,19 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 			nTypeText    := BT_TEXT_TRANSPARENT
 
-			//nTypeText := BT_TEXT_OPAQUE
+			n12 := (Len(cTexto) * nTam1 )+5
+
 
 			If (Mod( n1 , 2 ) = 0)
 				//(Mod( nLine + nRow  , 2 ) = 0)
 				nCorBk := WHITE
-				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , nCorBk  , nCorBk   )
+				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , n12 ,    nItemBrwHeight     , nCorBk  , nCorBk   )
 
 				lPar := .f.
 
 			Else
 				nCorBk := CORBROWSE
-				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , nCorBk  , nCorBk   )
+				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , n12 ,    nItemBrwHeight     , nCorBk  , nCorBk   )
 
 				lPar := .t.
 
@@ -2332,6 +2305,7 @@ Function xGoPgUp()
 	
 	nSelLine := nItemx5
 
+
 	
 	EncheMVis( nLast1 , .f.  , .f. )
 
@@ -2339,11 +2313,9 @@ Function xGoPgUp()
 	BT_ClientAreaInvalidateAll('Win_Browser')
 	BT_ClientAreaInvalidateAll('Win_Role1')
 
-	SysWait(0.07)
+	//SysWait(0.07)
 
-
-
-
+	SysWait(0.01)
 
 	xDcToDc()	
 	//SetWindowCursor('Win_Browser' , IDC_ARROW )
@@ -2389,21 +2361,25 @@ Function xGoPgDn()
 
 	lHitt := .f.
 
-	//xCursorWait(.t.)
+	xCursorWait(.t.)
 
 	//_HMG_PRINTER_SETVSCROLLVALUE(   GetFormHandle('Win_Browser')  , nPos1   )
 
-	For ni := 1 To nTamPag
-		//_HMG_PRINTER_SETVSCROLLVALUE(   GetFormHandle('Win_Browser')  ,    )
-		Do Events 
+	For ni := 1 To nTamPag  
+		
+		//Do Events 
 		ScrolUp1(.f.)
 		
 	Next 	
 
 
-	//Do Events
 
-//	xCursorWait(.f.)
+	xCursorWait(.f.)
+
+
+	
+	Do Events
+
 
 	//nLinScrool := nPos1
 
@@ -2428,7 +2404,7 @@ Function xGoPgDn()
 	BT_ClientAreaInvalidateAll('Win_Browser')
 	BT_ClientAreaInvalidateAll('Win_Role1')
 
-	SysWait(0.02)
+	SysWait(0.01)
 
 
 	If (nPageNumber+1) == nPageTotal
