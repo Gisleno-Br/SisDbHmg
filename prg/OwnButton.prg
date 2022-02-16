@@ -72,9 +72,12 @@ aColor structure: {aColorEnabledButton, aColorDisabledButton, aColorFocusedButto
     nBackColor1 and nBackColor2 are used to draw the background in gradient colors.
 */
 
+/*
 STATIC cArqImg  := ''
 STATIC cArqImg2 := ''
 STATIC nColx    := 0
+*/
+
 
 
 #include "hmg.ch"
@@ -112,9 +115,17 @@ FUNCTION OBTN_Create( cForm, nID, cCaption, nRow, nCol, nWidth, nHeight, lEnable
    LOCAL lUnderline := .F.
    LOCAL lStrikeOut := .F.
 
+
+
+
    DEFAULT cImage := ''
    DEFAULT nColImg := 0
    DEFAULT cImage2 := ''
+
+   //Private cBmp1 := ''
+
+
+
 
    If !Empty(cImage)
        cArqImg := cImage
@@ -399,6 +410,15 @@ FUNCTION OBTN_Shape( cForm, nID, nShape, lRedraw )
 
 RETURN nShape
 
+Function OBTN_BitMap1( cBitmap     )
+
+  Static cBmp1 
+  
+  cBmp1 := cBitMap 
+
+Return cBmp1  
+
+
 
 FUNCTION OBTN_Color( cForm, nID, aColor, lRedraw )
 
@@ -474,22 +494,95 @@ FUNCTION OBTN_Color( cForm, nID, aColor, lRedraw )
 
 RETURN If( hb_HHasKey( hColor, cForm ) .AND. hb_HHasKey( hColor[ cForm ], nID ), hColor[ cForm ][ nID ], NIL )
 
+Function OBTN_GetBitMap1( nId  , lFocus )
+
+  Local aMtr1 := {}
+
+  If (nId == 855)      
+      aMtr1 := { 'SCRUP1' , 'SCRUP1_1', 0 }
+  End If 
+
+
+  
+  If (nId == 856)      
+      aMtr1 := { 'SCRUP2' , 'SCRUP2_1', 0 }
+  End If 
+
+  If (nId == 857)      
+      aMtr1 := { 'SCRUP3' , 'SCRUP3_1', 0 }
+  End If 
+
+
+
+
+  If (nId == 860)      
+      aMtr1 := { 'SCRDOWN1' , 'SCRDOWN1_1', 0 }
+  End If 
+
+   If (nId == 859)      
+      aMtr1 := { 'SCRDOWN2' , 'SCRDOWN1_1', 0 }
+  End If 
+
+  
+   If (nId == 858)      
+      aMtr1 := { 'SCRDOWN3' , 'SCRDOWN3_1', 0 }
+  End If 
+
+
+
+
+
+
+
+
+  If (nId == 6652)
+      aMtr1 := {'OKVERDE1'  , 'OKVERDE2' , 3}
+  End If 
+
+
+
+  //, 'SCRDOWN1' , 0 , 'SCRDOWN1')
+
+
+Return aMtr1
+
+
 
 FUNCTION OBTN_Draw( nHParent, nID, nDRAWITEMSTRUCT , lFocus  )
 
    LOCAL cForm  := GetFormNameByIndex( GetFormIndexByHandle( nHParent ) )
-   Local cBmpFile := cArqImg
+   //Local cBmpFile := cArqImg
+   //LOCAL cBmpFile := OBTN_GetBitMap1(     ) 
    LOCAL nShape := OBTN_Shape( cForm, nID )
    LOCAL aColor := OBTN_Color( cForm, nID )
    LOCAL aFont  := OBTN_Font( cForm, nID )
+   LOCAL aMtBmp := OBTN_GetBitMap1( nId  , lFocus )
+   Local cBmpFile := ''
+   Local nColx    := 0
+
 
    DEFAULT lFocus := .f. 
+
+
+   If Len(aMtBmp) > 0
+      cBmpFile := aMtBmp[1]
+
+      If lFocus 
+         cBmpFile := aMtBmp[2]
+      End If 
+
+      nColx := aMtBmp[3]
+
+   End If 
+   /*
 
    IF (lFocus)
       If !Empty(cArqImg2)
          cBmpFile := cArqImg2
       End If    
    End If     
+
+   */
 
 
 
@@ -703,14 +796,14 @@ HB_FUNC( _OWNBUTTONDRAW )
   DrawText(pDIS->hDC, Text , -1, &rcText, DT_CENTER);
 
 
+
  
+
 
    if (hBitMap1 > 0 )
       {
 
 
-
-	      DrawBitmapX( pDIS->hDC, hBitMap1 , 1 ,  ncolbmp  , 25 , 25 , 0 );
 
          hBrush4  = CreateSolidBrush(  RGB(248,248,248)  );
 
@@ -719,7 +812,14 @@ HB_FUNC( _OWNBUTTONDRAW )
          rcF.right  = 27;
          rcF.bottom = 4;
 
+
+         DrawBitmapX( pDIS->hDC, hBitMap1 , 1 ,  ncolbmp  , 25 , 25 , 0 );
+
+
+
+         
          FillRect(pDIS->hDC , &rcF, hBrush4);  
+
 
 
       }   

@@ -148,7 +148,7 @@ Static nPageTotal := 0
 Static lControlOk := .f. 
 
 
-
+Static lTracking35 := .f.
 //DECLARE WINDOW Win_Browser
 
 
@@ -701,7 +701,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 		CHILD ;
 		PANEL ;
 		PARENT &cParent ;
-		WIDTH 20 HEIGHT (nTamPag * nItemBrwHeight) ;
+		WIDTH 25 HEIGHT (nTamPag * nItemBrwHeight) ;
 		TITLE 'xScroxRoleol1' + Left(cParent,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR WHITE   ;
 		ON PAINT xPaintScroll( ThisWindow.Name )
@@ -755,9 +755,12 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventBrowser"  ) )  ) = 0
 		InstallEventHandler( "EventBrowser" )
 		nIndexEventZ := EventCreate (  { ||   xTeclasBrow( )   }  )
+
+
 	End If
 
 	_ShowWindow("Win_Role1")
+
 
 	
 	_ShowWindow("Win_Espelho")
@@ -772,7 +775,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 
 
 
-
+	xCriaButs()
 
 	xDcToDc()
 
@@ -805,7 +808,8 @@ Function xTeclasBrow()
 
 	LOCAL  nHWnd   := EventHWND()
 	LOCAL  nMsg    := EventMSG()
-	LOCAL  nWParam := EventWPARAM()
+	LOCAL  nWParam := EventWPARAM()		
+	LOCAL  nLParam := EventLPARAM()
 	Local nContItens := 0
 	Local nQt        := 0
 	Local nRow       := 0
@@ -828,8 +832,12 @@ Function xTeclasBrow()
 
 	//xFechaMen
 
+
+
+
 	Local nMaxItem := Int(nTamSubMenuConsulta / nItemSubHeight)
 
+	
 
 
 	If nMsg == WM_KEYDOWN
@@ -1638,6 +1646,56 @@ static FUNCTION  QtAcento(cString)
 
 Return nQt1
 
+Function xCriaButs()
+
+	Local cJanx := 'Win_Role1'
+
+	Local nRow1 := GetProperty('Win_Role1','Height') - 20
+
+    OBTN_Create( cJanx,  855 , "&A", 0 ,   0  ,  22 ,  22  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont)
+
+    OBTN_Create( cJanx,  856 , "&B", 23   , 0,  22,  22  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont  )
+    OBTN_Create( cJanx,  857 , "&V", 43   , 0 ,  22,  23 ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont  )
+
+
+
+
+
+   
+	EventProcessAllHookMessage( EventCreate( {|| EventBrowser() }  ,   OBTN_Handle( cJanx, 855 )   ), .T. )		
+	EventProcessAllHookMessage( EventCreate( {|| EventBrowser() }  ,   OBTN_Handle( cJanx,  856 )   ), .T. )			
+	EventProcessAllHookMessage( EventCreate( {|| EventBrowser() }  ,   OBTN_Handle( cJanx, 857 )   ), .T. )
+
+
+
+   OBTN_Font( cJanx, 855,  { cFontName, nFontSize, .F., .F., .F., .F. } )
+   OBTN_Font( cJanx, 856,  { cFontName, nFontSize, .F., .F., .F., .F. } )
+   OBTN_Font( cJanx, 857,  { cFontName, nFontSize, .F., .F., .F., .F. } )
+
+
+	// Baixo 
+
+
+
+	   
+   OBTN_Create( cJanx,  858 , "&4", nRow1 - 5    , 0  ,  22,  22  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+   OBTN_Create( cJanx,  859 , "&R", nRow1 - 29   , 0  ,  20,  23  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+   OBTN_Create( cJanx,  860 , "&T", nRow1 - 50   , 0  ,  20,  20 ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+
+   
+   
+   EventProcessAllHookMessage( EventCreate( {|| EventBrowser()  },   OBTN_Handle( cJanx, 858 )   ), .T. )		
+   EventProcessAllHookMessage( EventCreate( {|| EventBrowser() },   OBTN_Handle( cJanx,  859 )   ), .T. )			
+   EventProcessAllHookMessage( EventCreate( {|| EventBrowser() },   OBTN_Handle( cJanx, 860 )   ), .T. )
+
+
+
+   OBTN_Font( cJanx, 858,  { cFontName, nFontSize, .F., .F., .F., .F. } )
+   OBTN_Font( cJanx, 859,  { cFontName, nFontSize, .F., .F., .F., .F. } )
+   OBTN_Font( cJanx, 860,  { cFontName, nFontSize, .F., .F., .F., .F. } )
+
+   
+Return 
 
 
 Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
@@ -1669,17 +1727,40 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 
 
+
+
+
 	If (nHWnd == GetProperty(  'Win_Role1' , "HANDLE" ))
 
 
+		
+		If (nHWnd == GetFormHandle('Win_Role1'))
+			//msginfo(Str(  nWParam  ))
+			If (nMsg == WM_DRAWITEM)	
+			//	msginfo(Str(  nWParam  ))
+				If ( nWParam >=  855 ) .AND.  ( nWParam <=  860 )
+					OBTN_Draw( nHWnd,  nwParam, nLParam  )
+				End If
+			End If 	
+		End If 		
 
-		If nMsg == WM_MOUSELEAVE
-			//msginfo('ok2')
-			nModeBrw := 0
+	
+		If (nMsg == WM_MOUSELEAVE)
+			
+			
+			nModeBrw := -1
+			lTracking35 := .f. 
+			//Do Events 
+
+			If  _isWindowDefined("Win_Msg")
+				xHidehint()
+			End If
+
 		End If
 
 
-		If nMsg == WM_MOUSEMOVE
+       /*
+		If (nMsg == WM_MOUSEMOVE) .And. (!lTracking35)
 
 
 			GetCursorPos( @nCol , @nRow )
@@ -1690,6 +1771,10 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			aR1 := GetPos_ScreenToClient(nHWnd, nRow, nCol )
 
 			SetWindowCursor( nHWnd , IDC_ARROW)
+
+			
+		   	lTracking35 := TrackMouseEvent( nHWnd ) // TM
+
 
 			//	msginfo('ok')
 
@@ -1705,6 +1790,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 					If ar1[1] <= 42
 						cTp1 := "Retorna uma Pagina para Tras no Grid."
 						nModeBrw := 2
+					//	msginfo('ok2')
 					Else
 						cTp1 := "Retorna uma Registro para Tras no Grid."
 						nModeBrw := 3
@@ -1743,6 +1829,8 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				Else
 					If  _isWindowDefined("Win_Msg")
 						xHidehint()
+						lTracking35 := .f. 
+						sysWait(0.05)
 					End If
 
 				End If
@@ -1750,8 +1838,16 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 			End If
 
+		
+
+			Do Events 
+
 
 			If lOkHint
+
+			//	Do Events 
+				Do Events 
+
 				If !_isWindowDefined("Win_Msg")
 					CrieJanTip( nRow  , nCol - 250   ,   Alltrim(cTp1)      ,, 0.5 )
 				Else
@@ -1763,20 +1859,39 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				BringTop('xHint')
 
 				SysWait(.1)
+
+				//SysWait(0.04)
 			End If
+
+
+		
 
 
 		End If
 
+		*/
 
 		
+		/*
 		If nMsg == WM_LBUTTONUP			
 			nModeBrw := -1
 			SendMessage( GetFormHandle('Win_Browser')  , WM_MOUSELEAVE , 0 , 0 )			
 	    	HMG_CleanLastMouseMessage ()
 			Do Events
-			Do Events
+		///	Do Events
 		End If 
+		*/
+
+		//*/
+
+		If nMsg == WM_LBUTTONUP			
+			SendMessage( GetFormHandle('Win_Browser')  , WM_MOUSELEAVE , 0 , 0 )			
+			Do Events
+			//msginfo('up ')
+
+		End If 
+
+
 
 
 
@@ -1816,20 +1931,24 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			End 
 			
 
+
+
 			While (nModeBrw = 5) .And. (!lHitB )			
 			
-	
-				SysWait(0.09)
+				SysWait(0.02)
 				xGoPgDn()
-				SysWait(.2)
+				
+				SysWait(.1)
 				
 			End If 
 
+
+
 			While (nModeBrw = 2) .And. (!lHitt)			
 	
-				SysWait(0.09)
+				SysWait(0.02)
 				xGoPgUp()
-				SysWait(.2)
+				SysWait(.1)
 
 			End If 
 
@@ -1856,6 +1975,13 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 	
 		End If
+
+
+
+		If nMsg == WM_MOUSEMOVE
+			lTracking35 := .f. 
+			//msginfo('ok')
+		End If 
 
 	        
 
@@ -2126,9 +2252,10 @@ Function xPaintScroll( cJanela )
 
 	Local hDC
 
-	Local nRIni := 63
+	Local nRIni := 68
 
 	Local nFator , yPos
+
 
 
 	Local yBmp1 := BT_BitMapLoadFile('SCRUP1')
@@ -2147,6 +2274,7 @@ Function xPaintScroll( cJanela )
 
 
 
+
 	LOCAL Width  := BT_ClientAreaWidth  (cJanela)
 	LOCAL Height := BT_ClientAreaHeight (cJanela)
 
@@ -2157,39 +2285,43 @@ Function xPaintScroll( cJanela )
 
 
 	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    , {209,209,209} ,   {249,249,249})
-
+/*
 
 	BT_DrawBitmap (hDC  , nRow1       , 0  , 20  , 20  ,      BT_STRETCH,  zBmp3)
 	BT_DrawBitmap (hDC  , nRow1 - 22  , 0   , 20  , 20 , BT_STRETCH,  zBmp2)
 	BT_DrawBitmap (hDC  , nRow1 - 43  , 0   , 20  , 20 , BT_STRETCH,  zBmp1)
+	*/
 
 
 	nLAst := nRow1 - 63
 
 
 
-
+/*
 	BT_DrawBitmap (hDC  , 0  , 0  	, 20  , 20  ,      BT_STRETCH,  yBmp3)
 	BT_DrawBitmap (hDC  , 22  , 0   , 20  , 20 , BT_STRETCH,  yBmp2)
 	BT_DrawBitmap (hDC  , 43  , 0   , 20  , 20 , BT_STRETCH,  yBmp1)
+	*/
+
+
 
 
 
 	// 63
 
 	If (nItemX5 == 1)
-		BT_DrawBitmap (hDC  , nRIni  , 1  	, 15  , 20  ,      BT_STRETCH,  zRolagem)
+		BT_DrawBitmap (hDC  , nRIni  , 1  	, 20  , 20  ,      BT_STRETCH,  zRolagem)
 	Else
 
 		If (nItemX5 == nMaxItem1 )
-			BT_DrawBitmap (hDC  , nLast  , 1  	, 15  , 20  ,      BT_STRETCH,  zRolagem)
+			BT_DrawBitmap (hDC  , nLast  , 1  	, 20  , 20  ,      BT_STRETCH,  zRolagem)
 		Else
 
 			yPos := nLast - nRIni
 
 			nFator := Int(( nItemX5 * yPos     ) /	nMaxItem1)+3
 
-			BT_DrawBitmap (hDC  , nRIni + nFator , 1  	, 15  , 20  ,      BT_STRETCH,  zRolagem)
+			BT_DrawBitmap (hDC  , nRIni + nFator , 1  	, 20  , 20  ,      BT_STRETCH,  zRolagem)
 
 
 		End If
@@ -2276,7 +2408,7 @@ Function xGoPgUp()
 	
 	For ni := 1 To nTamPag
 		//_HMG_PRINTER_SETVSCROLLVALUE(   GetFormHandle('Win_Browser')  ,    )
-		Do Events 
+		//Do Events 
 		ScrolUp1(.t.)
 		
 	Next 	
@@ -2313,9 +2445,9 @@ Function xGoPgUp()
 	BT_ClientAreaInvalidateAll('Win_Browser')
 	BT_ClientAreaInvalidateAll('Win_Role1')
 
-	//SysWait(0.07)
+	SysWait(0.07)
 
-	SysWait(0.01)
+	//SysWait(0.01)
 
 	xDcToDc()	
 	//SetWindowCursor('Win_Browser' , IDC_ARROW )
@@ -2378,7 +2510,7 @@ Function xGoPgDn()
 
 
 	
-	Do Events
+	//Do Events
 
 
 	//nLinScrool := nPos1
@@ -2404,7 +2536,10 @@ Function xGoPgDn()
 	BT_ClientAreaInvalidateAll('Win_Browser')
 	BT_ClientAreaInvalidateAll('Win_Role1')
 
-	SysWait(0.01)
+	
+	SysWait(0.07)
+
+
 
 
 	If (nPageNumber+1) == nPageTotal
@@ -2414,28 +2549,7 @@ Function xGoPgDn()
 
 	xDcToDc()	
 	
-	
 
-
-	/*
-	 N1 := 1	
-
-	 For N1 := 1 to nTamPag 
-
-		SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_DOWN , 0 )			
-	    	//HMG_CleanLastMouseMessage ()
-			Do Events
-
-		msginfo('ok')	
-    
-	 Next 	
-	 */
-
-
-
-
-
-	
 
 Return 
 
@@ -2578,6 +2692,30 @@ Function xSaveBmp()
 
 Return
 
+Function EventRole1()
+
+	LOCAL  nHWnd   := EventHWND()
+	LOCAL  nMsg    := EventMSG()
+	LOCAL  nWParam := EventWPARAM()
+	Local nLParam  := EventLPARAM()
+
+
+	
+
+	If (nHWnd == GetFormHandle('Win_Role1'))
+	//	msginfo(Str(  nWParam  ))
+		If (nMsg == WM_DRAWITEM)	
+			//msginfo(Str(  nWParam  ))
+			If ( nWParam >=  855 ) .AND.  ( nWParam <=  860 )
+				OBTN_Draw( nHWnd,  nwParam, nLParam  )
+			End If
+		End If 	
+	End If 		
+
+
+
+
+Return 
 
 Static Function xCursorWait( lOn )
 

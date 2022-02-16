@@ -756,7 +756,9 @@ Function xProcinit( lPergunta )
 
 	If (!lPergunta)
 
-		OBTN_Create( 'Win_Dialog', 6652,  '&Ok'   , 160, 166 ,  75 ,  30,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont , 'OKVERDE1'  , 3 , 'OKVERDE2')
+		OBTN_Create( 'Win_Dialog', 6652,  '&Ok'   , 160, 166 ,  75 ,  30,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+		
+		//, 'OKVERDE1'  , 3 , 'OKVERDE2')
 
 		OBTN_Font( 'Win_Dialog', 6652,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 

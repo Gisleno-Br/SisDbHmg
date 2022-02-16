@@ -16,6 +16,10 @@
 
 
 
+
+
+
+
 #define QUEBRA Chr(13)+Chr(10)
 
 #define SB_LINEUP           0    // ok
