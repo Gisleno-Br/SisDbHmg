@@ -149,6 +149,12 @@ Static lControlOk := .f.
 
 
 Static lTracking35 := .f.
+
+
+Static lTracking45 := .f.
+
+Static nHasFocus := 0
+
 //DECLARE WINDOW Win_Browser
 
 
@@ -823,6 +829,9 @@ Function xTeclasBrow()
 	Local w2
 	Local cControl := ''
 	Local cForm    := ''
+
+	Local n1 
+	Local nIdBut 
 
 	Local lCtrl := .f. 
 
@@ -1646,31 +1655,36 @@ static FUNCTION  QtAcento(cString)
 
 Return nQt1
 
+
+
 Function xCriaButs()
 
 	Local cJanx := 'Win_Role1'
 
 	Local nRow1 := GetProperty('Win_Role1','Height') - 20
 
-    OBTN_Create( cJanx,  855 , "&A", 0 ,   0  ,  22 ,  22  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont)
+    OBTN_Create( cJanx,  855 , "", 0 ,   0  ,  22 ,  22  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont)
 
-    OBTN_Create( cJanx,  856 , "&B", 23   , 0,  22,  22  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont  )
-    OBTN_Create( cJanx,  857 , "&V", 43   , 0 ,  22,  23 ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont  )
-
-
-
+    OBTN_Create( cJanx,  856 , "&B", 22   , 0,  22,  22  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont  )
+    OBTN_Create( cJanx,  857 , "&V", 42   , 0 ,  22,  23 ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont  )
 
 
    
-	EventProcessAllHookMessage( EventCreate( {|| EventBrowser() }  ,   OBTN_Handle( cJanx, 855 )   ), .T. )		
-	EventProcessAllHookMessage( EventCreate( {|| EventBrowser() }  ,   OBTN_Handle( cJanx,  856 )   ), .T. )			
-	EventProcessAllHookMessage( EventCreate( {|| EventBrowser() }  ,   OBTN_Handle( cJanx, 857 )   ), .T. )
+	//EventProcessAllHookMessage( EventCreate( {|| EventBrowser() }  ,   OBTN_Handle( cJanx, 855 )   ), .T. )		
+
+	EventProcessAllHookMessage( EventCreate( {|| EventRole1() }  ,   OBTN_Handle( cJanx, 855 )   ), .T. )		
+
+
+	EventProcessAllHookMessage( EventCreate( {|| EventRole1() }  ,   OBTN_Handle( cJanx,  856 )   ), .T. )			
+	EventProcessAllHookMessage( EventCreate( {|| EventRole1() }  ,   OBTN_Handle( cJanx, 857 )   ), .T. )
 
 
 
    OBTN_Font( cJanx, 855,  { cFontName, nFontSize, .F., .F., .F., .F. } )
    OBTN_Font( cJanx, 856,  { cFontName, nFontSize, .F., .F., .F., .F. } )
    OBTN_Font( cJanx, 857,  { cFontName, nFontSize, .F., .F., .F., .F. } )
+
+
 
 
 	// Baixo 
@@ -1684,9 +1698,9 @@ Function xCriaButs()
 
    
    
-   EventProcessAllHookMessage( EventCreate( {|| EventBrowser()  },   OBTN_Handle( cJanx, 858 )   ), .T. )		
-   EventProcessAllHookMessage( EventCreate( {|| EventBrowser() },   OBTN_Handle( cJanx,  859 )   ), .T. )			
-   EventProcessAllHookMessage( EventCreate( {|| EventBrowser() },   OBTN_Handle( cJanx, 860 )   ), .T. )
+   EventProcessAllHookMessage( EventCreate( {|| EventRole1()  },   OBTN_Handle( cJanx, 858 )   ), .T. )		
+   EventProcessAllHookMessage( EventCreate( {|| EventRole1() },   OBTN_Handle( cJanx,  859 )   ), .T. )			
+   EventProcessAllHookMessage( EventCreate( {|| EventRole1() },   OBTN_Handle( cJanx, 860 )   ), .T. )
 
 
 
@@ -1715,9 +1729,17 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	Local lOkHint := .f.
 	Local nInd1 := 0
 
+	Local nIdBut := 0
+
+/*
+	LOCAL  nHWnd   := EventHWND()
+	LOCAL  nMsg    := EventMSG()
+	LOCAL  nWParam := EventWPARAM()
+	LOCAL  nLParam := EventLPARAM()
+
+	*/
+
 	//Local ar1   := {}
-
-
 
     *// Menu Principal
 	//nItemx1 ,     nClearIt2 ,
@@ -1725,38 +1747,122 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 	//If (nHWnd == GetProperty(  'Win_e1' , "HANDLE" ))
 
-
-
-
+	
 
 
 	If (nHWnd == GetProperty(  'Win_Role1' , "HANDLE" ))
 
-
 		
-		If (nHWnd == GetFormHandle('Win_Role1'))
-			//msginfo(Str(  nWParam  ))
-			If (nMsg == WM_DRAWITEM)	
-			//	msginfo(Str(  nWParam  ))
-				If ( nWParam >=  855 ) .AND.  ( nWParam <=  860 )
-					OBTN_Draw( nHWnd,  nwParam, nLParam  )
-				End If
-			End If 	
-		End If 		
+		
+		If (nMsg == WM_DRAWITEM)				
+			If ( nWParam >=  855 ) .AND.  ( nWParam <=  860 )
+				OBTN_Draw( nHWnd,  nwParam, nLParam , (  nHasFocus == nWParam  )  )
+			End If
+		End If 	
 
+
+
+
+
+		If (nMsg == 2223) 
+			//.And. (!lTracking45)
+
+		//	msginfo('ok2 ' + Str(nModeBrw)	 )
+
+			If nModeBrw = 1
+				lControlOk := .t. 
+				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_HOME , 0 )
+				lControlOk := .f. 
+			//	msginfo('up')
+			End If 
+
+
+			If nModeBrw = 4
+				lControlOk := .t. 
+				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_END , 0 )
+				lControlOk := .f. 
+			End If 
+
+	
+
+			While( nModeBrw = 3)
+				lControlOk := .f. 
+				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_UP , 0 )				
+			End 
+
+			
+			While (nModeBrw = 6) .And. (!lTracking45)
+				lControlOk := .f. 
+				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_DOWN , 0 )				
+				SysWait(0.03)
+				//msginfo('o32')
+			End 
+			
+
+			While (nModeBrw = 5) .And. (!lHitB )			
+			
+				SysWait(0.02)
+				xGoPgDn()				
+				SysWait(.1)
+				
+			End If 
+
+
+
+
+
+			While (nModeBrw = 2) .And. (!lHitt)			
+	
+				SysWait(0.02)
+				xGoPgUp()
+				SysWait(.1)
+
+			End If 
+
+			nModeBrw := 0
+			Do Events
+
+		//	msginfo('Fim')
+
+			//lTracking45 := .t.
+			//TrackMouseEvent( nHWnd ) // TME_
+		
+		
+		End If 
+		
+				
 	
 		If (nMsg == WM_MOUSELEAVE)
 			
 			
 			nModeBrw := -1
 			lTracking35 := .f. 
-			//Do Events 
+			
 
 			If  _isWindowDefined("Win_Msg")
 				xHidehint()
+				//msginfo('1')
 			End If
 
 		End If
+
+		
+
+		If nMsg == WM_MOUSEMOVE
+			lTracking35 := .f. 
+			
+			
+			If nHasFocus > 0
+				If  _isWindowDefined("Win_Msg")
+					xHidehint()
+				End If
+			End If	
+
+			nHasFocus := 0
+		
+
+			
+		End If 
 
 
        /*
@@ -1872,22 +1978,26 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 		*/
 
 		
-		/*
+		
 		If nMsg == WM_LBUTTONUP			
 			nModeBrw := -1
 			SendMessage( GetFormHandle('Win_Browser')  , WM_MOUSELEAVE , 0 , 0 )			
 	    	HMG_CleanLastMouseMessage ()
 			Do Events
+			msginfo('ppp444 ')
 		///	Do Events
 		End If 
-		*/
+		
 
 		//*/
 
 		If nMsg == WM_LBUTTONUP			
-			SendMessage( GetFormHandle('Win_Browser')  , WM_MOUSELEAVE , 0 , 0 )			
+		//	SendMessage( GetFormHandle('Win_Browser')  , WM_MOUSELEAVE , 0 , 0 )			
+			nModeBrw := -1
+			lTracking35 := .t. 
+
 			Do Events
-			//msginfo('up ')
+			msginfo('up22 ')
 
 		End If 
 
@@ -1980,7 +2090,16 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 		If nMsg == WM_MOUSEMOVE
 			lTracking35 := .f. 
-			//msginfo('ok')
+			nHasFocus := 0
+		//	msginfo('ok')
+
+			
+			If  _isWindowDefined("Win_Msg")
+				xHidehint()
+			End If
+
+
+
 		End If 
 
 	        
@@ -2252,9 +2371,10 @@ Function xPaintScroll( cJanela )
 
 	Local hDC
 
-	Local nRIni := 68
+	Local nRIni := 66
 
 	Local nFator , yPos
+
 
 
 
@@ -2275,6 +2395,9 @@ Function xPaintScroll( cJanela )
 
 
 
+
+
+
 	LOCAL Width  := BT_ClientAreaWidth  (cJanela)
 	LOCAL Height := BT_ClientAreaHeight (cJanela)
 
@@ -2284,7 +2407,7 @@ Function xPaintScroll( cJanela )
 
 
 
-	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    , {209,209,209} ,   {249,249,249})
+	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    , {109,109,109} ,   {249,249,249})
 /*
 
 	BT_DrawBitmap (hDC  , nRow1       , 0  , 20  , 20  ,      BT_STRETCH,  zBmp3)
@@ -2699,18 +2822,228 @@ Function EventRole1()
 	LOCAL  nWParam := EventWPARAM()
 	Local nLParam  := EventLPARAM()
 
+	Local cFormx := 'Win_Role1'
+
+	Local nIdBut := 0
+	Local n1 
+
+	Local i 
+
+	Local nSvfocus := nHasFocus 
+
+	Local cTp1 := ''
+
+	Local nRow , nCol 
+
+	If !_IsWindowDefined('Win_Role1')
+		Return 
+	End If 
+
+	
+	For i := 1 To 255
+		GetAsyncKeyState(i)
+	Next i
+
+
+	
+	For n1 := 855 TO 860
+		If ( OBTN_Handle( 'Win_Role1', n1 ) == nHWnd )
+			If (nIdBut == 0)
+				nIdBut := n1			
+			End If 
+		End If
+	Next	
+
+
+
+	If (nIdBut > 0)
+
+
+
+		
+		If (nMsg == WM_LBUTTONDOWN) 
+
+			If nModeBrw = 1
+				lControlOk := .t. 
+				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_HOME , 0 )
+				lControlOk := .f. 
+			//	msginfo('up')
+			End If 
+
+
+			If nModeBrw = 4
+				lControlOk := .t. 
+				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_END , 0 )
+				lControlOk := .f. 
+			End If 
 
 	
 
-	If (nHWnd == GetFormHandle('Win_Role1'))
-	//	msginfo(Str(  nWParam  ))
-		If (nMsg == WM_DRAWITEM)	
-			//msginfo(Str(  nWParam  ))
-			If ( nWParam >=  855 ) .AND.  ( nWParam <=  860 )
-				OBTN_Draw( nHWnd,  nwParam, nLParam  )
+			While( nModeBrw = 3)
+				lControlOk := .f. 
+				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_UP , 0 )				
+			End 
+
+			
+			While (nModeBrw = 6) .And. (!lTracking45)
+				//Do Events
+
+				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_DOWN , 0 )				
+
+
+				If (GetAsyncKeyState(VK_LBUTTON)) == 0
+					msginfo('ok')
+
+				End If 
+				
+						
+			End  
+			
+
+			While (nModeBrw = 5) .And. (!lHitB )			
+			
+				SysWait(0.02)
+				xGoPgDn()				
+				SysWait(.1)
+				
+			End If 
+
+
+			While (nModeBrw = 2) .And. (!lHitt)			
+	
+				SysWait(0.02)
+				xGoPgUp()
+				SysWait(.1)
+
+			End If 
+
+		
+
+
+		end If 
+
+		
+		If nMsg == WM_LBUTTONUP			
+		//	SendMessage( GetFormHandle('Win_Browser')  , WM_MOUSELEAVE , 0 , 0 )			
+		//	nModeBrw := -1
+		//	lTracking35 := .t. 
+
+			Do Events
+
+			lTracking45 := .t. 
+			msginfo('up ')
+
+			Do Events
+			Do Events
+
+		End If 
+		
+
+
+		If ( nMsg == WM_MOUSEMOVE ) .and. (!lTracking35)
+
+		
+			lTracking35 := TrackMouseEvent( nHWnd ) // TME_LEAVE is default flag
+
+			nHasFocus := nIdBut
+
+
+			OBTN_Color( cFormx, nIdBut, RetColor1( 2 ), .T. )
+
+			OBTN_Enable( cFormx, nIdBut, .T. )
+			OBTN_Visible( cFormx, nIdBut, .T. )
+
+			CursorHand1( nHWnd  )
+
+			cTp1 := ''
+
+			//msginfo('ok2')
+
+
+
+
+			If nIdBut = 855
+				cTp1 := "Retorna uma Registro para Tras no Grid."
+				nModeBrw := 3
+			End If 	
+
+			If nIdBut = 856
+				cTp1 := "Retorna uma Pagina para Tras no Grid."
+				nModeBrw := 2
+			End If 	
+
+			If nIdBut = 857
+				cTp1 := "Desloca Grid ate Primeiro Registro."
+				nModeBrw := 1
+			End If 	
+
+			If nIdBut = 858
+				cTp1 := "Desloca Grid ate o Ultimo Registro."
+				nModeBrw := 4
+			End If 	
+
+			If nIdBut = 859
+				cTp1 := "Avança uma Pagina no Grid"
+				nModeBrw := 5
+			End If 	
+
+			If nIdBut = 860
+				cTp1 := "Avança um registro no Grid"
+				nModeBrw := 6
+			End If 	
+		
+			Do Events 
+
+			
+			GetCursorPos( @nCol , @nRow )
+
+			
+			If !_isWindowDefined("Win_Msg")
+				CrieJanTip( nRow  , nCol - 250   ,   Alltrim(cTp1)      ,, 0.5 )
+			Else
+				xDispHint( cTp1 , nRow ,  nCol - 250  )
 			End If
-		End If 	
-	End If 		
+
+			xDispUpTam(cTp1 )
+
+			BringTop('xHint')
+
+
+		End If
+
+		If ( nMsg == WM_MOUSELEAVE )
+
+			//msginfo('out ' + Str(nSvfocus))
+
+			nHasFocus := 0
+			nModeBrw := 0
+
+			If nSvFocus > 0
+
+				OBTN_Enable( cFormx, nSvFocus, .T. )
+				OBTN_Visible( cFormx, nSvFocus, .T. )
+
+				Do Events 
+
+			
+			End If 		
+
+
+	
+			OBTN_Color( cFormx,  nIdBut, RetColor1( 1 ), .T. )
+			OBTN_Enable( cFormx, nIdBut, .T. )
+			OBTN_Visible( cFormx, nIdBut, .T. )
+
+		
+
+			lTracking35 := .F.
+
+		End IF
+
+
+
+
+	End If 
 
 
 

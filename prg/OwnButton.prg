@@ -410,14 +410,6 @@ FUNCTION OBTN_Shape( cForm, nID, nShape, lRedraw )
 
 RETURN nShape
 
-Function OBTN_BitMap1( cBitmap     )
-
-  Static cBmp1 
-  
-  cBmp1 := cBitMap 
-
-Return cBmp1  
-
 
 
 FUNCTION OBTN_Color( cForm, nID, aColor, lRedraw )
@@ -520,19 +512,13 @@ Function OBTN_GetBitMap1( nId  , lFocus )
   End If 
 
    If (nId == 859)      
-      aMtr1 := { 'SCRDOWN2' , 'SCRDOWN1_1', 0 }
+      aMtr1 := { 'SCRDOWN2' , 'SCRDOWN2_1', 0 }
   End If 
 
   
    If (nId == 858)      
       aMtr1 := { 'SCRDOWN3' , 'SCRDOWN3_1', 0 }
   End If 
-
-
-
-
-
-
 
 
   If (nId == 6652)
@@ -630,11 +616,12 @@ HB_FUNC( _OWNBUTTONCREATE )
                            GetModuleHandle(NULL),
                            NULL);
 
-  //SetClassLong( (HWND) hButton  , GCL_HCURSOR, ( LONG ) LoadCursor( 0 , IDC_HAND ) );
+  
+  //SetClassLongPtr( (HWND) hButton  , GCLP_HCURSOR, ( LONG ) LoadCursor( 0 , IDC_HAND ) );
 
-  SetClassLongPtr( (HWND) hButton  , GCLP_HCURSOR, ( LONG ) LoadCursor( 0 , IDC_HAND ) );
+  
 
-  //SetClassLong( ( HWND ) hButton , -12 , ( LONG ) LoadCursor( NULL, IDC_HAND ) );
+
 
   HMG_retnl((LONG_PTR) hButton);
 
@@ -643,6 +630,18 @@ HB_FUNC( _OWNBUTTONCREATE )
 
        //               1                2       3        4        5        6
        //_OwnButtonDraw(nDRAWITEMSTRUCT, nShape, aColor1, aColor2, aColor3, aFont)
+
+
+HB_FUNC( CURSORHAND1 )
+{
+  
+   HWND hWnd1   = (HWND)  hb_parnl (1);
+   SetClassLongPtr(  hWnd1  , GCLP_HCURSOR, ( LONG ) LoadCursor( 0 , IDC_HAND ) );
+
+}
+
+
+
 HB_FUNC( _OWNBUTTONDRAW )
 {
   DRAWITEMSTRUCT *pDIS = (DRAWITEMSTRUCT *) HMG_parnl(1);
@@ -796,7 +795,6 @@ HB_FUNC( _OWNBUTTONDRAW )
   DrawText(pDIS->hDC, Text , -1, &rcText, DT_CENTER);
 
 
-
  
 
 
@@ -813,12 +811,11 @@ HB_FUNC( _OWNBUTTONDRAW )
          rcF.bottom = 4;
 
 
-         DrawBitmapX( pDIS->hDC, hBitMap1 , 1 ,  ncolbmp  , 25 , 25 , 0 );
-
-
-
-         
          FillRect(pDIS->hDC , &rcF, hBrush4);  
+
+         DrawBitmapX( pDIS->hDC, hBitMap1 , 1 ,  ncolbmp  , 25 , 25 , 0 );
+         
+       //  
 
 
 

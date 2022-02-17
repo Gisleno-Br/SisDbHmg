@@ -28,9 +28,40 @@
     SCRDOWN3    BITMAP  img\Down3.Bmp
 
 
+    SCRDOWN1_1    BITMAP img\Down1_1.Bmp 
+
+    SCRDOWN2_1    BITMAP  img\Down2_2.Bmp 
+
+    SCRDOWN3_1    BITMAP  img\Down3_3.Bmp
+
+
+    
+    SCRDOWN1_D    BITMAP img\Down1_d.Bmp 
+
+    SCRDOWN2_D    BITMAP  img\Down2_d.Bmp 
+
+    SCRDOWN3_D    BITMAP  img\Down3_d.Bmp
+
+
+
+
+
+    
+    SCRUP1_D    BITMAP  img\Up1_d.Bmp 
+    SCRUP2_D    BITMAP  img\Up2_d.Bmp 
+    SCRUP3_D    BITMAP  img\Up3_d.Bmp 
+
+
+
+
 
 
     SCRUP1      BITMAP  img\Up1.Bmp 
+
+    SCRUP1_1    BITMAP  img\Up1_1.Bmp 
+    SCRUP2_1    BITMAP  img\Up2_1.Bmp 
+    SCRUP3_1    BITMAP  img\Up3_1.Bmp 
+
 
 
     SCRUP2      BITMAP  img\up2.Bmp

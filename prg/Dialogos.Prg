@@ -923,11 +923,9 @@ Function xFechaDlg()
 	End If 
 	
 
-
 	
 
-	If nHandle2 > 0
-		
+	If nHandle2 > 0		
 		
 		DO EVENTS
 		SendMessage( nHandle2, WM_SYSCOMMAND, SC_CLOSE , 0 )
@@ -938,8 +936,6 @@ Function xFechaDlg()
 
 		SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )
 		DO EVENTS
-
-
 
 	End If 
 
