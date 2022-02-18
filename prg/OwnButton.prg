@@ -488,42 +488,41 @@ RETURN If( hb_HHasKey( hColor, cForm ) .AND. hb_HHasKey( hColor[ cForm ], nID ),
 
 Function OBTN_GetBitMap1( nId  , lFocus )
 
-  Local aMtr1 := {}
+   Local aMtr1 := {}
 
-  If (nId == 855)      
-      aMtr1 := { 'SCRUP1' , 'SCRUP1_1', 0 }
-  End If 
-
-
-  
-  If (nId == 856)      
-      aMtr1 := { 'SCRUP2' , 'SCRUP2_1', 0 }
-  End If 
-
-  If (nId == 857)      
-      aMtr1 := { 'SCRUP3' , 'SCRUP3_1', 0 }
-  End If 
+   If (nId == 855)      
+      aMtr1 := { 'SCRUP1' , 'SCRUP1_1', 0 , 'SCRUP1_D' }
+   End If 
 
 
+   
+   If (nId == 856)      
+      aMtr1 := { 'SCRUP2' , 'SCRUP2_1', 0  , 'SCRUP2_D' }
+   End If 
+
+   If (nId == 857)      
+      aMtr1 := { 'SCRUP3' , 'SCRUP3_1', 0 , 'SCRUP3_D' }
+   End If 
 
 
-  If (nId == 860)      
-      aMtr1 := { 'SCRDOWN1' , 'SCRDOWN1_1', 0 }
-  End If 
+
+   If (nId == 860)      
+      aMtr1 := { 'SCRDOWN1' , 'SCRDOWN1_1', 0 ,  'SCRDOWN1_D'}
+   End If 
 
    If (nId == 859)      
-      aMtr1 := { 'SCRDOWN2' , 'SCRDOWN2_1', 0 }
-  End If 
+      aMtr1 := { 'SCRDOWN2' , 'SCRDOWN2_1', 0 , 'SCRDOWN2_D'}
+   End If 
 
   
    If (nId == 858)      
-      aMtr1 := { 'SCRDOWN3' , 'SCRDOWN3_1', 0 }
-  End If 
+      aMtr1 := { 'SCRDOWN3' , 'SCRDOWN3_1', 0 , 'SCRDOWN3_D' }
+   End If 
 
 
-  If (nId == 6652)
-      aMtr1 := {'OKVERDE1'  , 'OKVERDE2' , 3}
-  End If 
+   If (nId == 6652)
+       aMtr1 := {'OKVERDE1'  , 'OKVERDE2' , 3}
+   End If 
 
 
 
@@ -534,21 +533,19 @@ Return aMtr1
 
 
 
-FUNCTION OBTN_Draw( nHParent, nID, nDRAWITEMSTRUCT , lFocus  )
+FUNCTION OBTN_Draw( nHParent, nID, nDRAWITEMSTRUCT , lFocus , aMtBmp  )
 
-   LOCAL cForm  := GetFormNameByIndex( GetFormIndexByHandle( nHParent ) )
-   //Local cBmpFile := cArqImg
-   //LOCAL cBmpFile := OBTN_GetBitMap1(     ) 
+   LOCAL cForm  := GetFormNameByIndex( GetFormIndexByHandle( nHParent ) )   
    LOCAL nShape := OBTN_Shape( cForm, nID )
    LOCAL aColor := OBTN_Color( cForm, nID )
    LOCAL aFont  := OBTN_Font( cForm, nID )
-   LOCAL aMtBmp := OBTN_GetBitMap1( nId  , lFocus )
+   
+   Local lEnabled := OBTN_Enable( cForm , nId )
    Local cBmpFile := ''
    Local nColx    := 0
 
-
    DEFAULT lFocus := .f. 
-
+   DEFAULT aMtBmp := {}
 
    If Len(aMtBmp) > 0
       cBmpFile := aMtBmp[1]
@@ -559,18 +556,16 @@ FUNCTION OBTN_Draw( nHParent, nID, nDRAWITEMSTRUCT , lFocus  )
 
       nColx := aMtBmp[3]
 
+      If Len(aMtBmp) >= 4
+
+         If !lEnabled
+            cBmpFile := aMtBmp[4]         
+         End If 
+
+      End If 
+
    End If 
-   /*
-
-   IF (lFocus)
-      If !Empty(cArqImg2)
-         cBmpFile := cArqImg2
-      End If    
-   End If     
-
-   */
-
-
+ 
 
    _OwnButtonDraw( nDRAWITEMSTRUCT, nShape, aColor[ 1 ], aColor[ 2 ], aColor[ 3 ], aFont , cBmpFile , nColx )
 
@@ -618,8 +613,7 @@ HB_FUNC( _OWNBUTTONCREATE )
 
   
   //SetClassLongPtr( (HWND) hButton  , GCLP_HCURSOR, ( LONG ) LoadCursor( 0 , IDC_HAND ) );
-
-  
+ 
 
 
 
@@ -657,6 +651,8 @@ HB_FUNC( _OWNBUTTONDRAW )
 
   COLORREF TextColor;
   int  Transparent = 1;
+
+
 
   int ncolbmp = 5;
   COLORREF FrameColor;

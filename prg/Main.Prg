@@ -2864,6 +2864,11 @@ HB_FUNC (BMP_RELEASE_HANDLE)
 
 
 
+
+
+
+
+
 HB_FUNC (BMP_PAINT)
 {
    HWND hWnd;
