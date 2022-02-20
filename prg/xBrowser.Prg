@@ -1672,6 +1672,7 @@ Function xCriaButs()
 
 
 
+
 	   
    OBTN_Create( cJanx,  858 , "&4", nRow1 - 5    , 0  ,  22,  22  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
    OBTN_Create( cJanx,  859 , "&R", nRow1 - 29   , 0  ,  20,  23  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
@@ -1690,7 +1691,9 @@ Function xCriaButs()
    OBTN_Font( cJanx, 860,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 
 
- //  OBTN_Visible( cJanx , 857 , .f. )
+  /// OBTN_Visible( cJanx , 855 , .f. )
+  // OBTN_Visible( cJanx , 856 , .f. )
+   //OBTN_Visible( cJanx , 857 , .f. )
 
    
 Return 
@@ -1723,12 +1726,11 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 		
 		If (nMsg == WM_DRAWITEM)				
 			If ( nWParam >=  855 ) .AND.  ( nWParam <=  860 )
-				OBTN_Draw( nHWnd,  nwParam, nLParam , (  nHasFocus == nWParam  ) , xRetImgs(  nWParam  )  )
+				OBTN_Draw( nHWnd,  nwParam, nLParam , (  nHasFocus == nWParam  )  ,  xRetImgs(  nWParam  ) , .f.  ) 				
 			End If
 		End If 	
 
-
-				
+			
 	
 		If (nMsg == WM_MOUSELEAVE)
 			

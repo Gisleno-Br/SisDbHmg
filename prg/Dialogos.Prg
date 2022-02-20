@@ -29,6 +29,18 @@ DECLARE WINDOW fSplit6
 
 
 
+Static Function xRetImgs( nId )
+
+
+	Local aMtr1 := {}	 
+
+	If (nId == 6652)
+		aMtr1 := {'OKVERDE1'  , 'OKVERDE2' , 3}
+	End If 
+ 
+Return aMtr1
+
+
 
 
 
@@ -88,14 +100,15 @@ FUNCTION EventDlg()
 
 
 			If ( nWParam >=  6652 ) .AND.  ( nWParam <=  6669 )
-				OBTN_Draw( nHWnd,  nwParam, nLParam , lFlagOk )
+				OBTN_Draw( nHWnd,  nwParam, nLParam , lFlagOk , xRetImgs( nWParam ) )
 			End If
 
 
-
+			/*
 			If ( nWParam >=  50 ) .AND.  ( nWParam <=  360 )
 				OBTN_Draw( nHWnd,  nwParam, nLParam )
 			End If
+			*/
 
 
 		End If
@@ -286,9 +299,8 @@ FUNCTION RetColor1( nInd1, nModel )
 
 	LOCAL nTxColorE  := Rgb( 79, 79, 79 )
 	LOCAL nFrColorE  := Rgb( 207, 207, 207 )
+	//Rgb( 207, 207, 207 )
 
-//	LOCAL nTxColorE  := WHITE 
-	//LOCAL nFrColorE  := RED
 
 
 	LOCAL nBkColorE1 := Rgb( 251, 251, 251 )
@@ -313,6 +325,9 @@ FUNCTION RetColor1( nInd1, nModel )
 	LOCAL nGradDirD  := 0
 	LOCAL nTxColorF  := Rgb( 45, 55, 56 )
 	LOCAL nFrColorF  := nFrColorE
+	
+	//0x100003B
+	//nFrColorE
 
 
 	LOCAL nBkColorF1 :=  0xFFFFFF
@@ -753,7 +768,6 @@ Function xProcinit( lPergunta )
 	
 	
 
-
 	If (!lPergunta)
 
 		OBTN_Create( 'Win_Dialog', 6652,  '&Ok'   , 160, 166 ,  75 ,  30,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
@@ -769,6 +783,7 @@ Function xProcinit( lPergunta )
 		EventProcessAllHookMessage(nIndexDlg22 , .t.)
 
 
+		
 	Else 
 
 		OBTN_Create( 'Win_Dialog', 6653, "&Sim", 162, 292,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
@@ -808,12 +823,40 @@ Function xProcinit( lPergunta )
 	*/
 
 
+
 Return 
 
 
 Function xFindEvent(  cEvent , nHandle1 )
-  Local nIndex1 := Ascan( _HMG_EventData  , { |a|  Iif( ( ValType(a[2]) == "N") .And. (a[2] > 0) , ;
-   ((a[1] ==  cEvent ) .And. (a[2] ==  nHandle1 )) , Nil )   })
+  //Local nIndex1 := Ascan( _HMG_EventData  , { |a|  Iif( ( ValType(a[2]) == "N") .And. (a[2] > 0) , ;
+  // ((a[1] ==  cEvent ) .And. (a[2] ==  nHandle1 )) , Nil )   })
+
+    Local nindex1:=0
+	Local ni := 1
+
+	
+	Do Events
+	Do Events
+
+
+	While nI <= Len(_HMG_EventData)
+
+		If (Valtype( _HMG_EventData[nI][2] ) == 'N') .And. (Valtype( _HMG_EventData[nI][1] ) == 'C')
+	
+
+			If  ((_HMG_EventData[nI][1] ==  cEvent ) .And. (_HMG_EventData[nI][2] ==  nHandle1 ))
+			//	msginfo('Fo')
+				nIndex1 := ni
+			End If 	
+
+
+		End If 	
+
+		ni++
+
+
+	Enddo	
+
 
 Return (nIndex1)
 
@@ -858,13 +901,16 @@ Return
 
 Function xFechaDlg()
 
+
 	
 	Local nHandle1  := DoFindWin("xDialog1")
 
 	Local nHandle2  := DoFindWin("Sombra2")
 
 
-	Local nIndex1 := xFindEvent(  'EventDlg()' ,  Win_Dialog.Handle) 
+
+
+	Local nIndex1 := xFindEvent(  'EventDlg()' ,  GetFormHandle('Win_Dialog') ) 
 	Local nIndex2 := xFindEvent(  'InputEv2()' ,  OBTN_Handle( 'Win_Dialog', 6653 )   ) 
 	Local nIndex3 := xFindEvent(  'InputEv2()' ,  OBTN_Handle( 'Win_Dialog', 6654 )   ) 
 
@@ -887,6 +933,7 @@ Function xFechaDlg()
 	If nIndex4 > 0
 		xDelEvent(   nIndex4 )
 	End If 
+
 
 
 

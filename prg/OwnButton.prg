@@ -533,7 +533,7 @@ Return aMtr1
 
 
 
-FUNCTION OBTN_Draw( nHParent, nID, nDRAWITEMSTRUCT , lFocus , aMtBmp  )
+FUNCTION OBTN_Draw( nHParent, nID, nDRAWITEMSTRUCT , lFocus , aMtBmp  , lBorda )
 
    LOCAL cForm  := GetFormNameByIndex( GetFormIndexByHandle( nHParent ) )   
    LOCAL nShape := OBTN_Shape( cForm, nID )
@@ -546,6 +546,8 @@ FUNCTION OBTN_Draw( nHParent, nID, nDRAWITEMSTRUCT , lFocus , aMtBmp  )
 
    DEFAULT lFocus := .f. 
    DEFAULT aMtBmp := {}
+
+   DEFAULT lBorda := .t.
 
    If Len(aMtBmp) > 0
       cBmpFile := aMtBmp[1]
@@ -567,7 +569,7 @@ FUNCTION OBTN_Draw( nHParent, nID, nDRAWITEMSTRUCT , lFocus , aMtBmp  )
    End If 
  
 
-   _OwnButtonDraw( nDRAWITEMSTRUCT, nShape, aColor[ 1 ], aColor[ 2 ], aColor[ 3 ], aFont , cBmpFile , nColx )
+   _OwnButtonDraw( nDRAWITEMSTRUCT, nShape, aColor[ 1 ], aColor[ 2 ], aColor[ 3 ], aFont , cBmpFile , nColx  , Iif(lBorda,1,0)  )
 
 RETURN NIL
 
@@ -649,6 +651,8 @@ HB_FUNC( _OWNBUTTONDRAW )
   INT   nUnderline = hb_parvl(6, 5) ? 1 : 0;
   INT   nStrikeOut = hb_parvl(6, 6) ? 1 : 0;
 
+  INT nBorda = (INT) hb_parni(9);
+
   COLORREF TextColor;
   int  Transparent = 1;
 
@@ -679,9 +683,9 @@ HB_FUNC( _OWNBUTTONDRAW )
   
 	if (HMG_parc  (7) != NULL)
    {
-   TCHAR *FileDown =  (TCHAR *) HMG_parc  (7);
-   ncolbmp = (INT) HMG_parnl(8);
-   hBitMap1 = HMG_LoadPicture (  FileDown, -1, -1, NULL, 0, Transparent, -1, 0, -1 );
+      TCHAR *FileDown =  (TCHAR *) HMG_parc  (7);
+      ncolbmp = (INT) HMG_parnl(8);
+      hBitMap1 = HMG_LoadPicture (  FileDown, -1, -1, NULL, 0, Transparent, -1, 0, -1 );
    } 
 
    
@@ -739,7 +743,15 @@ HB_FUNC( _OWNBUTTONDRAW )
       RoundRect(pDIS->hDC, pDIS->rcItem.left + 2, pDIS->rcItem.top + 2, pDIS->rcItem.right - 2, pDIS->rcItem.bottom - 2, nShape - 2, nShape - 2);
     }
     else
-      RoundRect(pDIS->hDC, pDIS->rcItem.left, pDIS->rcItem.top, pDIS->rcItem.right, pDIS->rcItem.bottom, nShape, nShape);
+       { 
+
+         if (nBorda == 1)
+            {
+               RoundRect(pDIS->hDC, pDIS->rcItem.left, pDIS->rcItem.top, pDIS->rcItem.right, pDIS->rcItem.bottom, nShape, nShape);    
+            }
+
+       }
+      //RoundRect(pDIS->hDC, pDIS->rcItem.left, pDIS->rcItem.top, pDIS->rcItem.right, pDIS->rcItem.bottom, nShape, nShape);
   }
   else
   {
