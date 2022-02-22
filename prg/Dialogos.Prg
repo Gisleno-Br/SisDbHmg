@@ -67,50 +67,12 @@ FUNCTION EventDlg()
 	End If
 
 
-		IF ( nMsg == WM_MOUSEMOVE ) .And. ;
-		   (nHWnd == GetProperty(  cMenuName, "HANDLE" ))
-
-			/*
-
-			lTracking45 := TrackMouseEvent( nHWnd ) // TME_LEAVE is default flag
-
-			OBTN_Color( cFormx, nIdBut, RetColor1( 2 ), .T. )
-
-			OBTN_Enable( cFormx, nIdBut, .T. )
-			OBTN_Visible( cFormx, nIdBut, .T. )
-			*/
-
-//			msginfo('ok2')
-
-
-		END IF
-
-
-
-
-
-
-
-
 	If nHWnd == GetProperty(  cMenuName, "HANDLE" )
 
 		If nMsg == WM_DRAWITEM
-
-
-
-
 			If ( nWParam >=  6652 ) .AND.  ( nWParam <=  6669 )
 				OBTN_Draw( nHWnd,  nwParam, nLParam , lFlagOk , xRetImgs( nWParam ) )
 			End If
-
-
-			/*
-			If ( nWParam >=  50 ) .AND.  ( nWParam <=  360 )
-				OBTN_Draw( nHWnd,  nwParam, nLParam )
-			End If
-			*/
-
-
 		End If
 
 		If nMsg == 273
@@ -122,48 +84,32 @@ FUNCTION EventDlg()
 				nIe1 := Ascan(aRotHnd , { |a|a[1] == nId } )
 
 				If (nIe1 > 0)			
-
 					PushButton( aRotHnd[nIe1][3]  , nId  )
 					Eval( aRotHnd[nIe1][2]  )
-
 				End If
 
 			End If
-
-
 
 
 			If nID == IDOK
 				nID := GetDlgCtrlID( GetFocus() )
 			End If 
 
-			If nId == 6652
-				 //xFechaDlg()
-				 //DoMethod('Win_Dialog' , 'Hide')
-				 //DoMethod('WinSombra2' , 'Hide')
+			If nId == 6652				 
 				 lExit := .t.
 				 Do Events 
 			End If 
 
-
-
-
-
 			If nId == 6653
 
 				lRetx := .T.			
-				
-				//PushButton( cMenuName , nId  )
 				xFechaDlg()			
 
 			End If 
 
-			If nId == 6654
-
-				//PushButton( cMenuName , nId  )
+			If nId == 6654			
 				lRetx := .F.			
 				xFechaDlg()
-
 			End If
 
 			IF nId == 6601
@@ -217,12 +163,13 @@ FUNCTION InputEv2()
 	End If
 
 
-
-
-
 	IF ( nIdBut > 0 )
 
 		If ( nMsg == WM_MOUSEMOVE ) .and. (!lTracking45)
+
+
+			CursorHand1( nHWnd  )
+
 
 			lTracking45 := TrackMouseEvent( nHWnd ) // TME_LEAVE is default flag
 
@@ -241,16 +188,9 @@ FUNCTION InputEv2()
 
 
 
-
-
 		If ( nMsg == WM_MOUSELEAVE )
-
-			
-		//	OBTN_Focus( cFormx, nIdBut, .f. )
-
 			
 			lFlagOk := .f. 
-
 
 
 			OBTN_Color( cFormx,  nIdBut, RetColor1( 1 ), .T. )
@@ -813,24 +753,11 @@ Function xProcinit( lPergunta )
 	nIndexDialog := Len(_HMG_EventData)	
 	BT_ClientAreaInvalidateAll('Win_Dialog')
 
-/*
-	PostMessage( OBTN_Handle( 'Win_Dialog', 6652   ) , WM_MOUSEMOVE , 0,0)
-	SysWait(.1)
-
-
-	PostMessage( OBTN_Handle( 'Win_Dialog', 6652   ) , WM_MOUSELEAVE , 0,0)
-	SysWait(.2)
-	*/
-
-
 
 Return 
 
 
 Function xFindEvent(  cEvent , nHandle1 )
-  //Local nIndex1 := Ascan( _HMG_EventData  , { |a|  Iif( ( ValType(a[2]) == "N") .And. (a[2] > 0) , ;
-  // ((a[1] ==  cEvent ) .And. (a[2] ==  nHandle1 )) , Nil )   })
-
     Local nindex1:=0
 	Local ni := 1
 
@@ -843,9 +770,7 @@ Function xFindEvent(  cEvent , nHandle1 )
 
 		If (Valtype( _HMG_EventData[nI][2] ) == 'N') .And. (Valtype( _HMG_EventData[nI][1] ) == 'C')
 	
-
-			If  ((_HMG_EventData[nI][1] ==  cEvent ) .And. (_HMG_EventData[nI][2] ==  nHandle1 ))
-			//	msginfo('Fo')
+			If  ((_HMG_EventData[nI][1] ==  cEvent ) .And. (_HMG_EventData[nI][2] ==  nHandle1 ))			
 				nIndex1 := ni
 			End If 	
 
