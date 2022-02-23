@@ -573,17 +573,6 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 	lNoHorzScr := .f.
 	hBitOk := BT_BitmapLoadFile ('OKMARK')
 
-
-
-	//msginfo(Str(   nLarg1  )   + '    ' + Str(   nLargTotal ))
-
-	//nLinScrool := nItemBrwHeight * nTamPag
-
-	//VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) VIRTUAL WIDTH nLargTotal
-	//WIDTH nLarg1 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) VIRTUAL WIDTH nLargTotal  ;
-
-
-
 	EncheMVis( nTamPag  , , .f.  )
 	cBrowserName := 'Win_Browser'
 
@@ -679,7 +668,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 		//366
 		//+90
 
-	SET WINDOW Win_Role1 TRANSPARENT TO 0
+	//SET WINDOW Win_Role1 TRANSPARENT TO 0
 
 
 
@@ -708,7 +697,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 
 	BT_ClientAreaInvalidateAll('Win_Browser')
 
-	BT_ClientAreaInvalidateAll('Win_Role1')
+	//BT_ClientAreaInvalidateAll('Win_Role1')
 
 
 
@@ -725,7 +714,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 	_ShowWindow("Win_Espelho")
 
 
-	_ShowWindow("Win_RoleEsp")
+	//_ShowWindow("Win_RoleEsp")
 
 	xCriaButs()
 
@@ -739,7 +728,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 
 	SysWait(0.05)
 
-	xDcToDEspe()
+	//xDcToDEspe()
 
 
 
@@ -1634,27 +1623,20 @@ Return
 
 Function xPaintScroll( cJanela )
 
-
 	Local BTstruct2
 	Local nLAst
 	Local hDC
-	Local nRIni := 67
+	Local nRIni := 68
 	Local nFator , yPos
 
 
 	Local yBmp1 := BT_BitMapLoadFile('SCRUP1')
 	Local yBmp2 := BT_BitMapLoadFile('SCRUP2')
 	Local yBmp3 := BT_BitMapLoadFile('SCRUP3')
-
-
 	Local zBmp1 := BT_BitMapLoadFile('SCRDOWN1')
 	Local zBmp2 := BT_BitMapLoadFile('SCRDOWN2')
 	Local zBmp3 := BT_BitMapLoadFile('SCRDOWN3')
-
-
 	Local zRolagem := BT_BitMapLoadFile('ROLAGEM')
-
-
 
 	LOCAL Width  := BT_ClientAreaWidth  (cJanela)
 	LOCAL Height := BT_ClientAreaHeight (cJanela)
@@ -1665,26 +1647,31 @@ Function xPaintScroll( cJanela )
 
 
 	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    , {109,109,109} ,   {249,249,249})
-	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    66    , {233,233,233} ,  {233,233,233} )
+	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    66        , {233,233,233} ,  {233,233,233} )
+
+	//SysWait(0.05)
+
 	nLAst := nRow1 - 63
 
 
 	If (nItemX5 == 1)
-		BT_DrawBitmap (hDC  , nRIni  , 1  	, 20  , 20  ,      BT_STRETCH,  zRolagem)
+		BT_DrawBitmap (hDC  , nRIni  , 2  	, 20  , 20  ,      BT_COPY  ,  zRolagem)
+		
 	Else
 
 
-
 		If (nItemX5 == nMaxItem1 )
-			BT_DrawBitmap (hDC  , nLast  , 1  	, 20  , 20  ,      BT_STRETCH,  zRolagem)
+			BT_DrawBitmap (hDC  , nLast - 5  , 2  	, 20  , 20  ,      BT_COPY,  zRolagem)
 		Else
 
 			yPos := nLast - nRIni
 			nFator := Int(( nItemX5 * yPos     ) /	nMaxItem1)+3
-			BT_DrawBitmap (hDC  , nRIni + nFator , 1  	, 20  , 20  ,      BT_STRETCH,  zRolagem)
+			BT_DrawBitmap (hDC  , nRIni + nFator , 2  	, 20  , 20  ,      BT_COPY,  zRolagem)
 
 		End If
+
 	End If
+
 
 
 	BT_DeleteDC (BTstruct2 )
@@ -1927,7 +1914,7 @@ Function xDcToDEspe()
 	//BT_DrawDCtoDC (hDC2, 0, 0, Width2, Height2, BT_SCALE, hDC1, 90 , 0, Width1, 366 )
 
 
-	BT_DrawDCtoDC (hDC2, 0, 0, Width2, Height2, BT_SCALE, hDC1, 0 , 0, Width1, Height1 )
+	BT_DrawDCtoDC (hDC2, 0, 0 , Width2, Height2, BT_SCALE, hDC1, 0 , 0, Width1, Height1 )
 
 
 
@@ -1938,6 +1925,7 @@ Function xDcToDEspe()
 
 	BT_DeleteDC (BTstruct1)
 	BT_DeleteDC (BTstruct2)
+
 	BT_ClientAreaInvalidateAll ("Win_RoleEsp")
 
 Return 
