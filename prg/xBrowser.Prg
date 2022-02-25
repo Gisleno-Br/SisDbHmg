@@ -150,6 +150,8 @@ Static lControlOk := .f.
 
 Static lTracking35 := .f.
 
+Static lTracking75 := .f.
+
 
 Static lTracking45 := .f.
 
@@ -668,9 +670,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 		//366
 		//+90
 
-	//SET WINDOW Win_Role1 TRANSPARENT TO 0
-
-
+	SET WINDOW Win_Role1 TRANSPARENT TO 0
 
 
 	_ShowWindow("Win_Browser")
@@ -697,7 +697,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 
 	BT_ClientAreaInvalidateAll('Win_Browser')
 
-	//BT_ClientAreaInvalidateAll('Win_Role1')
+	BT_ClientAreaInvalidateAll('Win_Role1')
 
 
 
@@ -708,27 +708,20 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 
 	
 	_ShowWindow("Win_Role1")
-
-
-
 	_ShowWindow("Win_Espelho")
 
 
-	//_ShowWindow("Win_RoleEsp")
+	_ShowWindow("Win_RoleEsp")
 
 	xCriaButs()
-
-
-
 	xDcToDc()
-
 		
 
-	//Do Events 
+	Do Events 
 
 	SysWait(0.05)
 
-	//xDcToDEspe()
+	xDcToDEspe()
 
 
 
@@ -890,7 +883,12 @@ Function xTeclasBrow()
 				Do Events
 				xDispUpTam(  cTp1 )
 				xFecheAnimate(  GetFormHandle('Win_Msg') )
-				xDcToDc()
+
+				BT_ClientAreaInvalidateAll ("Win_Role1")		
+				xDcToDc()				
+				xDcToDEspe()
+
+				
 				xCursorWait( .f. )
 				
 			End If
@@ -910,7 +908,9 @@ Function xTeclasBrow()
 				Do Events
 				xDispUpTam(  cTp1 )	
 				xFecheAnimate(  GetFormHandle('Win_Msg') )
-				xDcToDc()
+				BT_ClientAreaInvalidateAll ("Win_Role1")		
+				xDcToDc()				
+				xDcToDEspe()				
 				xCursorWait( .f. )
 
 			End If
@@ -1027,9 +1027,9 @@ Function xTeclasBrow()
 		
 		End If
 
-		Do Events
-		xDcToDc()		
-		Do Events		
+
+		BT_ClientAreaInvalidateAll ("Win_Role1")		
+		xDcToDc()				
 		xDcToDEspe()
 
 	
@@ -1079,17 +1079,18 @@ Function xTeclasBrow()
 			nLinScrool := 0
 			nLinhaBarra := 1
 
-			Do Events
-			Do Events
+			//Do Events
+		//	Do Events
 
 
 			xDialog('Top Atingido!' , .f.  )			
 
 		End If
 
-		Do Events
-		xDcToDc()		
-		Do Events
+
+		BT_ClientAreaInvalidateAll ("Win_Role1")		
+		xDcToDc()				
+		xDcToDEspe()
 
 		//End If
 
@@ -1377,12 +1378,10 @@ Function xCriaButs()
     OBTN_Create( cJanx,  857 , "", 42   , 0 ,  22,  23 ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont  )
 
 
-   
+
 	//EventProcessAllHookMessage( EventCreate( {|| EventBrowser() }  ,   OBTN_Handle( cJanx, 855 )   ), .T. )		
 
-	EventProcessAllHookMessage( EventCreate( {|| EventRole1() }  ,   OBTN_Handle( cJanx, 855 )   ), .T. )		
-
-
+	EventProcessAllHookMessage( EventCreate( {|| EventRole1() }  ,   OBTN_Handle( cJanx, 855 )   ), .T. )	
 	EventProcessAllHookMessage( EventCreate( {|| EventRole1() }  ,   OBTN_Handle( cJanx,  856 )   ), .T. )			
 	EventProcessAllHookMessage( EventCreate( {|| EventRole1() }  ,   OBTN_Handle( cJanx, 857 )   ), .T. )
 
@@ -1391,7 +1390,6 @@ Function xCriaButs()
 	OBTN_Font( cJanx, 855,  { cFontName, nFontSize, .F., .F., .F., .F. } )
  	OBTN_Font( cJanx, 856,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 	OBTN_Font( cJanx, 857,  { cFontName, nFontSize, .F., .F., .F., .F. } )
-
 
 
 	   
@@ -1438,7 +1436,86 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	Local nInd1 := 0
 
 	Local nIdBut := 0
+	Local nId   := 0
+	Local nL := 0
 	
+	//Local nRow1 := GetProperty('Win_Role1','Height') - 20
+	
+
+	If (nHWnd == GetProperty(  'Win_RoleEsp' , "HANDLE" ))
+
+
+		If (nMsg == WM_MOUSEMOVE) 			
+
+         	GetCursorPos (@nCol, @nRow)
+			ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
+
+			nRow1 := ar1[1]
+
+			nId := 0 
+
+			If (nRow1 > (GetProperty('Win_Role1','Height') - 70) )
+
+				nL := GetProperty('Win_Role1','Height') - 20
+
+			    If (nRow1 > (nL - 5))
+				    nId := 858
+				Else 
+					If (nRow1 > (nL - 29))
+					    nId := 859
+					Else 
+					   nId := 860	
+					End If 
+				End If 	
+			Else 
+				If nRow1 < 22
+					nId := 855
+				Else 
+					nId := 856
+					If nRow1 >= 42 	
+						nId := 857
+					Else 
+
+					End If 
+				End If 
+			End If 
+
+
+
+			If (nRow1 > 65) .And. (nRow1 <= (GetProperty('Win_Role1','Height') - 70)  )
+				msginfo('ok')
+				
+			End If 
+
+
+
+			If (nHasFocus > 0)
+
+				If (nId != nHasFocus)
+					PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )					
+					xDcToDEspe()
+					Do Events 			
+					lTracking75 := .f. 
+				End If 		
+                 
+			End If 
+
+			If (nId > 0) .And. (!lTracking75)	
+				
+				CursorHand1( nHWnd  )
+				PostMessage(OBTN_Handle(  'Win_Role1' , nId   )  , WM_MOUSEMOVE , 0, 0  )
+				Do Events 			
+				nHasFocus := nId
+				xDcToDEspe()
+				Do Events 
+				lTracking75 := .t. 
+
+			End If 	
+
+
+			
+		End If 
+	End If 	
 
 
 	If (nHWnd == GetProperty(  'Win_Role1' , "HANDLE" ))
@@ -1448,6 +1525,8 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				OBTN_Draw( nHWnd,  nwParam, nLParam , (  nHasFocus == nWParam  )  ,  xRetImgs(  nWParam  ) , .f.  ) 				
 			End If
 		End If 	
+
+		/*
 	
 		If (nMsg == WM_MOUSELEAVE)			
 			
@@ -1463,6 +1542,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 		
 
 		If nMsg == WM_MOUSEMOVE
+
 			lTracking35 := .f. 
 			If nHasFocus > 0
 				If  _isWindowDefined("Win_Msg")
@@ -1471,6 +1551,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			End If	
 
 			nHasFocus := 0				
+
 		End If 
 
 
@@ -1486,8 +1567,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 		End If 
 		
 
-		//*/
-
+	
 		If nMsg == WM_LBUTTONUP			
 		
 			nModeBrw := -1
@@ -1497,6 +1577,8 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			msginfo('up22 ')
 
 		End If 
+
+		*/
 
 
 	End If
@@ -1518,6 +1600,22 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 
 		If nMsg == WM_MOUSEMOVE
+
+			If (nHasFocus > 0)
+				//CursorHand1( nHWnd  )
+
+				PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )
+				SysWait(0.05)			
+
+				xDcToDEspe()
+				Do Events 
+
+				lTracking75 := .f. 
+			  
+                 
+			End If 
+
+
 			lTracking35 := .f. 
 			nHasFocus := 0
 			
@@ -1626,7 +1724,7 @@ Function xPaintScroll( cJanela )
 	Local BTstruct2
 	Local nLAst
 	Local hDC
-	Local nRIni := 68
+	Local nRIni := 67
 	Local nFator , yPos
 
 
@@ -1643,30 +1741,36 @@ Function xPaintScroll( cJanela )
 
 	Local nRow1 := Height - 20
 
-	hDC = BT_CreateDC ( cJanela  , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
+	hDC = BT_CreateDC ( cJanela  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
 
+
+	
 
 	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    , {109,109,109} ,   {249,249,249})
 	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    66        , {233,233,233} ,  {233,233,233} )
 
-	//SysWait(0.05)
+	
 
 	nLAst := nRow1 - 63
 
-
 	If (nItemX5 == 1)
-		BT_DrawBitmap (hDC  , nRIni  , 2  	, 20  , 20  ,      BT_COPY  ,  zRolagem)
+
+		BT_DrawBitmap (hDC  , nRIni  , 1  	, 20  , 20  ,      BT_COPY  ,  zRolagem)
 		
 	Else
 
 
 		If (nItemX5 == nMaxItem1 )
-			BT_DrawBitmap (hDC  , nLast - 5  , 2  	, 20  , 20  ,      BT_COPY,  zRolagem)
+			BT_DrawBitmap (hDC  , nLast - 7  , 1  	, 20  , 20  ,      BT_COPY,  zRolagem)
 		Else
+		
+			yPos := (nLast - 7) - nRIni
+			nFator := Int(( nItemX5 * yPos     ) /	nMaxItem1)
 
-			yPos := nLast - nRIni
-			nFator := Int(( nItemX5 * yPos     ) /	nMaxItem1)+3
-			BT_DrawBitmap (hDC  , nRIni + nFator , 2  	, 20  , 20  ,      BT_COPY,  zRolagem)
+			BT_DrawBitmap (hDC  , nRIni + nFator  , 1  	, 20  , 20  ,      BT_COPY,  zRolagem)
+
+
+			
 
 		End If
 
@@ -1675,6 +1779,7 @@ Function xPaintScroll( cJanela )
 
 
 	BT_DeleteDC (BTstruct2 )
+	BT_BitmapRelease (zRolagem)
 
 
 Return
@@ -1745,11 +1850,19 @@ Function xGoPgUp()
 
 
 	BT_ClientAreaInvalidateAll('Win_Browser')
-	BT_ClientAreaInvalidateAll('Win_Role1')
+	//BT_ClientAreaInvalidateAll('Win_Role1')
 
-	SysWait(0.07)	
+	SysWait(0.03)	
 
-	xDcToDc()	
+	//xDcToDc()	
+
+	BT_ClientAreaInvalidateAll ("Win_Role1")		
+
+	
+	Do Events 
+
+	xDcToDc()				
+	xDcToDEspe()
 		
 
 Return 
@@ -1784,11 +1897,8 @@ Function xGoPgDn()
 		ScrolUp1(.f.)		
 	Next 	
 
-	xCursorWait(.f.)
-
-
-	nLast1 := nPageNumber * nTamPag
-	nItemX5 +=(nTamPag)
+	nLast1      := nPageNumber * nTamPag
+	nItemX5     += (nTamPag)
 	nClearIt2   := nItemX5
 	nClear1     := nItemX5
 
@@ -1796,16 +1906,33 @@ Function xGoPgDn()
 	EncheMVis( nLast1 , .f. , .f.   )
 
 	BT_ClientAreaInvalidateAll('Win_Browser')
-	BT_ClientAreaInvalidateAll('Win_Role1')
-
 	
-	SysWait(0.07)
+
+	SysWait(0.04)
+
+
+
 
 	If (nPageNumber+1) == nPageTotal
 		nLinhaBarra := 1
 	End If 	
 
-	xDcToDc()	
+	//xDcToDc()	
+
+	BT_ClientAreaInvalidateAll ("Win_Role1")		
+
+	Do Events 
+
+	xDcToDc()				
+	xDcToDEspe()
+
+
+	
+	xCursorWait(.f.)
+
+
+	
+	//SysWait(0.07)
 
 Return 
 
@@ -1925,6 +2052,9 @@ Function xDcToDEspe()
 
 	BT_DeleteDC (BTstruct1)
 	BT_DeleteDC (BTstruct2)
+
+	//BT_ClientAreaInvalidateAll ("Win_Role1")
+
 
 	BT_ClientAreaInvalidateAll ("Win_RoleEsp")
 
@@ -2126,7 +2256,7 @@ Function EventRole1()
 			OBTN_Enable( cFormx, nIdBut, .T. )
 			OBTN_Visible( cFormx, nIdBut, .T. )
 
-			CursorHand1( nHWnd  )
+		//	CursorHand1( nHWnd  )
 
 			cTp1 := ''
 
@@ -2207,8 +2337,6 @@ Function EventRole1()
 			OBTN_Color( cFormx,  nIdBut, RetColor1( 1 ), .T. )
 			OBTN_Enable( cFormx, nIdBut, .T. )
 			OBTN_Visible( cFormx, nIdBut, .T. )
-
-		
 
 			lTracking35 := .F.
 
