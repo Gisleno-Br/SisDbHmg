@@ -19,6 +19,10 @@
     OKMARK      PNG     img\ngi.png
 
 
+    ESQUERDA    BITMAP  img\SetEsquerda1.bmp 
+    DIREITA     BITMAP  img\SetDireita1.bmp 
+
+
     CHAVE      PNG     img\chave2.png
 
 
