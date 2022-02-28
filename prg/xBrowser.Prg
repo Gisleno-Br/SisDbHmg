@@ -9,14 +9,14 @@
 
 
 
+
+
 #require "hbxpp"
 
 #include <hmg.ch>
 #include <dll.ch>
 
 #include "hbthread.ch"
-
-
 #define XQUEBRA Chr(13)+Chr(10)
 
 #DEFINE FONTBROWSER 'Lucida Sans Typewriter'
@@ -448,22 +448,12 @@ Function TestBrow( cParent1 , cTabx  )
 
 
 		If (nTamLargura == 0)
-
 			Aeval(aM1 , { |a|    nTamLargura += (a[2]+1)   })
-
 			nLargura := (nTamLargura * nTam1)
-
-
 		End If
 
 
-
 		cAndamento := 'Andamento : '  + Alltrim(Str(I)) + "/" + Alltrim(Str(   oQuery:LastRec() ))
-
-		//	Do Events
-
-		
-
 		nCont5++
 		
 
@@ -529,29 +519,17 @@ Function EncheMVis( nRec , lFrente , lCalcPage  )
 
 
 	If !lFrente
-
 		For n1 := 1 to nTamPag
-
 			Aadd(aMVisible  , {    z1  ,   nAcum         })
 			z1--
 			nAcum--
-
 		Next
 	Else
-
-
 		For n1 := 1 to nTamPag
-
 			Aadd(aMVisible  , {    n1  ,   nAcum         })
 			nAcum++
-
 		Next
-
-
 	End If
-
-
-
 
 Return
 
@@ -597,8 +575,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 		PARENT &cParent ;
 		WIDTH nLarg1 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) VIRTUAL WIDTH nLargTotal  ;
 		TITLE 'xEspelho' + Left(cActiveJan,4)  	;
-		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR BLACK 		
-		
+		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR BLACK 				
 	END WINDOW
 
 
@@ -736,7 +713,7 @@ Function xRetImgs(  nId  )
       aMtr1 := { 'SCRUP1' , 'SCRUP1_1', 0 , 'SCRUP1_D' }
 	End If 
 
-   
+	   
 	If (nId == 856)      
 		aMtr1 := { 'SCRUP2' , 'SCRUP2_1', 0  , 'SCRUP2_D' }
 	End If 
@@ -744,6 +721,10 @@ Function xRetImgs(  nId  )
 	If (nId == 857)      
 		aMtr1 := { 'SCRUP3' , 'SCRUP3_1', 0 , 'SCRUP3_D' }
 	End If 
+
+
+
+
 
 
 	If (nId == 860)      
@@ -1379,6 +1360,7 @@ Function xCriaButs()
 
 
 
+
 	//EventProcessAllHookMessage( EventCreate( {|| EventBrowser() }  ,   OBTN_Handle( cJanx, 855 )   ), .T. )		
 
 	EventProcessAllHookMessage( EventCreate( {|| EventRole1() }  ,   OBTN_Handle( cJanx, 855 )   ), .T. )	
@@ -1405,14 +1387,11 @@ Function xCriaButs()
 
 
 
+
+
 	OBTN_Font( cJanx, 858,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 	OBTN_Font( cJanx, 859,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 	OBTN_Font( cJanx, 860,  { cFontName, nFontSize, .F., .F., .F., .F. } )
-
-
-  /// OBTN_Visible( cJanx , 855 , .f. )
-  // OBTN_Visible( cJanx , 856 , .f. )
-   //OBTN_Visible( cJanx , 857 , .f. )
 
    
 Return 
@@ -1443,6 +1422,17 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	
 
 	If (nHWnd == GetProperty(  'Win_RoleEsp' , "HANDLE" ))
+
+
+		If (nMsg == WM_LBUTTONDOWN) 			
+			//msginfo('ok')
+
+			PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_LBUTTONDOWN , 0, 0  )					
+
+			Do Events 
+
+
+		End If 	
 
 
 		If (nMsg == WM_MOUSEMOVE) 			
@@ -1480,22 +1470,28 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				End If 
 			End If 
 
+			
 
 
-			If (nRow1 > 65) .And. (nRow1 <= (GetProperty('Win_Role1','Height') - 70)  )
-				msginfo('ok')
+			If (nRow1 > 65) .And. (nRow1 <= (GetProperty('Win_Role1','Height') - 70)  )							
 				
+				SendMessage(GetProperty(  'Win_Espelho' , "HANDLE" ) , WM_MOUSEMOVE , 0, 0  )			
+				SetWindowCursor( nHWnd , IDC_ARROW)				
+				SysWait(0.03)
+				Return 
 			End If 
 
 
 
 			If (nHasFocus > 0)
 
-				If (nId != nHasFocus)
+				If (nId != nHasFocus)					
 					PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )					
 					xDcToDEspe()
 					Do Events 			
+				
 					lTracking75 := .f. 
+					
 				End If 		
                  
 			End If 
@@ -1508,7 +1504,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				nHasFocus := nId
 				xDcToDEspe()
 				Do Events 
-				lTracking75 := .t. 
+				lTracking75 := .t. 				
 
 			End If 	
 
@@ -1526,59 +1522,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			End If
 		End If 	
 
-		/*
-	
-		If (nMsg == WM_MOUSELEAVE)			
-			
-			nModeBrw := -1
-			lTracking35 := .f. 			
-
-			If  _isWindowDefined("Win_Msg")
-				xHidehint()				
-			End If
-
-		End If
-
 		
-
-		If nMsg == WM_MOUSEMOVE
-
-			lTracking35 := .f. 
-			If nHasFocus > 0
-				If  _isWindowDefined("Win_Msg")
-					xHidehint()
-				End If
-			End If	
-
-			nHasFocus := 0				
-
-		End If 
-
-
-       		
-		
-		If nMsg == WM_LBUTTONUP			
-			nModeBrw := -1
-			SendMessage( GetFormHandle('Win_Browser')  , WM_MOUSELEAVE , 0 , 0 )			
-	    	HMG_CleanLastMouseMessage ()
-			Do Events
-			msginfo('ppp444 ')
-		
-		End If 
-		
-
-	
-		If nMsg == WM_LBUTTONUP			
-		
-			nModeBrw := -1
-			lTracking35 := .t. 
-
-			Do Events
-			msginfo('up22 ')
-
-		End If 
-
-		*/
 
 
 	End If
@@ -1605,12 +1549,16 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				//CursorHand1( nHWnd  )
 
 				PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )
-				SysWait(0.05)			
+				SysWait(0.03)			
+
 
 				xDcToDEspe()
 				Do Events 
 
 				lTracking75 := .f. 
+
+				//SysWait(0.03)
+
 			  
                  
 			End If 
@@ -2216,14 +2164,10 @@ Function EventRole1()
 			End 
 
 			lTracking45 := .f. 
-
 			SysWait(0.09)
-
 			SendMessage(  OBTN_Handle( 'Win_Role1' , nHasFocus ) , WM_MOUSELEAVE , 0,0)
 
-
-
-		end If 
+		End If 
 
 
 

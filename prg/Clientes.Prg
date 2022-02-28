@@ -17,8 +17,7 @@ if ( hb_parl (12) )
 
 
 
-
-
+	  
 
 #define WM_VSCROLL          0x0115img
 #define SB_LINEDOWN         1

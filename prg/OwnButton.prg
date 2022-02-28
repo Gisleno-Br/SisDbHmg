@@ -526,6 +526,7 @@ Function OBTN_GetBitMap1( nId  , lFocus )
 
 
 
+   
   //, 'SCRDOWN1' , 0 , 'SCRDOWN1')
 
 
@@ -654,7 +655,7 @@ HB_FUNC( _OWNBUTTONDRAW )
   INT nBorda = (INT) hb_parni(9);
 
   COLORREF TextColor;
-  int  Transparent = 1;
+  int  Transparent = 0;
 
 
 
@@ -808,8 +809,6 @@ HB_FUNC( _OWNBUTTONDRAW )
 
    if (hBitMap1 > 0 )
       {
-
-
 
          hBrush4  = CreateSolidBrush(  RGB(248,248,248)  );
 

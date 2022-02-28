@@ -55,22 +55,11 @@
     SCRUP1_D    BITMAP  img\Up1_d.Bmp 
     SCRUP2_D    BITMAP  img\Up2_d.Bmp 
     SCRUP3_D    BITMAP  img\Up3_d.Bmp 
-
-
-
-
-
-
     SCRUP1      BITMAP  img\Up1.Bmp 
-
     SCRUP1_1    BITMAP  img\Up1_1.Bmp 
     SCRUP2_1    BITMAP  img\Up2_1.Bmp 
     SCRUP3_1    BITMAP  img\Up3_1.Bmp 
-
-
-
     SCRUP2      BITMAP  img\up2.Bmp
-
     SCRUP3      BITMAP  img\up3.Bmp
     
     

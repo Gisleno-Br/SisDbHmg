@@ -695,7 +695,9 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 		End If
 
 
+		
 	End If
+
 
 
 	/*
@@ -2352,9 +2354,14 @@ Function OpenOpcao( cCadastro , cTitulo , nHandle1 )
 			MntVend()
 
 
+
+
 		End If
 
 	End If
+
+
+
 
 
 
