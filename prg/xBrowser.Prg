@@ -443,7 +443,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 		CHILD ;
 		PANEL ;
 		PARENT &cParent ;
-		WIDTH 25 HEIGHT (nTamPag * nItemBrwHeight) ;
+		WIDTH 16 HEIGHT (nTamPag * nItemBrwHeight) ;
 		TITLE 'xScroxRoleol1' + Left(cParent,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR WHITE   ;
 		ON PAINT xPaintScroll( ThisWindow.Name )
@@ -457,7 +457,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 		CHILD ;
 		PANEL ;
 		PARENT &cParent ;
-		WIDTH 25 HEIGHT (nTamPag * nItemBrwHeight)  ;
+		WIDTH 16 HEIGHT (nTamPag * nItemBrwHeight)  ;
 		TITLE 'xScroxRoleol1' + Left(cParent,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR WHITE   
 	END WINDOW
@@ -490,6 +490,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 		nIndexEventZ := EventCreate (  { ||   xTeclasBrow( )   }  )
 	End If
 
+
 	
 	_ShowWindow("Win_Role1")
 	_ShowWindow("Win_Espelho")
@@ -500,7 +501,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 		
 	Do Events 
 
-	SysWait(0.05)
+	SysWait(0.03)
 	xDcToDEspe()
 
 
@@ -519,28 +520,28 @@ Function xRetImgs(  nId  )
 	Local aMtr1 := {}
 
 	If (nId == 855)      
-      aMtr1 := { 'SCRUP1' , 'SCRUP1_1', 0 , 'SCRUP1_D' }
+      aMtr1 := { 'SCRUP1' , 'SCRUP1_1', 1 , 'SCRUP1_D' }
 	End If 
 
 	   
 	If (nId == 856)      
-		aMtr1 := { 'SCRUP2' , 'SCRUP2_1', 0  , 'SCRUP2_D' }
+		aMtr1 := { 'SCRUP2' , 'SCRUP2_1', 1  , 'SCRUP2_D' }
 	End If 
 
 	If (nId == 857)      
-		aMtr1 := { 'SCRUP3' , 'SCRUP3_1', 0 , 'SCRUP3_D' }
+		aMtr1 := { 'SCRUP3' , 'SCRUP3_1', 1 , 'SCRUP3_D' }
 	End If 
 	If (nId == 860)      
-		aMtr1 := { 'SCRDOWN1' , 'SCRDOWN1_1', 0 ,  'SCRDOWN1_D'}
+		aMtr1 := { 'SCRDOWN1' , 'SCRDOWN1_1', 1 ,  'SCRDOWN1_D'}
 	End If 
 
 	If (nId == 859)      
-		aMtr1 := { 'SCRDOWN2' , 'SCRDOWN2_1', 0 , 'SCRDOWN2_D'}
+		aMtr1 := { 'SCRDOWN2' , 'SCRDOWN2_1', 1 , 'SCRDOWN2_D'}
 	End If 
 
   
    If (nId == 858)      
-      aMtr1 := { 'SCRDOWN3' , 'SCRDOWN3_1', 0 , 'SCRDOWN3_D' }
+      aMtr1 := { 'SCRDOWN3' , 'SCRDOWN3_1', 1 , 'SCRDOWN3_D' }
    End If 
 
 Return aMtr1
@@ -1112,11 +1113,9 @@ Function xCriaButs()
 
 	Local nRow1 := GetProperty('Win_Role1','Height') - 20
 
-    OBTN_Create( cJanx,  855 , "", 0 ,   0  ,  22 ,  22  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont)
-    OBTN_Create( cJanx,  856 , "", 22   , 0,  22,  22  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont  )
-    OBTN_Create( cJanx,  857 , "", 42   , 0 ,  22,  23 ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont  )
-
-
+    OBTN_Create( cJanx,  855 , "&A", 0    , 0 ,  12 ,  12  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont  )
+    OBTN_Create( cJanx,  856 , "&A", 18   , 0 ,  12 ,  12  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont  )
+    OBTN_Create( cJanx,  857 , "&A", 39   , 0 ,  12 ,  12 ,  .T., .T., .T. ,  8, RetColor1( 1 ), aBtnFont  )
 
 
 	//EventProcessAllHookMessage( EventCreate( {|| EventBrowser() }  ,   OBTN_Handle( cJanx, 855 )   ), .T. )		
@@ -1127,15 +1126,17 @@ Function xCriaButs()
 
 
 
+
+
 	OBTN_Font( cJanx, 855,  { cFontName, nFontSize, .F., .F., .F., .F. } )
  	OBTN_Font( cJanx, 856,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 	OBTN_Font( cJanx, 857,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 
 
 	   
-	OBTN_Create( cJanx,  858 , "&4", nRow1 - 5    , 0  ,  22,  22  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-	OBTN_Create( cJanx,  859 , "&R", nRow1 - 29   , 0  ,  20,  23  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-	OBTN_Create( cJanx,  860 , "&T", nRow1 - 50   , 0  ,  20,  20 ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+	OBTN_Create( cJanx,  858 , "&4", nRow1  + 1   , 0  ,  12,  12  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+	OBTN_Create( cJanx,  859 , "&R", nRow1 - 17   , 0  ,  12,  12  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+	OBTN_Create( cJanx,  860 , "&T", nRow1 - 35   , 0  ,  12,  12 ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 
    
    
@@ -1144,12 +1145,17 @@ Function xCriaButs()
 	EventProcessAllHookMessage( EventCreate( {|| EventRole1() },   OBTN_Handle( cJanx, 860 )   ), .T. )
 
 
-
-
-
 	OBTN_Font( cJanx, 858,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 	OBTN_Font( cJanx, 859,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 	OBTN_Font( cJanx, 860,  { cFontName, nFontSize, .F., .F., .F., .F. } )
+
+	/*
+	OBTN_Visible(  cJanx, 857 , .f. )
+	OBTN_Visible(  cJanx, 856 , .f. )
+	OBTN_Visible(  cJanx, 855 , .f. )
+	*/
+
+
 
    
 Return 
@@ -1241,6 +1247,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 
 
+
 			If (nHasFocus > 0)
 
 				If (nId != nHasFocus)					
@@ -1276,11 +1283,9 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 		
 		If (nMsg == WM_DRAWITEM)				
 			If ( nWParam >=  855 ) .AND.  ( nWParam <=  860 )
-				OBTN_Draw( nHWnd,  nwParam, nLParam , (  nHasFocus == nWParam  )  ,  xRetImgs(  nWParam  ) , .f.  ) 				
+				OBTN_Draw( nHWnd,  nwParam, nLParam , (  nHasFocus == nWParam  )  ,  xRetImgs(  nWParam  ) , .f. , 12 ) 				
 			End If
 		End If 	
-
-		
 
 
 	End If
@@ -1449,11 +1454,14 @@ Function xPaintScroll( cJanela )
 
 	hDC = BT_CreateDC ( cJanela  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
 
+	
+
+
+	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    ,  {230,230,230}  , {230,230,230} )
 
 	
 
-	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    , {109,109,109} ,   {249,249,249})
-	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    66        , {233,233,233} ,  {233,233,233} )
+
 
 	
 
@@ -1474,14 +1482,10 @@ Function xPaintScroll( cJanela )
 			nFator := Int(( nItemX5 * yPos     ) /	nMaxItem1)
 
 			BT_DrawBitmap (hDC  , nRIni + nFator  , 1  	, 20  , 20  ,      BT_COPY,  zRolagem)
-
-
 			
 
 		End If
-
 	End If
-
 
 
 	BT_DeleteDC (BTstruct2 )

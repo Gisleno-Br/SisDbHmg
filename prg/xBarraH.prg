@@ -26,7 +26,7 @@ Function xBarraH( cParent , cBrowserName , nLinha1 )
         CHILD ;
         PANEL ;
         PARENT &cParent ;
-        WIDTH  GetProperty(  cBrowserName , 'Width'  )   HEIGHT 16 ;
+        WIDTH  GetProperty(  cBrowserName , 'Width'  )+18   HEIGHT 16 ;
         TITLE 'xScroxRoleol1' + Left(cBrowserName,4)  	;
         NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR WHITE   ;
         ON PAINT xPaintBarraH( ThisWindow.Name )
@@ -43,6 +43,7 @@ Function xBarraH( cParent , cBrowserName , nLinha1 )
 Return     
 
 
+
 Function xPaintBarraH( cJanela )
 
     //BT_DRAWEDGE
@@ -55,15 +56,9 @@ Function xPaintBarraH( cJanela )
     Local yDireita  := BT_BitMapLoadFile('DIREITA')
 
     Local hDC2 := BT_CreateDC (cJanela ,   BT_HDC_INVALIDCLIENTAREA  , @BTstruct)
-
-
     BT_DrawGradientFillHorizontal ( hDC2 ,  0   , 0  , Width  ,    Height     ,  {230,230,230}  , {230,230,230}   )
-
-
     BT_DrawBitmap (hDC2  , 0  , 0  	, 15  , 15  ,      BT_COPY,  yEsquerda )
-
-
-    BT_DrawBitmap (hDC2  , 0  , Width - 17  	, 15  , 15  ,      BT_COPY,  yDireita)
+    BT_DrawBitmap (hDC2  , 0  , Width - 12  	, 15  , 15  ,      BT_COPY,  yDireita)
 
 
     //BT_DrawEllipse (hDC2 , 0, 25 , 20  , 14 , RED , 1)

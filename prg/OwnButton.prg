@@ -534,7 +534,7 @@ Return aMtr1
 
 
 
-FUNCTION OBTN_Draw( nHParent, nID, nDRAWITEMSTRUCT , lFocus , aMtBmp  , lBorda )
+FUNCTION OBTN_Draw( nHParent, nID, nDRAWITEMSTRUCT , lFocus , aMtBmp  , lBorda , nTamanho )
 
    LOCAL cForm  := GetFormNameByIndex( GetFormIndexByHandle( nHParent ) )   
    LOCAL nShape := OBTN_Shape( cForm, nID )
@@ -549,6 +549,7 @@ FUNCTION OBTN_Draw( nHParent, nID, nDRAWITEMSTRUCT , lFocus , aMtBmp  , lBorda )
    DEFAULT aMtBmp := {}
 
    DEFAULT lBorda := .t.
+   DEFAULT nTamanho := 25
 
    If Len(aMtBmp) > 0
       cBmpFile := aMtBmp[1]
@@ -570,7 +571,7 @@ FUNCTION OBTN_Draw( nHParent, nID, nDRAWITEMSTRUCT , lFocus , aMtBmp  , lBorda )
    End If 
  
 
-   _OwnButtonDraw( nDRAWITEMSTRUCT, nShape, aColor[ 1 ], aColor[ 2 ], aColor[ 3 ], aFont , cBmpFile , nColx  , Iif(lBorda,1,0)  )
+   _OwnButtonDraw( nDRAWITEMSTRUCT, nShape, aColor[ 1 ], aColor[ 2 ], aColor[ 3 ], aFont , cBmpFile , nColx  , Iif(lBorda,1,0) , nTamanho )
 
 RETURN NIL
 
@@ -654,6 +655,8 @@ HB_FUNC( _OWNBUTTONDRAW )
 
   INT nBorda = (INT) hb_parni(9);
 
+  INT nTamanho = (INT) hb_parni(10);
+
   COLORREF TextColor;
   int  Transparent = 0;
 
@@ -721,6 +724,12 @@ HB_FUNC( _OWNBUTTONDRAW )
     nGradDir   = (INT)      hb_parvni(3, 5);
   }
 
+  
+  
+
+//  FrameColor2 = RGB(230,230,230);
+
+
   hBrush = CreateGradientBrush(pDIS->hDC, (pDIS->rcItem.right  - pDIS->rcItem.left), (pDIS->rcItem.bottom - pDIS->rcItem.top), nShape, nGradDir, BackColor1, BackColor2);
   hPen   = CreatePen(PS_INSIDEFRAME, 1, FrameColor);
   hFont  = CreateFont(-MulDiv(nFontSize, GetDeviceCaps(pDIS->hDC, LOGPIXELSY), 72), 0, 0, 0, nBold, nItalic, nUnderline, nStrikeOut, DEFAULT_CHARSET, OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, FontName);
@@ -729,6 +738,8 @@ HB_FUNC( _OWNBUTTONDRAW )
   hPenOld   = SelectObject(pDIS->hDC, hPen);
   hFontOld  = SelectObject(pDIS->hDC, hFont);
 
+
+
   if (nShape >= 0)
   {
     if (FrameColor2 <= 0xFFFFFF)
@@ -736,12 +747,15 @@ HB_FUNC( _OWNBUTTONDRAW )
       hBrush2 = CreateSolidBrush(FrameColor2);
       SelectObject(pDIS->hDC, hBrush2);
 
+      
       RoundRect(pDIS->hDC, pDIS->rcItem.left, pDIS->rcItem.top, pDIS->rcItem.right, pDIS->rcItem.bottom, nShape, nShape);
 
       SelectObject(pDIS->hDC, hBrush);
       DeleteObject(hBrush2);
 
       RoundRect(pDIS->hDC, pDIS->rcItem.left + 2, pDIS->rcItem.top + 2, pDIS->rcItem.right - 2, pDIS->rcItem.bottom - 2, nShape - 2, nShape - 2);
+
+
     }
     else
        { 
@@ -810,17 +824,19 @@ HB_FUNC( _OWNBUTTONDRAW )
    if (hBitMap1 > 0 )
       {
 
-         hBrush4  = CreateSolidBrush(  RGB(248,248,248)  );
 
-         rcF.top    = 1;
+         //RGB(248,248,248)
+         hBrush4  = CreateSolidBrush(  RGB(230,230,230) );
+
+         rcF.top    = 0;
          rcF.left   = ncolbmp - 1;
-         rcF.right  = 27;
-         rcF.bottom = 4;
+         rcF.right  = nTamanho;
+         rcF.bottom = nTamanho;
 
 
          FillRect(pDIS->hDC , &rcF, hBrush4);  
 
-         DrawBitmapX( pDIS->hDC, hBitMap1 , 1 ,  ncolbmp  , 25 , 25 , 0 );
+         DrawBitmapX( pDIS->hDC, hBitMap1 , 1 ,  ncolbmp  , nTamanho , nTamanho , 0 );
          
        //  
 
