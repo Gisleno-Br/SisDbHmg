@@ -1118,7 +1118,6 @@ Function xCriaButs()
     OBTN_Create( cJanx,  857 , "&A", 39   , 0 ,  12 ,  12 ,  .T., .T., .T. ,  8, RetColor1( 1 ), aBtnFont  )
 
 
-	//EventProcessAllHookMessage( EventCreate( {|| EventBrowser() }  ,   OBTN_Handle( cJanx, 855 )   ), .T. )		
 
 	EventProcessAllHookMessage( EventCreate( {|| EventRole1() }  ,   OBTN_Handle( cJanx, 855 )   ), .T. )	
 	EventProcessAllHookMessage( EventCreate( {|| EventRole1() }  ,   OBTN_Handle( cJanx,  856 )   ), .T. )			
@@ -1138,25 +1137,13 @@ Function xCriaButs()
 	OBTN_Create( cJanx,  859 , "&R", nRow1 - 17   , 0  ,  12,  12  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 	OBTN_Create( cJanx,  860 , "&T", nRow1 - 35   , 0  ,  12,  12 ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 
-   
-   
+
 	EventProcessAllHookMessage( EventCreate( {|| EventRole1()  },   OBTN_Handle( cJanx, 858 )   ), .T. )		
 	EventProcessAllHookMessage( EventCreate( {|| EventRole1() },   OBTN_Handle( cJanx,  859 )   ), .T. )			
 	EventProcessAllHookMessage( EventCreate( {|| EventRole1() },   OBTN_Handle( cJanx, 860 )   ), .T. )
-
-
 	OBTN_Font( cJanx, 858,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 	OBTN_Font( cJanx, 859,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 	OBTN_Font( cJanx, 860,  { cFontName, nFontSize, .F., .F., .F., .F. } )
-
-	/*
-	OBTN_Visible(  cJanx, 857 , .f. )
-	OBTN_Visible(  cJanx, 856 , .f. )
-	OBTN_Visible(  cJanx, 855 , .f. )
-	*/
-
-
-
    
 Return 
 
@@ -1187,15 +1174,32 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 	If (nHWnd == GetProperty(  'Win_RoleEsp' , "HANDLE" ))
 
+		
+		
+		If (nMsg == WM_LBUTTONUP)			
+
+			If (nHasFocus > 0 )
+				PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )					
+				
+				Do Events
+				Do Events
+				Do Events
+
+				xDcToDEspe()
+				
+				nHasFocus := 0
+				lTracking75 := .f.		
+				//msginfo('ok')
+			End If 	
+
+		End If 
+
+
 
 		If (nMsg == WM_LBUTTONDOWN) 			
 			//msginfo('ok')
-
+			Do Events 			
 			PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_LBUTTONDOWN , 0, 0  )					
-
-			Do Events 
-
-
 		End If 	
 
 
@@ -1212,7 +1216,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 				nL := GetProperty('Win_Role1','Height') - 20
 
-			    If (nRow1 > (nL - 5))
+			    If (nRow1 > (nL + 1))
 				    nId := 858
 				Else 
 					If (nRow1 > (nL - 29))
@@ -1222,11 +1226,11 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 					End If 
 				End If 	
 			Else 
-				If nRow1 < 22
+				If nRow1 <= 18
 					nId := 855
 				Else 
 					nId := 856
-					If nRow1 >= 42 	
+					If nRow1 >= 39
 						nId := 857
 					Else 
 
@@ -1235,13 +1239,16 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			End If 
 
 			
+			
 
-
-			If (nRow1 > 65) .And. (nRow1 <= (GetProperty('Win_Role1','Height') - 70)  )							
+			If (nRow1 >= 60) .And. (nRow1 <= (GetProperty('Win_Role1','Height') - 58)  )							
 				
 				SendMessage(GetProperty(  'Win_Espelho' , "HANDLE" ) , WM_MOUSEMOVE , 0, 0  )			
 				SetWindowCursor( nHWnd , IDC_ARROW)				
 				SysWait(0.03)
+
+				
+				//msginfo('ok')
 				Return 
 			End If 
 
@@ -1276,6 +1283,11 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 			
 		End If 
+
+
+
+
+
 	End If 	
 
 
@@ -1311,18 +1323,21 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			If (nHasFocus > 0)
 				//CursorHand1( nHWnd  )
 
+				//SysWait(0.
+				//03)		
+
+
+				nSvFocus := nHasFocus 
 				PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )
-				SysWait(0.03)			
 
-
+				//SysWait(0.03)		
+				nHasFocus := 0				
 				xDcToDEspe()
-				Do Events 
-
+				//Do Events 
 				lTracking75 := .f. 
-
-				//SysWait(0.03)
-
-			  
+				SysWait(0.03)		
+				//msginfo('ok')				
+				
                  
 			End If 
 
@@ -1342,36 +1357,23 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 			nItem := xGetPos('Win_Espelho')
 			nRow1 := -(nLinScrool)
-
-
 			If nClearIt2 > 0
 				xLimpSub( 'Win_Browser' ,  @nClearIt2 ,  nItemx5 , 0 ,   nItemBrwHeight , GetProperty(  'Win_Browser','Width')  , -(nLinScrool) )
 			End If
-
-
 			nItemx5 := 	nItem
 			nClearIt2 := nItemx5
-
-
 			If (nItemx5 > 0)
 				BT_ClientAreaInvalidateRect( 'Win_Browser' ,  nRow1  +  ( ( nItemx5 - 1 ) * nItemBrwHeight)  , 0 , GetProperty(  'Win_Browser','Width')  ,  nItemBrwHeight   , .t. )
 			End If
-
 			nSelLine := nItem
 			*// calcular nlinhaBarra
 
 			nInd1 := Ascan(  aMVisible , { |a|  a[2] == nItemX5   }   )
-
 			If nind1 > 0
 				nLinhaBarra := aMVisible[   nInd1  ][1]
-
 			End If
-
-
 			lHitb := (nLinhaBarra = nTamPag)
-			lHitt := (nLinhaBarra = 1)
-
-			
+			lHitt := (nLinhaBarra = 1)			
 			Do Events
 			xDcToDc()			
 			Do Events
@@ -1939,8 +1941,11 @@ Function EventRole1()
 
 			Do Events
 
+			nHasFocus := 0
+
 			lTracking45 := .t. 
-			msginfo('up222 ')
+			//msginfo('up222 ')
+
 
 			Do Events
 			Do Events
@@ -2025,17 +2030,14 @@ Function EventRole1()
 			//msginfo('out ' + Str(nSvfocus))
 
 
+
 			nHasFocus := 0
 			nModeBrw := 0
 
 			If nSvFocus > 0
-
 				OBTN_Enable( cFormx, nSvFocus, .T. )
 				OBTN_Visible( cFormx, nSvFocus, .T. )
-
-				Do Events 
-
-			
+				Do Events 			
 			End If 		
 
 

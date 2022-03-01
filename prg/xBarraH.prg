@@ -30,15 +30,10 @@ Function xBarraH( cParent , cBrowserName , nLinha1 )
         TITLE 'xScroxRoleol1' + Left(cBrowserName,4)  	;
         NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR WHITE   ;
         ON PAINT xPaintBarraH( ThisWindow.Name )
-    END WINDOW
-
-
-  
+    END WINDOW  
 
    HMG_ChangeWindowStyle(  GetProperty(  cJanName , 'HANDLE' ) , WS_BORDER, NIL, .T. )
-
-
-
+   
 
 Return     
 
