@@ -84,7 +84,7 @@ Static nLargTotal := 0
 Static lNoHorzScr := .f.
 Static nPageTotal := 0
 Static lControlOk := .f. 
-Static lTracking35 := .f.
+Static lTracking135 := .f.
 Static lTracking75 := .f.
 Static lTracking45 := .f.
 Static nHasFocus := 0
@@ -359,7 +359,7 @@ Return
 Function xBrowser( aDatas1 , cParent  , nTamWidth )
 
 
-	Local nLarg1 := GetDeskTopWidth() - 45
+	Local nLarg1 := GetDeskTopWidth() - 30
 	Local nRowIni := 145
 	Private aOpx1 := 0
 
@@ -384,8 +384,12 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 		WIDTH nLarg1 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) VIRTUAL WIDTH nLargTotal  ;
 		TITLE 'xBrowser' + Left(cActiveJan,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR Nil  ;		
-		ON PAINT (xPaintBrowser( ThisWindow.Name , aMt1 , nItemx5 ,     nClearIt2  , .t.  )  )	
+		ON PAINT (xPaintBrowser( ThisWindow.Name , aMt1 , nItemx5 ,     nClearIt2  , .t.  )  ) ;
+		ON GOTFOCUS xShowBrw() 
+		//ON GOTFOCUS ( _ShowWindow("Win_Browser") , _ShowWindow("Win_Espelho") , xDcToDc() , SysWait(.1) )
 	END WINDOW
+
+
 
 	DEFINE WINDOW Win_Espelho ;
 		AT nRowIni,10 ;
@@ -436,7 +440,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 	END LABEL
 
 
-	nCol11 := GetDeskTopWidth() - 32
+	nCol11 := GetDeskTopWidth() - 20
 
 	DEFINE WINDOW Win_Role1 ;
 		AT nRowIni,nCol11  ;
@@ -514,6 +518,26 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 
 Return
 
+Function xShowBrw()
+
+	
+
+	_ShowWindow("Win_Browser")  
+	_ShowWindow("Win_Espelho")  
+
+	_ShowWindow("Win_Role1")
+	_ShowWindow("Win_RoleEsp")
+	xDcToDc() 
+
+	SysWait(0.03)
+	xDcToDEspe()
+
+	
+
+
+
+Return 
+
 
 Function xRetImgs(  nId  )
 
@@ -522,7 +546,6 @@ Function xRetImgs(  nId  )
 	If (nId == 855)      
       aMtr1 := { 'SCRUP1' , 'SCRUP1_1', 1 , 'SCRUP1_D' }
 	End If 
-
 	   
 	If (nId == 856)      
 		aMtr1 := { 'SCRUP2' , 'SCRUP2_1', 1  , 'SCRUP2_D' }
@@ -1170,11 +1193,17 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	Local nL := 0
 	
 	//Local nRow1 := GetProperty('Win_Role1','Height') - 20
+
+	If (nHWnd == GetProperty(  cActiveJan , "HANDLE" ))		
+
+		If (nMsg == 5)			
+			msginfo('  pl332321   ')
+		End If 
+
+	End If 
 	
 
-	If (nHWnd == GetProperty(  'Win_RoleEsp' , "HANDLE" ))
-
-		
+	If (nHWnd == GetProperty(  'Win_RoleEsp' , "HANDLE" ))		
 		
 		If (nMsg == WM_LBUTTONUP)			
 
@@ -1186,6 +1215,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				xDcToDEspe()				
 				nHasFocus := 0
 				lTracking75 := .f.		
+				//msginfo('lp2')
 				SysWait(0.02)
 			End If 	
 
@@ -1198,6 +1228,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			Do Events 			
 			PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_LBUTTONDOWN , 0, 0  )					
 		End If 	
+
 
 
 		If (nMsg == WM_MOUSEMOVE) 			
@@ -1234,50 +1265,47 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 					End If 
 				End If 
 			End If 
-
-		
-
-			
 			
 
 			If (nRow1 >= 60) .And. (nRow1 <= (GetProperty('Win_Role1','Height') - 58)  )							
-				
-				PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )															
-				xDcToDEspe()
-				//Do Events 			
+				xButsOffs()
+				xDcToDEspe()				
 				SysWait(0.03)
 				lTracking75 := .f. 
+				lTracking135 := .f.
+				nHasFocus := 0				
 				Return 
-
 			End If 
 
 
-			If (nHasFocus > 0) 
-				//.And. (!lTracking75)
+			If (nHasFocus > 0) 				
 				If (nId != nHasFocus)					
 					PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )															
 					xDcToDEspe()
 					Do Events 			
-					lTracking75 := .f. 				
+					lTracking75 := .f. 		
+					lTracking135 := .f.
+					nHasFocus := 0				
 				End If 					
 			End If 
 
-
+			
 			If (nId > 0) .And. (!lTracking75)				
 				CursorHand1( nHWnd  )
-				PostMessage(OBTN_Handle(  'Win_Role1' , nId   )  , WM_MOUSEMOVE , 0, 0  )
-				Do Events 			
+				PostMessage(OBTN_Handle(  'Win_Role1' , nId   )  , WM_MOUSEMOVE , 0, 0  )				
+				Do Events 
+				
 				nHasFocus := nId
 				xDcToDEspe()
-				Do Events 
-				lTracking75 := .t. 				
-			End If 	
+				Do Events 				
 
+				lTracking135 := .t.
+				lTracking75  := .t.
+			End If 	
+				
 
 			
 		End If 
-
-
 
 
 
@@ -1296,8 +1324,8 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	End If
 
 
-	If (nHWnd == GetProperty(  'Win_Espelho' , "HANDLE" ))
 
+	If (nHWnd == GetProperty(  'Win_Espelho' , "HANDLE" ))
 
 		//msginfo('lp2')
 
@@ -1314,28 +1342,19 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 		If nMsg == WM_MOUSEMOVE
 
 			If (nHasFocus > 0)
-
-
-				If (nHasFocus > 0) 				
-	
-					If (nId != nHasFocus)					
-						SysWait(0.03)
-						PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )															
-						SysWait(0.03)
+				If (nHasFocus > 0) 					
+					If (nId != nHasFocus)											
+						xButsOffs()
 						xDcToDEspe()
 						Do Events 			
 						lTracking75 := .f. 																	
-						nHasFocus := 0
-					End If 		
-				
-				End If 		
-                 
+						lTracking135 := .f. 
+						nHasFocus := 0						
+					End If 						
+				End If 		                 
 			End If 
 
-
-			lTracking35 := .f. 
-			
-			
+		
 			If  _isWindowDefined("Win_Msg")
 				xHidehint()
 			End If
@@ -1376,6 +1395,31 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 
 Return
+
+Function xButsOffs()
+
+	PostMessage(OBTN_Handle(  'Win_Role1' , 855   )  , WM_MOUSELEAVE , 0, 0  )															
+	Do Events 
+
+
+	PostMessage(OBTN_Handle(  'Win_Role1' , 856   )  , WM_MOUSELEAVE , 0, 0  )															
+	Do Events 
+
+
+	PostMessage(OBTN_Handle(  'Win_Role1' , 857   )  , WM_MOUSELEAVE , 0, 0  )															
+	Do Events 
+
+	PostMessage(OBTN_Handle(  'Win_Role1' , 858   )  , WM_MOUSELEAVE , 0, 0  )															
+	Do Events 
+
+
+	PostMessage(OBTN_Handle(  'Win_Role1' , 859   )  , WM_MOUSELEAVE , 0, 0  )															
+	Do Events 
+
+	PostMessage(OBTN_Handle(  'Win_Role1' , 860   )  , WM_MOUSELEAVE , 0, 0  )															
+	Do Events 
+
+REturn 
 
 
 
@@ -1446,26 +1490,12 @@ Function xPaintScroll( cJanela )
 	Local nRow1 := Height - 20
 
 	hDC = BT_CreateDC ( cJanela  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
-
-	
-
-
 	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    ,  {230,230,230}  , {230,230,230} )
-
-	
-
-
-
-	
-
 	nLAst := nRow1 - 63
 
 	If (nItemX5 == 1)
-
-		BT_DrawBitmap (hDC  , nRIni  , 1  	, 20  , 20  ,      BT_COPY  ,  zRolagem)
-		
+		BT_DrawBitmap (hDC  , nRIni  , 1  	, 20  , 20  ,      BT_COPY  ,  zRolagem)		
 	Else
-
 
 		If (nItemX5 == nMaxItem1 )
 			BT_DrawBitmap (hDC  , nLast - 7  , 1  	, 20  , 20  ,      BT_COPY,  zRolagem)
@@ -1473,13 +1503,11 @@ Function xPaintScroll( cJanela )
 		
 			yPos := (nLast - 7) - nRIni
 			nFator := Int(( nItemX5 * yPos     ) /	nMaxItem1)
-
 			BT_DrawBitmap (hDC  , nRIni + nFator  , 1  	, 20  , 20  ,      BT_COPY,  zRolagem)
 			
 
 		End If
 	End If
-
 
 	BT_DeleteDC (BTstruct2 )
 	BT_BitmapRelease (zRolagem)
@@ -1945,11 +1973,13 @@ Function EventRole1()
 		
 
 
-		If ( nMsg == WM_MOUSEMOVE ) .and. (!lTracking35)
+		If ( nMsg == WM_MOUSEMOVE ) .and. (!lTracking135)
 
+
+			If (nHasFocus = nIdBut)
+				REturn 
+			End If 
 		
-			lTracking35 := TrackMouseEvent( nHWnd ) // TME_LEAVE is default flag
-
 			nHasFocus := nIdBut
 
 
@@ -1957,16 +1987,9 @@ Function EventRole1()
 
 			OBTN_Enable( cFormx, nIdBut, .T. )
 			OBTN_Visible( cFormx, nIdBut, .T. )
-
-		//	CursorHand1( nHWnd  )
-
 			cTp1 := ''
 
-			//msginfo('ok2')
-
-
-
-
+			
 			If nIdBut = 855
 				cTp1 := "Retorna uma Registro para Tras no Grid."
 				nModeBrw := 3
@@ -2000,6 +2023,7 @@ Function EventRole1()
 			Do Events 
 
 			
+
 			GetCursorPos( @nCol , @nRow )
 
 			
@@ -2013,35 +2037,38 @@ Function EventRole1()
 
 			BringTop('xHint')
 
+			lTracking135 := .t.
+			lTracking75  := .t.
+			//TrackMouseEvent( nHWnd ) // TME_LEAVE is default flag
+
 
 		End If
 
 		If ( nMsg == WM_MOUSELEAVE )
-
-			//msginfo('out ' + Str(nSvfocus))
-
-
-
+			
+			
 			If nHasFocus > 0
 				OBTN_Enable( cFormx, nSvFocus, .T. )
 				OBTN_Visible( cFormx, nSvFocus, .T. )
-				Do Events 			
-				//msginfo('out ' + Str(nHasFocus))
+				Do Events 							
 			End If 		
 
 			nHasFocus := 0
 			nModeBrw := 0
-
-
 
 	
 			OBTN_Color( cFormx,  nIdBut, RetColor1( 1 ), .T. )
 			OBTN_Enable( cFormx, nIdBut, .T. )
 			OBTN_Visible( cFormx, nIdBut, .T. )
 
-			lTracking35 := .F.
+			lTracking135 := .F.
+			lTracking75  := .f.
+				
 
-			//SysWait(0.02)
+			//msginfo('k2')
+
+			SysWait(0.05)
+
 
 		End IF
 

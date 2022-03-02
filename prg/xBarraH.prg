@@ -55,9 +55,6 @@ Function xPaintBarraH( cJanela )
     BT_DrawBitmap (hDC2  , 0  , 0  	, 15  , 15  ,      BT_COPY,  yEsquerda )
     BT_DrawBitmap (hDC2  , 0  , Width - 12  	, 15  , 15  ,      BT_COPY,  yDireita)
 
-
-    //BT_DrawEllipse (hDC2 , 0, 25 , 20  , 14 , RED , 1)
-
     BT_DrawFillRoundRect (hDC2 , 1 , 18 , 95 , 10 , 5 ,5 ,   {178 , 178 ,178}   , {178 , 178 ,178}  , 0)
 
 

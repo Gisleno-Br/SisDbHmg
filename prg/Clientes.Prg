@@ -270,10 +270,11 @@ FUNCTION CadCli()
 
 	Private lOkCad := .f.
 
+
+	//SET EVENTS FUNCTION TO EventsClien
+
+
 	
-
-
-
 
 	Private nColSel := 0
 
@@ -329,12 +330,14 @@ FUNCTION CadCli()
 	nCopyCharacters := HMG_CallDLL ("USER32.DLL", HB_DYN_CTYPE_INT, "GetWindowText", Main.HANDLE, @cBuffer, 512)
 
 
+
 	ManutDb( aCabec, aCampos,  GetSql( "clientes", .F. ), "Clien", aTam, "Cadastro de Clientes" ,"Clientes" , aOp1  , aOp2 , aButOpcoes )
 
 
 
 
 RETURN
+
 
 
 Function EnchMtrConsul(cTab1)
@@ -550,7 +553,7 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 
   
 	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventHndCli"  ) )  ) = 0
-	//	InstallEventHandler( "EventHndCli" )
+		InstallEventHandler( "EventHndCli" )
 	End If
 
 
@@ -3697,167 +3700,6 @@ FUNCTION EventButton()
 
 
 
-		*// Eventos Sub menu Consulta.
-
-		/*
-
-		If (_IsWindowDefined(cForm)) .And. (GetProperty(cForm , "HANDLE") == GetFormHandle( cMenuName ))
-			//msginfo('ok')
-
-			If  (nMsg == WM_MOUSEMOVE)
-
-				//msginfo('opk')
-
-
-
-				SetWindowCursor( GetControlHandle( cControl , cForm  ),  CURSORHAND )
-
-
-				If !lTracking12
-
-
-					SetProperty(cForm, cControl, "BACKCOLOR", CORSEL)
-					SetProperty(cForm, cControl, "FONTBOLD", .T.)
-
-					lTracking12 := TrackMouseEvent(nHWnd) //TME_LEAVE is default flag
-
-					cTp1 := RetSql( "select observacao from consultas where descricao = " + QuotedStr( GetProperty(cForm, cControl, "VALUE" )  )  +  " and tabela = " + QuotedStr(cTabela) )
-
-					If !Empty(cTp1)
-						_SetToolTip(cControl,cForm,hb_AnsiToOem(cTp1 ) )
-					End If
-
-					//sysWait(.1)
-
-
-				End If			
-
-
-			End If 
-
-
-			If nMsg == WM_MOUSELEAVE	
-
-				If (cSubMenuSel != cControl)
-				
-					SetWindowCursor( GetControlHandle( cControl , cForm  ),  IDC_ARROW )
-
-					SetProperty(cForm, cControl, "BACKCOLOR", BACK1)
-					SetProperty(cForm, cControl, "FONTBOLD", .F.)
-
-
-					lTracking12 := .F.
-
-				End If 	
-
-			End If 
-			
-
-			If nMsg == WM_LBUTTONDOWN
-
-				cOpcao := GetProperty(cForm, cControl, "VALUE")
-				
-
-				nIndf := ascan(aOpz2 , {|a|  Right(a[1],Len(a[1]) - 2)   == alltrim(cOpcao) } )
-
-
-				If alltrim(cOpSel) == 'Consultas'
-
-					If _IsControlDefined( 'Label_Sel1' , cFormPrin )
-
-						If (cSubMenuSel != cControl)
-
-						
-							lTracking12 := .F. 		
-
-							If !Empty(Alltrim( cSubMenuSel))
-                              
-								SetProperty(cForm, cSubMenuSel, "BACKCOLOR", BACK1)
-								SetProperty(cForm, cSubMenuSel, "FONTBOLD", .F.)
-
-
-							End If 
-
-
-							cSubMenuSel := cControl 
-
-							SetProperty(  cFormPrin  ,   'Label_Sel1' ,   'Value' ,  Alltrim(cOpcao)    )						
-
-							
-							lTracking12 := .F. 					
-							xButConsul( .t. , .t. )
-
-							
-
-						Else 					
-					
-
-							xCancelSel()
-
-
-						End If 
-
-					End If 
-
-
-					/*	
-					EnableButConsu(  .f.  )
-
-					nIdConsulta := GetId(  'consultas' , Alltrim(cOpcao) )
-
-					cTituloCon := Alltrim(cOpcao)
-
-					nHnx1 := GetControlHandle(cLblConsu,cFormPrin)
-
-
-					If (nIdConsulta > 0)
-
-						If xInitMov(  nIdConsulta, , cTabela, .f. ,  cFormPrin )
-
-						Else					
-
-							Syswait(.1)
-
-			
-							PostMessage(  nHnx1 , WM_LBUTTONDOWN ,0,0 )
-				
-							Syswait(.1)	
-
-							lTracking12 := .F. 
-							
-							_HMG_PRINTER_SETVSCROLLVALUE( GetFormHandle(  cMenuName  )  , (nQtElem - nItMax) * nItemSubHeight  )
-
-
-						End If
-
-						EnableButConsu(  .t.  )
-
-					End If
-		
-
-				Else
-					If nIndf > 0
-						Eval(  aOpz2[nindf][2] )
-					End If
-				End If
-
-
-
-				//Refreshall( cMenuName )
-
-
-				If _isControlDefined('G4343' , cFormPrin)
-					DoMethod( cFormPrin , 'G4343', 'Refresh')
-				End If
-				
-			End If 
-
-
-		End If 
-
-		*/
-
-
 		*//Eventos Form Principal.	
 		If  (_IsWindowDefined(cForm)) .And.  (GetProperty(cForm , "HANDLE") == GetProperty(  cActiveJan  , "HANDLE" )) 	
 
@@ -4695,6 +4537,11 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 	If nHWnd == GetProperty(  cForm, "HANDLE" )
 
+
+		if nmsg == 5
+			msginfo('kk')
+		End If 
+
 		IF nMsg == WM_DRAWITEM
 
 			nInd1 := AScan( aButtons, {| a| a[ 5 ] == nWParam } )
@@ -5173,6 +5020,12 @@ Function PlaceJan(  cLbl , cJanela  )
 		End If
 
 	End If
+
+
+
+
+
+
 
 	cLblSelected := cLbl
 	SetProperty('fSplit2',cLbl,'Visible',.f.)
