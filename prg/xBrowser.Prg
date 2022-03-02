@@ -1179,17 +1179,14 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 		If (nMsg == WM_LBUTTONUP)			
 
 			If (nHasFocus > 0 )
-				PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )					
-				
+				PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )									
 				Do Events
 				Do Events
 				Do Events
-
-				xDcToDEspe()
-				
+				xDcToDEspe()				
 				nHasFocus := 0
 				lTracking75 := .f.		
-				//msginfo('ok')
+				SysWait(0.02)
 			End If 	
 
 		End If 
@@ -1238,38 +1235,35 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				End If 
 			End If 
 
+		
+
 			
 			
 
 			If (nRow1 >= 60) .And. (nRow1 <= (GetProperty('Win_Role1','Height') - 58)  )							
 				
-				SendMessage(GetProperty(  'Win_Espelho' , "HANDLE" ) , WM_MOUSEMOVE , 0, 0  )			
-				SetWindowCursor( nHWnd , IDC_ARROW)				
+				PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )															
+				xDcToDEspe()
+				//Do Events 			
 				SysWait(0.03)
-
-				
-				//msginfo('ok')
+				lTracking75 := .f. 
 				Return 
+
 			End If 
 
 
-
-
-			If (nHasFocus > 0)
-
+			If (nHasFocus > 0) 
+				//.And. (!lTracking75)
 				If (nId != nHasFocus)					
-					PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )					
+					PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )															
 					xDcToDEspe()
 					Do Events 			
-				
-					lTracking75 := .f. 
-					
-				End If 		
-                 
+					lTracking75 := .f. 				
+				End If 					
 			End If 
 
-			If (nId > 0) .And. (!lTracking75)	
-				
+
+			If (nId > 0) .And. (!lTracking75)				
 				CursorHand1( nHWnd  )
 				PostMessage(OBTN_Handle(  'Win_Role1' , nId   )  , WM_MOUSEMOVE , 0, 0  )
 				Do Events 			
@@ -1277,7 +1271,6 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				xDcToDEspe()
 				Do Events 
 				lTracking75 := .t. 				
-
 			End If 	
 
 
@@ -1321,29 +1314,27 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 		If nMsg == WM_MOUSEMOVE
 
 			If (nHasFocus > 0)
-				//CursorHand1( nHWnd  )
-
-				//SysWait(0.
-				//03)		
 
 
-				nSvFocus := nHasFocus 
-				PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )
-
-				//SysWait(0.03)		
-				nHasFocus := 0				
-				xDcToDEspe()
-				//Do Events 
-				lTracking75 := .f. 
-				SysWait(0.03)		
-				//msginfo('ok')				
+				If (nHasFocus > 0) 				
+	
+					If (nId != nHasFocus)					
+						SysWait(0.03)
+						PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )															
+						SysWait(0.03)
+						xDcToDEspe()
+						Do Events 			
+						lTracking75 := .f. 																	
+						nHasFocus := 0
+					End If 		
 				
+				End If 		
                  
 			End If 
 
 
 			lTracking35 := .f. 
-			nHasFocus := 0
+			
 			
 			If  _isWindowDefined("Win_Msg")
 				xHidehint()
@@ -2031,14 +2022,16 @@ Function EventRole1()
 
 
 
-			nHasFocus := 0
-			nModeBrw := 0
-
-			If nSvFocus > 0
+			If nHasFocus > 0
 				OBTN_Enable( cFormx, nSvFocus, .T. )
 				OBTN_Visible( cFormx, nSvFocus, .T. )
 				Do Events 			
+				//msginfo('out ' + Str(nHasFocus))
 			End If 		
+
+			nHasFocus := 0
+			nModeBrw := 0
+
 
 
 	
@@ -2047,6 +2040,8 @@ Function EventRole1()
 			OBTN_Visible( cFormx, nIdBut, .T. )
 
 			lTracking35 := .F.
+
+			//SysWait(0.02)
 
 		End IF
 
