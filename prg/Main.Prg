@@ -656,7 +656,6 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 	If nHWnd == GetProperty(  'fSplit2' , "HANDLE" )
 
 
-
 		If ( nMsg == WM_MOUSEMOVE )
 
 			GetCursorPos (@nCol, @nRow1)
