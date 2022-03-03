@@ -71,6 +71,7 @@ Static lTermino := .f.
 Static nModeBrw := 1
 Static lFundo := .t.
 Static lFlagPaint := .t.
+Static nLimteLin := 0
 Static lColor1 := .f.
 Static aMtrColor := {}
 Static nLinScrool := 0
@@ -359,7 +360,7 @@ Return
 Function xBrowser( aDatas1 , cParent  , nTamWidth )
 
 
-	Local nLarg1 := GetDeskTopWidth() - 30
+	Local nLarg1 := GetDeskTopWidth() - 40
 	Local nRowIni := 145
 	Private aOpx1 := 0
 
@@ -384,8 +385,8 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 		WIDTH nLarg1 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) VIRTUAL WIDTH nLargTotal  ;
 		TITLE 'xBrowser' + Left(cActiveJan,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR Nil  ;		
-		ON PAINT (xPaintBrowser( ThisWindow.Name , aMt1 , nItemx5 ,     nClearIt2  , .t.  )  ) ;
-		ON GOTFOCUS xShowBrw() 
+		ON PAINT (xPaintBrowser( ThisWindow.Name , aMt1 , nItemx5 ,     nClearIt2  , .t.  )  ) 
+		//ON GOTFOCUS xShowBrw() 
 		//ON GOTFOCUS ( _ShowWindow("Win_Browser") , _ShowWindow("Win_Espelho") , xDcToDc() , SysWait(.1) )
 	END WINDOW
 
@@ -440,14 +441,14 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 	END LABEL
 
 
-	nCol11 := GetDeskTopWidth() - 20
+	nCol11 := GetDeskTopWidth() - 27
 
 	DEFINE WINDOW Win_Role1 ;
 		AT nRowIni,nCol11  ;
 		CHILD ;
 		PANEL ;
 		PARENT &cParent ;
-		WIDTH 16 HEIGHT (nTamPag * nItemBrwHeight) ;
+		WIDTH 21 HEIGHT (nTamPag * nItemBrwHeight) ;
 		TITLE 'xScroxRoleol1' + Left(cParent,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR WHITE   ;
 		ON PAINT xPaintScroll( ThisWindow.Name )
@@ -461,7 +462,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 		CHILD ;
 		PANEL ;
 		PARENT &cParent ;
-		WIDTH 16 HEIGHT (nTamPag * nItemBrwHeight)  ;
+		WIDTH 21 HEIGHT (nTamPag * nItemBrwHeight)  ;
 		TITLE 'xScroxRoleol1' + Left(cParent,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR WHITE   
 	END WINDOW
@@ -473,6 +474,9 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 
 
 	_ShowWindow("Win_Browser")
+
+
+	xCalcBarV()
 
 
 	ShowScrollbar (GetFormHandle("Win_Browser") , 0, .f.)
@@ -494,13 +498,12 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 		nIndexEventZ := EventCreate (  { ||   xTeclasBrow( )   }  )
 	End If
 
-
 	
 	_ShowWindow("Win_Role1")
 	_ShowWindow("Win_Espelho")
 	_ShowWindow("Win_RoleEsp")
 
-	xCriaButs()
+	nLimteLin := xCriaButs()
 	xDcToDc()
 		
 	Do Events 
@@ -509,17 +512,37 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 	xDcToDEspe()
 
 
-
 	_ShowWindow( xGetBarName() )
-
 	BT_ClientAreaInvalidateAll(xGetBarName())
 
 	Do Events 
 
 Return
 
-Function xShowBrw()
 
+Function xCalcPosV(nReg1)
+
+	Local nPos 	  := 0
+	Local n1      := xCalcBarV()
+	Local nTamBar := GetProperty('Win_Role1' , 'Height') - 83
+
+	nPos := Int ((  (nTamBar  - n1)  *  nREg1 ) / Len(aMt1))
+
+Return nPos
+
+
+Function xCalcBarV()
+
+	Local nCalc := 0
+
+	Local nTamBar := GetProperty('Win_Role1' , 'Height') - 83
+
+	nCalc := Int (( nTamBar *  nTamPag ) / Len(aMt1))
+
+
+Return nCalc 
+
+Function xShowBrw()
 	
 
 	_ShowWindow("Win_Browser")  
@@ -530,10 +553,7 @@ Function xShowBrw()
 	xDcToDc() 
 
 	SysWait(0.03)
-	xDcToDEspe()
-
-	
-
+	xDcToDEspe()	
 
 
 Return 
@@ -1136,9 +1156,9 @@ Function xCriaButs()
 
 	Local nRow1 := GetProperty('Win_Role1','Height') - 20
 
-    OBTN_Create( cJanx,  855 , "&A", 0    , 0 ,  12 ,  12  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont  )
-    OBTN_Create( cJanx,  856 , "&A", 18   , 0 ,  12 ,  12  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont  )
-    OBTN_Create( cJanx,  857 , "&A", 39   , 0 ,  12 ,  12 ,  .T., .T., .T. ,  8, RetColor1( 1 ), aBtnFont  )
+    OBTN_Create( cJanx,  855 , "&A", 0    , 0 ,  20 ,  20  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont  )
+    OBTN_Create( cJanx,  856 , "&A", 21   , 0 ,  20 ,  20  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont  )
+    OBTN_Create( cJanx,  857 , "&A", 41   , 0 ,  20 ,  20 ,  .T., .T., .T. ,  8, RetColor1( 1 ), aBtnFont  )
 
 
 
@@ -1148,27 +1168,27 @@ Function xCriaButs()
 
 
 
-
-
 	OBTN_Font( cJanx, 855,  { cFontName, nFontSize, .F., .F., .F., .F. } )
  	OBTN_Font( cJanx, 856,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 	OBTN_Font( cJanx, 857,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 
 
 	   
-	OBTN_Create( cJanx,  858 , "&4", nRow1  + 1   , 0  ,  12,  12  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-	OBTN_Create( cJanx,  859 , "&R", nRow1 - 17   , 0  ,  12,  12  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-	OBTN_Create( cJanx,  860 , "&T", nRow1 - 35   , 0  ,  12,  12 ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+	OBTN_Create( cJanx,  858 , "&4", nRow1  + 1   , 0  ,  20,  20  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+	OBTN_Create( cJanx,  859 , "&R", nRow1 - 17   , 0  ,  20,  20  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+	OBTN_Create( cJanx,  860 , "&T", nRow1 - 35   , 0  ,  20,  20 ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 
 
 	EventProcessAllHookMessage( EventCreate( {|| EventRole1()  },   OBTN_Handle( cJanx, 858 )   ), .T. )		
 	EventProcessAllHookMessage( EventCreate( {|| EventRole1() },   OBTN_Handle( cJanx,  859 )   ), .T. )			
 	EventProcessAllHookMessage( EventCreate( {|| EventRole1() },   OBTN_Handle( cJanx, 860 )   ), .T. )
+
 	OBTN_Font( cJanx, 858,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 	OBTN_Font( cJanx, 859,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 	OBTN_Font( cJanx, 860,  { cFontName, nFontSize, .F., .F., .F., .F. } )
    
-Return 
+Return (nRow1 - 35)
+
 
 
 Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
@@ -1312,11 +1332,12 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	End If 	
 
 
+
 	If (nHWnd == GetProperty(  'Win_Role1' , "HANDLE" ))
 		
 		If (nMsg == WM_DRAWITEM)				
 			If ( nWParam >=  855 ) .AND.  ( nWParam <=  860 )
-				OBTN_Draw( nHWnd,  nwParam, nLParam , (  nHasFocus == nWParam  )  ,  xRetImgs(  nWParam  ) , .f. , 12 ) 				
+				OBTN_Draw( nHWnd,  nwParam, nLParam , (  nHasFocus == nWParam  )  ,  xRetImgs(  nWParam  ) , .f. , 20 ) 				
 			End If
 		End If 	
 
@@ -1472,8 +1493,12 @@ Function xPaintScroll( cJanela )
 	Local BTstruct2
 	Local nLAst
 	Local hDC
-	Local nRIni := 67
+	Local nRIni := 60
 	Local nFator , yPos
+
+	Local nAltura := xCalcBarV()
+
+	Local nTamBar := GetProperty('Win_Role1' , 'Height') - 83
 
 
 	Local yBmp1 := BT_BitMapLoadFile('SCRUP1')
@@ -1489,21 +1514,32 @@ Function xPaintScroll( cJanela )
 
 	Local nRow1 := Height - 20
 
+
+
 	hDC = BT_CreateDC ( cJanela  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
 	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    ,  {230,230,230}  , {230,230,230} )
+
+
 	nLAst := nRow1 - 63
 
 	If (nItemX5 == 1)
-		BT_DrawBitmap (hDC  , nRIni  , 1  	, 20  , 20  ,      BT_COPY  ,  zRolagem)		
+		
+		BT_DrawFillRoundRect ( hDC , nRIni ,  2   , Width - 5 , nAltura , 5 ,5 ,   {152 , 152 ,152}   , {152 , 152 ,152}  , 0 ) 				
+
 	Else
 
-		If (nItemX5 == nMaxItem1 )
-			BT_DrawBitmap (hDC  , nLast - 7  , 1  	, 20  , 20  ,      BT_COPY,  zRolagem)
-		Else
-		
-			yPos := (nLast - 7) - nRIni
+		If (nItemX5 == nMaxItem1 )			
+			BT_DrawFillRoundRect ( hDC , nLimteLin - nAltura ,  2   , Width - 5 , nAltura , 5 ,5 ,   {152 , 152 ,152}   , {152 , 152 ,152}  , 0 ) 				
+			msginfo('ok')
+			
+		Else				
+
+		   // nFator := xCalcPosV(nItemX5)
+
+			yPos := nLimteLin - nRIni - nAltura
 			nFator := Int(( nItemX5 * yPos     ) /	nMaxItem1)
-			BT_DrawBitmap (hDC  , nRIni + nFator  , 1  	, 20  , 20  ,      BT_COPY,  zRolagem)
+
+			BT_DrawFillRoundRect ( hDC ,   (nrIni  + nFator )  ,  2   , Width - 5 , nAltura , 5 ,5 ,  {152 , 152 ,152}   , {152 , 152 ,152}  , 0 ) 				
 			
 
 		End If
@@ -1895,7 +1931,7 @@ Function EventRole1()
 			While( nModeBrw = 3) .And. (!lTracking45)
 				
 
-				Do Events 
+				//Do Events 
 				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_UP , 0 )				
 
 				If (GetAsyncKeyState(VK_LBUTTON)) == 0					
@@ -1906,7 +1942,7 @@ Function EventRole1()
 
 			
 			While (nModeBrw = 6) .And. (!lTracking45)
-				Do Events
+				//Do Events
 
 				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_DOWN , 0 )				
 
@@ -1949,6 +1985,7 @@ Function EventRole1()
 			lTracking45 := .f. 
 			SysWait(0.09)
 			SendMessage(  OBTN_Handle( 'Win_Role1' , nHasFocus ) , WM_MOUSELEAVE , 0,0)
+
 
 		End If 
 
