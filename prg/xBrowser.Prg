@@ -1293,6 +1293,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				End If 
 			End If 
 
+
 			
 
 			If (nRow1 >= 60) .And. (nRow1 <= (GetProperty('Win_Role1','Height') - 60) ) .And. (nId = 0) 							
