@@ -1264,6 +1264,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			//Do Events
 
 
+
 			If (nRow1 >= nLimteLin)			
 
 				nL := GetProperty('Win_Role1','Height') - 20
