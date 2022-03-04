@@ -23,39 +23,23 @@
     DIREITA     BITMAP  img\SetDireita1.bmp 
 
 
+    ESQUERDA1   BITMAP  img\SetaEsquerda_1.bmp 
+    DIREITA1    BITMAP  img\SetaDireita_1.bmp 
+
+
+
     CHAVE      PNG     img\chave2.png
-
-
     BACK1       ARRAY   {229,237,242}
     FONTCOR     ARRAY   {0,106,133}
-
-
     SCRDOWN1    BITMAP img\Down1.Bmp 
-
     SCRDOWN2    BITMAP  img\Down2.Bmp 
-
     SCRDOWN3    BITMAP  img\Down3.Bmp
-
-
     SCRDOWN1_1    BITMAP img\Down1_1.Bmp 
-
     SCRDOWN2_1    BITMAP  img\Down2_2.Bmp 
-
-    SCRDOWN3_1    BITMAP  img\Down3_3.Bmp
-
-
-    
+    SCRDOWN3_1    BITMAP  img\Down3_3.Bmp    
     SCRDOWN1_D    BITMAP img\Down1_d.Bmp 
-
     SCRDOWN2_D    BITMAP  img\Down2_d.Bmp 
-
-    SCRDOWN3_D    BITMAP  img\Down3_d.Bmp
-
-
-
-
-
-    
+    SCRDOWN3_D    BITMAP  img\Down3_d.Bmp    
     SCRUP1_D    BITMAP  img\Up1_d.Bmp 
     SCRUP2_D    BITMAP  img\Up2_d.Bmp 
     SCRUP3_D    BITMAP  img\Up3_d.Bmp 

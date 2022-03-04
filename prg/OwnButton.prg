@@ -832,6 +832,7 @@ HB_FUNC( _OWNBUTTONDRAW )
          rcF.left   = ncolbmp - 1;
          rcF.right  = nTamanho;
          rcF.bottom = nTamanho;
+         
 
 
          FillRect(pDIS->hDC , &rcF, hBrush4);  

@@ -1174,9 +1174,9 @@ Function xCriaButs()
 
 
 	   
-	OBTN_Create( cJanx,  858 , "&4", nRow1  + 1   , 0  ,  20,  20  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-	OBTN_Create( cJanx,  859 , "&R", nRow1 - 17   , 0  ,  20,  20  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-	OBTN_Create( cJanx,  860 , "&T", nRow1 - 35   , 0  ,  20,  20 ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+	OBTN_Create( cJanx,  858 , "&4", nRow1 - 6    , 0  ,  20,  20  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+	OBTN_Create( cJanx,  859 , "&R", nRow1 - 26   , 0  ,  20,  20  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+	OBTN_Create( cJanx,  860 , "&T", nRow1 - 46   , 0  ,  20,  20 ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 
 
 	EventProcessAllHookMessage( EventCreate( {|| EventRole1()  },   OBTN_Handle( cJanx, 858 )   ), .T. )		
@@ -1187,7 +1187,7 @@ Function xCriaButs()
 	OBTN_Font( cJanx, 859,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 	OBTN_Font( cJanx, 860,  { cFontName, nFontSize, .F., .F., .F., .F. } )
    
-Return (nRow1 - 35)
+Return (nRow1 - 46)
 
 
 
@@ -1214,11 +1214,12 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	
 	//Local nRow1 := GetProperty('Win_Role1','Height') - 20
 
-	If (nHWnd == GetProperty(  cActiveJan , "HANDLE" ))		
+	If (_IsWindowDefined(cBarraH)) .And.  (nHWnd == GetProperty(  cBarrah , "HANDLE" ))		
 
-		If (nMsg == 5)			
+		If (nMsg == WM_MOUSEMOVE) 		
 			msginfo('  pl332321   ')
-		End If 
+		End If 	
+		
 
 	End If 
 	
@@ -1260,40 +1261,54 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 			nId := 0 
 
-			If (nRow1 > (GetProperty('Win_Role1','Height') - 70) )
+			//Do Events
+
+
+			If (nRow1 >= nLimteLin)			
 
 				nL := GetProperty('Win_Role1','Height') - 20
 
 			    If (nRow1 > (nL + 1))
 				    nId := 858
 				Else 
-					If (nRow1 > (nL - 29))
-					    nId := 859
+					If (nRow1 <= (nLimteLin + 20   ))
+					    nId := 860
 					Else 
-					   nId := 860	
+					   nId := 859	
 					End If 
 				End If 	
 			Else 
-				If nRow1 <= 18
+				If nRow1 <= 20
 					nId := 855
 				Else 
-					nId := 856
-					If nRow1 >= 39
-						nId := 857
+					
+					If (nRow1 >= 41) .And. (nRow1 <= 61)
+						nId := 857					
 					Else 
-
+						If (nRow1 >= 21) .And. (nRow1 <= 40)
+							nId := 856
+						End If 
 					End If 
+
 				End If 
 			End If 
+
 			
 
-			If (nRow1 >= 60) .And. (nRow1 <= (GetProperty('Win_Role1','Height') - 58)  )							
+			If (nRow1 >= 60) .And. (nRow1 <= (GetProperty('Win_Role1','Height') - 60) ) .And. (nId = 0) 							
 				xButsOffs()
 				xDcToDEspe()				
-				SysWait(0.03)
+			//	SysWait(0.03)
 				lTracking75 := .f. 
 				lTracking135 := .f.
 				nHasFocus := 0				
+
+				xLuzOff( cBarrah)
+				//msginfo('ok')
+
+				Do Events 
+
+				//Msginfo('ok')
 				Return 
 			End If 
 
@@ -1317,7 +1332,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				
 				nHasFocus := nId
 				xDcToDEspe()
-				Do Events 				
+			//	Do Events 				
 
 				lTracking135 := .t.
 				lTracking75  := .t.
@@ -1362,18 +1377,20 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 		If nMsg == WM_MOUSEMOVE
 
-			If (nHasFocus > 0)
-				If (nHasFocus > 0) 					
-					If (nId != nHasFocus)											
-						xButsOffs()
-						xDcToDEspe()
-						Do Events 			
-						lTracking75 := .f. 																	
-						lTracking135 := .f. 
-						nHasFocus := 0						
-					End If 						
-				End If 		                 
-			End If 
+			
+			If (nHasFocus > 0) 					
+				If (nId != nHasFocus)											
+					xButsOffs()
+					xDcToDEspe()
+					Do Events 			
+					lTracking75 := .f. 																	
+					lTracking135 := .f. 
+					nHasFocus := 0						
+
+				End If 						
+
+			End If 		                 
+			
 
 		
 			If  _isWindowDefined("Win_Msg")
@@ -1420,22 +1437,22 @@ Return
 Function xButsOffs()
 
 	PostMessage(OBTN_Handle(  'Win_Role1' , 855   )  , WM_MOUSELEAVE , 0, 0  )															
-	Do Events 
+	//Do Events 
 
 
 	PostMessage(OBTN_Handle(  'Win_Role1' , 856   )  , WM_MOUSELEAVE , 0, 0  )															
-	Do Events 
+//	Do Events 
 
 
 	PostMessage(OBTN_Handle(  'Win_Role1' , 857   )  , WM_MOUSELEAVE , 0, 0  )															
-	Do Events 
+	//Do Events 
 
 	PostMessage(OBTN_Handle(  'Win_Role1' , 858   )  , WM_MOUSELEAVE , 0, 0  )															
-	Do Events 
+//	Do Events 
 
 
 	PostMessage(OBTN_Handle(  'Win_Role1' , 859   )  , WM_MOUSELEAVE , 0, 0  )															
-	Do Events 
+	//Do Events 
 
 	PostMessage(OBTN_Handle(  'Win_Role1' , 860   )  , WM_MOUSELEAVE , 0, 0  )															
 	Do Events 
@@ -1493,7 +1510,7 @@ Function xPaintScroll( cJanela )
 	Local BTstruct2
 	Local nLAst
 	Local hDC
-	Local nRIni := 60
+	Local nRIni := 65
 	Local nFator , yPos
 
 	Local nAltura := xCalcBarV()
@@ -1530,7 +1547,7 @@ Function xPaintScroll( cJanela )
 
 		If (nItemX5 == nMaxItem1 )			
 			BT_DrawFillRoundRect ( hDC , nLimteLin - nAltura ,  2   , Width - 5 , nAltura , 5 ,5 ,   {152 , 152 ,152}   , {152 , 152 ,152}  , 0 ) 				
-			msginfo('ok')
+		//	msginfo('ok')
 			
 		Else				
 
