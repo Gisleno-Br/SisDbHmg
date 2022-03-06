@@ -181,6 +181,7 @@ Function TestBrow( cParent1 , cTabx  )
 
 
 
+
 //	msginfo(Str(   nTam1  ))
 
 	//SetWindowCursor( GetFormHandle(  cActiveJan ) , HOURGLASS )
@@ -574,19 +575,23 @@ Function xRetImgs(  nId  )
 	If (nId == 857)      
 		aMtr1 := { 'SCRUP3' , 'SCRUP3_1', 1 , 'SCRUP3_D' }
 	End If 
-	If (nId == 860)      
-		aMtr1 := { 'SCRDOWN1' , 'SCRDOWN1_1', 1 ,  'SCRDOWN1_D'}
-	End If 
 
-	If (nId == 859)      
+	If (nId == 858)      
+		aMtr1 := { 'SCRDOWN3' , 'SCRDOWN3_1', 1 , 'SCRDOWN3_D' }
+	 End If 
+
+	 If (nId == 859)      
 		aMtr1 := { 'SCRDOWN2' , 'SCRDOWN2_1', 1 , 'SCRDOWN2_D'}
 	End If 
 
   
-   If (nId == 858)      
-      aMtr1 := { 'SCRDOWN3' , 'SCRDOWN3_1', 1 , 'SCRDOWN3_D' }
-   End If 
+	If (nId == 860)      
+		aMtr1 := { 'SCRDOWN1' , 'SCRDOWN1_1', 1 ,  'SCRDOWN1_D'}
+	End If 
 
+	
+  
+   
 Return aMtr1
 
 Function xSaveVars()
@@ -819,18 +824,22 @@ Function xTeclasBrow()
 				xSelItem( nItemx5  , .f.  )
 				SysWait(0.06)
 
+
 			End If
 
 			xSaveVars()
 
 		Else
 
+			msginfo('ok')	
 			xDialog('Maximo Atingido! ' + Str(nItemx5) + '  ' + Str(nMaxItem1) + '   '  + Str(nLinScrool)  )
 			nLinhaBarra := nTamPag
 			lHtb := .t.
 			nItemx5 := nMaxItem1
 			lHtt := .f.
 			xWaitDlg()
+
+			//SysWait(0.06)
 		
 		End If
 
@@ -865,6 +874,7 @@ Function xTeclasBrow()
 
 		Else
 
+		//	msginfo('ok2')	
 			lHitt := .t.
 			nItemx5 := 1
 			nClearIt2 := 1
@@ -1156,6 +1166,8 @@ Function xCriaButs()
 
 	Local nRow1 := GetProperty('Win_Role1','Height') - 20
 
+	/*
+
     OBTN_Create( cJanx,  855 , "&A", 0    , 0 ,  20 ,  20  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont  )
     OBTN_Create( cJanx,  856 , "&A", 21   , 0 ,  20 ,  20  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont  )
     OBTN_Create( cJanx,  857 , "&A", 41   , 0 ,  20 ,  20 ,  .T., .T., .T. ,  8, RetColor1( 1 ), aBtnFont  )
@@ -1186,6 +1198,10 @@ Function xCriaButs()
 	OBTN_Font( cJanx, 858,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 	OBTN_Font( cJanx, 859,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 	OBTN_Font( cJanx, 860,  { cFontName, nFontSize, .F., .F., .F., .F. } )
+
+	*/
+
+
    
 Return (nRow1 - 46)
 
@@ -1214,14 +1230,6 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	
 	//Local nRow1 := GetProperty('Win_Role1','Height') - 20
 
-	If (_IsWindowDefined(cBarraH)) .And.  (nHWnd == GetProperty(  cBarrah , "HANDLE" ))		
-
-		If (nMsg == WM_MOUSEMOVE) 		
-			msginfo('  pl332321   ')
-		End If 	
-		
-
-	End If 
 	
 
 	If (nHWnd == GetProperty(  'Win_RoleEsp' , "HANDLE" ))		
@@ -1245,23 +1253,115 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 
 		If (nMsg == WM_LBUTTONDOWN) 			
-			//msginfo('ok')
+			 /*
+			msginfo('ok')
+
 			Do Events 			
 			PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_LBUTTONDOWN , 0, 0  )					
+			*/
+
+			If nModeBrw = 1
+				lControlOk := .t. 
+				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_HOME , 0 )
+				lControlOk := .f. 
+			//	msginfo('up')
+			End If 
+
+
+			If nModeBrw = 4
+				lControlOk := .t. 
+				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_END , 0 )
+				lControlOk := .f. 
+			End If 
+
+	
+
+			While( nModeBrw = 3) .And. (!lTracking45)
+				
+
+				//Do Events 
+				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_UP , 0 )				
+
+				//SysWait(0.08)
+
+				If (GetAsyncKeyState(VK_LBUTTON)) == 0					
+					lTracking45 := .t. 
+				End If 				
+
+			End 
+
+			
+			While (nModeBrw = 6) .And. (!lTracking45)
+				//Do Events
+
+				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_DOWN , 0 )				
+
+
+				If (GetAsyncKeyState(VK_LBUTTON)) == 0					
+					lTracking45 := .t. 
+				End If 				
+						
+			End  
+
+
+			While (nModeBrw = 5) .And. (!lTracking45)
+			
+				SysWait(0.02)
+				xGoPgDn()				
+				SysWait(0.02)
+
+				
+				If (GetAsyncKeyState(VK_LBUTTON)) == 0					
+					lTracking45 := .t. 
+				End If 			
+				
+			End If 
+
+
+
+			While (nModeBrw = 2) .And. (!lTracking45)
+	
+				SysWait(0.02)
+				xGoPgUp()
+				SysWait(0.02)
+
+
+					
+				If (GetAsyncKeyState(VK_LBUTTON)) == 0					
+					lTracking45 := .t. 
+				End If 			
+
+			End 
+
+			SysWait(0.02)
+			
+			HMG_CLEANLASTMOUSEMESSAGE()
+
+			lTracking45 := .f. 
+			SysWait(0.09)
+			//SendMessage(  OBTN_Handle( 'Win_Role1' , nHasFocus ) , WM_MOUSELEAVE , 0,0)
+
+
+		
 		End If 	
 
 
 
 		If (nMsg == WM_MOUSEMOVE) 			
 
+			Do Events	
+			Do Events	
+
+
          	GetCursorPos (@nCol, @nRow)
 			ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
 
 			nRow1 := ar1[1]
-
 			nId := 0 
 
 			//Do Events
+
+		//	msginfo('ok')
 
 
 
@@ -1295,47 +1395,56 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			End If 
 
 
-			
+					
 
-			If (nRow1 >= 60) .And. (nRow1 <= (GetProperty('Win_Role1','Height') - 60) ) .And. (nId = 0) 							
-				xButsOffs()
-				xDcToDEspe()				
-			//	SysWait(0.03)
+			If (nRow1 >= 61) .And. (nRow1 <= (GetProperty('Win_Role1','Height') - 61) ) .And. (nId = 0) 							
+			//	xButsOffs()
+				
 				lTracking75 := .f. 
 				lTracking135 := .f.
 				nHasFocus := 0				
-
-				xLuzOff( cBarrah)
-				//msginfo('ok')
-
+				SetWindowCursor( nHWnd , IDC_ARROW )
+				xRefreshBut()				
 				Do Events 
-
-				//Msginfo('ok')
+				xLuzOff( cBarrah)
+				xDcToDEspe()											
+				Do Events 				
+				
+				If  _isWindowDefined("Win_Msg")
+					xHidehint()
+				End If
+				Do EVENTS
 				Return 
 			End If 
 
 
+
+
 			If (nHasFocus > 0) 				
 				If (nId != nHasFocus)					
-					PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )															
+				//	PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )															
 					xDcToDEspe()
 					Do Events 			
 					lTracking75 := .f. 		
 					lTracking135 := .f.
-					nHasFocus := 0				
+					nHasFocus := 0		
+					//msginfo('lp')		
+					//Do Events
 				End If 					
 			End If 
 
+
 			
 			If (nId > 0) .And. (!lTracking75)				
-				CursorHand1( nHWnd  )
-				PostMessage(OBTN_Handle(  'Win_Role1' , nId   )  , WM_MOUSEMOVE , 0, 0  )				
-				Do Events 
-				
-				nHasFocus := nId
-				xDcToDEspe()
-			//	Do Events 				
 
+				nModeBrw := xDoHint(   nId  )
+				Do Events 
+				CursorHand1( nHWnd  )				
+				Do Events 				
+				nHasFocus := nId
+				xRefreshBut()
+				Do Events 
+				xDcToDEspe()
 				lTracking135 := .t.
 				lTracking75  := .t.
 			End If 	
@@ -1351,10 +1460,15 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 
 	If (nHWnd == GetProperty(  'Win_Role1' , "HANDLE" ))
+
+		If (nMsg == WM_LBUTTONDOWN) 			
+
+			msginfo('kk2')
+		End If 	
 		
 		If (nMsg == WM_DRAWITEM)				
 			If ( nWParam >=  855 ) .AND.  ( nWParam <=  860 )
-				OBTN_Draw( nHWnd,  nwParam, nLParam , (  nHasFocus == nWParam  )  ,  xRetImgs(  nWParam  ) , .f. , 20 ) 				
+				//OBTN_Draw( nHWnd,  nwParam, nLParam , (  nHasFocus == nWParam  )  ,  xRetImgs(  nWParam  ) , .f. , 20 ) 				
 			End If
 		End If 	
 
@@ -1381,16 +1495,16 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 			
 			If (nHasFocus > 0) 					
-				If (nId != nHasFocus)											
-					xButsOffs()
-					xDcToDEspe()
+				If (nId != nHasFocus)																
 					Do Events 			
 					lTracking75 := .f. 																	
 					lTracking135 := .f. 
 					nHasFocus := 0						
+					xRefreshBut()
+					Do Events 
+					xDcToDEspe()		
 
-				End If 						
-
+				End If 			
 			End If 		                 
 			
 
@@ -1433,8 +1547,91 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 	End If
 
-
 Return
+
+
+
+
+Function xDoHint(   nIdBut )
+
+	Local cTp1 := ''
+	Local nModeBrw := 0
+	Local nRow , nCol 
+
+	If nIdBut = 855
+		cTp1 := "Retorna uma Registro para Tras no Grid."
+		nModeBrw := 3
+	End If 	
+
+	If nIdBut = 856
+		cTp1 := "Retorna uma Pagina para Tras no Grid."
+		nModeBrw := 2
+	End If 	
+
+	If nIdBut = 857
+		cTp1 := "Desloca Grid ate Primeiro Registro."
+		nModeBrw := 1
+	End If 	
+
+	If nIdBut = 858
+		cTp1 := "Desloca Grid ate o Ultimo Registro."
+		nModeBrw := 4
+	End If 	
+
+	If nIdBut = 859
+		cTp1 := "Avança uma Pagina no Grid"
+		nModeBrw := 5
+	End If 	
+
+	If nIdBut = 860
+		cTp1 := "Avança um registro no Grid"
+		nModeBrw := 6
+	End If 	
+
+	Do Events 
+
+
+	GetCursorPos( @nCol , @nRow )
+
+	
+	If !_isWindowDefined("Win_Msg")
+		CrieJanTip( nRow  , nCol - 250   ,   Alltrim(cTp1)      ,, 0.5 )
+	Else
+		xDispHint( cTp1 , nRow ,  nCol - 250  )
+	End If
+
+	xDispUpTam(cTp1 )
+
+	BringTop('xHint')
+
+	lTracking135 := .t.
+	lTracking75  := .t.
+	
+REturn nModeBrw
+
+
+
+Function xRefreshBut()
+
+	
+	Local n11 := xCriaButs()
+
+
+	If (nHasFocus == 0)
+
+		BT_ClientAreaInvalidateAll( 'Win_Role1' )
+	Else 
+		If (nHasFocus < 858 )
+			BT_ClientAreaInvalidateRect( 'Win_Role1' , 0,0, 20 , 61 , .t.)
+		Else 		
+			BT_ClientAreaInvalidateRect( 'Win_Role1' , n11 ,0, 20 , 61 , .t.)
+		End If	
+	End If 
+
+	//BT_ClientAreaInvalidateAll('Win_Role1')	
+
+
+Return 
 
 Function xButsOffs()
 
@@ -1526,17 +1723,54 @@ Function xPaintScroll( cJanela )
 	Local zBmp1 := BT_BitMapLoadFile('SCRDOWN1')
 	Local zBmp2 := BT_BitMapLoadFile('SCRDOWN2')
 	Local zBmp3 := BT_BitMapLoadFile('SCRDOWN3')
-	Local zRolagem := BT_BitMapLoadFile('ROLAGEM')
+	//Local zRolagem := BT_BitMapLoadFile('ROLAGEM')
 
 	LOCAL Width  := BT_ClientAreaWidth  (cJanela)
 	LOCAL Height := BT_ClientAreaHeight (cJanela)
 
 	Local nRow1 := Height - 20
 
+	Local n11 := xCriaButs()
 
+	Local aMtrz1 := { 855 , 856 , 857 , 860 , 859 , 858}
+
+	Local nLinha := 0
+	Local lFlag  := .f. 
+
+	Local n1 
+	
 
 	hDC = BT_CreateDC ( cJanela  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
 	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    ,  {230,230,230}  , {230,230,230} )
+
+
+	For n1 := 1 To Len(aMtrz1)
+
+		aImgs := xRetImgs(  aMtrz1[n1]   )
+	
+
+		If (aMtrz1[n1] >= 858) .And. ( !lFlag	)
+			nLinha := n11			
+			lFlag := .t. 
+		Else 
+			
+		End If 	
+
+		cImg := aImgs[1]
+
+
+		If (nHasFocus == aMtrz1[n1] )
+			cImg := aImgs[2]
+		End If 	
+
+
+
+		BT_DrawBitmap (hDC  , nLinha  , 0  	, 18  , 18  ,      BT_COPY,   BT_BitMapLoadFile( cImg   )    )
+		nLinha += 21
+
+	Next 	
+
+	Do Events 
 
 
 	nLAst := nRow1 - 63
@@ -1549,11 +1783,9 @@ Function xPaintScroll( cJanela )
 
 		If (nItemX5 == nMaxItem1 )			
 			BT_DrawFillRoundRect ( hDC , nLimteLin - nAltura ,  2   , Width - 5 , nAltura , 5 ,5 ,   {152 , 152 ,152}   , {152 , 152 ,152}  , 0 ) 				
-		//	msginfo('ok')
+		
 			
 		Else				
-
-		   // nFator := xCalcPosV(nItemX5)
 
 			yPos := nLimteLin - nRIni - nAltura
 			nFator := Int(( nItemX5 * yPos     ) /	nMaxItem1)
@@ -1565,7 +1797,7 @@ Function xPaintScroll( cJanela )
 	End If
 
 	BT_DeleteDC (BTstruct2 )
-	BT_BitmapRelease (zRolagem)
+//	BT_BitmapRelease (zRolagem)
 
 
 Return
@@ -2043,6 +2275,7 @@ Function EventRole1()
 
 			OBTN_Enable( cFormx, nIdBut, .T. )
 			OBTN_Visible( cFormx, nIdBut, .T. )
+
 			cTp1 := ''
 
 			
@@ -2111,6 +2344,7 @@ Function EventRole1()
 
 			nHasFocus := 0
 			nModeBrw := 0
+
 
 	
 			OBTN_Color( cFormx,  nIdBut, RetColor1( 1 ), .T. )
