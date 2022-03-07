@@ -788,6 +788,8 @@ Function xTeclasBrow()
 
 	If (nWParam == VK_DOWN)
 
+
+
 		lHitt := .f.
 
 		If (lHitt)
@@ -849,9 +851,12 @@ Function xTeclasBrow()
 
 	End If
 
-	If (nWParam == VK_UP)
+	If (nWParam == VK_UP) 	
+		
 
 		HMG_CleanLastVirtualKeyUp()
+
+	
 
 		If nItemx5 > 1
 			nItemx5--
@@ -863,24 +868,31 @@ Function xTeclasBrow()
 			End If
 
 			If (lHitt)
+				//SysWait(0.09)
 				xSelItem( nItemx5  , .t. , .f.  )
 				ScrolUp1(.t.)				
 				EncheMVis( nItemx5  , .t. )
-				SysWait(0.04)
+				SysWait(0.06)
+				HMG_CleanLastMouseMessage()
 			Else
+
 				xSelItem( nItemx5  , .f.  , .f. )				
-				SysWait(0.04)
+				SysWait(0.09)
 			End If				
 
 		Else
 
+
 		//	msginfo('ok2')	
+
+
 			lHitt := .t.
 			nItemx5 := 1
 			nClearIt2 := 1
 			nLinScrool := 0
 			nLinhaBarra := 1
 			xDialog('Top Atingido!' , .f.  )			
+
 
 		End If
 
@@ -1237,28 +1249,41 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 		If (nMsg == WM_LBUTTONUP)			
 
 			If (nHasFocus > 0 )
-				PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )									
-				Do Events
-				Do Events
+				PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )												
 				Do Events
 				xDcToDEspe()				
 				nHasFocus := 0
-				lTracking75 := .f.		
-				//msginfo('lp2')
-				SysWait(0.02)
+				lTracking75 := .f.					
+				lTracking45 := .t. 
+			//	msginfo('lp2')
+				SysWait(0.01)
 			End If 	
 
+
 		End If 
+		
+  
+		/*
+		If (nMsg == WM_LBUTTONUP)				
+
+			Do Events
+
+			nHasFocus := 0
+
+			lTracking45 := .t. 
+			
+			Do Events
+			Do Events
+
+		End If 
+		*/
+
+		
 
 
 
 		If (nMsg == WM_LBUTTONDOWN) 			
-			 /*
-			msginfo('ok')
-
-			Do Events 			
-			PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_LBUTTONDOWN , 0, 0  )					
-			*/
+	
 
 			If nModeBrw = 1
 				lControlOk := .t. 
@@ -1276,13 +1301,11 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 	
 
-			While( nModeBrw = 3) .And. (!lTracking45)
-				
+			While( nModeBrw = 3) .And. (!lTracking45)				
 
-				//Do Events 
+
 				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_UP , 0 )				
 
-				//SysWait(0.08)
 
 				If (GetAsyncKeyState(VK_LBUTTON)) == 0					
 					lTracking45 := .t. 
@@ -1291,8 +1314,10 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			End 
 
 			
+
+			
 			While (nModeBrw = 6) .And. (!lTracking45)
-				//Do Events
+				
 
 				SendMessage( GetFormHandle('Win_Browser')  , WM_KEYDOWN , VK_DOWN , 0 )				
 
@@ -1325,7 +1350,6 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				xGoPgUp()
 				SysWait(0.02)
 
-
 					
 				If (GetAsyncKeyState(VK_LBUTTON)) == 0					
 					lTracking45 := .t. 
@@ -1333,15 +1357,15 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 			End 
 
+
+
 			SysWait(0.02)
 			
-			HMG_CLEANLASTMOUSEMESSAGE()
+//			HMG_CLEANLASTMOUSEMESSAGE()
 
 			lTracking45 := .f. 
 			SysWait(0.09)
-			//SendMessage(  OBTN_Handle( 'Win_Role1' , nHasFocus ) , WM_MOUSELEAVE , 0,0)
-
-
+			
 		
 		End If 	
 
@@ -1358,12 +1382,6 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 			nRow1 := ar1[1]
 			nId := 0 
-
-			//Do Events
-
-		//	msginfo('ok')
-
-
 
 			If (nRow1 >= nLimteLin)			
 
@@ -1421,22 +1439,18 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 
 			If (nHasFocus > 0) 				
-				If (nId != nHasFocus)					
-				//	PostMessage(OBTN_Handle(  'Win_Role1' , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )															
+				If (nId != nHasFocus)									
 					xDcToDEspe()
 					Do Events 			
 					lTracking75 := .f. 		
 					lTracking135 := .f.
-					nHasFocus := 0		
-					//msginfo('lp')		
-					//Do Events
+					nHasFocus := 0							
 				End If 					
 			End If 
 
 
 			
-			If (nId > 0) .And. (!lTracking75)				
-
+			If (nId > 0) .And. (!lTracking75)			
 				nModeBrw := xDoHint(   nId  )
 				Do Events 
 				CursorHand1( nHWnd  )				
@@ -1494,17 +1508,42 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 		If nMsg == WM_MOUSEMOVE
 
 			
+			
+
 			If (nHasFocus > 0) 					
+
+				lTracking75 := .f. 
+				lTracking135 := .f.
+				nHasFocus := 0				
+				SetWindowCursor( nHWnd , IDC_ARROW )
+				xRefreshBut()				
+				Do Events 
+				xLuzOff( cBarrah)
+				xDcToDEspe()											
+				Do Events 				
+				
+				If  _isWindowDefined("Win_Msg")
+					xHidehint()
+				End If
+				Do EVENTS
+
+			  /*
 				If (nId != nHasFocus)																
 					Do Events 			
 					lTracking75 := .f. 																	
 					lTracking135 := .f. 
+					//lTracking45 := .t. 
 					nHasFocus := 0						
 					xRefreshBut()
 					Do Events 
 					xDcToDEspe()		
 
+					Do Events 
+
 				End If 			
+				*/
+
+
 			End If 		                 
 			
 

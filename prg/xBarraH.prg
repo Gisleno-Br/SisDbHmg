@@ -35,8 +35,7 @@ Function xBarraH( cParent , cBrowserName , nLinha1 )
     END WINDOW  
 
     If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventBarra"  ) )  ) = 0
-		InstallEventHandler( "EventBarra" )
-		//nIndexEventZ := EventCreate (  { ||   xTeclasBrow( )   }  )
+		InstallEventHandler( "EventBarra" )		
 	End If
 
    HMG_ChangeWindowStyle(  GetProperty(  cJanName , 'HANDLE' ) , WS_BORDER, NIL, .T. )
