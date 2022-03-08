@@ -27,6 +27,11 @@
     DIREITA1    BITMAP  img\SetaDireita_1.bmp 
 
 
+    ESQUERDAD   BITMAP  img\SetaEsquerda_d.bmp 
+    DIREITAD    BITMAP  img\SetaDireita_d.bmp 
+
+
+
 
     CHAVE      PNG     img\chave2.png
     BACK1       ARRAY   {229,237,242}

@@ -1088,8 +1088,7 @@ Function InitTela(  lIni1  , nColz1)
 
 
 
-
-	xBrowser( aMtrDados , cFormPrin , nLarg)
+	xBrowser( aMtrDados , cFormPrin  )
 
 	DoMethod('Win_Browser' , 'Activate')
 

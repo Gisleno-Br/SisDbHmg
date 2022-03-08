@@ -90,6 +90,8 @@ Static lTracking75 := .f.
 Static lTracking45 := .f.
 Static nHasFocus := 0
 
+Static nLargX := 0
+
 Static cBarrah := ''
 
 //DECLARE WINDOW Win_Browser
@@ -358,12 +360,25 @@ Function EncheMVis( nRec , lFrente , lCalcPage  )
 Return
 
 
-Function xBrowser( aDatas1 , cParent  , nTamWidth )
+Function xBrowser( aDatas1 , cParent   , nLarg1  )
 
 
-	Local nLarg1 := GetDeskTopWidth() - 40
-	Local nRowIni := 145
+	//Local nLarg1    := GetDeskTopWidth() - 40
+	Local nRowIni   := 145
+	Local nTamWidth := xRetLargura()
+
 	Private aOpx1 := 0
+
+	DEFAULT nLarg1  := GetDeskTopWidth() - 40
+
+
+	If (nLargx > GetDeskTopWidth() - 40)
+		*// Largura Maxima Para Janela
+		nLarg1  := GetDeskTopWidth() - 40
+	End If 
+
+	
+	nLargx := nLarg1 
 
 
 	aMt1 := Aclone(aDatas1)
@@ -386,9 +401,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 		WIDTH nLarg1 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) VIRTUAL WIDTH nLargTotal  ;
 		TITLE 'xBrowser' + Left(cActiveJan,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR Nil  ;		
-		ON PAINT (xPaintBrowser( ThisWindow.Name , aMt1 , nItemx5 ,     nClearIt2  , .t.  )  ) 
-		//ON GOTFOCUS xShowBrw() 
-		//ON GOTFOCUS ( _ShowWindow("Win_Browser") , _ShowWindow("Win_Espelho") , xDcToDc() , SysWait(.1) )
+		ON PAINT (xPaintBrowser( ThisWindow.Name , aMt1 , nItemx5 ,     nClearIt2  , .t.  )  ) 		
 	END WINDOW
 
 
@@ -404,7 +417,7 @@ Function xBrowser( aDatas1 , cParent  , nTamWidth )
 	END WINDOW
 
 
-	cBarrah := xBarraH( cParent ,  cBrowserName , nRowIni+(nTamPag * nItemBrwHeight)+2  )
+	cBarrah := xBarraH( cParent ,  cBrowserName , nRowIni+(nTamPag * nItemBrwHeight)+2  , nLargTotal  ,  nLargX )
 
 
 
@@ -628,8 +641,12 @@ Function xTeclasBrow()
 
 	Local lCtrl := .f. 
 
-	Local nLarg1 := GetDeskTopWidth() - 45
+	Local nLarg1 := nLargX
+	//GetDeskTopWidth() - 45
+
 	Local nDiff := nLargTotal - nLarg1
+
+
 
 
 	//xFechaMen
@@ -1023,7 +1040,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 		cTexto := Hb_Utf8ToStr(aMtrOp[n1][1])		
 		nLinb++
 
-		cTexto := StrZero(n1,6) + '    ' + StrZero(nItemx5,5) + '   ' + StrZero(nLinB,6) + '   ' + Alltrim(Str(nRow) + '   ' + Str(  aMtrOp[n1][3]   )  )
+		//cTexto := StrZero(n1,6) + '    ' + StrZero(nItemx5,5) + '   ' + StrZero(nLinB,6) + '   ' + Alltrim(Str(nRow) + '   ' + Str(  aMtrOp[n1][3]   )  )
 
 		IF (nLinb > nTamPag)
 			nLinB := 0
@@ -1056,7 +1073,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 				nFontCor 	 := BLACK
 			End If 	
 
-			cTexto := StrZero(n1,6) + '    ' + StrZero(nItemx5,5) + '   ' + StrZero(nLinB,6) + '   ' + Alltrim(Str(nRow))  + "** " + Str(aMtrOp[n1][3])
+		//	cTexto := StrZero(n1,6) + '    ' + StrZero(nItemx5,5) + '   ' + StrZero(nLinB,6) + '   ' + Alltrim(Str(nRow))  + "** " + Str(aMtrOp[n1][3])
 
 			BT_DrawText ( hDC2 , nLine + nRow  , 17+nCol ,   cTexto , xFont2  , 9 , nFontCor ,  SELCOR   , ;
 				nTypeText ,	nAlingText, nOrientation )
@@ -1310,6 +1327,8 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				If (GetAsyncKeyState(VK_LBUTTON)) == 0					
 					lTracking45 := .t. 
 				End If 				
+
+				SysWait(0.03)
 
 			End 
 
@@ -1707,6 +1726,7 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 	Local nI := 0
 
 	Default lFrente := .t.
+
 
 	If nClearIt2 > 0
 		xLimpSub( 'Win_Browser' ,  @nClearIt2 ,  @nItemx5 , 0 ,   nItemBrwHeight , GetProperty(  'Win_Browser','Width') , -(nLinScrool) )
