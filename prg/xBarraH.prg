@@ -168,6 +168,8 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
     Local ar1 
 
+    Local lOk := .f. 
+
 	
 
 	
@@ -192,13 +194,19 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
             lFirst := .f. 
 
-
+           
             While (lDragMode) 
 
 
                     GetCursorPos (@nCol, @nRow)
 			        ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
 			        nColx := ar1[2]
+
+                    CursorWe()
+
+                    lOk := .f. 
+                    
+			        //SetWindowCursor( nHWnd , IDC_SIZEWE)
 
                     
                     If !lFirst
@@ -216,22 +224,41 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                     If (nColx != nSaveCol)
                         If (nColx > nSaveCol)
 
-                            If (nColx - nSaveCol ) >= 30
-                                msginfo(' Ok ')
-                                nSaveCol := nColX
-                            End If 
+                            If ( Abs(nColx - nSaveCol) ) >= 30                               
+                                If nColScrool <= (nLimite )                                                         
+                                    nColScrool += 30                                       
+                                Else 
 
-                            //msginfo(' Maior ')
-
-
+                                End If                                     
+                            End If           
 
                         Else 
-                            msginfo(' Menor ')
-                        End If 
-                      //  nSaveCol := nColX
-                    End If 
 
-                    
+                            If ( Abs(nSaveCol - nColx) ) >= 30
+                                If nColScrool > 18
+                                    nColScrool -= 30                                       
+                                Else 
+
+                                End If 
+
+
+                            Else 
+
+                            End If 
+                        End If 
+
+
+                        If (lOk)
+                             Do Events                    
+                             BT_ClientAreaInvalidateAll(cBarraName)                                                                        
+	    		             CursorWe()
+                             SysWait(0.02)
+                            nSaveCol := nColX
+                        End If     
+
+
+                      //  nSaveCol := nColX
+                    End If                     
 
                    // SysWait(0.03)
                     
@@ -240,8 +267,11 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
             If lFirst
                 xFecheAnimate(  GetFormHandle('Win_Msg') )
-                 xShowBrw()
-                 SysWait(0.04)
+                xShowBrw()
+                SetWindowCursor( nHWnd , IDC_ARROW )
+                SetWindowCursor( GetFormHandle('Win_Browser') , IDC_ARROW )
+                SetWindowCursor( GetFormHandle('Win_Role1')   , IDC_ARROW )
+                SysWait(0.04)                 
             End If 
 
 
@@ -338,6 +368,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                     nModeBut := 999
                     lDragMode := .t.
                     nSaveCol := nCol
+                  //  msginfo('Dm')
                 End If 
 
             End If 

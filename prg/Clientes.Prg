@@ -5373,6 +5373,13 @@ REturn
 
 	}
 
+	
+
+HB_FUNC( CURSORWE )
+{
+   hb_retnl( ( long ) SetCursor(LoadCursor(0, IDC_SIZEWE)) );
+}
+
 
 	HB_FUNC(CONTROLBACKX)
 	{
