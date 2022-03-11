@@ -310,9 +310,14 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
 
 
-                                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,  30 )
+                                    //SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,  30 )
 
                                     //SendMessage( GetFormHandle(cBarraSombra)  , WM_KEYDOWN , VK_RIGHT ,  n1 )
+
+                                    
+
+	                                _HMG_PRINTER_SETHSCROLLVALUE(  GetFormHandle(cBrwName)  , 900+nScroxy)
+
 
                                     
                                     
