@@ -1088,9 +1088,9 @@ Function InitTela(  lIni1  , nColz1)
 
 
 
-	xBrowser( aMtrDados , cFormPrin  )
+	xBrowser( aMtrDados , cFormPrin ,  , 'Brw' + Left(cTabela,4)  )
 
-	DoMethod('Win_Browser' , 'Activate')
+	DoMethod( 'Brw' + Left(cTabela,4) , 'Activate')
 
 	//DoMethod( cFormPrin , 'Activate')
 
@@ -1098,7 +1098,7 @@ Function InitTela(  lIni1  , nColz1)
 
 
 	
-	DoMethod('Win_Browser' , 'SetFocus')
+//	DoMethod('Win_Browser' , 'SetFocus')
 
 
 	//ShowBrowser()
@@ -4136,17 +4136,16 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 	STATIC lTracking30 := .F.
 
 	
-
 	cForm := 'FTop1' + Right(cActiveJan,5)
 
-	IF !_IsWindowDefined ( cForm )
-		Return
-	END IF
+//	IF !_IsWindowDefined ( cForm )
+	//	Return
+//END IF
 
 	IF !_IsWindowDefined ( cActiveJan )
 		Return
 	END IF
-
+	
 
 	If nSec11 = 0
 		nSec11 := hb_MilliSeconds()
@@ -4166,9 +4165,9 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 	
 
 	
-	If (GetProperty(  cActiveJan   , "HANDLE" ) = GetProperty(cForm, "HANDLE"))
+//If (GetProperty(  cActiveJan   , "HANDLE" ) = GetProperty(cForm, "HANDLE"))
 
-	End If 	
+//	End If 	
 
 
 	IF nHWnd == GetProperty(  cActiveJan   , "HANDLE" )
@@ -4180,6 +4179,14 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 				OBTN_Draw( nHWnd,  nWParam , nLParam )
 			END IF
 		END IF
+
+		
+		If nmsg == WM_MOUSEMOVE
+			//msginfo('kk')
+
+			
+		End If 
+
 
 
 
@@ -4311,6 +4318,8 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 
 	END IF
+
+	/*
 	
 	If nHWnd == GetProperty(  cMenuName , "HANDLE" )
 
@@ -4361,6 +4370,7 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 		If ( nMsg == WM_MOUSEMOVE ) 
 
+			//msginfo('ok')
 
 			If (nOpselx > Len(aSubOp)) 
 				return 	
@@ -4537,8 +4547,8 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 	If nHWnd == GetProperty(  cForm, "HANDLE" )
 
 
-		if nmsg == 5
-			msginfo('kk')
+		if nmsg == WM_MOUSEMOVE
+		//	msginfo('kk')
 		End If 
 
 		IF nMsg == WM_DRAWITEM
@@ -4580,6 +4590,8 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 		End If 
 
 	End If 
+
+	*/
 
 	//EventButton()
 
