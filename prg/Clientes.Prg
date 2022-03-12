@@ -1062,6 +1062,7 @@ Function InitTela(  lIni1  , nColz1)
 
 
 	
+	
 	aMz1 := yEfect(  cActiveJan , .t.   )
 
 	
@@ -1078,17 +1079,20 @@ Function InitTela(  lIni1  , nColz1)
 	nLarg := xRetLargura()
 
 
+
+
 	//xCloseMsg()
 
 
 	EfectEnd(cActiveJan , aMz1 )
 
 	
+	
 	SetWindowCursor( GetFormHandle( cFormPrin )  , IDC_ARROW  )
 
 
 
-	xBrowser( aMtrDados , cFormPrin ,  , 'Brw' + Left(cTabela,4)  )
+	xBrowser(  , aMtrDados , cFormPrin , nLarg , 'Brw' + Left(cTabela,4)   )
 
 	DoMethod( 'Brw' + Left(cTabela,4) , 'Activate')
 

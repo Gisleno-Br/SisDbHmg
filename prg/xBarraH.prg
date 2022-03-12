@@ -8,7 +8,9 @@
 #include <dll.ch>
 #include "hbthread.ch"
 #define XQUEBRA Chr(13)+Chr(10)
-#DEFINE FONTBROWSER 'Lucida Sans Typewriter'
+//#DEFINE FONTBROWSER 'Lucida Sans Typewriter'
+
+#DEFINE FONTBROWSER 'Courier New'
 
 Static cBarraName := ''
 Static cBarraSombra := ''
@@ -61,7 +63,7 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
 
 	
     
-    lEnabled := (xCalcBarH() != 0)
+    lEnabled := (xCalcBarH() > 0)
     //lEnabled := .f. 
 
 
@@ -90,24 +92,35 @@ Function xShowHint( nRow1 , nCol1 , cMsg )
 
 REturn     
 
+
+
 Function xCalcBarH()
 
 	Local nCalc := 0
     Local n2    := 0
 	Local nLargTotal := GetProperty(  cBarraName , 'Width'  ) - 58
 
-	nCalc := nLarTotalx - nLargJan 
+    Local n1 := (( nLargJan  / nLarTotalx) * 100)
+    Local nConst := Int(nLarTotalx / 10)
+    //270
 
-    If (nCalc < 0)
+
+
+	
+    If (nLarTotalx <= nLargJan) .or. (n1 >= 95)
         nCalc := 0
-    End If 
+        nConst := 0
+    Else         
+         nCalc := Int((  n1 / 100) * nLargJan   )
+    End If    
 
-    If (nCalc == 0)
-        Return 0
-    End If 
+    //nCalc := nLarTotalx - nLargJan 
 
 
-Return (nLargJan  - nCalc  )
+Return nCalc - nConst
+
+
+
 
 
 Function UpdateBarH( nPos )
@@ -177,6 +190,7 @@ Return Iif(nTipo = 1, cBarraName, cBarraSombra)
 
 
 
+
 Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
 	Local cOpcao := ''
@@ -194,7 +208,9 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
     //Local nWidBarra := xCalcBarH()
 
     Local nLimite := nLarTotalx - nLargJan - 25
-    Local nLimite2 := nLargJan 
+    Local nLimite2 := nLarTotalx  
+
+    //- nWidBarra
     //nLarTotalx 
     //- nLargJan  
 
@@ -288,15 +304,13 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                             If ( Abs(nColx - nSaveCol) ) >= 1                              
                                 If  ( (nZacum+nWidBarra)  <  (nLimite2 ) )
 
-
-
                                     If nColAnt > 0
                                        nScroxy += (nColx  - nColAnt )     
                                        nZAcum +=  (nColx  - nColAnt )     
 
                                        n1 := (nColx  - nColAnt )  
 
-                                      // SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT , (nColx  - nColAnt )   ) 
+                                      
                                     Else 
                                         nScroxy += Abs(nColx - nSaveCol)                                   
                                         nZacum += Abs(nColx - nSaveCol)
@@ -306,20 +320,14 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                                         
                                     End If 
 
+
                                     nColAnt := nColx 
+                                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,  n1 )
 
-
-
-                                    //SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,  30 )
 
                                     //SendMessage( GetFormHandle(cBarraSombra)  , WM_KEYDOWN , VK_RIGHT ,  n1 )
-
-                                    
-
-	                                _HMG_PRINTER_SETHSCROLLVALUE(  GetFormHandle(cBrwName)  , 900+nScroxy)
-
-
-                                    
+                                 	                              
+                                   
                                     
                                     SysWait(0.01)                                   
 
@@ -328,6 +336,8 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
                                     SysWait(0.03)                                   
                                     lOk := .t. 
+
+                                    //msginfo('ok2')
 
                                     
 
@@ -418,16 +428,26 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
             While (nModeBut = 2) .And. (!lTracking26)                                        
 
-                If nScroxy <= (nLimite )                     
-                    nScroxy += 30               
+                If nScroxy <= (nLimite  * 10000055)                     
+                    nScroxy += 10               
                     BT_ClientAreaInvalidateAll(cBarraName)                
                     SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,0  )                     
-                    Do Events                 
-                    xDcBarH()
+                 //   Do Events                 
+                    
                     If (GetAsyncKeyState(VK_LBUTTON)) == 0					
                         lTracking26 := .t. 
+                        msginfo('ok')
                     End If 	
-                    SysWait(0.03)
+
+
+//                    Do Events
+
+                    SysWait(0.01)    
+
+
+                    xDcBarH()
+
+
                 Else                    
 
                     Do Events                    

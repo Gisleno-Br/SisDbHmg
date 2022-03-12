@@ -86,7 +86,7 @@ Static nSave1 := 0
 Static aMVisible := {}
 Static nLinhaBarra := 1
 Static nColScrool := 0
-Static nHSCrool := 30
+Static nHSCrool := 10
 Static nLargTotal := 0
 Static lNoHorzScr := .f.
 Static nPageTotal := 0
@@ -176,7 +176,7 @@ Function TestBrow( cParent1 , cTabx  )
 	Local aItens := {}
 	Local oServer
 	Local nTamLargura := 0
-	Local nTam1 := GetTextoTam( ''  , cParent1 )
+	Local nTam1 := GetTextoTam( ' '  , cParent1 )
 	Local cLabelx := 'Lblx01'
 	Local nPagNum := 1
 	Local i
@@ -308,7 +308,7 @@ Function TestBrow( cParent1 , cTabx  )
 
 		c1 := ''
 		Aeval(aM1 , { |a|  c1 += ( a[1] + ' '  )     })
-		c1 += "."
+		c1 += " "
 
 		If (nTamLargura == 0)
 			Aeval(aM1 , { |a|    nTamLargura += (a[2]+1)   })
@@ -366,24 +366,27 @@ Function EncheMVis( nRec , lFrente , lCalcPage  )
 Return
 
 
-Function xBrowser( aDatas1 , cParent   , nLarg1  , cBrwName )
+Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  )
 
 
 	//Local nLarg1    := GetDeskTopWidth() - 40
-	Local nRowIni   := 145
+	//ocal nRowIni   := 145
 	Local nTamWidth := xRetLargura()
+
+	Local nTam1 := GetTextoTam( ' '  , cActiveJan )
 
 	Private aOpx1 := 0
 
 	DEFAULT nLarg1  := GetDeskTopWidth() - 40
+	DEFAULT nCol := 10
+
+	DEFAULT nRowIni   := 145
 
 
-	If (nLargx > GetDeskTopWidth() - 40)
-		*// Largura Maxima Para Janela
-		nLarg1  := GetDeskTopWidth() - 40
-	End If 
 
-	
+	//msginfo(Str(  nLarg1  ))
+
+
 	nLargx := nLarg1 
 
 	aMt1      := Aclone(aDatas1)
@@ -396,6 +399,7 @@ Function xBrowser( aDatas1 , cParent   , nLarg1  , cBrwName )
 
 	EncheMVis( nTamPag  , , .f.  )
 
+
 	cBrowserName  := cBrwName
 	//'Win_Browser'
 	cEspelhoBrw   := 'Win_E' + Left(cBrowserName,4)
@@ -403,12 +407,35 @@ Function xBrowser( aDatas1 , cParent   , nLarg1  , cBrwName )
 	cBarraVSombra := 'Win_Resp' +  Left(cBrowserName,4)
 
 
+	
+
+	If Len(aDatas1) > 0 
+		nLArg1 := (Len( aDatas1[1][1]) * nTam1)+18
+		If (nLarg1 > GetDeskTopWidth() - 50)
+		
+			nLarg1  := GetDeskTopWidth() - 50			
+			nLargx := nLarg1 
+
+		
+		End If 
+	End If 
+
+
+//	msginfo(Str(  nLargTotal  ) + '  ' + Str(nLarg1)   )
+
+
+
+	//nLargTotal := nLArg1 + 1
+
+
+
+
 	DEFINE WINDOW &cBrowserName ;
-		AT nRowIni,10 ;
+		AT nRowIni,nCol  ;
 		CHILD ;
 		PANEL ;
 		PARENT &cParent ;
-		WIDTH nLarg1 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) VIRTUAL WIDTH nLargTotal  ;
+		WIDTH nLarg1 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) VIRTUAL WIDTH nLargTotal+1  ;
 		TITLE 'xBrowser' + Left(cActiveJan,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR Nil  ;		
 		ON PAINT (xPaintBrowser( ThisWindow.Name , aMt1 , nItemx5 ,     nClearIt2  , .t.  )  ) 		
@@ -417,11 +444,11 @@ Function xBrowser( aDatas1 , cParent   , nLarg1  , cBrwName )
 
 
 	DEFINE WINDOW &cEspelhoBrw ;
-		AT nRowIni,10 ;
+		AT nRowIni,nCol  ;
 		CHILD ;
 		PANEL ;
 		PARENT &cParent ;
-		WIDTH nLarg1 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) VIRTUAL WIDTH nLargTotal  ;
+		WIDTH nLarg1 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) VIRTUAL WIDTH nLargTotal+1  ;
 		TITLE 'xEspelho' + Left(cActiveJan,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR BLACK 				
 	END WINDOW
@@ -471,7 +498,7 @@ Function xBrowser( aDatas1 , cParent   , nLarg1  , cBrwName )
 	END LABEL
 
 
-	nCol11 := GetDeskTopWidth() - 27
+	nCol11 := nCol + nLarg1 
 
 	DEFINE WINDOW &cBarraVfrm ;
 		AT nRowIni,nCol11  ;
@@ -690,13 +717,18 @@ Function xTeclasBrow()
 				REturn
 			End If
 
-			HMG_CleanLastVirtualKeyDown()
+		//	HMG_CleanLastVirtualKeyDown()
 
 			//MsgInfo( Str( nLParam  )  )
 
 			If (nLParam > 0)
 			   	nDiff := 5000000
 			End If 
+			nDiff := 95000000
+
+
+		//	msginfo(Str(nColScrool) + '  ' + Str(nDiff ))
+
 
 
 			If (nColScrool < nDiff )
@@ -704,7 +736,8 @@ Function xTeclasBrow()
 				SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  -(nHSCrool)    , 2 )
 				xDcToDc()
 			Else 
-			    xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida."))
+			    xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.") + ' ' + Str(nDiff)  )
+				msginfo(Str(nColScrool) + '  ' + Str(nDiff ))
 			End If
 
 		End If
@@ -972,12 +1005,11 @@ Return
 
 
 
-
 function GetTextoTam( cMsg  , cParent )
 
 	Local  FontHandle := _SetFont ( GetControlHandle( 'LblMsg1' , cParent ), FONTBROWSER, 9 , .f. , .f. ,.f. ,.f. )
 
-Return (GetTextWidth(  0,  'L' , FontHandle  )  + 1 )
+Return (GetTextWidth(  0,  'L' , FontHandle  )   )
 
 	//   xPaintBrowser( , aMt1 , nItemx1 ,     nClearIt2 ,  lHitB , lHitT  )
 
@@ -998,7 +1030,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 	Local hBit10
 	Local hBit11
 	Local nHeightBmp := nItemBrwHeight * Len(aMtrOp)
-	Local nTam1 := GetTextoTam( ''  , cActiveJan )
+	Local nTam1 := GetTextoTam( ' '  , cActiveJan )
 	Local hBitmap2
 	LOCAL Width  := BT_ClientAreaWidth  (cForm)
 	LOCAL Height := BT_ClientAreaHeight (cForm)
@@ -1055,6 +1087,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 		cTexto := Hb_Utf8ToStr(aMtrOp[n1][1])		
 		nLinb++
 
+
 		//cTexto := StrZero(n1,6) + '    ' + StrZero(nItemx5,5) + '   ' + StrZero(nLinB,6) + '   ' + Alltrim(Str(nRow) + '   ' + Str(  aMtrOp[n1][3]   )  )
 
 		IF (nLinb > nTamPag)
@@ -1066,7 +1099,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 		If (nPg = nPageTotal)
            cTexto := cTexto := StrZero(n1,6) + '    ' + StrZero(nItemx5,5) + '   Ultimo '
 
-		   n12 := (Len(cTexto) * nTam1 )+5
+		   n12 := (Len(cTexto) * nTam1 )
 
 		   If !lPaint 				
 				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 0  , n12  ,    (nTamPag+2) * nItemBrwHeight     ,  RED  , RED   )	
@@ -1081,7 +1114,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 		If (nOpselx1 > 0) .And. (nOpSelx1 = n1)   
 
 			nTypeText    := BT_TEXT_BOLD
-			nFontCor := WHITE	
+			nFontCor     := WHITE	
 
 			If !lBrwEnable
 				nTypeText    := BT_TEXT_TRANSPARENT				
@@ -1101,7 +1134,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 		Else
 
 			nTypeText    := BT_TEXT_TRANSPARENT
-			n12 := (Len(cTexto) * nTam1 )+5
+			n12 := (Len(cTexto) * nTam1 )
 
 
 			If (Mod( n1 , 2 ) = 0)				
