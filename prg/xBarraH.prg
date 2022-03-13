@@ -17,6 +17,7 @@ Static cBarraSombra := ''
 Static nLarTotalx := 0
 Static nAcende := 0
 Static lTracking26 := .f. 
+Static lTracking37 := .f. 
 Static lDispo1 := .t. 
 Static nColBarra := 18
 Static nModeBut := 0
@@ -101,10 +102,8 @@ Function xCalcBarH()
 	Local nLargTotal := GetProperty(  cBarraName , 'Width'  ) - 58
 
     Local n1 := (( nLargJan  / nLarTotalx) * 100)
-    Local nConst := Int(nLarTotalx / 10)
+    Local nConst := Int(nLarTotalx / 10) 
     //270
-
-
 
 	
     If (nLarTotalx <= nLargJan) .or. (n1 >= 95)
@@ -114,10 +113,11 @@ Function xCalcBarH()
          nCalc := Int((  n1 / 100) * nLargJan   )
     End If    
 
+
     //nCalc := nLarTotalx - nLargJan 
 
 
-Return nCalc - nConst
+Return nCalc - nConst 
 
 
 
@@ -208,7 +208,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
     //Local nWidBarra := xCalcBarH()
 
     Local nLimite := nLarTotalx - nLargJan - 25
-    Local nLimite2 := nLarTotalx  
+    Local nLimite2 := nLargJan - nWidBarra  
 
     //- nWidBarra
     //nLarTotalx 
@@ -282,15 +282,6 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                     End If 
 
 
-                    
-			    //    SetWindowCursor( nHWND , IDC_SIZEWE)
-                //    Do Events
-
-
-               //     msginfo('ok2')
-
-
-
                     If (GetAsyncKeyState(VK_LBUTTON)) == 0					
                         xOffBarra(cBarraName)
                         xDcBarH()
@@ -342,9 +333,9 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                                     
 
                                 Else 
-                                   // nColScrool := nLimite2 + 15
+                                   
                                     MsgInfo( str(nZacum+nWidBarra) + '  ' + Str(   nLimite2    ) )
-                                    //MsgInfo(Str( nZAcum ) + '  ' + Str(    nLimite2 - nWidBarra - 18 )   )
+                                    
                                     lTtd := .t. 
                                     lTracking26 := .t. 
                                     xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não e possivel Avançar."))
@@ -398,6 +389,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                 lDragMode := .f.            
                 xShowBrw()
                 lTracking26 := .f.            
+                lTracking37 := .f.            
                 lFirst := .f.         
             End If 
 
@@ -405,15 +397,18 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
             While (nModeBut = 1) .And. (!lTracking26)           
 
                 If nScroxy > 18
-                    nScroxy -= 30 
+                    nScroxy -= nHSCrool 
                     SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,0  ) 
+                    BT_ClientAreaInvalidateAll(cBarraName)                
                     Do Events                     
                     If (GetAsyncKeyState(VK_LBUTTON)) == 0					
-                        lTracking26 := .t. 
+                        lTracking26 := .t.                         
+                        nModeBut := 0  
+                        SysWait(0.03) 
+                        Exit                       
                     End If 	
                     xDcBarH()
-                    SysWait(0.03)
-
+                    SysWait(0.01)
                 Else 
 
                     Do Events                    
@@ -428,34 +423,26 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
             While (nModeBut = 2) .And. (!lTracking26)                                        
 
-                If nScroxy <= (nLimite  * 10000055)                     
-                    nScroxy += 10               
+                If nScroxy <= (nLimite2 + 1 )                     
+                    nScroxy += nHSCrool               
                     BT_ClientAreaInvalidateAll(cBarraName)                
-                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,0  )                     
-                 //   Do Events                 
-                    
+                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,0  )                                                         
                     If (GetAsyncKeyState(VK_LBUTTON)) == 0					
                         lTracking26 := .t. 
-                        msginfo('ok')
+                        nModeBut := 0
+                        SysWait(0.03)                            
+                        Exit                
                     End If 	
-
-
-//                    Do Events
-
                     SysWait(0.01)    
-
-
                     xDcBarH()
 
-
-                Else                    
-
+                Else         
+                    nScroxy -= nHSCrool  
                     Do Events                    
                     BT_ClientAreaInvalidateAll(cBarraName)                                    
                     SysWait(0.04)
                     lTracking26 := .t. 
-                    xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida."))
-
+                    xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.") )
                 End If     
 
             End If 
@@ -468,41 +455,59 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
         End If 
 
-		If (nMsg == WM_MOUSEMOVE) 					
-            nModeBut := 0
-            SetWindowCursor( nHWnd , IDC_ARROW )
+		If (nMsg == WM_MOUSEMOVE)  
 
-            If nAcende > 0
-               nAcende := 0
-               BT_ClientAreaInvalidateAll(cBarraName)
-               Do Events 
-                xDcBarH()
-            End If 
-
+            
             GetCursorPos (@nCol, @nRow)
-			ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
-			nCol := ar1[2]
+            ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
+            nCol := ar1[2]
 
-            If (nCol < 18)  
-               CursorHand1( nHWnd  )
-               nAcende := 1
-               BT_ClientAreaInvalidateRect( cBarraName  , 0,0,25,20 , .t.    )
-               nModeBut := 1
-               lTracking26 := .f. 
-               Do Events 
-                xDcBarH()
-            End If 
+            If (nCol > 18) .And. (nCol < (Width - 18)) 
+                nModeBut := 0
 
-            If (nCol >= (Width - 18))
-               CursorHand1( nHWnd  )
-               nAcende := 2
-               BT_ClientAreaInvalidateRect( cBarraName  , 0,  (Width - 25)    ,25,20 , .t.    )
-               nModeBut := 2            
-               lTracking26 := .f. 
-               Do Events 
-                xDcBarH()
-            End If 
+            Else 
+                        
+            
+                If (!lTracking37)					
 
+                    nModeBut := 0
+                
+                    SetWindowCursor( nHWnd , IDC_ARROW )
+
+                    If nAcende > 0
+                        nAcende := 0
+                        BT_ClientAreaInvalidateAll(cBarraName)
+                        Do Events 
+                        xDcBarH()
+                    End If 
+
+
+                    If (nCol < 18)  
+                        CursorHand1( nHWnd  )
+                        nAcende := 1
+                        BT_ClientAreaInvalidateRect( cBarraName  , 0,0,25,20 , .t.    )
+                        nModeBut := 1
+                        lTracking26 := .f. 
+                        lTracking37 := .t. 
+                        Do Events 
+                        xDcBarH()
+                    End If 
+
+                    If (nCol >= (Width - 18)) 
+                        CursorHand1( nHWnd  )
+                        nAcende := 2
+                        BT_ClientAreaInvalidateRect( cBarraName  , 0,  (Width - 25)    ,25,20 , .t.    )
+                        nModeBut := 2            
+                        lTracking26 := .f. 
+                        
+                        lTracking37 := .t. 
+                        SysWait(0.02)
+                        xDcBarH()
+                    End If 
+
+                End If 
+
+            End If     
 
             If (nModeBut = 0)
 
@@ -519,9 +524,19 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                 Do Events 
                 xDcBarH()
 
+                //msginfo('ok')
+
+                nAcende := 0
+                BT_ClientAreaInvalidateAll(cBarraName)
+
+
+                lTracking26 := .f.
+                lTracking37 := .f. 
+
             End If 
 		End If 			
 	End If 
+
 
 Return 
 

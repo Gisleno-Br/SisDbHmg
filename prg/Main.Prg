@@ -116,7 +116,7 @@ FUNCTION Main
 	SET NAVIGATION EXTENDED
 
 
-
+	Public nHSCrool := 10
 	Public cJanx
 
 	Private lExit := .f. 

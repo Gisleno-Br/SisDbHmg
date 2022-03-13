@@ -86,7 +86,7 @@ Static nSave1 := 0
 Static aMVisible := {}
 Static nLinhaBarra := 1
 Static nColScrool := 0
-Static nHSCrool := 10
+
 Static nLargTotal := 0
 Static lNoHorzScr := .f.
 Static nPageTotal := 0
@@ -737,7 +737,7 @@ Function xTeclasBrow()
 				xDcToDc()
 			Else 
 			    xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.") + ' ' + Str(nDiff)  )
-				msginfo(Str(nColScrool) + '  ' + Str(nDiff ))
+				//msginfo(Str(nColScrool) + '  ' + Str(nDiff ))
 			End If
 
 		End If
