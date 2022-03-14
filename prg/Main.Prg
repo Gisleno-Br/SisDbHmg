@@ -2307,7 +2307,7 @@ HB_FUNC ( SETVSCROLLVALUE )
 
 	GetClientRect(hwnd, &rect3);
 
-	rect3.right -= 35;
+	//rect3.right -= 35;
 
 	
    // VERT 
@@ -2339,6 +2339,7 @@ HB_FUNC ( SETVSCROLLVALUE )
 		si.nTrackPos = yChar;
 		si.fMask  = SIF_ALL;
 		//si.fMask  = SIF_TRACKPOS;
+
 
 
 

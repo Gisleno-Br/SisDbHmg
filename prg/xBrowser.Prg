@@ -308,7 +308,7 @@ Function TestBrow( cParent1 , cTabx  )
 
 		c1 := ''
 		Aeval(aM1 , { |a|  c1 += ( a[1] + ' '  )     })
-		c1 += " "
+		c1 += "."
 
 		If (nTamLargura == 0)
 			Aeval(aM1 , { |a|    nTamLargura += (a[2]+1)   })
@@ -406,8 +406,9 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  )
 	cBarraVfrm 	  := 'Win_R1' +  Left(cBrowserName,4)
 	cBarraVSombra := 'Win_Resp' +  Left(cBrowserName,4)
 
-
 	
+	
+
 
 	If Len(aDatas1) > 0 
 		nLArg1 := (Len( aDatas1[1][1]) * nTam1)+18
