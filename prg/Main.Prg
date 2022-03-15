@@ -135,6 +135,10 @@ FUNCTION Main
 	
 	PRIVATE nFontSize  := 8
 
+	
+
+	Private cObjSelected := ''
+
 
 	SET SCROLLSTEP TO 10
 
@@ -645,9 +649,10 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 		If (nMsg == 71)
 			//WM_WINDOWPOSCHANGED
 
-			If (_IsWindowDefined( cActiveJan)) .and. (cActiveJan != "Main")
-				xShowBrw()				
+			If (_IsWindowDefined( cActiveJan)) .And. (cActiveJan != "Main")				
+				xShowBrw(  cTabela  )				
 			End If 
+
 
 		End If 
 

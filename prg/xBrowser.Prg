@@ -71,6 +71,8 @@ Static cBarraVfrm := ''
 Static cBarraVSombra := ''
 
 
+
+
 Static nSelLine := 1
 Static nIndexEventZ := 0
 Static lTermino := .f.
@@ -101,6 +103,7 @@ Static nLargX := 0
 Static cBarrah := ''
 
 //DECLARE WINDOW Win_Browser
+
 
 
 Function xRodaImp()
@@ -377,6 +380,8 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  )
 
 	Private aOpx1 := 0
 
+
+
 	DEFAULT nLarg1  := GetDeskTopWidth() - 40
 	DEFAULT nCol := 10
 
@@ -409,15 +414,11 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  )
 	
 	
 
-
 	If Len(aDatas1) > 0 
 		nLArg1 := (Len( aDatas1[1][1]) * nTam1)+18
-		If (nLarg1 > GetDeskTopWidth() - 50)
-		
-			nLarg1  := GetDeskTopWidth() - 50			
-			nLargx := nLarg1 
-
-		
+		If (nLarg1 > GetDeskTopWidth() - 40)		
+			nLarg1  := GetDeskTopWidth() - 40			
+			nLargx := nLarg1 		
 		End If 
 	End If 
 
@@ -451,8 +452,10 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  )
 		PARENT &cParent ;
 		WIDTH nLarg1 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) VIRTUAL WIDTH nLargTotal+1  ;
 		TITLE 'xEspelho' + Left(cActiveJan,4)  	;
-		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR BLACK 				
+		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR BLACK ;
+		ON MOUSEMOVE ( xCheckObj() ,   cObjSelected := 'Browser')				
 	END WINDOW
+
 
 
 	cBarrah := xBarraH( cParent ,  cBrowserName , nRowIni+(nTamPag * nItemBrwHeight)+2  , nLargTotal  ,  nLargX , cBrowserName )
@@ -514,23 +517,22 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  )
 
 
 
-
 	DEFINE WINDOW &cBarraVSombra ;
 		AT nRowIni,nCol11  ;
 		CHILD ;
 		PANEL ;
 		PARENT &cParent ;
-		WIDTH 21 HEIGHT (nTamPag * nItemBrwHeight)  ;
+		WIDTH 27 HEIGHT (nTamPag * nItemBrwHeight)  ;
 		TITLE 'xScroxSombra' + Left(cParent,4)  	;
-		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR WHITE   
+		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR {240,240,240}  ;
+		ON MOUSEMOVE (cObjSelected := 'BarraV')				  
 	END WINDOW
+
 
 		//366
 		//+90
 
 	SET WINDOW &cBarraVfrm TRANSPARENT TO 0
-
-
 	_ShowWindow(cBrowserName )
 
 
@@ -589,7 +591,6 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  )
 
 Return
 
-
 Function xCalcPosV(nReg1)
 
 	Local nPos 	  := 0
@@ -612,18 +613,29 @@ Function xCalcBarV()
 
 Return nCalc 
 
-Function xShowBrw()
+Function xShowBrw(  cTable1   )
+
+	Local cBrwName        := 'Brw' + Left(cTable1,4) 
+	Local cEspelhoBrw     := 'Win_E' + Left(cBrwName,4)
+	Local cBarraVfrm 	  := 'Win_R1' +  Left(cBrwName,4)
+	Local cBarraVSombra   := 'Win_Resp' +  Left(cBrwName,4)
+
+
 	
+	If (_isWindowDefined(cBrwName))
 
-	_ShowWindow(cBrowserName )  
-	_ShowWindow(cEspelhoBrw)  
+		_ShowWindow(cBrwName )  
+		_ShowWindow(cEspelhoBrw)  
 
-	_ShowWindow(cBarraVfrm)
-	_ShowWindow(cBarraVSombra)
-	xDcToDc() 
+		_ShowWindow(cBarraVfrm)
+		_ShowWindow(cBarraVSombra)
+		xDcToDc() 
 
-	SysWait(0.03)
-	xDcToDEspe()	
+		SysWait(0.03)
+		xDcToDEspe()	
+		xDcBarH()
+
+	End If 
 
 
 Return 
@@ -1305,6 +1317,19 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	Local nIdBut := 0
 	Local nId   := 0
 	Local nL := 0
+
+	Local cControl := ''
+
+	Local nCol1   
+
+	Local hWnd
+
+	Local cBrwName        := 'Brw' + Left(cTabela,4) 
+	Local cEspelhoBrw     := 'Win_E' + Left(cBrwName,4)
+	Local cBarraVfrm 	  := 'Win_R1' +  Left(cBrwName,4)
+	Local cBarraVSombra   := 'Win_Resp' +  Left(cBrwName,4)
+
+	Local cFormName := ''
 	
 	//Local nRow1 := GetProperty('Win_Role1','Height') - 20
 
@@ -1312,11 +1337,55 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	IF nHWnd == GetProperty(  cActiveJan   , "HANDLE" )
 
 				
-		If nmsg == WM_MOUSEMOVE
-		//	msginfo('kk  '  )			
+		If nMsg == WM_MOUSEMOVE
+			//msginfo('kk  '  )			
+
+			/*
+			If _IsWindowDefined(cBrwName)
+				If _IsWindowDefined(cBarraVfrm)				
+					XOffBarra( cBarraVfrm  )
+					SysWait(0.04)  
+
+
+
+
+					//SysWait(0.04)  
+					// MsgInfo('ok2')
+
+				End If 
+			End If 
+			*/
+
+			GetCursorPos (@nCol1, @nRow1)
+
+			ar1 := GetPos_ScreenToClient(   nHWnd , nRow1, nCol1 )
+
+			hWnd := WindowFromPoint ( ar1[1] , ar1[2])
+
+
+			//GetWindowNameByHandle ( hWnd  , @cFormName )
+
+			//GetControlNameByHandle(hWnd, @cControl, @cFormName)
+
+			If GetFormHandle(  cBrwName ) == hWnd
+				msginfo( cBrwName )
+			End If 
+
+		//	msginfo(  cControl  )
+
+			If (cFormName != cActiveJan )
+			//	msginfo(  cFormName  )
+			End If 
+
+			Return 
+
+
+
 		End If 
 
 	End If 	
+
+
 
 	
 
@@ -1419,6 +1488,12 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
          	GetCursorPos (@nCol, @nRow)
 			ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
 
+			If (ar1[2] > 21)
+				//msginfo('ok')
+				xOffBarVert( nHWnd )
+				Return 
+			End If 
+
 			nRow1 := ar1[1]
 			nId := 0 
 
@@ -1455,15 +1530,20 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 					
 
 			If (nRow1 >= 61) .And. (nRow1 <= (GetProperty(cBarraVfrm,'Height') - 61) ) .And. (nId = 0) 							
+
 			//	xButsOffs()
-				
+				/*
 				lTracking75 := .f. 
 				lTracking135 := .f.
 				nHasFocus := 0				
 				SetWindowCursor( nHWnd , IDC_ARROW )
 				xRefreshBut()				
 				Do Events 
-				xLuzOff( cBarrah)
+				//xLuzOff( cBarrah)
+
+				xOffBarra( cBarrah  )
+
+				//xLuzOff( cBarrah )
 				xDcToDEspe()											
 				Do Events 				
 				
@@ -1471,7 +1551,11 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 					xHidehint()
 				End If
 				Do EVENTS
+				*/
+
+				xOffBarVert( nHWnd )
 				Return 
+
 			End If 
 
 
@@ -1546,6 +1630,10 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 		If nMsg == WM_MOUSEMOVE
 
+		//	sysWait(0.04)		
+
+			//msginfo('ok2')
+
 			
 			
 
@@ -1557,30 +1645,21 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				SetWindowCursor( nHWnd , IDC_ARROW )
 				xRefreshBut()				
 				Do Events 
-				xLuzOff( cBarrah)
+				//xOffBarra( cBarrah  )
+			//	xLuzOff( cBarrah)
 				xDcToDEspe()											
 				Do Events 				
 				
 				If  _isWindowDefined("Win_Msg")
 					xHidehint()
 				End If
-				Do EVENTS
+				Do EVENTS	
 
-			  /*
-				If (nId != nHasFocus)																
-					Do Events 			
-					lTracking75 := .f. 																	
-					lTracking135 := .f. 
-					//lTracking45 := .t. 
-					nHasFocus := 0						
-					xRefreshBut()
-					Do Events 
-					xDcToDEspe()		
+				xOffBarra( cBarrah  )
 
-					Do Events 
-
-				End If 			
-				*/
+			Else 
+			   
+				//xOffBarra( cBarrah  )
 
 
 			End If 		                 
@@ -1780,6 +1859,30 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 
 Return
 
+
+Function xOffBarVert( nWh1 )
+	
+
+	lTracking75 := .f. 
+	lTracking135 := .f.
+	nHasFocus := 0				
+	//SetWindowCursor( nHWnd , IDC_ARROW )
+	xRefreshBut()				
+	Do Events 	
+
+	xOffBarra( cBarrah  )
+
+				//xLuzOff( cBarrah )
+	xDcToDEspe()											
+	Do Events 				
+				
+	If  _isWindowDefined("Win_Msg")
+		xHidehint()
+	End If
+	Do EVENTS
+
+
+Return 
 
 
 

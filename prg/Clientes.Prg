@@ -4132,6 +4132,7 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 	Local cFormx := cFormJan
 
+
 	Local cFormPrin := cActiveJan
 
 	//Local cForm    := ''
@@ -4186,7 +4187,9 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 		
 		If nmsg == WM_MOUSEMOVE
-			//msginfo('kk')
+			//msginfo('kk')		
+
+		
 
 			
 		End If 

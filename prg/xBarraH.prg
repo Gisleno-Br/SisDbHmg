@@ -29,6 +29,8 @@ Static nScroxy := 18
 Static lEnabled := .t. 
 Static cBrwName := ''
 
+Static lDesligado := .f. 
+
 
 Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela  , cBrowser )
 
@@ -58,15 +60,17 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
         CHILD ;
         PANEL ;
         PARENT &cParent ;
-        WIDTH  GetProperty(  cBrowserName , 'Width'  )+22   HEIGHT 20 ;
+        WIDTH  GetProperty(  cBrowserName , 'Width'  )+22   HEIGHT 40 ;
         TITLE 'xScroxRoleol1Sombra' + Left(cBrowserName,4)  	;
-        NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR BLACK   
+        NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR RGB(242,242,242) ;
+        ON MOUSEMOVE (cObjSelected := 'BarraH')	
     END WINDOW  
 
 	
     
     lEnabled := (xCalcBarH() > 0)
     //lEnabled := .f. 
+
 
 
     SET WINDOW &cJanName TRANSPARENT TO Iif(!lEnabled , 167 , 0)
@@ -76,7 +80,7 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
     HMG_ChangeWindowStyle(  GetProperty(  cJanName , 'HANDLE' ) , WS_BORDER, NIL, .T. )
 
      
-Return     
+Return cJanName    
 
 
 Function xShowHint( nRow1 , nCol1 , cMsg )
@@ -148,6 +152,8 @@ Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
 
     DEFAULT nCol1 := 0
 
+    lDesligado := .f. 
+
 
     If (nAcende1 > 0)
 
@@ -156,6 +162,8 @@ Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
         Else 
             yEsquerda := BT_BitMapLoadFile('ESQUERDA1')
         End If 
+
+        lDesligado := .t. 
 
     End If 
 
@@ -289,7 +297,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                
 
                     If !lFirst
-                        xShowHint( nRow , nCol , 'Click e Arraste para Navegar entre as Colunas.' )
+                        xShowHint( nRow , nCol , 'Click e Arraste Devagar para Navegar entre as Colunas.' )
                         lFirst := .t. 
                     End If 
 
@@ -313,7 +321,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                                     nScroxy += nHSCrool                                     
                                     SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,  nHSCrool )                                 	                                                                   
                                     xDcBarH()                                
-                                   // SysWait(0.04)
+                                    //SysWait(0.09)
                                     nColAnt := nColx 
                                     lOk := .t. 
                                 Else                                     
@@ -347,13 +355,12 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                             End If 
                         End If 
 
-                        If (lOk) .And. (!lTracking26)
-                             Do Events                    
-                             BT_ClientAreaInvalidateAll(cBarraName)                                                                        	    		          
-                             SysWait(0.01)
-                             //nSaveCol := nColX
-                            
+
+                        If (lOk) .And. (!lTracking26)                             
+                            SysWait(0.01)
                         End If     
+
+
                       
                     End If                                                           
 
@@ -364,7 +371,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
             If lFirst
                 lDragMode := .f.            
-                xShowBrw()
+                //xShowBrw(   cTabela    )
                 lTracking26 := .f.            
                 lTracking37 := .f.            
                 lFirst := .f.         
@@ -438,12 +445,32 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
         End If 
 
-		If (nMsg == WM_MOUSEMOVE)  
-
+		If (nMsg == WM_MOUSEMOVE)              
             
             GetCursorPos (@nCol, @nRow)
             ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
             nCol := ar1[2]
+
+            If (ar1[1] >= 20)
+            /*
+                lDragMode := .f.                    
+	            SetWindowCursor( GetFormHandle( cBarraName )  , IDC_ARROW  )
+               
+                BT_ClientAreaInvalidateAll( cBarraName )
+                Do Events 
+                xDcBarH()
+               // msginfo('ok')
+                nAcende := 0
+                BT_ClientAreaInvalidateAll(cBarraName)
+
+                lTracking26 := .f.
+                lTracking37 := .f.                 
+                */
+
+                xOffBarra( cBarraName  )
+
+                Return Nil
+            End If 
 
             If (nCol > 18) .And. (nCol < (Width - 18)) 
                 nModeBut := 0
@@ -507,7 +534,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                 Do Events 
                 xDcBarH()
 
-                //msginfo('ok')
+               // msginfo('ok')
 
                 nAcende := 0
                 BT_ClientAreaInvalidateAll(cBarraName)
@@ -524,22 +551,45 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 Return 
 
 
+
+Function xCheckObj()
+
+	If (!Empty(Alltrim(cObjSelected)) ) .And. (cObjSelected != "Browser")
+  		
+		xOffBarra(   cBarraName )
+		SysWait(0.02)		
+
+	End If 	  
+
+REturn 
+
+
 Function xOffBarra( cBarName  )
-
-    lDragMode := .f.                        
+      
+    lDragMode := .f.  
+	SetWindowCursor( GetFormHandle( cBarName )  , IDC_ARROW  )
+               
+    BT_ClientAreaInvalidateAll( cBarName )
+    Do Events 
+    xDcBarH()
+               // msginfo('ok')
     nAcende := 0
-    SetWindowCursor(  GetFormHandle(cBarName ) , IDC_ARROW )   
-    BT_ClientAreaInvalidateAll(cBarName)                         
+    BT_ClientAreaInvalidateAll(cBarName)
 
+    xDcBarH()
+
+    lTracking26 := .f.
+    lTracking37 := .f.    
+
+    Do Events
 
 REturn 
 
 Function xLuzOff( cJanela )
 
-    nAcende := 0
+    nAcende   :=  0
     lDragmode := .f. 
     BT_ClientAreaInvalidateAll(cJanela)
-
   //  SysWait(0.02)
   //  msginfo('ok')
 
