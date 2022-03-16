@@ -10,7 +10,7 @@
 #define XQUEBRA Chr(13)+Chr(10)
 //#DEFINE FONTBROWSER 'Lucida Sans Typewriter'
 
-#DEFINE FONTBROWSER 'Courier New'
+//#DEFINE FONTBROWSER 'Courier New'
 
 Static cBarraName := ''
 Static cBarraSombra := ''

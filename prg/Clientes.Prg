@@ -1054,14 +1054,14 @@ Return lOk
 Function InitTela(  lIni1  , nColz1)
 
 	Local nLarg
+	Local aCabec  := GetCamposDic( cTabela, 'S', .F. , .f. )
+
+	Local aTams   := GetCamposInf( cTabela, 'TAM' )
+
+  
 
 
-
-	aMtrDados := {}
-
-
-
-	
+	aMtrDados := {}	
 	
 	aMz1 := yEfect(  cActiveJan , .t.   )
 
@@ -1092,22 +1092,13 @@ Function InitTela(  lIni1  , nColz1)
 
 
 
-	xBrowser(  , aMtrDados , cFormPrin , nLarg , 'Brw' + Left(cTabela,4)   )
+	xBrowser(  , aMtrDados , cFormPrin , nLarg , 'Brw' + Left(cTabela,4)  ,, aCabec , aTams )
 
 	DoMethod( 'Brw' + Left(cTabela,4) , 'Activate')
 
 	//DoMethod( cFormPrin , 'Activate')
 
 	DoMethod( cFormPrin , 'SetFocus')
-
-
-	
-//	DoMethod('Win_Browser' , 'SetFocus')
-
-
-	//ShowBrowser()
-
-
 
 		   
 Return

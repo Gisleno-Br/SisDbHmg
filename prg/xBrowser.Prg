@@ -7,7 +7,7 @@
 #include <dll.ch>
 #include "hbthread.ch"
 #define XQUEBRA Chr(13)+Chr(10)
-#DEFINE FONTBROWSER 'Lucida Sans Typewriter'
+//#DEFINE FONTBROWSER 'Lucida Sans Typewriter'
 
 
 
@@ -71,6 +71,10 @@ Static cBarraVfrm := ''
 Static cBarraVSombra := ''
 
 
+Static cHeaderName  := ''
+Static cHSombraName := ''
+
+
 
 
 Static nSelLine := 1
@@ -101,6 +105,8 @@ Static nHasFocus := 0
 Static nLargX := 0
 
 Static cBarrah := ''
+
+Static lHasHeader := .f. 
 
 //DECLARE WINDOW Win_Browser
 
@@ -294,11 +300,10 @@ Function TestBrow( cParent1 , cTabx  )
 			If (Alltrim(cValor) = 'Inativo')
 				lAtivo := .f.
 			End If
-			//nTam1 := 1
-			//Aadd(aM1 , { Padr(cValor , Int( (aTams[nx1]+3) * 1.03)  )   ,  Int( (aTams[nx1]+3) * 1.03)           }  )
 
 			nQAcento := QtAcento(cValor)
 			nTam := If( (nQAcento =  0)   , aTams[nx1] ,  aTams[nx1] + nQAcento )
+
 			If ( Alltrim(aTips[nx1]) = 'C') //.or. ( Alltrim(aTips[nx1]) = 'D')
 				Aadd(aM1 , { Padr( (cValor) ,nTam )  ,  nTam          }  )
 			Else
@@ -309,8 +314,9 @@ Function TestBrow( cParent1 , cTabx  )
 
 		Next
 
+
 		c1 := ''
-		Aeval(aM1 , { |a|  c1 += ( a[1] + ' '  )     })
+		Aeval(aM1 , { |a|  c1 += ( a[1] + '.'  )     })
 		c1 += "."
 
 		If (nTamLargura == 0)
@@ -325,7 +331,7 @@ Function TestBrow( cParent1 , cTabx  )
 		End If 	
 
 		Aadd(aItens , { c1 , lAtivo , nPagNum }  )
-		//Dbskip()
+		
 	Next
 
 
@@ -369,7 +375,7 @@ Function EncheMVis( nRec , lFrente , lCalcPage  )
 Return
 
 
-Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  )
+Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  , aCabecalho , aTamanhos)
 
 
 	//Local nLarg1    := GetDeskTopWidth() - 40
@@ -377,6 +383,7 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  )
 	Local nTamWidth := xRetLargura()
 
 	Local nTam1 := GetTextoTam( ' '  , cActiveJan )
+
 
 	Private aOpx1 := 0
 
@@ -386,6 +393,8 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  )
 	DEFAULT nCol := 10
 
 	DEFAULT nRowIni   := 145
+
+	DEFAULT aCabecalho := {}
 
 
 
@@ -410,6 +419,9 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  )
 	cEspelhoBrw   := 'Win_E' + Left(cBrowserName,4)
 	cBarraVfrm 	  := 'Win_R1' +  Left(cBrowserName,4)
 	cBarraVSombra := 'Win_Resp' +  Left(cBrowserName,4)
+
+
+	cHeaderName := 'Win_Header' + Left(cBrowserName,4)
 
 	
 	
@@ -460,6 +472,10 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  )
 
 	cBarrah := xBarraH( cParent ,  cBrowserName , nRowIni+(nTamPag * nItemBrwHeight)+2  , nLargTotal  ,  nLargX , cBrowserName )
 
+	If Len(aCabecalho) > 0
+		lHasHeader := xHeader( cHeaderName , aCabecalho , aTamanhos , cParent ,  cBrowserName ,  nLargTotal )
+	End If 	
+
 
 
 	//SET WINDOW Win_Browser TRANSPARENT TO 0
@@ -479,14 +495,14 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  )
 
 	DEFINE LABEL Labelx1
 		//PARENT Win_Browser
-		PARENT &cBrowserName 
+		PARENT &cActiveJan  
 		ROW    720
 		COL    20
 		WIDTH  120
 		HEIGHT 24
-		VALUE " adsadasd  "
+		VALUE " "
 		FONTNAME FONTBROWSER
-		FONTSIZE 9
+		FONTSIZE FONTBROWSERSIZE
 		TOOLTIP ""
 		FONTBOLD .T.
 		FONTITALIC .F.
@@ -565,6 +581,18 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  )
 	_ShowWindow(cEspelhoBrw)
 	_ShowWindow(cBarraVSombra)
 
+	If (lHasHeader)
+		
+		ShowScrollbar (GetFormHandle(cHeaderName) , 0, .f.)
+		ShowScrollbar (GetFormHandle(cHeaderName) , 1, .f.)
+
+		_ShowWindow(cHeaderName)
+
+
+		BT_ClientAreaInvalidateAll(cHeaderName)
+
+	End If 
+
 	nLimteLin := xCriaButs()
 	xDcToDc()
 		
@@ -584,6 +612,9 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  )
 	Do Events 
 
 	xDcBarH()
+
+
+
 
     Do Events
     Do Events
@@ -1018,9 +1049,9 @@ Return
 
 
 
-function GetTextoTam( cMsg  , cParent )
+function GetTextoTam( cMsg  )
 
-	Local  FontHandle := _SetFont ( GetControlHandle( 'LblMsg1' , cParent ), FONTBROWSER, 9 , .f. , .f. ,.f. ,.f. )
+	Local  FontHandle := _SetFont ( GetControlHandle( 'LblMsg1' , cActiveJan ), FONTBROWSER,  FONTBROWSERSIZE  , .f. , .f. ,.f. ,.f. )
 
 Return (GetTextWidth(  0,  'L' , FontHandle  )   )
 
@@ -1110,7 +1141,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 		nPg := Int(    n1  / nTamPag )+1
 
 		If (nPg = nPageTotal)
-           cTexto := cTexto := StrZero(n1,6) + '    ' + StrZero(nItemx5,5) + '   Ultimo '
+        //   cTexto := cTexto := StrZero(n1,6) + '    ' + StrZero(nItemx5,5) + '   Ultimo '
 
 		   n12 := (Len(cTexto) * nTam1 )
 
@@ -1182,7 +1213,7 @@ Return
 
 
 
-static FUNCTION  QtAcento(cString)
+FUNCTION  QtAcento(cString)
 	Local cChar  := ""
 	Local nX     := 0
 	Local nY     := 0
