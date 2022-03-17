@@ -1054,22 +1054,17 @@ Return lOk
 Function InitTela(  lIni1  , nColz1)
 
 	Local nLarg
-	Local aCabec  := GetCamposDic( cTabela, 'S', .F. , .f. )
+	Local aCabec   := GetCamposDic( cTabela, 'S', .F. , .f. )
+	Local aTams    := GetCamposInf( cTabela, 'TAM' )
+	Local aTipos1   := GetCamposInf( cTabela, 'TIPO' )
 
-	Local aTams   := GetCamposInf( cTabela, 'TAM' )
-
-  
+	//LOCAL aTips    := GetCamposInf( wCad, 'CABEC' )
 
 
-	aMtrDados := {}	
-	
-	aMz1 := yEfect(  cActiveJan , .t.   )
-
-	
+	aMtrDados := {}		
+	aMz1 := yEfect(  cActiveJan , .t.   )	
 	aMtrDados := DoMatriz( cActiveJan , cTabela ) 
 	
-
-
 
 	//xMsgRun( "Aguarde Criando Estrutura .... "  , { || aMtrDados := xRodaImp()   }   , .f.  )
 
@@ -1092,7 +1087,7 @@ Function InitTela(  lIni1  , nColz1)
 
 
 
-	xBrowser(  , aMtrDados , cFormPrin , nLarg , 'Brw' + Left(cTabela,4)  ,, aCabec , aTams )
+	xBrowser(  , aMtrDados , cFormPrin , nLarg , 'Brw' + Left(cTabela,4)  ,, aCabec , aTams , aTipos1 )
 
 	DoMethod( 'Brw' + Left(cTabela,4) , 'Activate')
 
@@ -5205,6 +5200,9 @@ Function PutImagem(nColx , cTexto , cSeq1 )
 
 
 Return
+
+
+
 
 
 

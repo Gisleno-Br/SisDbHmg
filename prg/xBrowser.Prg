@@ -7,7 +7,6 @@
 #include <dll.ch>
 #include "hbthread.ch"
 #define XQUEBRA Chr(13)+Chr(10)
-//#DEFINE FONTBROWSER 'Lucida Sans Typewriter'
 
 
 
@@ -69,6 +68,8 @@ Static cEspelhoBrw := ''
 Static cBarraVfrm := ''
 
 Static cBarraVSombra := ''
+
+
 
 
 Static cHeaderName  := ''
@@ -305,9 +306,9 @@ Function TestBrow( cParent1 , cTabx  )
 			nTam := If( (nQAcento =  0)   , aTams[nx1] ,  aTams[nx1] + nQAcento )
 
 			If ( Alltrim(aTips[nx1]) = 'C') //.or. ( Alltrim(aTips[nx1]) = 'D')
-				Aadd(aM1 , { Padr( (cValor) ,nTam )  ,  nTam          }  )
+				Aadd(aM1 , { Padr( (cValor) ,nTam , " " )  ,  nTam          }  )
 			Else
-				Aadd(aM1 , { Padl( (cValor) ,nTam )  ,  nTam          }  )
+				Aadd(aM1 , { Padl( (cValor) ,nTam , " ")  ,  nTam          }  )
 			End If
 
 			Do Events
@@ -316,7 +317,7 @@ Function TestBrow( cParent1 , cTabx  )
 
 
 		c1 := ''
-		Aeval(aM1 , { |a|  c1 += ( a[1] + '.'  )     })
+		Aeval(aM1 , { |a|  c1 += ( a[1] + ' '  )     })
 		c1 += "."
 
 		If (nTamLargura == 0)
@@ -375,13 +376,10 @@ Function EncheMVis( nRec , lFrente , lCalcPage  )
 Return
 
 
-Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  , aCabecalho , aTamanhos)
+Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  , aCabecalho , aTamanhos , aTipos)
 
 
-	//Local nLarg1    := GetDeskTopWidth() - 40
-	//ocal nRowIni   := 145
 	Local nTamWidth := xRetLargura()
-
 	Local nTam1 := GetTextoTam( ' '  , cActiveJan )
 
 
@@ -473,7 +471,7 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 	cBarrah := xBarraH( cParent ,  cBrowserName , nRowIni+(nTamPag * nItemBrwHeight)+2  , nLargTotal  ,  nLargX , cBrowserName )
 
 	If Len(aCabecalho) > 0
-		lHasHeader := xHeader( cHeaderName , aCabecalho , aTamanhos , cParent ,  cBrowserName ,  nLargTotal )
+		lHasHeader := xHeader( cHeaderName , aCabecalho , aTamanhos , cParent ,  cBrowserName ,  nLargTotal , aTipos  )
 	End If 	
 
 
@@ -743,8 +741,7 @@ Function xTeclasBrow()
 	Local nLarg1 := nLargX
 	//GetDeskTopWidth() - 45
 
-	Local nDiff := nLargTotal - nLarg1
-
+	Local nDiff := nLargTotal - nLarg1 + 30
 
 
 
@@ -758,30 +755,32 @@ Function xTeclasBrow()
 		If (nWParam == VK_RIGHT)
 			If  lNoHorzScr
 				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))
-				REturn
+				Return
 			End If
-
-		//	HMG_CleanLastVirtualKeyDown()
-
-			//MsgInfo( Str( nLParam  )  )
-
-			If (nLParam > 0)
-			   	nDiff := 5000000
-			End If 
-			nDiff := 95000000
-
-
-		//	msginfo(Str(nColScrool) + '  ' + Str(nDiff ))
-
-
-
-			If (nColScrool < nDiff )
-				nColScrool += Iif( nLParam <= 0  ,  nHSCrool , nLParam ) 
+	
+				
+			If (nColScrool <= nDiff )
+			//if !((nColScrool - (nLargTotal - nLargX  )) > 40 )
+				nColScrool += nHSCrool 
 				SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  -(nHSCrool)    , 2 )
+			
+				Do Events 
+
+				If lHasHeader
+					SETVSCROLLVALUE( GetFormHandle( cHeaderName  )  ,  -(nHSCrool)    , 2 )
+					UpdHeader(  cHeaderName ,    (nHSCrool)   )					
+					Do Events 
+				End If 					
 				xDcToDc()
+
+				If (nLParam > 0)
+					UpdateBarH( nHSCrool )					
+				End If 
+
 			Else 
-			    xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.") + ' ' + Str(nDiff)  )
-				//msginfo(Str(nColScrool) + '  ' + Str(nDiff ))
+			    xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida. ") )
+
+
 			End If
 
 		End If
@@ -795,10 +794,23 @@ Function xTeclasBrow()
 			End If
 			HMG_CleanLastVirtualKeyDown()
 
+
 			If (nColScrool > 0)
 				nColScrool -= nHSCrool
 				SETVSCROLLVALUE( GetFormHandle( cBrowserName   )  , nHSCrool , 2 )
+
+				If lHasHeader
+					SETVSCROLLVALUE( GetFormHandle( cHeaderName  )  ,  nHSCrool    , 2 )
+					UpdHeader(  cHeaderName ,    -nHSCrool   )
+					Do Events 
+				End If 	
+
 				xDcToDc()
+
+				If (nLParam > 0)
+					UpdateBarH( -(nHSCrool) )					
+				End If 
+
 
 			Else				
 				 xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida."))
@@ -1083,8 +1095,8 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
 	Local cTexto := ''
 	Local xFont2 := FONTBROWSER
-	Local nRow := -(GetProperty( cForm    , "VscrollBar" , "Value"))
-	Local nCol := -(GetProperty( cForm    , "HscrollBar" , "Value"))
+	//Local nRow := -(GetProperty( cForm    , "VscrollBar" , "Value"))
+	//Local nCol := -(GetProperty( cForm    , "HscrollBar" , "Value"))
 	Local nLineSeta := nTamSubMenuConsulta
 	Local nLinDrop := 0
 	Local lEnabled := .t.
@@ -1105,6 +1117,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 	nRow := -(nLinScrool)
 	nCol := -(nColScrool)
+
 	hBitMap2 := BT_BitmapCreateNew (Width  , Height , WHITE )
 	hDC2 := BT_CreateDC (cForm ,   BT_HDC_INVALIDCLIENTAREA  , @BTstruct)
 
@@ -1153,6 +1166,8 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 		   lPaint := .t. 
 
 		End If 	
+
+
 
 
 		If (nOpselx1 > 0) .And. (nOpSelx1 = n1)   
@@ -1367,6 +1382,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	
 	IF nHWnd == GetProperty(  cActiveJan   , "HANDLE" )
 
+
 				
 		If nMsg == WM_MOUSEMOVE
 			//msginfo('kk  '  )			
@@ -1519,8 +1535,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
          	GetCursorPos (@nCol, @nRow)
 			ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
 
-			If (ar1[2] > 21)
-				//msginfo('ok')
+			If (ar1[2] > 21)				
 				xOffBarVert( nHWnd )
 				Return 
 			End If 
@@ -1561,35 +1576,9 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 					
 
 			If (nRow1 >= 61) .And. (nRow1 <= (GetProperty(cBarraVfrm,'Height') - 61) ) .And. (nId = 0) 							
-
-			//	xButsOffs()
-				/*
-				lTracking75 := .f. 
-				lTracking135 := .f.
-				nHasFocus := 0				
-				SetWindowCursor( nHWnd , IDC_ARROW )
-				xRefreshBut()				
-				Do Events 
-				//xLuzOff( cBarrah)
-
-				xOffBarra( cBarrah  )
-
-				//xLuzOff( cBarrah )
-				xDcToDEspe()											
-				Do Events 				
-				
-				If  _isWindowDefined("Win_Msg")
-					xHidehint()
-				End If
-				Do EVENTS
-				*/
-
 				xOffBarVert( nHWnd )
 				Return 
-
 			End If 
-
-
 
 
 			If (nHasFocus > 0) 				
@@ -1620,8 +1609,6 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 			
 		End If 
-
-
 
 	End If 	
 
@@ -1661,13 +1648,6 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 		If nMsg == WM_MOUSEMOVE
 
-		//	sysWait(0.04)		
-
-			//msginfo('ok2')
-
-			
-			
-
 			If (nHasFocus > 0) 					
 
 				lTracking75 := .f. 
@@ -1685,7 +1665,6 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 					xHidehint()
 				End If
 				Do EVENTS	
-
 				xOffBarra( cBarrah  )
 
 			Else 

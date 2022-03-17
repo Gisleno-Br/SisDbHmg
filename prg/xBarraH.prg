@@ -128,10 +128,14 @@ Return nCalc - 50
 
 
 
-
-
 Function UpdateBarH( nPos )
 
+    nScroxy += nPos     
+    nColDrag += nPos 
+
+
+    BT_ClientAreaInvalidateAll(cBarraName)  
+    xDcBarH()
 
 Return 
 
@@ -185,6 +189,7 @@ Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
     Else 
 
 
+
         If lEnabled
 
             If (lDragMode) 
@@ -200,6 +205,7 @@ Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
     BT_BitmapRelease (yEsquerda)
     BT_BitmapRelease (yDireita)
 	BT_DeleteDC (BTstruct )
+
 
 Return     
 
@@ -292,8 +298,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 			        ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
 			        nColx := ar1[2]
 
-                    lOk := .f. 
-                    
+                    lOk := .f.                    
                
 
                     If !lFirst
@@ -319,14 +324,14 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                                     n1 :=  (nColx - nColAnt)
                                     nColDrag += nHSCrool                          
                                     nScroxy += nHSCrool                                     
-                                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,  nHSCrool )                                 	                                                                   
+                                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,  0 )                                 	                                                                   
                                     xDcBarH()                                
                                     //SysWait(0.09)
                                     nColAnt := nColx 
                                     lOk := .t. 
                                 Else                                     
                                     lTracking26 := .t. 
-                                    xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não e possivel Avançar."))
+                                    xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar."))
                                     Exit 
                                 End If     
 
@@ -339,16 +344,13 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                                 If nScroxy > 18
                                     nScroxy -= nHSCrool     
                                     nColDrag -= nHSCrool 
-                                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,0  ) 
-                                   // Do Events
+                                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,0  )                                    
                                     xDcBarH()
-
                                     lTte := .f. 
-                                    lOk := .t.                                   
+                                    lOk := .t.      
+                                    nColAnt := nColx                              
                                 Else 
-
                                     lTte := .t. 
-
                                 End If 
                             Else 
 

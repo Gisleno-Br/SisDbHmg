@@ -5,9 +5,8 @@
 #include <hmg.ch>
 #include <dll.ch>
 #include "hbthread.ch"
+#include "BosTaurus.ch"
 #define XQUEBRA Chr(13)+Chr(10)
-//#DEFINE FONTBROWSER 'Lucida Sans Typewriter'
-
 
 
 
@@ -43,13 +42,26 @@
 
 #define WM_VSCROLL          0x0115
 
+Static nColHeader := 0
+Static cHeaderJan := ''
+
+Static aMapsCol := {}
+
+Static nColSel := 0
 
 
-Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1  )
+
+Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1 , aTps  )
 
     Local nRowIni := GetProperty( cBrwName1 , 'Row')
     Local nCol    := GetProperty( cBrwName1 , 'Col')
     Local nLarg1  := GetProperty( cBrwName1 , 'Width')
+
+    cHeaderJan := cHName
+
+    
+    xMapCols( aCabecalho , aTams , aTps )
+
 
     
 	DEFINE WINDOW &cHName ;
@@ -64,7 +76,60 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
 	END WINDOW
 
 
+
+    If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventHeader"  ) )  ) = 0
+		InstallEventHandler( "EventHeader" )
+		//nIndexEventZ := EventCreate (  { ||   xTeclasBrow( )   }  )
+	End If
+
+
 Return .t. 
+
+
+Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
+
+
+    If !_IsWindowDefined(cHeaderJan)
+       // msgingfo('ok2')
+        Return 
+    End If 
+    
+	
+	If nHWnd == GetProperty(  cHeaderJan   , "HANDLE" )
+				
+		If nMsg == WM_MOUSEMOVE
+            //MsgInfo('ok')
+        End If 
+
+    End If     
+
+
+Return 
+
+Function xMapCols( aCabs , aTamx1 , aTipos1 )
+
+    Local i := 0
+    Local nPos1 := 1 
+
+    aMapsCol := {}
+
+    For i := 1 To Len(aCabs)
+
+        Aadd( aMapsCol , {   aCabs[i] , nPos1 , nPos1 +  aTamx1[i]  , aTipos1[i]     }  )
+        nPos1 := nPos1 +  aTamx1[i] + 1
+
+    Next 
+
+Return 
+
+
+Function UpdHeader( cHeader1 ,  nValor   )
+
+    
+   nColHeader += nValor    
+   BT_ClientAreaInvalidateAll (cHeader1)	
+
+return 
 
 
 
@@ -72,46 +137,54 @@ Function xPaintHeader( cJanela , aCabec  , aTamanho)
 
     LOCAL Width  := BT_ClientAreaWidth  (cJanela)
 	LOCAL Height := BT_ClientAreaHeight (cJanela)
-
     Local BTstruct
-
-    Local cTexto := ''
+    Local cTexto  := ''
+    Local cTexto1 := ''
     Local n1     := 1
-
     Local nTam1 := 0
-
-    Local nCol := 17
-
+    Local nTamx1 := GetTextoTam( 'A'  , cActiveJan ) 
+    Local hFont 
     Local nTypeText    := BT_TEXT_TRANSPARENT  //+ BT_TEXT_BOLD
 	Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
 	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
-
     Local nQAcento := 0
     Local nTam 
-    
-
+    Local nCol := -(nColHeader)
+    Local nColx := 17
     
 	hDC = BT_CreateDC ( cJanela  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct )
 	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    ,  {230,230,230}  , {230,230,230} )
 
 
-    For n1 := 1 To Len(aCabec)
+    If (nColHeader > 0)
+        nColx += nCol 
+    End If 
 
+    hFont := HMG_CreateFont (  hDC , FONTBROWSER, FONTBROWSERSIZE, .f., .f., .f., .f. )
+
+    For n1 := 1 To Len(aCabec)
         
         nTam1  := aTamanho[n1]
-
-
         nQAcento := QtAcento(Alltrim(aCabec[n1]) )
+        nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
+        cTexto1 += Padc( Alltrim(aCabec[n1]) ,   nTam + 1      )
+        cTexto := Replicate('A' ,  aTamanho[n1] + 1 )
+        n12 := GetTextWidth( hDC , cTexto , hfont )
+        nTam := n12
 
-        nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento )
+        If (n1 = 2)
+            nColx+=3
+        End If 
 
-        cTexto += Padc( Alltrim(aCabec[n1]) ,   nTam  ,   Alltrim(Str(n1))      )
+        BT_DRAWEDGE (hDC, 1, nColx , nColx + 2   , Height ,  EDGE_ETCHED  , BF_LEFT + BF_RIGHT)
+        BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  EDGE_ETCHED  , BF_LEFT + BF_RIGHT)
 
+        nColx += nTam        
 
     Next 
 
 
-    BT_DrawText ( hDC , 10  , nCol ,   Hb_Utf8ToStr(cTexto) , FONTBROWSER  , FONTBROWSERSIZE , {125,125,125} ,  {230,230,230}   , ;
+    BT_DrawText ( hDC , 10  , 17+nCol ,   Hb_Utf8ToStr(cTexto1) , FONTBROWSER  , FONTBROWSERSIZE , {125,125,125} ,  {230,230,230}   , ;
 				nTypeText ,	nAlingText, nOrientation )
 
 
