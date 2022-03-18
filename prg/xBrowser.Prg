@@ -1162,13 +1162,9 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 0  , n12  ,    (nTamPag+2) * nItemBrwHeight     ,  RED  , RED   )	
 		   End If 	
 
-
 		   lPaint := .t. 
 
 		End If 	
-
-
-
 
 		If (nOpselx1 > 0) .And. (nOpSelx1 = n1)   
 

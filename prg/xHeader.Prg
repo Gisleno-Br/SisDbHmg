@@ -151,6 +151,8 @@ Function xPaintHeader( cJanela , aCabec  , aTamanho)
     Local nTam 
     Local nCol := -(nColHeader)
     Local nColx := 17
+
+    Local hBitOk 	   := BT_BitmapLoadFile ('OKMARK')
     
 	hDC = BT_CreateDC ( cJanela  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct )
 	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    ,  {230,230,230}  , {230,230,230} )
@@ -159,6 +161,11 @@ Function xPaintHeader( cJanela , aCabec  , aTamanho)
     If (nColHeader > 0)
         nColx += nCol 
     End If 
+
+
+    BT_DrawBitmap (hDC  , 6 ,  (0+nColx) - 16  , 15  , 15 , BT_STRETCH, hBitOk)
+
+
 
     hFont := HMG_CreateFont (  hDC , FONTBROWSER, FONTBROWSERSIZE, .f., .f., .f., .f. )
 
@@ -176,7 +183,7 @@ Function xPaintHeader( cJanela , aCabec  , aTamanho)
             nColx+=3
         End If 
 
-        BT_DRAWEDGE (hDC, 1, nColx , nColx + 2   , Height ,  EDGE_ETCHED  , BF_LEFT + BF_RIGHT)
+        BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  EDGE_ETCHED  , BF_LEFT + BF_RIGHT)
         BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  EDGE_ETCHED  , BF_LEFT + BF_RIGHT)
 
         nColx += nTam        
@@ -189,6 +196,8 @@ Function xPaintHeader( cJanela , aCabec  , aTamanho)
 
 
     BT_DeleteDC (BTstruct )
+
+    BT_BitmapRelease (hBitOk)
 
 
 
