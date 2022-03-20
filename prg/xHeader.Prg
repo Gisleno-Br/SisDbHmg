@@ -48,6 +48,9 @@ Static cHeaderJan := ''
 Static aMapsCol := {}
 
 Static nColSel := 0
+Static nColAntx := 0
+
+Static lTrack39 := .f. 
 
 
 
@@ -59,11 +62,7 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
 
     cHeaderJan := cHName
 
-    
-    xMapCols( aCabecalho , aTams , aTps )
-
-
-    
+        
 	DEFINE WINDOW &cHName ;
 		AT nRowIni - 92 , nCol  ;
 		CHILD ;
@@ -76,6 +75,10 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
 	END WINDOW
 
 
+    
+    xMapCols( aCabecalho , aTams , aTps )
+
+
 
     If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventHeader"  ) )  ) = 0
 		InstallEventHandler( "EventHeader" )
@@ -86,19 +89,120 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
 Return .t. 
 
 
+
 Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
 
+    Local nRow 
+    //Local nCol 
+    Local nColx 
+    Local ar1     
+    Local aCords := {}
+    Local n1 
+    Local n2 
+    Local Height := GetProperty( cHeaderJan  , 'Height')
 
-    If !_IsWindowDefined(cHeaderJan)
-       // msgingfo('ok2')
+    Local nCol := -(nColHeader)
+
+    If !_IsWindowDefined(cHeaderJan)       
         Return 
     End If 
     
 	
 	If nHWnd == GetProperty(  cHeaderJan   , "HANDLE" )
+
+
+        If (nMsg == WM_LBUTTONDOWN)	
+             
+            msginfo(Str(nColSel))
+
+        End If     
+
+
+        If (nMsg == WM_LBUTTONUP)	
+
+
+        End If     
 				
-		If nMsg == WM_MOUSEMOVE
-            //MsgInfo('ok')
+		If (nMsg == WM_MOUSEMOVE)
+
+            GetCursorPos (@nCol, @nRow)
+            ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
+            nColx := ar1[2]            
+
+            SetWindowCursor( nHWnd , IDC_ARROW)
+            DO EVENTS
+
+           // nColSel := 0
+            aCords := xSearchPos(  nColx )
+
+          //  msginfo( Str(aCords[1][2]) + '  ' + Str( nColAntx  ))
+
+            
+            If (nColAntx != aCords[1][2]) .And. (nColAntx > 0 ) .And. (nColAntx <= Len(aMapsCol) )
+               DO EVENTS
+
+
+               nColSel := 0 
+
+               n1 := aMapsCol[  nColAntx  ][2]
+               n3 := aMapsCol[  nColAntx  ][5]
+               BT_ClientAreaInvalidateRect(   cHeaderJan , 1 , n1 ,  n3 , Height , .t.   )
+
+
+               
+               nColAntx := aCords[1][2] 
+               lTrack39 := .f. 
+
+               SysWait(0.03)
+
+              // msginfo('1')
+
+
+            End If     
+
+            
+            If Len(aCords) > 0
+
+                If !lTrack39
+
+                    //SysWait(0.03)
+
+                    nColSel := aCords[1][2]                
+                    nColAntx := aCords[1][2] 
+
+                    
+                  //  DO EVENTS
+
+                    n1 := aMapsCol[  nColSel  ][2]
+                    n3 := aMapsCol[  nColSel  ][5]
+
+                   // BT_ClientAreaInvalidateRect(   cHeaderJan , 1 , n1 ,  n3 , Height , .t.   )
+
+                   BT_ClientAreaInvalidateAll(   cHeaderJan )
+
+                 //   DO EVENTS 
+
+                    
+                    SetWindowCursor( nHWnd , CURSORHAND)
+                   // msginfo('ok ' + Str(nColSel)   )
+
+                    
+
+                 //   _ShowWindow( cHeaderJan )
+
+                    SysWait(0.08)
+
+
+                  //  msginfo('ok')
+
+                    lTrack39 := .t. 
+
+                End If     
+
+
+            End If     
+
+
         End If 
 
     End If     
@@ -110,17 +214,63 @@ Function xMapCols( aCabs , aTamx1 , aTipos1 )
 
     Local i := 0
     Local nPos1 := 1 
+    Local nColx := 17
+    Local nTam1 
+    Local nTam 
+    Local BTstruct
+    Local nQAcento 
+
+    hDC = BT_CreateDC ( cHeaderJan  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct )
+    hFont := HMG_CreateFont (  hDC , FONTBROWSER, FONTBROWSERSIZE, .f., .f., .f., .f. )
 
     aMapsCol := {}
 
-    For i := 1 To Len(aCabs)
+    For n1 := 1 To Len(aCabs)
+        
+        cTexto := Replicate('A' ,  aTamx1[n1] + 1 )
 
-        Aadd( aMapsCol , {   aCabs[i] , nPos1 , nPos1 +  aTamx1[i]  , aTipos1[i]     }  )
-        nPos1 := nPos1 +  aTamx1[i] + 1
+        nTam1  := aTamx1[n1]
+        nQAcento := QtAcento(Alltrim(aCabs[n1]) )
+        nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
+        
+
+        
+        n12 := GetTextWidth( hDC , cTexto , hfont )
+        nTam := n12
+
+        If (n1 > 1)
+            nColx+=1
+        End If 
+
+        Aadd( aMapsCol , {   aCabs[n1] , nColx , nColx +  nTam + 1 , aTipos1[n1] ,   nTam + 1   }  )
+        nColx += nTam + 1      
+
+
 
     Next 
 
-Return 
+Return Nil 
+
+
+Function xSearchPos(  nCol1 )
+
+    Local nColuna := 0
+    Local n1 
+    Local aMatriz := {}
+
+    Local nCol := -(nColHeader)
+
+
+    n1 := Ascan(  aMapsCol , { |a| (  (a[2]+nCol) <= nCol1) .And. ( (a[3]+nCol) >= nCol1) } )
+
+
+    If n1 > 0
+        nColuna := n1
+        Aadd(aMatriz , { aMapsCol[n1][1] ,nColuna   })
+    End If      
+
+
+REturn aMatriz
 
 
 Function UpdHeader( cHeader1 ,  nValor   )
@@ -182,6 +332,18 @@ Function xPaintHeader( cJanela , aCabec  , aTamanho)
         If (n1 = 2)
             nColx+=3
         End If 
+
+        If (nColSel > 0) .And. (nColSel = n1)
+             
+            BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 1 ,    Height    , RED ,BLUE )
+
+            BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  EDGE_ETCHED  , BF_LEFT + BF_RIGHT)
+            BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  EDGE_ETCHED  , BF_LEFT + BF_RIGHT)
+
+
+        Else 
+            
+        End If     
 
         BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  EDGE_ETCHED  , BF_LEFT + BF_RIGHT)
         BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  EDGE_ETCHED  , BF_LEFT + BF_RIGHT)

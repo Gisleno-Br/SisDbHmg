@@ -1074,6 +1074,8 @@ Function InitTela(  lIni1  , nColz1)
 	nLarg := xRetLargura()
 
 
+	
+
 
 
 	//xCloseMsg()
@@ -5252,6 +5254,9 @@ fUNCTION DrawTransp(cJan , zBitMap , cTitulo , nQreg , cTitConsu , cTitFltr )
 		//hb_memowrit('cli221ok.txt', 'Transp : ' + cJan + ' ' + Str(Width) + ' ' + Str(Height) + ' rrow : ' + Str(nRow) )
 		nRow := 0
 	End if
+
+	
+
 
 
 	If Flag_AlphaBlend_Effect

@@ -200,6 +200,7 @@ Function TestBrow( cParent1 , cTabx  )
 
 
 
+
 //	msginfo(Str(   nTam1  ))
 
 	//SetWindowCursor( GetFormHandle(  cActiveJan ) , HOURGLASS )
@@ -712,6 +713,7 @@ return
 
 
 
+
 Function xTeclasBrow()
 
 
@@ -967,7 +969,7 @@ Function xTeclasBrow()
 
 		Else
 
-			msginfo('ok')	
+			//msginfo('ok')	
 			xDialog('Maximo Atingido! ' + Str(nItemx5) + '  ' + Str(nMaxItem1) + '   '  + Str(nLinScrool)  )
 			nLinhaBarra := nTamPag
 			lHtb := .t.
@@ -1431,6 +1433,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 
 	
+	
 
 	If (nHWnd == GetProperty(  cBarraVSombra, "HANDLE" ))		
 		
@@ -1678,6 +1681,8 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 		End If 
 
+
+		
 	        
 
 		If nMsg == WM_LBUTTONDOWN
