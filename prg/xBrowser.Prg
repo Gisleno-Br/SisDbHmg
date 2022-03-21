@@ -382,17 +382,10 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 
 	Local nTamWidth := xRetLargura()
 	Local nTam1 := GetTextoTam( ' '  , cActiveJan )
-
-
 	Private aOpx1 := 0
-
-
-
 	DEFAULT nLarg1  := GetDeskTopWidth() - 40
 	DEFAULT nCol := 10
-
 	DEFAULT nRowIni   := 145
-
 	DEFAULT aCabecalho := {}
 
 
@@ -432,16 +425,6 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 			nLargx := nLarg1 		
 		End If 
 	End If 
-
-
-//	msginfo(Str(  nLargTotal  ) + '  ' + Str(nLarg1)   )
-
-
-
-	//nLargTotal := nLArg1 + 1
-
-
-
 
 	DEFINE WINDOW &cBrowserName ;
 		AT nRowIni,nCol  ;
@@ -1336,6 +1319,8 @@ Function xCriaButs()
 	*/
 
 
+
+
    
 Return (nRow1 - 46)
 
@@ -1383,23 +1368,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 				
 		If nMsg == WM_MOUSEMOVE
-			//msginfo('kk  '  )			
-
-			/*
-			If _IsWindowDefined(cBrwName)
-				If _IsWindowDefined(cBarraVfrm)				
-					XOffBarra( cBarraVfrm  )
-					SysWait(0.04)  
-
-
-
-
-					//SysWait(0.04)  
-					// MsgInfo('ok2')
-
-				End If 
-			End If 
-			*/
+		
 
 			GetCursorPos (@nCol1, @nRow1)
 
@@ -1407,16 +1376,25 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 			hWnd := WindowFromPoint ( ar1[1] , ar1[2])
 
-
 			//GetWindowNameByHandle ( hWnd  , @cFormName )
 
 			//GetControlNameByHandle(hWnd, @cControl, @cFormName)
 
 			If GetFormHandle(  cBrwName ) == hWnd
-				msginfo( cBrwName )
+				//msginfo( cBrwName )
+
+
+
+
 			End If 
 
-		//	msginfo(  cControl  )
+			//msginfo(  'd3'  )
+
+			If (lHasHeader)
+				xApagueH( cHeaderName )
+			End If 
+
+			
 
 			If (cFormName != cActiveJan )
 			//	msginfo(  cFormName  )
@@ -1529,6 +1507,10 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 			Do Events	
 			Do Events	
+
+			If (lHasHeader)
+				xApagueH( cHeaderName )
+			End If 
 
 
          	GetCursorPos (@nCol, @nRow)
@@ -1644,8 +1626,13 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 		End If
 
 
-
 		If nMsg == WM_MOUSEMOVE
+
+		//	msginfo('d2')
+
+			If (lHasHeader)
+				xApagueH( cHeaderName )
+			End If 
 
 			If (nHasFocus > 0) 					
 
@@ -1654,9 +1641,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				nHasFocus := 0				
 				SetWindowCursor( nHWnd , IDC_ARROW )
 				xRefreshBut()				
-				Do Events 
-				//xOffBarra( cBarrah  )
-			//	xLuzOff( cBarrah)
+				Do Events 				
 				xDcToDEspe()											
 				Do Events 				
 				
@@ -1667,14 +1652,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				xOffBarra( cBarrah  )
 
 			Else 
-			   
-				//xOffBarra( cBarrah  )
-
-
-			End If 		                 
-			
-
-		
+			End If 		          
 			If  _isWindowDefined("Win_Msg")
 				xHidehint()
 			End If

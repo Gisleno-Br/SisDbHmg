@@ -499,6 +499,7 @@ Return
 
 
 
+
 Function Proc_ON_PAINT(wJanela)
 
 //LOCAL Width  := BT_ClientAreaWidth  ( ThisWindow.name )
@@ -1334,8 +1335,7 @@ Function xSqlUpdate(cTabela , aValores ,aCamposF , cChave )
 	Use
 
 
-REturn cSql1
-
+Return cSql1
 
 
 

@@ -4173,14 +4173,15 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 			END IF
 		END IF
 
+
 		
 		If nmsg == WM_MOUSEMOVE
-			//msginfo('kk')		
-
-		
-
+			//msginfo('k2222k')		
 			
 		End If 
+		
+
+
 
 
 
@@ -5202,13 +5203,6 @@ Function PutImagem(nColx , cTexto , cSeq1 )
 
 
 Return
-
-
-
-
-
-
-
 
 
 

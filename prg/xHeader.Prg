@@ -71,7 +71,7 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
 		WIDTH nLarg1+27 HEIGHT 30 VIRTUAL HEIGHT Nil VIRTUAL WIDTH Iif( nLargTot1 > 0 , nLargTot1 , nLarg1+1)  ;
 		TITLE 'xHeader1' + Left(cHName,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE  ;		
-		ON PAINT xPaintHeader( ThisWindow.Name , aCabecalho  , aTams)  		
+		ON PAINT xPaintHeader( ThisWindow.Name , aCabecalho  , aTams , aTps )  		
 	END WINDOW
 
 
@@ -121,6 +121,8 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
         If (nMsg == WM_LBUTTONUP)	
 
 
+
+
         End If     
 				
 		If (nMsg == WM_MOUSEMOVE)
@@ -130,75 +132,33 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
             nColx := ar1[2]            
 
             SetWindowCursor( nHWnd , IDC_ARROW)
-            DO EVENTS
-
-           // nColSel := 0
+            DO EVENTS           
             aCords := xSearchPos(  nColx )
-
-          //  msginfo( Str(aCords[1][2]) + '  ' + Str( nColAntx  ))
-
             
             If (nColAntx != aCords[1][2]) .And. (nColAntx > 0 ) .And. (nColAntx <= Len(aMapsCol) )
                DO EVENTS
-
-
                nColSel := 0 
-
                n1 := aMapsCol[  nColAntx  ][2]
                n3 := aMapsCol[  nColAntx  ][5]
-               BT_ClientAreaInvalidateRect(   cHeaderJan , 1 , n1 ,  n3 , Height , .t.   )
-
-
-               
+               BT_ClientAreaInvalidateRect(   cHeaderJan , 1 , n1 ,  n3 , Height , .t.   )              
                nColAntx := aCords[1][2] 
-               lTrack39 := .f. 
-
+               lTrack39 := .f.                
                SysWait(0.03)
-
-              // msginfo('1')
-
-
             End If     
 
             
             If Len(aCords) > 0
 
                 If !lTrack39
-
-                    //SysWait(0.03)
-
                     nColSel := aCords[1][2]                
                     nColAntx := aCords[1][2] 
-
-                    
-                  //  DO EVENTS
-
                     n1 := aMapsCol[  nColSel  ][2]
                     n3 := aMapsCol[  nColSel  ][5]
-
-                   // BT_ClientAreaInvalidateRect(   cHeaderJan , 1 , n1 ,  n3 , Height , .t.   )
-
-                   BT_ClientAreaInvalidateAll(   cHeaderJan )
-
-                 //   DO EVENTS 
-
-                    
-                    SetWindowCursor( nHWnd , CURSORHAND)
-                   // msginfo('ok ' + Str(nColSel)   )
-
-                    
-
-                 //   _ShowWindow( cHeaderJan )
-
+                    BT_ClientAreaInvalidateAll(   cHeaderJan )
+                    SetWindowCursor( nHWnd , CURSORHAND)                   
                     SysWait(0.08)
-
-
-                  //  msginfo('ok')
-
                     lTrack39 := .t. 
-
                 End If     
-
 
             End If     
 
@@ -210,7 +170,32 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
 
 Return 
 
-Function xMapCols( aCabs , aTamx1 , aTipos1 )
+
+Function xApagueH( cJanela1 )
+
+    Local n1 
+    Local n3 
+    Local Height := GetProperty( cJanela1  , 'Height')    
+
+
+    If (nColSel > 0)
+
+        lTrack39 := .f.               
+
+        n1 := aMapsCol[  nColSel  ][2]
+        n3 := aMapsCol[  nColSel  ][5]
+        nColSel  := 0
+        nColAntx := Len(aMapsCol) - 1       
+        BT_ClientAreaInvalidateAll(   cJanela1 )     
+        SysWait(0.02)        
+        
+
+    End If 
+
+
+Return 
+
+Function xMapCols( aCabs , aTamx1 , aTipos1  )
 
     Local i := 0
     Local nPos1 := 1 
@@ -227,25 +212,18 @@ Function xMapCols( aCabs , aTamx1 , aTipos1 )
 
     For n1 := 1 To Len(aCabs)
         
-        cTexto := Replicate('A' ,  aTamx1[n1] + 1 )
-
         nTam1  := aTamx1[n1]
+
         nQAcento := QtAcento(Alltrim(aCabs[n1]) )
         nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
-        
 
-        
+
+        cTexto := Replicate('A' ,  nTam1 + 1  )              
         n12 := GetTextWidth( hDC , cTexto , hfont )
         nTam := n12
 
-        If (n1 > 1)
-            nColx+=1
-        End If 
-
-        Aadd( aMapsCol , {   aCabs[n1] , nColx , nColx +  nTam + 1 , aTipos1[n1] ,   nTam + 1   }  )
-        nColx += nTam + 1      
-
-
+        Aadd( aMapsCol , {   aCabs[n1] , nColx , nColx +  nTam + 1 , aTipos1[n1] ,   nTam    }  )
+        nColx += nTam 
 
     Next 
 
@@ -283,7 +261,7 @@ return
 
 
 
-Function xPaintHeader( cJanela , aCabec  , aTamanho)
+Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
     LOCAL Width  := BT_ClientAreaWidth  (cJanela)
 	LOCAL Height := BT_ClientAreaHeight (cJanela)
@@ -299,6 +277,7 @@ Function xPaintHeader( cJanela , aCabec  , aTamanho)
 	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
     Local nQAcento := 0
     Local nTam 
+    Local nTam2
     Local nCol := -(nColHeader)
     Local nColx := 17
 
@@ -314,11 +293,35 @@ Function xPaintHeader( cJanela , aCabec  , aTamanho)
 
 
     BT_DrawBitmap (hDC  , 6 ,  (0+nColx) - 16  , 15  , 15 , BT_STRETCH, hBitOk)
-
-
-
     hFont := HMG_CreateFont (  hDC , FONTBROWSER, FONTBROWSERSIZE, .f., .f., .f., .f. )
 
+
+    For n1 := 1 To Len(aMapsCol)
+        
+        nTam1  := aMapsCol[n1][5] 
+        nQAcento := QtAcento(Alltrim( aMapsCol[n1][1]  ) )
+        nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
+        nTam2 := If( (nQAcento =  0)   , aTamanho[n1] , aTamanho[n1] + nQAcento ) //* nTamX1
+        cTexto1 += Padc( Alltrim(  Alltrim(aMapsCol[n1][1]) ) ,   nTam2 + 1  )
+        cTexto := Replicate('A' ,  aTamanho[n1] + 1 )  
+       
+
+        If (nColSel > 0) .And. (nColSel = n1)             
+            BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 1 ,    Height    , RED ,BLUE )        
+        Else 
+            
+        End If     
+
+        BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  EDGE_ETCHED  , BF_LEFT + BF_RIGHT)
+        BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  EDGE_ETCHED  , BF_LEFT + BF_RIGHT)
+        nColx += nTam1 
+
+    Next 
+    
+
+
+
+  /*
     For n1 := 1 To Len(aCabec)
         
         nTam1  := aTamanho[n1]
@@ -351,6 +354,7 @@ Function xPaintHeader( cJanela , aCabec  , aTamanho)
         nColx += nTam        
 
     Next 
+    */
 
 
     BT_DrawText ( hDC , 10  , 17+nCol ,   Hb_Utf8ToStr(cTexto1) , FONTBROWSER  , FONTBROWSERSIZE , {125,125,125} ,  {230,230,230}   , ;
