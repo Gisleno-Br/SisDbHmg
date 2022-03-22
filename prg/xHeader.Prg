@@ -81,8 +81,7 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
 
 
     If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventHeader"  ) )  ) = 0
-		InstallEventHandler( "EventHeader" )
-		//nIndexEventZ := EventCreate (  { ||   xTeclasBrow( )   }  )
+		InstallEventHandler( "EventHeader" )		
 	End If
 
 
@@ -100,6 +99,7 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
     Local n1 
     Local n2 
     Local Height := GetProperty( cHeaderJan  , 'Height')
+    Local nColx2 := 0
 
     Local nCol := -(nColHeader)
 
@@ -134,6 +134,25 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
             SetWindowCursor( nHWnd , IDC_ARROW)
             DO EVENTS           
             aCords := xSearchPos(  nColx )
+
+            If Len(aCords) = 0
+                xApagueH( cHeaderJan )
+                Return 
+            End If 
+
+            If ((nColx2 := xSearchLim(  nColx )) > 0)
+                xDoHint(    , 'Redimensiona a Coluna ' + Hb_Utf8ToStr(Alltrim(aMapsCol[nColx2][1])) )                
+                SetWindowCursor( nHWnd  , 'CURSORSIZE' )
+                DO EVENTS                
+              
+                Return 
+            Else 
+
+            	If  _isWindowDefined("Win_Msg")
+			    	xHidehint()
+			    End If
+                    
+            End If   
             
             If (nColAntx != aCords[1][2]) .And. (nColAntx > 0 ) .And. (nColAntx <= Len(aMapsCol) )
                DO EVENTS
@@ -145,6 +164,7 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
                lTrack39 := .f.                
                SysWait(0.03)
             End If     
+
 
             
             If Len(aCords) > 0
@@ -230,6 +250,23 @@ Function xMapCols( aCabs , aTamx1 , aTipos1  )
 Return Nil 
 
 
+
+Function xSearchLim(  nCol1 )
+
+    Local nColuna := 0
+    Local n1 
+    Local aMatriz := {}
+    Local nCol := -(nColHeader)
+
+    n1 := Ascan(  aMapsCol , { |a|   Abs( (a[3]+nCol) - nCol1 )  <= 2    }     )
+
+    If n1 > 0
+        nColuna := n1        
+    End If      
+
+REturn nColuna 
+
+
 Function xSearchPos(  nCol1 )
 
     Local nColuna := 0
@@ -280,8 +317,7 @@ Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
     Local nTam2
     Local nCol := -(nColHeader)
     Local nColx := 17
-
-    Local hBitOk 	   := BT_BitmapLoadFile ('OKMARK')
+    Local hBitOk := BT_BitmapLoadFile ('OKMARK')
     
 	hDC = BT_CreateDC ( cJanela  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct )
 	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    ,  {230,230,230}  , {230,230,230} )

@@ -97,6 +97,7 @@ REQUEST HB_CODEPAGE_PT850
 
 FUNCTION Main
 
+
 	Public cForm := ''
 
 	PUBLIC aBackColor := { 57, 108, 164 }

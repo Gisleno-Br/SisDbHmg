@@ -195,16 +195,6 @@ Function TestBrow( cParent1 , cTabx  )
 
 
 	aMtrHeader := {}
-
-
-
-
-
-
-//	msginfo(Str(   nTam1  ))
-
-	//SetWindowCursor( GetFormHandle(  cActiveJan ) , HOURGLASS )
-
 	aCampos  := GetCamposDic( cTabela, 'S' , .t. , .t. )
 	//Local aCabec  := GetCamposDic( cTabela, 'S' , .f. , .t. )
 
@@ -1363,42 +1353,23 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	//Local nRow1 := GetProperty('Win_Role1','Height') - 20
 
 	
-	IF nHWnd == GetProperty(  cActiveJan   , "HANDLE" )
-
-
-				
+	IF nHWnd == GetProperty(  cActiveJan   , "HANDLE" )				
 		If nMsg == WM_MOUSEMOVE
 		
 
 			GetCursorPos (@nCol1, @nRow1)
-
 			ar1 := GetPos_ScreenToClient(   nHWnd , nRow1, nCol1 )
-
 			hWnd := WindowFromPoint ( ar1[1] , ar1[2])
 
-			//GetWindowNameByHandle ( hWnd  , @cFormName )
-
-			//GetControlNameByHandle(hWnd, @cControl, @cFormName)
-
-			If GetFormHandle(  cBrwName ) == hWnd
-				//msginfo( cBrwName )
-
-
-
-
-			End If 
-
-			//msginfo(  'd3'  )
 
 			If (lHasHeader)
 				xApagueH( cHeaderName )
 			End If 
 
+			If  _isWindowDefined("Win_Msg")
+			   	xHidehint()
+			End If
 			
-
-			If (cFormName != cActiveJan )
-			//	msginfo(  cFormName  )
-			End If 
 
 			Return 
 
@@ -1698,41 +1669,52 @@ Return
 
 
 
-Function xDoHint(   nIdBut )
+Function xDoHint(   nIdBut , cMsg  )
 
 	Local cTp1 := ''
 	Local nModeBrw := 0
 	Local nRow , nCol 
 
-	If nIdBut = 855
-		cTp1 := "Retorna uma Registro para Tras no Grid."
-		nModeBrw := 3
-	End If 	
+	DEFAULT cMsg := Nil 
+	
+	If (cMsg = Nil)
+		If nIdBut = 855
+			cTp1 := "Retorna uma Registro para Tras no Grid."
+			nModeBrw := 3
+		End If 	
 
-	If nIdBut = 856
-		cTp1 := "Retorna uma Pagina para Tras no Grid."
-		nModeBrw := 2
-	End If 	
+		If nIdBut = 856
+			cTp1 := "Retorna uma Pagina para Tras no Grid."
+			nModeBrw := 2
+		End If 	
 
-	If nIdBut = 857
-		cTp1 := "Desloca Grid ate Primeiro Registro."
-		nModeBrw := 1
-	End If 	
+		If nIdBut = 857
+			cTp1 := "Desloca Grid ate Primeiro Registro."
+			nModeBrw := 1
+		End If 	
 
-	If nIdBut = 858
-		cTp1 := "Desloca Grid ate o Ultimo Registro."
-		nModeBrw := 4
-	End If 	
+		If nIdBut = 858
+			cTp1 := "Desloca Grid ate o Ultimo Registro."
+			nModeBrw := 4
+		End If 	
 
-	If nIdBut = 859
-		cTp1 := "Avança uma Pagina no Grid"
-		nModeBrw := 5
-	End If 	
+		If nIdBut = 859
+			cTp1 := "Avança uma Pagina no Grid"
+			nModeBrw := 5
+		End If 	
 
-	If nIdBut = 860
-		cTp1 := "Avança um registro no Grid"
-		nModeBrw := 6
-	End If 	
+		If nIdBut = 860
+			cTp1 := "Avança um registro no Grid"
+			nModeBrw := 6
+		End If 	
+
+		
+		lTracking135 := .t.
+		lTracking75  := .t.
+
+	Else 
+	 	 cTp1 := cMsg
+	End If 
 
 	Do Events 
 
@@ -1741,17 +1723,15 @@ Function xDoHint(   nIdBut )
 
 	
 	If !_isWindowDefined("Win_Msg")
-		CrieJanTip( nRow  , nCol - 250   ,   Alltrim(cTp1)      ,, 0.5 )
+		CrieJanTip( nRow  - 20 , nCol - 15   ,   Alltrim(cTp1)      ,, 0.5 )
 	Else
-		xDispHint( cTp1 , nRow ,  nCol - 250  )
+		xDispHint( cTp1 , nRow  - 20,  nCol - 15  )
 	End If
 
 	xDispUpTam(cTp1 )
 
 	BringTop('xHint')
 
-	lTracking135 := .t.
-	lTracking75  := .t.
 	
 REturn nModeBrw
 

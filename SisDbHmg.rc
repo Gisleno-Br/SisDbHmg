@@ -7,6 +7,7 @@
     HOME1       PNG     img\Home1.Png 
     CURSOR1     CURSOR  img\hourglass.Cur  
     NAOPODE     CURSOR  img\aero_unavail_xl.Cur 
+    CURSORSIZE  CURSOR  img\size3_il.cur 
     NEXT        PNG     img\go-next.Png 
     SETATRANSP  PNG     img\0001.Png 
     EXCLA1      PNG     img\Exclamation3.Png
@@ -17,6 +18,7 @@
     OKVERDE2    BITMAP  img\okverde2.bmp 
     OKVERDE3    BITMAP  img\okverde3.bmp 
     OKMARK      PNG     img\ngi.png
+    
 
 
     ESQUERDA    BITMAP  img\SetEsquerda1.bmp 
