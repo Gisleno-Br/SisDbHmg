@@ -47,14 +47,25 @@ Static cHeaderJan := ''
 
 Static aMapsCol := {}
 
+Static aColsTam := {}
+Static aTipsy   := {}
+
+Static aCabecs   := {}
+
+
 Static nColSel := 0
 Static nColAntx := 0
 
 Static lTrack39 := .f. 
 
+Static lSizeMode := .f. 
+Static lDragMode := .f. 
+
+Static cTable := ''
 
 
-Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1 , aTps  )
+
+Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1 , aTps , cTabela  )
 
     Local nRowIni := GetProperty( cBrwName1 , 'Row')
     Local nCol    := GetProperty( cBrwName1 , 'Col')
@@ -62,6 +73,11 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
 
     cHeaderJan := cHName
 
+    aColsTam := aTams 
+    aTipsy   := aTps
+    aCabecs  := aCabecalho
+
+    cTable := cTabela
         
 	DEFINE WINDOW &cHName ;
 		AT nRowIni - 92 , nCol  ;
@@ -71,14 +87,12 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
 		WIDTH nLarg1+27 HEIGHT 30 VIRTUAL HEIGHT Nil VIRTUAL WIDTH Iif( nLargTot1 > 0 , nLargTot1 , nLarg1+1)  ;
 		TITLE 'xHeader1' + Left(cHName,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE  ;		
-		ON PAINT xPaintHeader( ThisWindow.Name , aCabecalho  , aTams , aTps )  		
+		ON PAINT xPaintHeader( ThisWindow.Name , aCabecs  , aColsTam , aTipsy )  		
 	END WINDOW
 
 
     
-    xMapCols( aCabecalho , aTams , aTps )
-
-
+    xMapCols( aCabecs , aColsTam , aTipsy )
 
     If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventHeader"  ) )  ) = 0
 		InstallEventHandler( "EventHeader" )		
@@ -88,11 +102,25 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
 Return .t. 
 
 
+Function xLimpMode()
+
+    lSizeMode := .f. 
+    lDragMode := .f. 
+    nColSel := 0
+    nColAntx := 0
+
+    lTrack39 := .f.
+
+Return 
+
+
+
 
 Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
 
     Local nRow 
     //Local nCol 
+    Local lOk  := .f. 
     Local nColx 
     Local ar1     
     Local aCords := {}
@@ -100,12 +128,20 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
     Local n2 
     Local Height := GetProperty( cHeaderJan  , 'Height')
     Local nColx2 := 0
+    Local i 
 
-    Local nCol := -(nColHeader)
+  //  Local nUnit := xRetUnit()
+   // Local nColx 
+
+    Local nCol := 0
+    Local nSaveCol1 := 0
+    //-(nColHeader)
 
     If !_IsWindowDefined(cHeaderJan)       
         Return 
     End If 
+
+    
     
 	
 	If nHWnd == GetProperty(  cHeaderJan   , "HANDLE" )
@@ -113,23 +149,95 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
 
         If (nMsg == WM_LBUTTONDOWN)	
              
-            msginfo(Str(nColSel))
+            //msginfo(Str(nColSel))
+
+            If (lSizeMode)                
+	
+                For i := 1 To 255
+                    GetAsyncKeyState(i)
+                Next i
+
+                GetCursorPos (@nCol, @nRow)
+                ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
+                nColx := ar1[2]    
+
+                nSaveCol1 := nColSel 
+                nUnit := xRetUnit()
+                lOk  := .f. 
+
+
+                While (.t. )
+
+                        If (GetAsyncKeyState(VK_LBUTTON)) == 0					
+                            Exit     
+				        End If 		
+
+                        GetCursorPos (@nCol, @nRow)
+                        ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
+                        nColx2 := ar1[2]          
+
+                        If (Abs(nColx2 - nColx) >= nUnit)
+                                                        
+                            If (nColx2 > nColx)                            
+                               aMapsCol[nSaveCol1][5] += Abs(nColx2 - nColx)
+                               aColsTam[nSaveCol1] += Int(Abs(nColx2 - nColx) / nUnit)                            
+                            Else                               
+                               aMapsCol[nSaveCol1][5] -= Abs(nColx2 - nColx)
+                               aColsTam[nSaveCol1]    -= Int(Abs(nColx2 - nColx) / nUnit)                                                          
+                            End If                           
+
+                            xMapCols( aCabecs , aColsTam , aTipsy )          
+                            SysWait(0.01)                            
+
+                            BT_ClientAreaInvalidateAll(cHeaderJan)
+                            SysWait(0.01)                            
+
+                            lOk  := .t. 
+                            nColx := nColx2 
+
+                        End If 
+
+                        SysWait(0.02)                        
+
+                Enddo                 
+
+                If lOk 
+                    xMapCols( aCabecs , aColsTam , aTipsy )
+
+                    If !SetCampoTam(	cTabela  , Alltrim(   aCabecs[nSaveCol1]      ) , aColsTam[nSaveCol1] )
+                        xDialog("Não Foi Possivel Atualizar o Dicionario.")
+                    End If 
+
+                    SysWait(0.02)
+                    
+                    BT_ClientAreaInvalidateAll(cHeaderJan)
+                    SysWait(0.02)
+                End If     
+
+                lSizeMode := .f. 
+                //msginfo('Exit ')
+
+            End If
 
         End If     
 
 
         If (nMsg == WM_LBUTTONUP)	
 
+            lSizeMode := .f.
+            lDragMode := .f.
 
 
 
         End If     
 				
-		If (nMsg == WM_MOUSEMOVE)
+		If (nMsg == WM_MOUSEMOVE) .And. (!lSizeMode) .And. (!lDragMode)
+
 
             GetCursorPos (@nCol, @nRow)
             ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
             nColx := ar1[2]            
+          //  msginfo(Str(  nUnit  ))
 
             SetWindowCursor( nHWnd , IDC_ARROW)
             DO EVENTS           
@@ -143,14 +251,17 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
             If ((nColx2 := xSearchLim(  nColx )) > 0)
                 xDoHint(    , 'Redimensiona a Coluna ' + Hb_Utf8ToStr(Alltrim(aMapsCol[nColx2][1])) )                
                 SetWindowCursor( nHWnd  , 'CURSORSIZE' )
-                DO EVENTS                
-              
+                DO EVENTS                              
+                lSizeMode := .t.
                 Return 
             Else 
 
             	If  _isWindowDefined("Win_Msg")
 			    	xHidehint()
 			    End If
+
+                lSizeMode := .f.
+                SetWindowCursor( nHWnd , IDC_ARROW)
                     
             End If   
             
@@ -249,6 +360,24 @@ Function xMapCols( aCabs , aTamx1 , aTipos1  )
 
 Return Nil 
 
+Function xRetUnit()
+
+    Local BTstruct
+    Local nQAcento 
+    Local hDC 
+    Local hFont 
+    Local n12 
+
+    hDC = BT_CreateDC ( cHeaderJan  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct )
+    hFont := HMG_CreateFont (  hDC , FONTBROWSER, FONTBROWSERSIZE, .f., .f., .f., .f. )
+
+    n12 := GetTextWidth( hDC , Replicate(' ' ,  1  ) , hfont )
+
+    BT_DeleteDC (BTstruct )
+
+
+REturn n12 
+
 
 
 Function xSearchLim(  nCol1 )
@@ -257,11 +386,26 @@ Function xSearchLim(  nCol1 )
     Local n1 
     Local aMatriz := {}
     Local nCol := -(nColHeader)
+    Local nColz1 
+    Local nRow1 
+    Local ar1
+    Local nColX 
+    Local aCords := {}
+    Local nHWnd := GetFormHandle(  cHeaderJan )
 
-    n1 := Ascan(  aMapsCol , { |a|   Abs( (a[3]+nCol) - nCol1 )  <= 2    }     )
+    
+    GetCursorPos (@nColz1, @nRow1)
+    ar1 := GetPos_ScreenToClient(   nHWnd , nRow1 , nColz1 )
+    nColx := ar1[2]      
 
-    If n1 > 0
-        nColuna := n1        
+    aCords := xSearchPos(  nColx )
+
+    n1 := Ascan(  aMapsCol , { |a|   Abs( (a[3]+nCol) - nCol1 )  <= 20    }     )
+
+    If (n1 > 0) .And. (Len(aCords) > 0)
+        If (aCords[1][2]  == n1)
+            nColuna := n1        
+        End If            
     End If      
 
 REturn nColuna 
@@ -338,8 +482,17 @@ Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
         nQAcento := QtAcento(Alltrim( aMapsCol[n1][1]  ) )
         nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
         nTam2 := If( (nQAcento =  0)   , aTamanho[n1] , aTamanho[n1] + nQAcento ) //* nTamX1
-        cTexto1 += Padc( Alltrim(  Alltrim(aMapsCol[n1][1]) ) ,   nTam2 + 1  )
-        cTexto := Replicate('A' ,  aTamanho[n1] + 1 )  
+
+        If (lSizeMode ) .And. ( nColSel = n1)
+          // nTam2 := nTam1 
+          // msginfo( Str(nTam1))
+
+         //  msginfo('ok2')
+        End If 
+
+      
+        cTexto1 += Padc( Alltrim(  aMapsCol[n1][1] ) ,   nTam2 + 1  )
+     //   cTexto := Replicate('A' ,  aTamanho[n1] + 1 )  
        
 
         If (nColSel > 0) .And. (nColSel = n1)             
@@ -398,7 +551,6 @@ Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
 
     BT_DeleteDC (BTstruct )
-
     BT_BitmapRelease (hBitOk)
 
 

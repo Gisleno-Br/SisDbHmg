@@ -99,13 +99,13 @@ FUNCTION Main
 
 
 	Public cForm := ''
-
 	PUBLIC aBackColor := { 57, 108, 164 }
 
+
 	Public nVirtualMenu := Nil
+	
 
 	Public aRotHnd := {}
-
 	Public lAtivaBlack := .f.
 
 	Public nColTamMenu := 189

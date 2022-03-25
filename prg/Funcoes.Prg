@@ -146,18 +146,10 @@ FUNCTION GetCamposDic( cTabela, cBrowse, lCmpTab , lOem )
 
 						Else
 							AAdd( aCampos,   AllTrim(oRow:FieldGet(3 ))     )
-
-
 						End If
-					Else
-
-						//AAdd( aCampos,   Hb_UTf8ToStr(oRow:FieldGet( 5 ))  )
+					Else						
 						AAdd( aCampos,   oRow:FieldGet( 5 )  )
-						
-
-
 					End If
-
 				End If
 			End If
 
@@ -665,15 +657,9 @@ FUNCTION GetCamposInf( cTabela, cInf  ,cCampo )
 		oRow := oQuery:GetRow( i )
 
 		If Empty(Alltrim(cCampo))
-
-
-			IF Alltrim(oRow:FieldGet( 6 )) == 'S'
-
-				//msginfo('ok')
+			IF Alltrim(oRow:FieldGet( 6 )) == 'S'				
 
 				IF cInf = 'CABEC'
-					//AAdd( aTam,  hb_AnsiToOem( AllTrim( oRow:FieldGet(5 ) )  )   )
-
 					AAdd( aTam,   AllTrim( oRow:FieldGet(5 ) )     )
 				END IF
 
@@ -688,11 +674,7 @@ FUNCTION GetCamposInf( cTabela, cInf  ,cCampo )
 				IF cInf = 'TIPO'
 					AAdd( aTam,  oRow:FieldGet( 4 )  )
 				END IF
-
 			END IF
-
-
-
 		Else
 
 			IF cInf = 'CABEC'

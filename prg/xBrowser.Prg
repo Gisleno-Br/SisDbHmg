@@ -445,7 +445,7 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 	cBarrah := xBarraH( cParent ,  cBrowserName , nRowIni+(nTamPag * nItemBrwHeight)+2  , nLargTotal  ,  nLargX , cBrowserName )
 
 	If Len(aCabecalho) > 0
-		lHasHeader := xHeader( cHeaderName , aCabecalho , aTamanhos , cParent ,  cBrowserName ,  nLargTotal , aTipos  )
+		lHasHeader := xHeader( cHeaderName , aCabecalho , aTamanhos , cParent ,  cBrowserName ,  nLargTotal , aTipos , cTabela  )
 	End If 	
 
 
@@ -902,8 +902,6 @@ Function xTeclasBrow()
 
 
 	If (nWParam == VK_DOWN)
-
-
 
 		lHitt := .f.
 
@@ -1364,6 +1362,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 			If (lHasHeader)
 				xApagueH( cHeaderName )
+				xLimpMode()
 			End If 
 
 			If  _isWindowDefined("Win_Msg")
@@ -2105,6 +2104,7 @@ Function xGoPgDn()
 	//SysWait(0.07)
 
 Return 
+
 
 
 
