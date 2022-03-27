@@ -193,6 +193,8 @@ Function TestBrow( cParent1 , cTabx  )
 	Local nX1
 	Local nCont5 := 0
 
+	Local aResults := { }
+
 
 	aMtrHeader := {}
 	aCampos  := GetCamposDic( cTabela, 'S' , .t. , .t. )
@@ -215,6 +217,7 @@ Function TestBrow( cParent1 , cTabx  )
 	End If
 
 	cSq2 += " order by codigo limit 500"
+
 
 
 	If (Select(calias) > 0)
@@ -259,6 +262,8 @@ Function TestBrow( cParent1 , cTabx  )
 		oRow := oQuery:GetRow( i )
 		lAtivo := .t.
 
+		aResults := {}
+
 		For nx1 := 1 To Len(oRow[1])
 
 			//cValor := Hb_AnsiToOem( oRow:FieldGet(nx1)  )
@@ -298,13 +303,19 @@ Function TestBrow( cParent1 , cTabx  )
 
 			If ( Alltrim(aTips[nx1]) = 'C') //.or. ( Alltrim(aTips[nx1]) = 'D')
 				Aadd(aM1 , { Padr( (cValor) ,nTam , " " )  ,  nTam          }  )
+
+				Aadd(aResults , {   Padr( (cValor) ,nTam , " " )  ,    oRow:FieldName(nx1)  , nx1  , nTam  }   )
 			Else
 				Aadd(aM1 , { Padl( (cValor) ,nTam , " ")  ,  nTam          }  )
-			End If
+
+				Aadd(aResults , {   Padl( (cValor) ,nTam , " " )  ,    oRow:FieldName(nx1)  , nx1  , nTam }   )
+
+			End If		
 
 			Do Events
 
 		Next
+
 
 
 		c1 := ''
@@ -320,9 +331,10 @@ Function TestBrow( cParent1 , cTabx  )
 		If nCont5 > nTamPag
 			nPagNum++
 			nCont5 := 1
-		End If 	
+		End If 
 
-		Aadd(aItens , { c1 , lAtivo , nPagNum }  )
+
+		Aadd(aItens , { c1 , lAtivo , nPagNum  , aResults }  )
 		
 	Next
 
@@ -672,9 +684,15 @@ Function xRetImgs(  nId  )
 	If (nId == 860)      
 		aMtr1 := { 'SCRDOWN1' , 'SCRDOWN1_1', 1 ,  'SCRDOWN1_D'}
 	End If 
+	
+
+//	If (nId == 6652)      
+	//	aMtr1 := { 'OKVERDE1' , 'OKVERDE2', 3 , 'SCRUP1_D' }
+//	End If
 
 	
   
+
    
 Return aMtr1
 
@@ -987,7 +1005,7 @@ Function xTeclasBrow()
 			nItemx5 := 1
 			nClearIt2 := 1
 			nLinScrool := 0
-			nLinhaBarra := 1
+			nLinhaBarra := 1			
 			xDialog('Top Atingido!' , .f.  )			
 		End If
 
@@ -1634,6 +1652,19 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	        
 
 		If nMsg == WM_LBUTTONDOWN
+
+   /*
+			If isWindowVisible( GetFormHandle('Win_Dialog'))
+			//	msginfo('ok')	
+				//Tone(1000,1)
+				
+				_ShowWindow('Win_Dialog')
+				BringTop('xDialog')
+				SysWait(0.04)
+				Return
+			End If 	
+			*/
+
 
 			nItem := xGetPos(cEspelhoBrw)
 			nRow1 := -(nLinScrool)

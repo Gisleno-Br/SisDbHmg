@@ -89,16 +89,19 @@ Function SetCampoTam(cTabela , cCampo , nOrdem1 )
 	Local oRow
 
 	LOCAL cSql  := "update dicionario set tamdisp = "  + Alltrim(Str(nOrdem1))
-	cSQl += " where tabela = '" + AllTrim( cTabela ) + "' and camposistema = '" + cCampo + "'"
+	cSQl += " where tabela = '" + AllTrim( cTabela ) + "' and camposistema = '" + cCampo + "';Commit"
 
 
 	oServer := GetConexao()
 	oQuery := oServer:Query( cSql)
 
 	IF oQuery:NetErr()		
-		yAviso( '(CAmpoTam) Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error() ,, .f. )
+		xDialog( Hb_AnsiToOem('(CampoTam) Erro ao Executar Atualização -> ' + Chr( 10 ) + Chr( 13 ) + oQuery:Error() ), .f.  )
 		RETURN .f.
 	END IF
+
+
+	oQuery := oServer:Query('Commit')
 
 	lOk := .t.
 

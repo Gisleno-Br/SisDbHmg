@@ -19,6 +19,7 @@ STATIC nIndexDlg24 := 0
 
 
 
+
 DEFINE WINDOW main
 DECLARE WINDOW fSplit6
 
@@ -65,15 +66,38 @@ FUNCTION EventDlg()
 	If !_IsWindowDefined ( cMenuName )
 		Return
 	End If
+	
+
+	If nMsg == WM_KEYDOWN
+
+		If (nWParam == VK_O )			
+			lExit := .t.				 
+			Do Events 
+		End If 
+
+		If (nWParam == VK_S)
+			lRetx := .T.			
+			xFechaDlg()			
+		End If 
+
+		If (nWParam == VK_N)
+			lRetx := .F.			
+			xFechaDlg()
+		End If
+
+
+	End If 		
 
 
 	If nHWnd == GetProperty(  cMenuName, "HANDLE" )
 
 		If nMsg == WM_DRAWITEM
 			If ( nWParam >=  6652 ) .AND.  ( nWParam <=  6669 )
-				OBTN_Draw( nHWnd,  nwParam, nLParam , lFlagOk , xRetImgs( nWParam ) )
+				OBTN_Draw( nHWnd,  nwParam, nLParam , lFlagOk , xRetImgs( nWParam ) , .t. , 25 )
+				//,  xRetImgs(  nWParam  ) , .f. , 20
 			End If
 		End If
+
 
 		If nMsg == 273
 
@@ -96,15 +120,13 @@ FUNCTION EventDlg()
 			End If 
 
 			If nId == 6652				 
-				 lExit := .t.
+				 lExit := .t.				 
 				 Do Events 
 			End If 
 
 			If nId == 6653
-
 				lRetx := .T.			
 				xFechaDlg()			
-
 			End If 
 
 			If nId == 6654			
@@ -127,19 +149,14 @@ FUNCTION InputEv2()
 
 	//STATIC lTracking45 := .F.
 
-
-
 	LOCAL  nHWnd   := EventHWND()
 	LOCAL  nMsg    := EventMSG()
 	LOCAL  nWParam := EventWPARAM()
 	LOCAL  nLParam := EventLPARAM()
-
 	LOCAL cFormx := 'Win_Dialog'
-
 
 	LOCAL nind1
 	LOCAL nIdBut := 0
-
 	LOCAL n1
 	LOCAL ButHnd
 
@@ -148,11 +165,10 @@ FUNCTION InputEv2()
 	If !_isWindowDefined("Win_Dialog")
 		Return 
 	End If 
-
-	//DEFAULT cFormx := 'fDialogo'
-
-	// LOCAL n1
+	
 	If (Alltrim(cFormx) = "Win_Dialog")
+
+		
 		For n1 := 6652 TO 6659
 			If ( OBTN_Handle( cFormx, n1 ) == nHWnd )
 				If nIdBut == 0
@@ -165,17 +181,15 @@ FUNCTION InputEv2()
 
 	IF ( nIdBut > 0 )
 
+	
 		If ( nMsg == WM_MOUSEMOVE ) .and. (!lTracking45)
 
-
+	
 			CursorHand1( nHWnd  )
-
-
 			lTracking45 := TrackMouseEvent( nHWnd ) // TME_LEAVE is default flag
 
 
 			OBTN_Color( cFormx, nIdBut, RetColor1( 2 ), .T. )
-
 			OBTN_Enable( cFormx, nIdBut, .T. )
 			OBTN_Visible( cFormx, nIdBut, .T. )
 
@@ -183,25 +197,22 @@ FUNCTION InputEv2()
 
 			lFlagOk := .t. 
 
-
 		End If
-
 
 
 		If ( nMsg == WM_MOUSELEAVE )
 			
 			lFlagOk := .f. 
 
-
 			OBTN_Color( cFormx,  nIdBut, RetColor1( 1 ), .T. )
 			OBTN_Enable( cFormx, nIdBut, .T. )
 			OBTN_Visible( cFormx, nIdBut, .T. )
-	
 
 
 			lTracking45 := .F.
 
 		End IF
+
 
 	Else
 
@@ -474,11 +485,11 @@ FUNCTION xIniProgress( nTp )
 RETURN
 
 
-Function xProcDlg(  cText , lMsgRun    )
+Function xProcDlg(  cJanela , cText , lMsgRun    )
 
-	LOCAL Width     := BT_ClientAreaWidth  ( ThisWindow.Name ) 
+	LOCAL Width     := BT_ClientAreaWidth  ( cJanela ) 
 
-	LOCAL Height    := BT_ClientAreaHeight  ( ThisWindow.Name ) 
+	LOCAL Height    := BT_ClientAreaHeight  ( cJanela ) 
 
 	Local aRGBcolor := { 9, 111, 137 }
 
@@ -492,7 +503,7 @@ Function xProcDlg(  cText , lMsgRun    )
 	//LOCAL hDC2
 	Local BTstruct2	
 	
-	Local hDC2 := BT_CreateDC ( ThisWindow.Name, BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
+	Local hDC2 := BT_CreateDC ( cJanela, BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
 
 	Default lMsgRun := .f. 
 
@@ -504,10 +515,10 @@ Function xProcDlg(  cText , lMsgRun    )
 
 	BT_DrawGradientFillVertical ( hDC2 ,  0,  0,  Width, 20 , aRGBcolor , BLACK )
 
-	BT_DrawGradientFillVertical ( hDC2 ,  195 ,  0 , 571 ,  55 ,   { 238,238,238}, {  244,244,244 } )
+	BT_DrawGradientFillVertical ( hDC2 ,  220 ,  0 , Width ,  25 ,   { 238,238,238}, {  244,244,244 } )
 
 	If !lMsgRun
-		BT_DrawText (hDC2 , 120 , 15 , alltrim(cText) , "arial", 9, BLACK ,  WHITE , , nAlingText, nOrientation)
+		//BT_DrawText (hDC2 , 120 , 15 , alltrim(cText) , "arial", 9, BLACK ,  WHITE , , nAlingText, nOrientation)
 	Else 
 
 		BT_DrawBitmapTransparent ( hDC2,   50   ,  15   , 25 , 25 , BT_COPY   ,  hBitSeta , WHITE )
@@ -546,25 +557,9 @@ Function xDialog( cMsg1 , lAsk1  )
 
 	Private lRetx := .F.
 
+	Private lInstall := .f. 
+
 	lExit := .f. 
-
-
-	
-	
-
-
-	
-
-  /*
-	DEFINE WINDOW Win_Dialog AT 0, 0 WIDTH 450 HEIGHT 247 TITLE 'xDialog1' 
-		 NOMAXIMIZE NOMINIMIZE NOSIZE  NOSYSMENU NOCAPTION CHILD BACKCOLOR WHITE ;
-		ON PAINT xProcDlg(  cMsg1 )
-	END WINDOW
-
-*/
-
-
-
 
 
 	If _IsWindowDefined('Win_Dialog')
@@ -573,24 +568,44 @@ Function xDialog( cMsg1 , lAsk1  )
 	
 	DEFINE WINDOW Win_Dialog ;
 		AT 0,0  ;				
-		WIDTH 450 HEIGHT 247 ;
+		WIDTH 747 HEIGHT 247 ;
 		CHILD TITLE 'xDialog1'  ;		
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE ;
-		ON PAINT xProcDlg(  cMsg1 ) 	
+		ON PAINT xProcDlg( ThisWindow.Name ,  cMsg1 )  				
 	END WINDOW	
 
-
 	
 
-	//sginfo( Str( GetProperty('Win_Dialog' , 'Row') )    )
+    DEFINE LABEL Labez1
+		PARENT Win_Dialog
+        ROW    92
+        COL    20
+        WIDTH  700
+        HEIGHT 100
+        VALUE cMsg1
+        FONTNAME XFONT1
+        FONTSIZE 9
+        TOOLTIP ""
+        FONTBOLD .T.
+        FONTITALIC .F.
+        FONTUNDERLINE .F.
+        FONTSTRIKEOUT .F.
+        HELPID Nil
+        VISIBLE .T.
+        TRANSPARENT .T.
+        ACTION Nil
+        AUTOSIZE .F.
+        BACKCOLOR NIL
+        FONTCOLOR {150,150,150}
+    END LABEL
 
-	
+
 
 
     DEFINE IMAGE Image_1
 		PARENT Win_Dialog
-        ROW    37
-        COL    20
+        ROW    27
+        COL    35
         WIDTH  48
         HEIGHT 48
         PICTURE Iif( !lAsk1 , "EXCLA1" , "INTERRO1" )
@@ -604,13 +619,13 @@ Function xDialog( cMsg1 , lAsk1  )
 
     DEFINE LABEL Label_1
 		PARENT Win_Dialog
-        ROW    95
+        ROW    75
         COL    20
-        WIDTH  120
-        HEIGHT 24
+        WIDTH  650
+        HEIGHT 45
         VALUE Hb_AnsiToOem("Aviso Informação")
         FONTNAME XFONT1
-        FONTSIZE 9
+        FONTSIZE 8
         TOOLTIP ""
         FONTBOLD .T.
         FONTITALIC .F.
@@ -645,37 +660,32 @@ Function xDialog( cMsg1 , lAsk1  )
 	
 
 
-
-
-
-	DEFINE WINDOW WinSombra2 AT nTop + 12 , nLeft+15 WIDTH 440 HEIGHT 240 TITLE 'Sombra2' ;
+	DEFINE WINDOW WinSombra2 AT nTop + 12 , nLeft+15 WIDTH GetProperty('Win_Dialog' , 'Width') - 9 HEIGHT 240 TITLE 'Sombra2' ;
 			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
-			ON PAINT xSombra( ThisWindow.Name , nTop  , nLeft  , zBitMap )
+			ON PAINT xSombra( ThisWindow.Name , nTop  , nLeft  , zBitMap ) 			
 	END WINDOW
 
 
-	//ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+5  )
-	
+    xProcinit(lAsk1)
+		
 	
 	HMG_ChangeWindowStyle( Win_Dialog.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
 	HMG_ChangeWindowStyle( Win_Dialog.Handle, WS_EX_STATICEDGE, NIL, .T., .T. )
 
+	
 
-	xProcinit( lAsk1 )
+	//DisableWindow(cActiveJan)
+
+
 
 	WinSombra2.Show()
-
 	Bt_ClientAreaInvalidateAll('WinSombra2')
-	
-	//ACTIVATE WINDOW Win_Dialog
-
 	
 	_ShowWindow('Win_Dialog')
 
-	xWaitDlg()
+    xWaitDlg()	
 
-
-	
+	//msginfo('pl2')
 	xFechaDlg()
 
 
@@ -705,16 +715,17 @@ Function xProcinit( lPergunta )
 
 	nIndexDlg22 := Len(_HMG_EventData) + 1	
 	CREATE EVENT PROCNAME EventDlg() HWND Win_Dialog.Handle STOREINDEX nIndexDlg22 
-	
-	
+		
 
 	If (!lPergunta)
 
-		OBTN_Create( 'Win_Dialog', 6652,  '&Ok'   , 160, 166 ,  75 ,  30,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+		OBTN_Create( 'Win_Dialog', 6652,  '&Ok'   , 185, 360 ,  75 ,  30,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont ) 
 		
 		//, 'OKVERDE1'  , 3 , 'OKVERDE2')
 
 		OBTN_Font( 'Win_Dialog', 6652,  { cFontName, nFontSize, .F., .F., .F., .F. } )
+
+
 
 
 		nIndexDlg22 := Len(_HMG_EventData) + 1	
@@ -723,24 +734,33 @@ Function xProcinit( lPergunta )
 		EventProcessAllHookMessage(nIndexDlg22 , .t.)
 
 
+		//SysWait(0.09)
+
+		//msginfo('lp2')
+		
+		lInstall := .t. 
+
+
+		//EventProcessAllHookMessage(EventCreate("InputEv2", OBTN_Handle( 'Win_Dialog', 6652 )), .T.)
+
+
+
 		
 	Else 
 
-		OBTN_Create( 'Win_Dialog', 6653, "&Sim", 162, 292,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-		OBTN_Create( 'Win_Dialog', 6654, hb_ANSIToOEM( "&Não" ), 162, 355 ,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+		OBTN_Create( 'Win_Dialog', 6653, "&Sim", 185, 292,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+		OBTN_Create( 'Win_Dialog', 6654, hb_ANSIToOEM( "&Não" ), 185, 355 ,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 
 		OBTN_Font( 'Win_Dialog', 6653,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 		OBTN_Font( 'Win_Dialog', 6654,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 
-		nIndexDlg22 := Len(_HMG_EventData) + 1	
-		//EventProcessAllHookMessage(nIndexDlg22   := EventCreate (  { ||   InputEv2( )} , OBTN_Handle( 'Win_Dialog', 6653 ) ) , .t.)
+		nIndexDlg22 := Len(_HMG_EventData) + 1			
 	    CREATE EVENT PROCNAME InputEv2() HWND OBTN_Handle( 'Win_Dialog', 6653 )  STOREINDEX nIndexDlg22 
 
 		EventProcessAllHookMessage(nIndexDlg22 , .t.)
 
 
-		nIndexDlg22 := Len(_HMG_EventData) + 1	
-		//EventProcessAllHookMessage(nIndexDlg22   := EventCreate (  { ||   InputEv2( )} , OBTN_Handle( 'Win_Dialog', 6654 ) ) , .t.)
+		nIndexDlg22 := Len(_HMG_EventData) + 1			
 		CREATE EVENT PROCNAME InputEv2() HWND OBTN_Handle( 'Win_Dialog', 6654 )  STOREINDEX nIndexDlg22 
 		EventProcessAllHookMessage(nIndexDlg22 , .t.)
 
@@ -751,7 +771,7 @@ Function xProcinit( lPergunta )
 
 	
 	nIndexDialog := Len(_HMG_EventData)	
-	BT_ClientAreaInvalidateAll('Win_Dialog')
+	//BT_ClientAreaInvalidateAll('Win_Dialog')
 
 
 Return 
@@ -774,11 +794,9 @@ Function xFindEvent(  cEvent , nHandle1 )
 				nIndex1 := ni
 			End If 	
 
-
 		End If 	
 
 		ni++
-
 
 	Enddo	
 
@@ -865,14 +883,8 @@ Function xFechaDlg()
 	If nHandle1 > 0
 
 		
-		//AnimateWindow(nHandle1, (1*21500), (AW_BLEND + AW_HIDE))
-
+	
 		nSeconds := 1
-		/*
-   		AnimateWindow(nHandle1, (nSeconds*300), AW_VER_NEGATIVE)
-   		hb_IdleSleep(nSeconds)
-   		AnimateWindow(nHandle1, (nSeconds*1500), (AW_BLEND + AW_HIDE))
-		   */
 
 
 		DO EVENTS
@@ -886,11 +898,7 @@ Function xFechaDlg()
 
 
 		SendMessage( nHandle1, WM_SYSCOMMAND, WM_DESTROY , 0 )
-
-		DO EVENTS
-
-
-	
+		DO EVENTS	
 
 	End If 
 	
@@ -921,6 +929,10 @@ Return
 Function xWaitDlg()
 
 	Local i
+	Local ar1
+	Local nRow1,nCol1
+	Local nHWnd := GetFormHandle('Win_Dialog')
+	Local nHWnd1
 
 
 	For i := 1 To 255
@@ -932,15 +944,24 @@ Function xWaitDlg()
     Do Events
 	Do Events
 
+	//aMx := yEfect(  cActiveJan , .t.  )
+
+
 	Do While .Not. lExit
-		Do Events 
-		For i := 1 To 255
-			If (GetAsyncKeyState(VK_RETURN) != 0)
-				lExit := .T.
+
+
+
+		Do Events
+		
+		For i := 1 To 255				
+			If (GetAsyncKeyState(VK_RETURN) != 0) 
+				lExit := .T.				
 				Exit			
 			EndIf
 		Next i
 	EndDo
 
-Return 
+	//msginfo('Exit')
+
+Return .t. 
 
