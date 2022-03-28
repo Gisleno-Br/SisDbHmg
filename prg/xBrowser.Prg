@@ -298,7 +298,9 @@ Function TestBrow( cParent1 , cTabx  )
 				lAtivo := .f.
 			End If
 
-			nQAcento := QtAcento(cValor)
+
+
+			nQAcento := QtAcento(cValor)			
 			nTam := If( (nQAcento =  0)   , aTams[nx1] ,  aTams[nx1] + nQAcento )
 
 			If ( Alltrim(aTips[nx1]) = 'C') //.or. ( Alltrim(aTips[nx1]) = 'D')
@@ -317,7 +319,6 @@ Function TestBrow( cParent1 , cTabx  )
 		Next
 
 
-
 		c1 := ''
 		Aeval(aM1 , { |a|  c1 += ( a[1] + ' '  )     })
 		c1 += "."
@@ -328,13 +329,14 @@ Function TestBrow( cParent1 , cTabx  )
 		End If
 		cAndamento := 'Andamento : '  + Alltrim(Str(I)) + "/" + Alltrim(Str(   oQuery:LastRec() ))
 		nCont5++
+
 		If nCont5 > nTamPag
 			nPagNum++
 			nCont5 := 1
 		End If 
 
 
-		Aadd(aItens , { c1 , lAtivo , nPagNum  , aResults }  )
+		Aadd(aItens , { c1 , lAtivo , nPagNum  , aResults , ''}  )
 		
 	Next
 
@@ -606,6 +608,21 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 
 Return
 
+Function SetArray( aMz1 )
+
+	If Len(aMz1) > 0 
+		nOpselx1 := 0
+		nItemx5 := 0
+		nClearIt2 := 0
+ 		aMt1 := Aclone(aMz1)
+	End If 	 
+
+REturn   
+
+Function xRetArray()
+Return aMt1 
+   
+
 Function xCalcPosV(nReg1)
 
 	Local nPos 	  := 0
@@ -628,22 +645,38 @@ Function xCalcBarV()
 
 Return nCalc 
 
-Function xShowBrw(  cTable1   )
+Function xShowBrw(  cTable1 , lDisplay   )
 
 	Local cBrwName        := 'Brw' + Left(cTable1,4) 
 	Local cEspelhoBrw     := 'Win_E' + Left(cBrwName,4)
 	Local cBarraVfrm 	  := 'Win_R1' +  Left(cBrwName,4)
 	Local cBarraVSombra   := 'Win_Resp' +  Left(cBrwName,4)
 
+	DEFAULT lDisplay := .F. 
+
 
 	
 	If (_isWindowDefined(cBrwName))
+
+
+		If lDisplay 
+
+			//msginfo( Str(  Len(aMt1)  ))
+
+		   BT_ClientAreaInvalidateAll (cEspelhoBrw)	
+
+		   BT_ClientAreaInvalidateAll (cBrwName)	
+		   SysWait(0.02)
+
+		End If 
 
 		_ShowWindow(cBrwName )  
 		_ShowWindow(cEspelhoBrw)  
 
 		_ShowWindow(cBarraVfrm)
 		_ShowWindow(cBarraVSombra)
+
+
 		xDcToDc() 
 
 		SysWait(0.03)
@@ -1133,6 +1166,8 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 	For n1 := 1 To Len(aMtrOp) 
 
 		cTexto := Hb_Utf8ToStr(aMtrOp[n1][1])		
+
+		//cTexto := Hb_AnsitoOem(aMtrOp[n1][1])		
 		nLinb++
 
 
@@ -2218,7 +2253,12 @@ Function xGoTop()
 	SysWait(0.05)
 
 	xDcToDEspe()
-	//Do Events 
+	
+				
+	xCursorWait( .f. )
+				
+	Do Events 
+
 
 REturn
 
@@ -2552,7 +2592,7 @@ Function EventRole1()
 
 Return 
 
-Static Function xCursorWait( lOn )
+Function xCursorWait( lOn )
 
 
 	If lOn 

@@ -56,6 +56,10 @@
     SCRUP3_1    BITMAP  img\Up3_1.Bmp 
     SCRUP2      BITMAP  img\up2.Bmp
     SCRUP3      BITMAP  img\up3.Bmp
+
+
+    ORDEMCIMA   BITMAP  img\setaa.Bmp
+    ORDEMBAIXO  BITMAP  img\setaa.Bmp
     
     
 

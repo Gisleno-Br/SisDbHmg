@@ -13,6 +13,8 @@ Declare window Main
 
 
 
+
+
 Function GetCampoOrdem( cTabela , cCampo)
 
 	LOCAL oServ   := GetConexao()
@@ -88,10 +90,13 @@ Function SetCampoTam(cTabela , cCampo , nOrdem1 )
 	LOCAL oQuery
 	Local oRow
 
+
+
 	LOCAL cSql  := "update dicionario set tamdisp = "  + Alltrim(Str(nOrdem1))
-	cSQl += " where tabela = '" + AllTrim( cTabela ) + "' and camposistema = '" + cCampo + "';Commit"
+	cSQl += " where tabela = '" + AllTrim( cTabela ) + "' and camposistema = '" + cCampo + "'"
 
 
+	SaveLog('SqlamposTam.Log' , cSql + QUEBRA )
 	oServer := GetConexao()
 	oQuery := oServer:Query( cSql)
 
@@ -107,8 +112,6 @@ Function SetCampoTam(cTabela , cCampo , nOrdem1 )
 
 	oServer:Destroy()
 	oServer := Nil
-
-
 
 Return lOk
 

@@ -63,9 +63,13 @@ Static lDragMode := .f.
 
 Static cTable := ''
 
+Static c_BrowName := ''
+
 Static lAndamento := .f.
 
 Static nColDrag := 0
+
+Static nOrdCol := 0
 
 
 Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1 , aTps , cTabela  )
@@ -79,6 +83,8 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
     aColsTam := aTams 
     aTipsy   := aTps
     aCabecs  := aCabecalho
+
+    c_BrowName := cBrwName1
 
     cTable := cTabela
         
@@ -119,42 +125,121 @@ Function xLimpMode()
 Return 
 
 
-Function xAtuDados()
+Static Function xAtuDados(   nIndice1 , lAscedente )
 
 
-    Local aCampos  := GetCamposDic( cTabela, 'S' , .t. , .t. )
+    Local aCampos := GetCamposDic( cTabela, 'S' , .t. , .t. )
 	Local aCabec  := GetCamposDic( cTabela, 'S', .F. , .f. )
 	Local aTams   := GetCamposInf( cTabela, 'TAM' )
 	Local aTips   := GetCamposInf( cTabela, 'TIPO' )
-    Local aMz1 
-    Local cTexto := ''
+    Local aMz1    
+    Local aZZ1    := xRetArray()
+    Local cTexto  := ''
+    Local aM4     := {}
+    Local aZ1     := {}
+    Local nQAcento := 0
+    Local nTam 
+    Local nTam1 
+    Local lAtivo 
+    Local nNum2
+    Local cTxt1 := ''
+    Local cTipo := ''
+    Local nX1 
+    Local cCOrd := ''
+    Local cChaveOrd := ''
 
 
-    For n1 := 1 To Len(aCampos)
-
-        nTam1 := aTams[n1] 
-
-        aMz1 := aMtrDados[1][4]
-
-        cTexto += Padc(   aMz1[n1][1] , nTam1  )
-
-        If (nTam1 != aMz1[n1][4])
-
-           msginfo( aCampos[n1] + '   ' + Str(nTam1) + '  ' + aMz1[n1][1] + '  ' +  + Str(  aMz1[n1][4]  )  )
-
-        End If     
-
-
-    Next      
-
-    //For n1 := 1 To Len(aMtrDados)
-
+    DEFAULT nIndice1   := 0
+    DEFAULT lAscedente := .f. 
     
-        
+	xCursorWait( .t. )
 
-        
 
-    //Next     
+    For nx1 := 1 To Len(aZZ1)
+
+        aMz1 := aZZ1[nx1][4]     
+
+        aZ1  := {}   
+
+        lAtivo := aZZ1[nx1][2]
+        nNum2  := aZZ1[nx1][3]
+        cTexto := ''
+
+        cChaveOrd := ''
+
+        For n1 := 1 To Len(aCampos)
+
+            cTxt1 := ''           
+
+
+            //nx1 := n1 
+            cTxt1 := aMz1[n1][1]
+
+            If  Alltrim(aTips[n1]) == 'D'
+				cTxt1 := Padl(aMz1[n1][1] ,10)
+			End If
+
+			lNum := .f.
+
+			If Alltrim(aTips[n1]) == 'B'
+				cTxt1 := alltrim(Transform( rTrans(aMz1[n1][1]  ) , "@E 999,999,999.99" ))
+				lNum := .t.
+			End If
+
+			If ( Alltrim(aTips[n1]) == 'I')
+				If (n1 > 1)
+					cTxt1 := alltrim( Str(   Val( aMz1[n1][1] )    )  )
+					lNum := .t.
+				Else
+					cTxt1 := Alltrim( Str(   Val( aMz1[n1][1] )    ) )
+				End If
+			End If
+
+            nTam1 := aTams[n1] 
+            nQAcento := QtAcento( cTxt1  )			
+
+            nTam := If( (nQAcento =  0)   , nTam1 ,  nTam1 + nQAcento )
+            cTexto += (Padr(   cTxt1 , nTam  ) + ' ')
+
+
+            If (nIndice1 > 0)
+                If (nIndice1 = n1)
+                    cChaveOrd := cTxt1
+                End If 
+            End If 
+
+            Aadd(aZ1 , {cTxt1 ,  aMz1[n1][2] ,   n1 , nTam     }  )
+
+            Do Events 
+
+        Next     
+
+        Do Events 
+        Aadd(aM4 , { cTexto , lAtivo , nNum2  , aZ1 , cChaveOrd }  )
+
+    Next 
+
+
+    If (nIndice1 > 0)
+        If lAscedente
+            aM4 := Asort(aM4 ,,, { |a,b|  a[5] <  b[5]  })
+        Else 
+            aM4 := Asort(aM4 ,,, { |a,b|  a[5] >  b[5]  })
+        End If     
+    End If 
+
+
+
+
+    Do Events 
+    SetArray( aM4 )
+  
+    Do Events 
+  
+    If _IsWindowDefined(c_BrowName)        
+        xShowBrw(  cTabela , .t.  )       
+        xGoTop()
+    End If      
 
 REturn     
 
@@ -286,7 +371,7 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
                     xMapCols( aCabecs , aColsTam , aTipsy )
 
                     If !SetCampoTam(	cTabela  , Alltrim(   aCabecs[nSaveCol1]      ) , aColsTam[nSaveCol1] )
-                        xDialog("Não Foi Possivel Atualizar o Dicionario.")
+                        xDialog( Hb_AnsitoOem("Não Foi Possivel Atualizar o Dicionario.") )
                     End If 
 
                     SysWait(0.02)
@@ -294,7 +379,7 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
                     BT_ClientAreaInvalidateAll(cHeaderJan)
                     SysWait(0.02)
 
-                    xAtuDados()
+                    xAtuDados( 3 , .t. )
 
                 End If     
 
@@ -427,7 +512,7 @@ Function xApagueH( cJanela1 )
 
 Return 
 
-Function xMapCols( aCabs , aTamx1 , aTipos1  )
+Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
 
     Local i := 0
     Local nPos1 := 1 
@@ -461,7 +546,7 @@ Function xMapCols( aCabs , aTamx1 , aTipos1  )
 
 Return Nil 
 
-Function xRetUnit()
+Static Function xRetUnit()
 
     Local BTstruct
     Local nQAcento 
@@ -481,7 +566,7 @@ REturn n12
 
 
 
-Function xSearchLim(  nCol1 )
+Static Function xSearchLim(  nCol1 )
 
     Local nColuna := 0
     Local n1 
@@ -516,7 +601,7 @@ Function xSearchLim(  nCol1 )
 REturn nColuna 
 
 
-Function xSearchPos(  nCol1 )
+Static Function xSearchPos(  nCol1 )
 
     Local nColuna := 0
     Local n1 
@@ -547,7 +632,7 @@ return
 
 
 
-Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
+Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
     LOCAL Width  := BT_ClientAreaWidth  (cJanela)
 	LOCAL Height := BT_ClientAreaHeight (cJanela)
