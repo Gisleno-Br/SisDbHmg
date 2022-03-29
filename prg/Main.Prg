@@ -2288,6 +2288,21 @@ Return
 		}
 
 
+HB_FUNC ( GETVSCROLLVALUE )
+
+{
+
+	HWND hwnd;
+	SCROLLINFO si; 
+
+	hwnd = (HWND) HMG_parnl (1);
+	GetScrollInfo (hwnd, SB_HORZ, &si);
+	
+   
+    hb_retni( si.nTrackPos  );
+
+}
+
 		
 HB_FUNC ( SETVSCROLLVALUE )
 {
@@ -2318,7 +2333,8 @@ HB_FUNC ( SETVSCROLLVALUE )
 
 	GetClientRect(hwnd, &rect3);
 
-	//rect3.right -= 35;
+	rect3.right  += 1335;
+	rect3.bottom += 1335;
 
 	
    // VERT 
@@ -2350,18 +2366,14 @@ HB_FUNC ( SETVSCROLLVALUE )
 		si.nTrackPos = yChar;
 		si.fMask  = SIF_ALL;
 		//si.fMask  = SIF_TRACKPOS;
-
-
-
-
 		SetScrollInfo (hwnd, SB_HORZ, &si, TRUE);
 		GetScrollInfo (hwnd, SB_HORZ, &si);
-
 		
 		yPos = si.nPos;
 		si.nPos -= 1;
 
-		ScrollWindow(hwnd, yChar * (yPos - si.nPos),  0   , NULL , NULL );
+
+		ScrollWindow(hwnd, yChar  ,  0   , NULL , NULL );
 
 
 	 }

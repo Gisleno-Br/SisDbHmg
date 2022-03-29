@@ -234,6 +234,7 @@ Function TestBrow( cParent1 , cTabx  )
 	aItens := {}
 
 
+
 	nF1 := {|| ARRAY FONT "Arial"   SIZE 9 }
 	nF1 := {|| ARRAY FONT "Arial"   SIZE 9 BOLD}
 	aDynFont := {}
@@ -315,6 +316,7 @@ Function TestBrow( cParent1 , cTabx  )
 			End If		
 
 			Do Events
+			
 
 		Next
 
@@ -390,6 +392,7 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 	DEFAULT nLarg1  := GetDeskTopWidth() - 40
 	DEFAULT nCol := 10
 	DEFAULT nRowIni   := 145
+	//145
 	DEFAULT aCabecalho := {}
 
 
@@ -507,11 +510,11 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 	nCol11 := nCol + nLarg1 
 
 	DEFINE WINDOW &cBarraVfrm ;
-		AT nRowIni,nCol11  ;
+		AT nRowIni - 31 ,nCol11  ;
 		CHILD ;
 		PANEL ;
 		PARENT &cParent ;
-		WIDTH 21 HEIGHT (nTamPag * nItemBrwHeight) ;
+		WIDTH 21 HEIGHT (nTamPag * nItemBrwHeight) + 31 ;
 		TITLE 'xScroxRoleol1' + Left(cParent,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR WHITE   ;
 		ON PAINT xPaintScroll( ThisWindow.Name )
@@ -520,11 +523,11 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 
 
 	DEFINE WINDOW &cBarraVSombra ;
-		AT nRowIni,nCol11  ;
+		AT nRowIni - 31 ,nCol11  ;
 		CHILD ;
 		PANEL ;
 		PARENT &cParent ;
-		WIDTH 27 HEIGHT (nTamPag * nItemBrwHeight)  ;
+		WIDTH 27 HEIGHT (nTamPag * nItemBrwHeight) + 31  ;
 		TITLE 'xScroxSombra' + Left(cParent,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR {240,240,240}  ;
 		ON MOUSEMOVE (cObjSelected := 'BarraV')				  
@@ -764,6 +767,9 @@ Function xTeclasBrow()
 
 	Local lCtrl := .f. 
 
+	Local nPos1
+	Local nWidth 
+
 	Local nLarg1 := nLargX
 	//GetDeskTopWidth() - 45
 
@@ -777,19 +783,78 @@ Function xTeclasBrow()
 
 
 	If nMsg == WM_KEYDOWN
-
+		
 		If (nWParam == VK_RIGHT)
 			If  lNoHorzScr
 				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))
 				Return
 			End If
-	
+
+/*
+			nColz1 := xGetColSel()
+
+			nColz1++
+
+			xSelCol( nColz1 )
+
+			DO EVENTS 
+			
+			nWidth := xGetColWidth(  nColz1   )			
+			nPos1 := xGetInfC(   nColz1 , 2  )
+			nPos2 := xGetInfC(   nColz1 , 3  )
+
+
+			//nColScrool += nWidth
+
+			n1:=1
+
+			*/
+
+
+			//nY := 	
+		//	msginfo( 'Nscrool : ' + Str(   nColScrool  ) + ' Width Col ' + str(  nLarg1  )  )
+					
+
+			/*
+			If ( (nLargx - nColScrool  ) < xGetColWidth(  nColz1   ) )
+
+				nHSCrool := nWidth
+
+				SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  -(nHSCrool)    , 2 )
+				SETVSCROLLVALUE( GetFormHandle( cHeaderName  )  ,  -(nHSCrool)    , 2 )
+
+				UpdHeader(  cHeaderName ,    (nHSCrool)   )					
+				Do Events 
+
+				xDcToDc()
 				
+
+				DO EVENTS
+				
+
+			//	SysWait(0.04)
+
+				If (nLParam > 0)
+					UpdateBarH( nHSCrool )					
+				End If 
+
+			Else 
+
+			 //  nColScrool += xGetColWidth(  nColz1   )	
+
+			End If 
+			*/
+
+
+
+	
+			
 			If (nColScrool <= nDiff )
 			//if !((nColScrool - (nLargTotal - nLargX  )) > 40 )
 				nColScrool += nHSCrool 
 				SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  -(nHSCrool)    , 2 )
 			
+
 				Do Events 
 
 				If lHasHeader
@@ -803,16 +868,20 @@ Function xTeclasBrow()
 					UpdateBarH( nHSCrool )					
 				End If 
 
+				//MSGINFO( STR(   GETVSCROLLVALUE(  GetFormHandle( cBrowserName  )   )  )   )   
+
 			Else 
 			    xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida. ") )
 
 
 			End If
+			
 
 		End If
+		
 
 
-
+		/*			
 		If (nWParam == VK_LEFT)
 			If  lNoHorzScr
 				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))
@@ -843,6 +912,9 @@ Function xTeclasBrow()
 			End If
 
 		End If
+
+		*/
+
 
 		lCtrl := (GetKeyState ( VK_CONTROL ) < 0) .or. (lControlOk)
 
@@ -917,6 +989,8 @@ Function xTeclasBrow()
 			BT_ClientAreaInvalidateAll(cBrowserName)
 			xDcToDc()
 
+			//msginfo('lp2')
+
 
 
 		End If
@@ -933,6 +1007,8 @@ Function xTeclasBrow()
 			SETVSCROLLVALUE( GetFormHandle( cBrowserName )  , -(nColScrool) , 2 )
 			BT_ClientAreaInvalidateAll(cBrowserName)			
 			xDcToDc()
+
+			msginfo('lp2')
 
 
 		End If
@@ -1235,7 +1311,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 				nTypeText    :=  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT				
 			End If
 
-			BT_DrawText ( hDC2 , nLine + nRow  , nCol+17 ,  cTexto , xFont2, 9 ,  cCor , nCorBk , nTypeText, nAlingText, nOrientation )
+			BT_DrawText ( hDC2 , nLine + nRow  , 17+nCol  ,  cTexto , xFont2, 9 ,  cCor , nCorBk , nTypeText, nAlingText, nOrientation )
 
 		End If
 

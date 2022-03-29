@@ -47,3 +47,4 @@
  update dicionario set tamdisp = 55 where tabela = 'Clientes' and camposistema = 'Cidade'
  update dicionario set tamdisp = 58 where tabela = 'Clientes' and camposistema = 'Cidade'
  update dicionario set tamdisp = 60 where tabela = 'Clientes' and camposistema = 'Cidade'
+ update dicionario set tamdisp = 48 where tabela = 'Clientes' and camposistema = 'Residência'

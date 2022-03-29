@@ -72,6 +72,9 @@ Static nColDrag := 0
 Static nOrdCol := 0
 
 
+Static nColSele := 1
+
+
 Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1 , aTps , cTabela  )
 
     Local nRowIni := GetProperty( cBrwName1 , 'Row')
@@ -93,13 +96,11 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
 		CHILD ;
 		PANEL ;
 		PARENT &cParent1 ;
-		WIDTH nLarg1+27 HEIGHT 30 VIRTUAL HEIGHT Nil VIRTUAL WIDTH Iif( nLargTot1 > 0 , nLargTot1 , nLarg1+1)  ;
+		WIDTH nLarg1+1 HEIGHT 30 VIRTUAL HEIGHT Nil VIRTUAL WIDTH Iif( nLargTot1 > 0 , nLargTot1 , nLarg1+1)  ;
 		TITLE 'xHeader1' + Left(cHName,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE  ;		
 		ON PAINT xPaintHeader( ThisWindow.Name , aCabecs  , aColsTam , aTipsy )  		
 	END WINDOW
-
-
     
     xMapCols( aCabecs , aColsTam , aTipsy )
 
@@ -244,6 +245,29 @@ Static Function xAtuDados(   nIndice1 , lAscedente )
 REturn     
 
 
+Function xGetColSel()
+Return nColSele
+
+
+
+Function xGetColWidth(   nColuna )
+Return aMapsCol[ nColuna  ][5] 
+
+Function xGetInfC(   nColuna , nIndice  )
+Return aMapsCol[ nColuna  ][nIndice] 
+
+
+
+
+Function xSelCol( nCol1 )
+
+    nColSele := nCol1            
+    BT_ClientAreaInvalidateAll(cHeaderJan)
+    SysWait(0.02)                            
+
+
+Return 
+
 Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
 
     Local nRow 
@@ -269,7 +293,6 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
         Return 
     End If 
 
-    
     
 	
 	If nHWnd == GetProperty(  cHeaderJan   , "HANDLE" )
@@ -308,6 +331,10 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
         If (nMsg == WM_LBUTTONDOWN)	
              
             //msginfo(Str(nColSel1))
+
+            nColSele := nColSel1            
+            BT_ClientAreaInvalidateAll(cHeaderJan)
+            SysWait(0.02)                            
 
             If (lSizeMode)                
 	
@@ -651,15 +678,19 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
     Local nTam2
     Local nCol := -(nColHeader)
     Local nColx := 17
-    Local hBitOk := BT_BitmapLoadFile ('OKMARK')
+    Local hBitOk := BT_BitmapLoadFile ('OKMARK22')
     
 	hDC = BT_CreateDC ( cJanela  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct )
-	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    ,  {230,230,230}  , {230,230,230} )
+	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    ,  {117,124,131}  , {137,143,150} )
+
+    //BT_DrawGradientFillHorizontal ( hDC ,   0 , 0  , Width ,    Height    ,  {128,128,128}  , {128,128,128} )
 
 
     If (nColHeader > 0)
-        nColx += nCol 
+        nColx += nCol         
     End If 
+
+    BT_DRAWEDGE (hDC, 0 , 0 ,  Width     , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
 
 
     BT_DrawBitmap (hDC  , 6 ,  (0+nColx) - 16  , 15  , 15 , BT_STRETCH, hBitOk)
@@ -673,71 +704,62 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
         nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
         nTam2 := If( (nQAcento =  0)   , aTamanho[n1] , aTamanho[n1] + nQAcento ) //* nTamX1
 
-        If (lSizeMode ) .And. ( nColSel1 = n1)
-          // nTam2 := nTam1 
-          // msginfo( Str(nTam1))
-
-         //  msginfo('ok2')
-        End If 
-
-      
+         
         cTexto1 += Padc( Alltrim(  aMapsCol[n1][1] ) ,   nTam2 + 1  )
-     //   cTexto := Replicate('A' ,  aTamanho[n1] + 1 )  
        
 
         If (nColSel1 > 0) .And. (nColSel1 = n1)             
-            BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 1 ,    Height    , RED ,BLUE )        
+            BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 1 ,    Height    , {163,168,173} , {163,168,173} )        
+
+
         Else 
             
         End If     
 
-        BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  EDGE_ETCHED  , BF_LEFT + BF_RIGHT)
-        BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  EDGE_ETCHED  , BF_LEFT + BF_RIGHT)
+        BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
+        BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
         nColx += nTam1 
 
     Next 
-    
+
+    BT_DrawText ( hDC , 10  , 17+nCol ,   Hb_Utf8ToStr(cTexto1) , FONTBROWSER  , FONTBROWSERSIZE , WHITE,  {230,230,230}   , ;
+				nTypeText ,	nAlingText, nOrientation )
 
 
 
-  /*
-    For n1 := 1 To Len(aCabec)
-        
-        nTam1  := aTamanho[n1]
-        nQAcento := QtAcento(Alltrim(aCabec[n1]) )
-        nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
-        cTexto1 += Padc( Alltrim(aCabec[n1]) ,   nTam + 1      )
-        cTexto := Replicate('A' ,  aTamanho[n1] + 1 )
-        n12 := GetTextWidth( hDC , cTexto , hfont )
-        nTam := n12
+     If (nColSele > 0)                 
 
-        If (n1 = 2)
-            nColx+=3
+        nColx := 17        
+
+        If (nColHeader > 0)
+            nColx += nCol         
         End If 
 
-        If (nColSel1 > 0) .And. (nColSel1 = n1)
-             
-            BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 1 ,    Height    , RED ,BLUE )
+        nTam1  := aMapsCol[nColSele][5]              
+        nColx +=  (aMapsCol[nColSele][2] - 13)
+        cTexto1 := aMapsCol[nColSele][1]              
 
-            BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  EDGE_ETCHED  , BF_LEFT + BF_RIGHT)
-            BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  EDGE_ETCHED  , BF_LEFT + BF_RIGHT)
+        //msginfo('ok2')
+
+        
+
+        nQAcento := QtAcento(Alltrim( aMapsCol[nColSele][1]  ) )
+        nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
+        nTam2 := If( (nQAcento =  0)   , aTamanho[nColSele] , aTamanho[nColSele] + nQAcento ) //
+
+        cTexto1 := Padc( Alltrim(  aMapsCol[nColSele][1] ) ,   nTam2 + 1  )
 
 
-        Else 
+       BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam - 5  ,    Height    ,  {163,168,173} , {128,128,128} )        
+       //{163,168,173}
+    
+        
+       BT_DrawText ( hDC , 10  , nColx,   Hb_Utf8ToStr(cTexto1) , FONTBROWSER  , FONTBROWSERSIZE , WHITE,  {230,230,230}   , ;
+				BT_TEXT_TRANSPARENT+BT_TEXT_BOLD ,	nAlingText, nOrientation )
+        
             
-        End If     
+    End If       
 
-        BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  EDGE_ETCHED  , BF_LEFT + BF_RIGHT)
-        BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  EDGE_ETCHED  , BF_LEFT + BF_RIGHT)
-
-        nColx += nTam        
-
-    Next 
-    */
-
-
-    BT_DrawText ( hDC , 10  , 17+nCol ,   Hb_Utf8ToStr(cTexto1) , FONTBROWSER  , FONTBROWSERSIZE , {125,125,125} ,  {230,230,230}   , ;
-				nTypeText ,	nAlingText, nOrientation )
 
 
     BT_DeleteDC (BTstruct )
