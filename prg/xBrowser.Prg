@@ -69,6 +69,12 @@ Static cBarraVfrm := ''
 
 Static cBarraVSombra := ''
 
+Static nQTotCol := 0
+
+Static lScrool1 := .f. 
+
+Static nAcumTot2 := 0
+
 
 
 
@@ -108,6 +114,8 @@ Static nLargX := 0
 Static cBarrah := ''
 
 Static lHasHeader := .f. 
+
+Static nColH1 := 0
 
 //DECLARE WINDOW Win_Browser
 
@@ -433,6 +441,8 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 		End If 
 	End If 
 
+
+
 	DEFINE WINDOW &cBrowserName ;
 		AT nRowIni,nCol  ;
 		CHILD ;
@@ -459,16 +469,17 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 
 
 
-	cBarrah := xBarraH( cParent ,  cBrowserName , nRowIni+(nTamPag * nItemBrwHeight)+2  , nLargTotal  ,  nLargX , cBrowserName )
-
+	
 	If Len(aCabecalho) > 0
 		lHasHeader := xHeader( cHeaderName , aCabecalho , aTamanhos , cParent ,  cBrowserName ,  nLargTotal , aTipos , cTabela  )
 	End If 	
 
+	cBarrah := xBarraH( cParent ,  cBrowserName , nRowIni+(nTamPag * nItemBrwHeight)+2  , nLargTotal  ,  nLargX , cBrowserName , (nQTotCol := xGetColQtd())  )
+
 
 
 	//SET WINDOW Win_Browser TRANSPARENT TO 0
-
+	//msginfo(Str(  nQTotCol  ))
 
 	SET WINDOW &cBrowserName TRANSPARENT TO 0
 
@@ -542,6 +553,9 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 
 
 	xCalcBarV()
+
+
+	//SETSCROLLRANGE (GetFormHandle(cBrowserName ) , SB_HORZ, 0, 2500 , .T. )
 
 
 	ShowScrollbar (GetFormHandle(cBrowserName ) , 0, .f.)
@@ -771,15 +785,23 @@ Function xTeclasBrow()
 	Local nWidth 
 
 	Local nLarg1 := nLargX
+
+	Local nLargz1 := nLargx
 	//GetDeskTopWidth() - 45
 
 	Local nDiff := nLargTotal - nLarg1 + 30
 
+	Local aMVisible1 := Iif( nColScrool >= nLarg1  , xColsVisible(nColScrool) , {} )
+
+	
+	Local nPos2
+
+	Local nTotal := 0
 
 
 	//xFechaMen
 	Local nMaxItem := Int(nTamSubMenuConsulta / nItemSubHeight)
-	
+
 
 
 	If nMsg == WM_KEYDOWN
@@ -790,70 +812,72 @@ Function xTeclasBrow()
 				Return
 			End If
 
-/*
+			
 			nColz1 := xGetColSel()
 
+			If (nColz1 = nQTotCol)
+				xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida. ") )
+				REturn 
+			End If 
 			nColz1++
 
 			xSelCol( nColz1 )
-
 			DO EVENTS 
 			
 			nWidth := xGetColWidth(  nColz1   )			
 			nPos1 := xGetInfC(   nColz1 , 2  )
 			nPos2 := xGetInfC(   nColz1 , 3  )
+			nTotal := xRetTotal( nColz1 )
+			lScrool1 := (nPos2 >= nLargz1) .And. (nColScrool < nTotal)  			
 
+			If (lScrool1)
 
-			//nColScrool += nWidth
-
-			n1:=1
-
-			*/
-
-
-			//nY := 	
-		//	msginfo( 'Nscrool : ' + Str(   nColScrool  ) + ' Width Col ' + str(  nLarg1  )  )
-					
-
-			/*
-			If ( (nLargx - nColScrool  ) < xGetColWidth(  nColz1   ) )
-
-				nHSCrool := nWidth
-
-				SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  -(nHSCrool)    , 2 )
-				SETVSCROLLVALUE( GetFormHandle( cHeaderName  )  ,  -(nHSCrool)    , 2 )
-
-				UpdHeader(  cHeaderName ,    (nHSCrool)   )					
-				Do Events 
-
-				xDcToDc()
+			//	nColScrool += nPos2
 				
+				If nAcumTot2 == 0
+					nHSCrool := (nPos2 - nLargz1)+7 
+				Else 
+					nHSCrool := (nPos2 - nLargz1)-20
+				End If 	
+
+
+				nLargz1 := nPos2
+				nColScrool += nHSCrool				
+
+				nAcumTot2 += nHSCrool
+				SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  -(nHSCrool)    , 2 )				
+				Do Events				
+
+				UpdHeader(  cHeaderName ,    nHSCrool   )					
+				Do Events 
+				xDcToDc()			
 
 				DO EVENTS
-				
-
-			//	SysWait(0.04)
-
-				If (nLParam > 0)
-					UpdateBarH( nHSCrool )					
-				End If 
 
 			Else 
-
-			 //  nColScrool += xGetColWidth(  nColz1   )	
-
+			//	nAcumTot2 := nPos2
+		
 			End If 
-			*/
+
+			If (nLParam > 0)			    
+				UpdateBarH( 20 )								
+			End If 
+			
 
 
 
-	
+	   /*
 			
 			If (nColScrool <= nDiff )
 			//if !((nColScrool - (nLargTotal - nLargX  )) > 40 )
 				nColScrool += nHSCrool 
+
 				SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  -(nHSCrool)    , 2 )
-			
+
+				Do Events
+
+
+							
 
 				Do Events 
 
@@ -868,13 +892,14 @@ Function xTeclasBrow()
 					UpdateBarH( nHSCrool )					
 				End If 
 
-				//MSGINFO( STR(   GETVSCROLLVALUE(  GetFormHandle( cBrowserName  )   )  )   )   
+				
 
 			Else 
 			    xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida. ") )
 
 
 			End If
+			*/
 			
 
 		End If
@@ -1218,6 +1243,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 	nRow := -(nLinScrool)
 	nCol := -(nColScrool)
 
+	
 	hBitMap2 := BT_BitmapCreateNew (Width  , Height , WHITE )
 	hDC2 := BT_CreateDC (cForm ,   BT_HDC_INVALIDCLIENTAREA  , @BTstruct)
 

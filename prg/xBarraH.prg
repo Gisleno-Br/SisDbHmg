@@ -29,10 +29,12 @@ Static nScroxy := 18
 Static lEnabled := .t. 
 Static cBrwName := ''
 
+Static nColtotal := 0
+
 Static lDesligado := .f. 
 
 
-Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela  , cBrowser )
+Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela  , cBrowser , nTotCol )
 
 
    Private cJanName   := 'Win_Bh' + Left(cActiveJan,4)
@@ -42,6 +44,9 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
    cBarraName   := cJanName
    cBrwName     := cBrowser
    nLargJan     := nLargJanela
+
+
+   nColtotal := nTotCol
         
     DEFINE WINDOW &cJanName ;
         AT nLinha1 ,  GetProperty(  cBrowserName , 'Col'  )  ;
@@ -105,11 +110,13 @@ Function xCalcBarH()
 
 	Local nCalc := 0
     Local n2    := 0
-	Local nLargTotal := GetProperty(  cBarraName , 'Width'  ) - 58
+	Local nLargTotal := GetProperty(  cBarraName , 'Width'  ) - (nColTotal * 20)
+    
 
+/*
     Local n1 := ((  nLargJan    / nLarTotalx) * 100)
     Local nConst := Int(nLarTotalx / 10)  
-    //270
+    
 
 	
     If (nLarTotalx <= nLargJan) .or. (n1 >= 95)
@@ -121,9 +128,11 @@ Function xCalcBarH()
     End If    
 
     nCalc := nLargJan - (nLarTotalx - nLargJan)
+    */
 
 
-Return nCalc - 50 
+Return nLargTotal 
+
 
 
 
@@ -134,6 +143,8 @@ Function UpdateBarH( nPos )
     nColDrag += nPos 
 
 
+
+   // msginfo(Str(   nScroxy))
     BT_ClientAreaInvalidateAll(cBarraName)  
     xDcBarH()
 
@@ -286,6 +297,9 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
             nZacum := 0
 
+            SysWait(0.02)
+
+
             For i := 1 To 255
                 GetAsyncKeyState(i)
             Next i
@@ -380,12 +394,18 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
             End If 
 
 
+            
+            For i := 1 To 255
+                GetAsyncKeyState(i)
+            Next i
+
+
             While (nModeBut = 1) .And. (!lTracking26)           
 
                 If nScroxy > 18
-                    nScroxy -= nHSCrool                     
+                   // nScroxy -= nHSCrool                     
                     SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,0  ) 
-                    BT_ClientAreaInvalidateAll(cBarraName)                
+                  //  BT_ClientAreaInvalidateAll(cBarraName)                
                     Do Events                     
                     If (GetAsyncKeyState(VK_LBUTTON)) == 0					
                         lTracking26 := .t.                         
@@ -393,7 +413,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                         SysWait(0.03) 
                         Exit                       
                     End If 	
-                    xDcBarH()
+                   // xDcBarH()
                     SysWait(0.01)
                 Else 
 
@@ -409,24 +429,35 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
 
 
-            While (nModeBut = 2) .And. (!lTracking26)                                        
+            If (nModeBut = 2) .And. (!lTracking26)                                        
+              
+                    //SysWait(0.05)
+                    //DO EVENTS
 
-                    //nLargJan nLarTotalx
+                    PostMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT , 150  )                                                                                             
+                    SysWait(0.2)    
 
-                If  !(nScroxy - (nLarTotalx - nlargJan) > 40 )
-                    nScroxy += nHSCrool               
-                    BT_ClientAreaInvalidateAll(cBarraName)                
-                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,0  )                                                         
-                    If (GetAsyncKeyState(VK_LBUTTON)) == 0					
-                        lTracking26 := .t. 
-                        nModeBut := 0
-                        SysWait(0.03)                                                    
-                        Exit                
-                    End If 	
-                    SysWait(0.01)    
-                    xDcBarH()
+                   // lTracking26 := .t. 
 
+                    If (GetAsyncKeyState(VK_LBUTTON)) != 0	
+                        While (nModeBut = 2) .And. (!lTracking26)     
 
+                                PostMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,150  )    
+                                SysWait(0.2)
+
+                                If (GetAsyncKeyState(VK_LBUTTON)) == 0					
+                                    lTracking26 := .t. 
+                                    nModeBut := 0
+                                    SysWait(0.03)    
+                                //    msginfo('lp2')
+                                    Exit 
+                                End If     
+
+                        Enddo 
+                        
+                    End If 
+
+              /*
                 Else         
                     xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.") + '   ' + Str((nLargJan+nScroxy))  +'   ' + Str(nLarTotalx+18  ))
                     nScroxy -= nHSCrool  
@@ -436,6 +467,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                     lTracking26 := .t. 
                     
                 End If     
+                */
 
             End If 
 
@@ -515,6 +547,9 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                         lTracking37 := .t. 
                         SysWait(0.02)
                         xDcBarH()
+
+                      
+                     //   msginfo('z1')
                     End If 
 
                 End If 

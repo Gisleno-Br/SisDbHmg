@@ -1,4 +1,4 @@
-#include <hmg.ch>
+ #include <hmg.ch>
 #include "inkey.ch"
 #include <minigui.ch>
 #require "hbxpp"
@@ -7,6 +7,8 @@
 #include "hbthread.ch"
 #include "BosTaurus.ch"
 #define XQUEBRA Chr(13)+Chr(10)
+
+
 
 
 
@@ -249,6 +251,10 @@ Function xGetColSel()
 Return nColSele
 
 
+Function xGetColQtd()
+Return Len(aMapsCol)
+
+
 
 Function xGetColWidth(   nColuna )
 Return aMapsCol[ nColuna  ][5] 
@@ -257,7 +263,23 @@ Function xGetInfC(   nColuna , nIndice  )
 Return aMapsCol[ nColuna  ][nIndice] 
 
 
+Function xColsVisible(nPos1 )
 
+   Local am1 := {} 
+   Local n1 := 0
+
+   For n1 := 1 To Len(  aMapsCol )
+        SaveLog('Out1.txt' ,  aMapsCol[n1][1] + '  Pos1 : ' + Str(aMapsCol[n1][2])  + '   Pos2 : ' +  Str(aMapsCol[n1][3]) + '  Tam : ' + Str(aMapsCol[n1][5]) + XQUEBRA  )
+        If (aMapsCol[n1][3] <= (nPos1+3) )
+            Aadd(aM1 , n1)
+
+            
+        End If 
+   Next    
+
+
+
+Return aM1
 
 Function xSelCol( nCol1 )
 
@@ -539,6 +561,24 @@ Function xApagueH( cJanela1 )
 
 Return 
 
+
+Function xRetTotal(   nCol1   )
+
+    Local n1 := 0
+    Local n2 := 0
+
+    For n1 := 1 To Len(aMapsCol)
+
+        If n1 >= nCol1 
+            n2 += aMapsCol[n1][5]
+        End If 
+    Next 
+
+    //Aeval( aMapsCol , { |  a |  n1 += a[5] })
+
+
+Return n2
+
 Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
 
     Local i := 0
@@ -573,7 +613,7 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
 
 Return Nil 
 
-Static Function xRetUnit()
+Function xRetUnit()
 
     Local BTstruct
     Local nQAcento 
@@ -705,7 +745,8 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
         nTam2 := If( (nQAcento =  0)   , aTamanho[n1] , aTamanho[n1] + nQAcento ) //* nTamX1
 
          
-        cTexto1 += Padc( Alltrim(  aMapsCol[n1][1] ) ,   nTam2 + 1  )
+        cTexto1 += Padc( Alltrim(  aMapsCol[n1][1] )   ,   nTam2 + 1  )
+
        
 
         If (nColSel1 > 0) .And. (nColSel1 = n1)             

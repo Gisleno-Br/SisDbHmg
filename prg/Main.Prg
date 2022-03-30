@@ -2375,6 +2375,10 @@ HB_FUNC ( SETVSCROLLVALUE )
 
 		ScrollWindow(hwnd, yChar  ,  0   , NULL , NULL );
 
+		si.nTrackPos = yChar;
+		SetScrollInfo (hwnd, SB_HORZ, &si, TRUE);
+
+
 
 	 }
 
