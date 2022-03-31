@@ -117,6 +117,8 @@ Static lHasHeader := .f.
 
 Static nColH1 := 0
 
+Static nColEsquerda := 1
+
 //DECLARE WINDOW Win_Browser
 
 
@@ -753,6 +755,33 @@ Function xSaveVars()
 return
 
 
+Function ScrollCol()
+
+				
+    Local nColTam 
+
+	Local nWidth := xGetColWidth(  nColEsquerda   )	
+
+	If nColEsquerda == 1
+	   nWidth += 15
+	End If 				
+
+	//nLargz1 := nPos2
+	nColScrool += nWidth				
+
+	//nAcumTot2 += nHSCrool
+	SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  -(nWidth)    , 2 )				
+	Do Events				
+
+	UpdHeader(  cHeaderName ,    nWidth   )					
+	Do Events 
+	xDcToDc()			
+
+	DO EVENTS
+	nColEsquerda++
+
+
+REturn 
 
 
 Function xTeclasBrow()
@@ -859,11 +888,15 @@ Function xTeclasBrow()
 		
 			End If 
 
-			If (nLParam > 0)			    
-				UpdateBarH( 20 )								
+			If (nLParam > 0)					
+				UpdateBarH( 20 )									
+    			xDcBarH()
 			End If 
-			
 
+			
+			//SysWait(0.04)
+
+			
 
 
 	   /*

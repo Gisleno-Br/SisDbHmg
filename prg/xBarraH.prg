@@ -29,6 +29,8 @@ Static nScroxy := 18
 Static lEnabled := .t. 
 Static cBrwName := ''
 
+Static nTamBarra := 0
+
 Static nColtotal := 0
 
 Static lDesligado := .f. 
@@ -46,7 +48,13 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
    nLargJan     := nLargJanela
 
 
-   nColtotal := nTotCol
+   // msginfo( Str(GetProperty(  cBrowserName , 'Width'  )+22) )
+   nColTotal := nTotCol   
+   nTamBarra := (GetProperty(  cBrowserName , 'Width'  )+22) - ( nTotCol * 20 )
+   
+   // xCalcBarH(  GetProperty(  cBrowserName , 'Width'  )+22 ) 
+
+
         
     DEFINE WINDOW &cJanName ;
         AT nLinha1 ,  GetProperty(  cBrowserName , 'Col'  )  ;
@@ -71,11 +79,11 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
         ON MOUSEMOVE (cObjSelected := 'BarraH')	
     END WINDOW  
 
+
 	
     
-    lEnabled := (xCalcBarH() > 0)
+    lEnabled := (nTamBarra > 0)
     //lEnabled := .f. 
-
 
 
     SET WINDOW &cJanName TRANSPARENT TO Iif(!lEnabled , 167 , 0)
@@ -106,11 +114,11 @@ REturn
 
 
 
-Function xCalcBarH()
+Function xCalcBarH( nWidth )
 
 	Local nCalc := 0
     Local n2    := 0
-	Local nLargTotal := GetProperty(  cBarraName , 'Width'  ) - (nColTotal * 20)
+	Local nLargTotal := nWidth - (nColTotal * 20)
     
 
 /*
@@ -137,16 +145,26 @@ Return nLargTotal
 
 
 
-Function UpdateBarH( nPos )
+Function UpdateBarH( nPos1 )
 
-    nScroxy += nPos     
-    nColDrag += nPos 
+    nScroxy += nPos1     
+    nColDrag += nPos1 
 
 
+   // SysWait(0.02)
 
-   // msginfo(Str(   nScroxy))
+    //msginfo(Str(   nScroxy))
+
+
     BT_ClientAreaInvalidateAll(cBarraName)  
     xDcBarH()
+
+    //SysWait(0.05)
+
+
+    Do Events
+    Do Events
+   // SysWait(0.02)
 
 Return 
 
@@ -155,10 +173,12 @@ Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
 
     //BT_DRAWEDGE
 
+
     Local BTstruct
     LOCAL Width  := BT_ClientAreaWidth  (cJanela)
 	LOCAL Height := BT_ClientAreaHeight (cJanela)
-    Local nWidBarra := xCalcBarH()
+    Local nWidBarra := nTamBarra - 20
+
 
     Local yEsquerda := BT_BitMapLoadFile('ESQUERDA')
     Local yDireita  := BT_BitMapLoadFile('DIREITA')
@@ -195,18 +215,20 @@ Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
     BT_DrawBitmap (hDC2  , 0  , 0  	, 18  , 18  ,      BT_COPY,  yEsquerda )
     BT_DrawBitmap (hDC2  , 0  , Width - 20  	, 18  , 18  ,      BT_COPY,  yDireita)
 
+    If Abs(nScroxy - Width) <= 10
+     //   msginfo('lp2')
+    End If 
+
     If (!lDragMode) .And. (lEnabled)
         BT_DrawFillRoundRect (hDC2 , 4 , nScroxy , nWidBarra , 10 , 5 ,5 ,   {178 , 178 ,178}   , {178 , 178 ,178}  , 0)
     Else 
 
-
-
         If lEnabled
 
             If (lDragMode) 
-                BT_DrawFillRoundRect (hDC2 , 4 , nCol1 , nWidBarra - 0  , 10 , 5 ,5 ,  {12,134,166}   , {166 , 166 , 166}  , 0)
+                BT_DrawFillRoundRect (hDC2 , 4 , nCol1 , nWidBarra   , 10 , 5 ,5 ,  {12,134,166}   , {166 , 166 , 166}  , 0)
             Else 
-                BT_DrawFillRoundRect (hDC2 , 4 , nScroxy , nWidBarra  - 0 , 10 , 5 ,5 ,  {12,134,166}   , {166 , 166 , 166}  , 0)
+                BT_DrawFillRoundRect (hDC2 , 4 , nScroxy , nWidBarra  , 10 , 5 ,5 ,  {12,134,166}   , {166 , 166 , 166}  , 0)
             End If     
 
         End If     
@@ -240,7 +262,8 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
     LOCAL Width  := BT_ClientAreaWidth  (cBarraName)
 
-    Local nWidBarra := xCalcBarH() 
+    Local nWidBarra := nTamBarra
+    //xCalcBarH() 
     //- 6
 
     //Local nWidBarra := xCalcBarH()
@@ -282,6 +305,8 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
             SysWait(0.02)
             lDragMode := .f. 
+          //  lTracking26 := .t. 
+           //msginfo('ok2')
            
 
         End If 
@@ -299,6 +324,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
             SysWait(0.02)
 
+            
 
             For i := 1 To 255
                 GetAsyncKeyState(i)
@@ -337,7 +363,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                                 If  !(nScroxy - (nLarTotalx - nlargJan) > 40 )
                                     n1 :=  (nColx - nColAnt)
                                     nColDrag += nHSCrool                          
-                                    nScroxy += nHSCrool                                     
+                                  //  nScroxy += nHSCrool                                     
                                     SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,  0 )                                 	                                                                   
                                     xDcBarH()                                
                                     //SysWait(0.09)
@@ -400,11 +426,15 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
             Next i
 
 
+
             While (nModeBut = 1) .And. (!lTracking26)           
 
                 If nScroxy > 18
                    // nScroxy -= nHSCrool                     
                     SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,0  ) 
+
+                    HMG_CleanLastMouseMessage()
+
                   //  BT_ClientAreaInvalidateAll(cBarraName)                
                     Do Events                     
                     If (GetAsyncKeyState(VK_LBUTTON)) == 0					
@@ -426,36 +456,56 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                 End If     
             End If 
 
+            
 
 
 
             If (nModeBut = 2) .And. (!lTracking26)                                        
+
+                    
+                    For i := 1 To 255
+                         GetAsyncKeyState(i)
+                    Next i
               
-                    //SysWait(0.05)
-                    //DO EVENTS
+                 //   SysWait(0.05)
+                    DO EVENTS
 
-                    PostMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT , 150  )                                                                                             
-                    SysWait(0.2)    
 
-                   // lTracking26 := .t. 
-
-                    If (GetAsyncKeyState(VK_LBUTTON)) != 0	
-                        While (nModeBut = 2) .And. (!lTracking26)     
-
-                                PostMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,150  )    
-                                SysWait(0.2)
+              
+                   //If (GetAsyncKeyState(VK_LBUTTON)) != 0	
+                       // msginfo('ok2  ' + Str(nModeBut) + '  ' + Iif(lTracking26 , ' Tr ', ' Tr2 ' )     )
+                        While (nModeBut = 2) .And. (!lTracking26)                                 
 
                                 If (GetAsyncKeyState(VK_LBUTTON)) == 0					
-                                    lTracking26 := .t. 
-                                    nModeBut := 0
+                                 //   lTracking26 := .t. 
+                                  //  nModeBut := 0
                                     SysWait(0.03)    
                                 //    msginfo('lp2')
                                     Exit 
-                                End If     
+                                End If    
+
+
+
+
+
+                                //SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,150  )    
+
+                                ScrollCol()
+
+                               // SysWait(0.03)
+                               
+            
+                                For i := 1 To 255
+                                    GetAsyncKeyState(i)
+                                Next i
+
+
+                                HMG_CleanLastMouseMessage()
 
                         Enddo 
+
                         
-                    End If 
+                    //End If 
 
               /*
                 Else         
@@ -468,6 +518,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                     
                 End If     
                 */
+                 //Return        
 
             End If 
 
@@ -479,31 +530,21 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
         End If 
 
-		If (nMsg == WM_MOUSEMOVE)              
+		If (nMsg == WM_MOUSEMOVE)     
+
             
             GetCursorPos (@nCol, @nRow)
             ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
             nCol := ar1[2]
 
-            If (ar1[1] >= 20)
-            /*
-                lDragMode := .f.                    
-	            SetWindowCursor( GetFormHandle( cBarraName )  , IDC_ARROW  )
-               
-                BT_ClientAreaInvalidateAll( cBarraName )
-                Do Events 
-                xDcBarH()
-               // msginfo('ok')
-                nAcende := 0
-                BT_ClientAreaInvalidateAll(cBarraName)
+         //   msginfo('mm')
 
-                lTracking26 := .f.
-                lTracking37 := .f.                 
-                */
+            If (ar1[1] >= 20)        
 
                 xOffBarra( cBarraName  )
-
                 Return Nil
+
+
             End If 
 
             If (nCol > 18) .And. (nCol < (Width - 18)) 
@@ -543,6 +584,8 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                         BT_ClientAreaInvalidateRect( cBarraName  , 0,  (Width - 25)    ,25,20 , .t.    )
                         nModeBut := 2            
                         lTracking26 := .f. 
+
+                     //   msginfo('ok22')
                         
                         lTracking37 := .t. 
                         SysWait(0.02)
