@@ -269,7 +269,7 @@ Function xColsVisible(nPos1 )
    Local n1 := 0
 
    For n1 := 1 To Len(  aMapsCol )
-        SaveLog('Out1.txt' ,  aMapsCol[n1][1] + '  Pos1 : ' + Str(aMapsCol[n1][2])  + '   Pos2 : ' +  Str(aMapsCol[n1][3]) + '  Tam : ' + Str(aMapsCol[n1][5]) + XQUEBRA  )
+        //SaveLog('Out1.txt' ,  aMapsCol[n1][1] + '  Pos1 : ' + Str(aMapsCol[n1][2])  + '   Pos2 : ' +  Str(aMapsCol[n1][3]) + '  Tam : ' + Str(aMapsCol[n1][5]) + XQUEBRA  )
         If (aMapsCol[n1][3] <= (nPos1+3) )
             Aadd(aM1 , n1)
 
