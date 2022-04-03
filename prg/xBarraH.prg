@@ -386,51 +386,28 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
                             nW1 := xGetColWidth(  nColz2 )
 
-                       //     msginfo(Str(   nW1  ) + '   ' + Str(nColz2) )
-
                        
-                            If ((nColx - nColAnt) >= nW1 )                                 
+                            If ((nColx - nColAnt) >= 5 )                                                               
 
-                                   //msginfo( Str(nLarTotalx) + '  ' + Str(Width - 20)   )
-                                  /*
-                                    n1 := (nColx - nColAnt)
-                                    nHSCrool := n1                          
-                                    nColDrag += nHSCrool                          
-                                    nScroxy  += nHSCrool                                     
+                                nColDrag += (nW1 - 20)
+                                nScroxY  += nW1 
+                                nColz2++                                    
+                                lOk := .t. 
+                                ScrollCol( .t. , .f.  )
+                                nColAnt := nColx 
 
-                                    */
+                                  
 
-
-                                    nColDrag += (nW1 - 20)
-                                    nScroxY  += nW1 
-
-                                    nColz2++
-
-
-                                   
-                                  //  SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,  0 )                                 	                                                                   
-                                    
-                                    
-                                    lOk := .t. 
-                                    ScrollCol( .t. , .f.  )
-                                    nColAnt := nColx 
-
-                                  //  msginfo( Str(nColDrag)  + '   ' + Str(nColDrag+nWidBarra) + '  ' + Str(Width) + '  ' + Str(nW1) + '  ' + Str(nColz2) )
-
-                                    If ( (nColDrag+nWidBarra)  >= (Width - 20)    )
-                                        xGoBarR()  
-                                   //     SysWait(0.05)
-                                   //     msginfo('ok2')
-
-                                        SysWait(0.03)
-                                    Else 
-                                        
+                                If ( (nColDrag+nWidBarra)  >= (Width - 20)    )
+                                    xGoBarR()                                     
+                                    SysWait(0.01)
+                                Else                                        
                                         
 
-                                    End If     
+                                End If     
 
-                                    SysWait(0.02)
-                                    xDcBarH()                                
+                                SysWait(0.01)
+                                xDcBarH()                                
 
 
 
@@ -445,6 +422,35 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
                         Else 
 
+                            If ( Abs(nColAnt - nColx) ) >= 5
+
+                                If (nColz2 > 1)
+
+                                    nColz2--
+                                    
+                                    nW1 := xGetColWidth(  nColz2 )
+
+                                    nColDrag -= nW1 
+                                    nScroxY  -= nW1 
+                                    ScrollCol( .f. , .f.  )
+                                    nColAnt := nColx 
+
+                                    
+                                    SysWait(0.01)
+                                    xDcBarH()                    
+
+
+                                Else
+
+
+
+                                End If    
+
+                            Else 
+
+                            End If     
+
+                            /*
                             If ( Abs(nColAnt - nColx) ) >= 10
                                 If nScroxy > 21
                                     n1 := (nColAnt - nColx)
@@ -464,6 +470,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                             Else 
 
                             End If 
+                            */
                         End If 
 
 
