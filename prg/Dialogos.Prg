@@ -503,7 +503,10 @@ Function xProcDlg(  cJanela , cText , lMsgRun    )
 	//LOCAL hDC2
 	Local BTstruct2	
 	
+	
+
 	Local hDC2 := BT_CreateDC ( cJanela, BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
+
 
 	Default lMsgRun := .f. 
 

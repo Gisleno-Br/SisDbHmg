@@ -263,6 +263,39 @@ Function xGetInfC(   nColuna , nIndice  )
 Return aMapsCol[ nColuna  ][nIndice] 
 
 
+Function xColMEsquerda( nLargura )
+
+    Local nCol := 1 
+    Local nWidth 
+    Local nPos1 
+    Local nPos2  
+    Local lScrool1
+    Local nQt1 := xGetColQtd()
+
+    While .t. 
+         
+
+			nWidth := xGetColWidth(  nCol    )			
+			nPos1 := xGetInfC(   nCol , 2  )
+			nPos2 := xGetInfC(   nCol , 3  )
+			
+			lScrool1 := (nPos2 >= nLargura) 
+
+            If (lScrool1) .or. (nCol = nQt1 )
+             //   msginfo(Str(  nCol   ))     
+                Exit 
+            End If    
+
+            nCol++
+
+    Enddo             
+
+
+
+
+Return nCol     
+
+
 Function xColsVisible(nPos1 )
 
    Local am1 := {} 
@@ -750,7 +783,11 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
        
 
         If (nColSel1 > 0) .And. (nColSel1 = n1)             
-            BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 1 ,    Height    , {163,168,173} , {163,168,173} )        
+            If nColSel1 != Len(aCabecs)
+               BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 1 ,    Height    , {163,168,173} , {163,168,173} )        
+            Else 
+                BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 250 ,    Height    , {163,168,173} , {163,168,173} )        
+            End If     
 
 
         Else 
@@ -782,6 +819,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
         //msginfo('ok2')
 
+
         
 
         nQAcento := QtAcento(Alltrim( aMapsCol[nColSele][1]  ) )
@@ -791,8 +829,12 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
         cTexto1 := Padc( Alltrim(  aMapsCol[nColSele][1] ) ,   nTam2 + 1  )
 
 
-       BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam - 5  ,    Height    ,  {163,168,173} , {128,128,128} )        
-       //{163,168,173}
+       If nColSele != Len(aCabecs)   
+            BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam - 5   ,    Height    ,  {163,168,173} , {128,128,128} )        
+       Else 
+            BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 350   ,    Height    ,  {163,168,173} , {128,128,128} )               
+       End If 
+       
     
         
        BT_DrawText ( hDC , 10  , nColx,   Hb_Utf8ToStr(cTexto1) , FONTBROWSER  , FONTBROWSERSIZE , WHITE,  {230,230,230}   , ;

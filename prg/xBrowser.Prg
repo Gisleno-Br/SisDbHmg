@@ -757,6 +757,11 @@ Function xSaveVars()
 
 return
 
+Function RetScrPos()
+
+	Local nWidth := xGetColWidth(  nColEsquerda   )	- 3
+
+Return nWidth 
 
 Function ScrollCol( lFrente , lUpdHeader )
 
@@ -765,7 +770,7 @@ Function ScrollCol( lFrente , lUpdHeader )
 
 	Local nTotal := xRetTotal( 0 )
 
-	Local nWidth := xGetColWidth(  nColEsquerda   )	
+	Local nWidth := xGetColWidth(  nColEsquerda   )	- 3
 
 	DEFAULT lUpdHeader := .t. 
 
@@ -773,8 +778,9 @@ Function ScrollCol( lFrente , lUpdHeader )
 	If lFrente 
 
 		If (nColScrool >= (nLargTotal - nLargX))
-			xDialog( Hb_AnsiToOem("Não Há Mais Coluna a Rolar.") , .f.)
-			Return 	
+			//xDialog( Hb_AnsiToOem("Não Há Mais Coluna a Rolar.") , .f.)
+			//msginfo( Str((nLargTotal - nLargX)) + '   ' + Str(nColScrool)   )
+			Return 	0 
 		End If 
 
 		If nColEsquerda == 1
@@ -787,13 +793,17 @@ Function ScrollCol( lFrente , lUpdHeader )
 
 		nColEsquerda++
 
-		//msginfo(Str( nTotal  ) + '   ' + Str(nColScrool) + '  ' + Str(nLargTotal) + '  ' + Str(nLargX)   )
+	//	msginfo(Str(nColEsquerda))
+
+
+		
+
 
 	Else 
 
 		If nColEsquerda == 1
 			xDialog("Coluna numero um Atingida." , .f.)
-			Return 
+			Return 0
 		End If 
 
 		nColScrool -= nWidth
@@ -801,11 +811,21 @@ Function ScrollCol( lFrente , lUpdHeader )
 
 		nColEsquerda--
 
+
 	End If 	
 
+
 	If (lUpdHeader)
-		UpdateBarH( nWidth  - 7  )									
+		//msginfo( Str((nLargTotal - nLargX)) + '   ' + Str(nLargTotal) + '  ' + Str(nLargX)   )
+		If (nColScrool >= (nLargTotal - nLargX))		
+			nVal := xRetBarH()		
+			xGoBarR()
+		Else 	
+			UpdateBarH( nWidth    )		
+		End If 			
+		
     	xDcBarH()
+
 	End If 	
 
 	//nAcumTot2 += nHSCrool
@@ -817,10 +837,9 @@ Function ScrollCol( lFrente , lUpdHeader )
 	xDcToDc()			
 
 	DO EVENTS
-	
 
 
-REturn 
+REturn nWidth
 
 
 Function xTeclasBrow()
@@ -892,16 +911,24 @@ Function xTeclasBrow()
 
 			xSelCol( nColz1 )
 			DO EVENTS 
+
 			
+
 			nWidth := xGetColWidth(  nColz1   )			
 			nPos1 := xGetInfC(   nColz1 , 2  )
 			nPos2 := xGetInfC(   nColz1 , 3  )
 			nTotal := xRetTotal( nColz1 )
-			lScrool1 := (nPos2 >= nLargz1) .And. (nColScrool < nTotal)  			
+			lScrool1 := (nPos2 >= nLargz1) 
+			//.And. (nColScrool < nTotal)  	
+
+		//	msginfo( Str(nLargz1)  )
+
+			
 
 			If (lScrool1)
 
 				ScrollCol( .t. )
+
 
 
 				/*
@@ -1328,7 +1355,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 	hDC2 := BT_CreateDC (cForm ,   BT_HDC_INVALIDCLIENTAREA  , @BTstruct)
 
 	If (nOpselx1 = 0)
-		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , WHITE , WHITE  )
+		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width  ,    Height    , WHITE , WHITE  )
 	End If
 
 	If nClear1 > 0
@@ -1345,15 +1372,13 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 	nIndice := -9999
 
 
+	
+
 	For n1 := 1 To Len(aMtrOp) 
 
-		cTexto := Hb_Utf8ToStr(aMtrOp[n1][1])		
-
-		//cTexto := Hb_AnsitoOem(aMtrOp[n1][1])		
+		cTexto := Hb_Utf8ToStr(aMtrOp[n1][1]) + Replicate(' ',200)
 		nLinb++
-
-
-		//cTexto := StrZero(n1,6) + '    ' + StrZero(nItemx5,5) + '   ' + StrZero(nLinB,6) + '   ' + Alltrim(Str(nRow) + '   ' + Str(  aMtrOp[n1][3]   )  )
+		
 
 		IF (nLinb > nTamPag)
 			nLinB := 0
@@ -1362,8 +1387,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 		nPg := Int(    n1  / nTamPag )+1
 
 		If (nPg = nPageTotal)
-        //   cTexto := cTexto := StrZero(n1,6) + '    ' + StrZero(nItemx5,5) + '   Ultimo '
-
+        
 		   n12 := (Len(cTexto) * nTam1 )
 
 		   If !lPaint 				
@@ -1384,7 +1408,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 				nFontCor 	 := BLACK
 			End If 	
 
-		//	cTexto := StrZero(n1,6) + '    ' + StrZero(nItemx5,5) + '   ' + StrZero(nLinB,6) + '   ' + Alltrim(Str(nRow))  + "** " + Str(aMtrOp[n1][3])
+		
 
 			BT_DrawText ( hDC2 , nLine + nRow  , 17+nCol ,   cTexto , xFont2  , 9 , nFontCor ,  SELCOR   , ;
 				nTypeText ,	nAlingText, nOrientation )
