@@ -837,6 +837,20 @@ Function ScrollCol( lFrente , lUpdHeader )
 
 REturn nWidth
 
+Function DoScrolly( nVert1 )
+
+	nColScrool += nVert1
+	SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  nVert1    , 2 )	
+
+	SysWait(0.02)
+	xDcToDc()
+
+	
+	UpdHeader(  cHeaderName ,    nVert1   )					
+	Do Events 
+
+Return 
+
 
 Function xTeclasBrow()
 

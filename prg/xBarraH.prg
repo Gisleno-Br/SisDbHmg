@@ -70,6 +70,8 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
         ON PAINT xPaintBarraH( ThisWindow.Name , nAcende , nColDrag )
     END WINDOW  
 
+    //msginfo(  Str(GetProperty(  cBrowserName , 'Width'  )+22) )
+
 
     DEFINE WINDOW &cJanSombra ;
         AT nLinha1 ,  GetProperty(  cBrowserName , 'Col'  )  ;
@@ -275,19 +277,12 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
     LOCAL Width  := BT_ClientAreaWidth  (cBarraName)
 
     Local nWidBarra := nTamBarra
-    //xCalcBarH() 
-    //- 6
+  
 
-    //Local nWidBarra := xCalcBarH()
-
-    Local nLimite := nLarTotalx - nWidBarra 
-    //- 25
+    Local nLimite := nLarTotalx - nWidBarra   
     Local nLimite2 := (nLargJan - nWidBarra)  
 
-    //- nWidBarra
-    //nLarTotalx 
-    //- nLargJan  
-
+  
     Local ar1 
 
     Local lOk := .f. 
@@ -377,37 +372,36 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                     If (nColx != nColAnt)
                         If (nColx > nColAnt)                            
 
-                           
-                            If ( (nColDrag+nWidBarra)  >= (Width - 20)    )
-                                xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar."))    
-                                Return     
-                            End If      
+                            //Msginfo(Str(  Width   ))
+                                                       
+                            If ((nColx - nColAnt) >= 10 )                                                               
 
+                                If ( ( nColDrag+nWidBarra  )  >= (Width - 20)    )
+                                //    xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar."))    
+                                  //  msginfo(  Str( nColDrag+nWidBarra + (nColx - nColAnt)  )  + '   ' + Str(Width)  )
+                                    Exit
+                                Else   
 
-                            nW1 := xGetColWidth(  nColz2 )
+                                    nColDrag += (nColx - nColAnt)                                
+                                    nScroxY  += (nColx - nColAnt)                                
+                                    lOk := .t.                                
+                                    nColAnt := nColx                                
+                                    DoScrolly( -100 )
 
-                       
-                            If ((nColx - nColAnt) >= 5 )                                                               
+                                    
 
-                                nColDrag += (nW1 - 20)
-                                nScroxY  += nW1 
-                                nColz2++                                    
-                                lOk := .t. 
-                                ScrollCol( .t. , .f.  )
-                                nColAnt := nColx 
+                                    If ( (nColDrag+nWidBarra)  >= (Width - 20)    )
+                                        xGoBarR()                                     
+                                        SysWait(0.02)
+                                      //  msginfo('lp2')
+                                    Else                                        
+                                            
 
-                                  
+                                    End If     
 
-                                If ( (nColDrag+nWidBarra)  >= (Width - 20)    )
-                                    xGoBarR()                                     
-                                    SysWait(0.01)
-                                Else                                        
-                                        
-
-                                End If     
-
-                                SysWait(0.01)
-                                xDcBarH()                                
+                                    SysWait(0.06)
+                                    xDcBarH()   
+                                End If                                  
 
 
 
@@ -422,29 +416,25 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
                         Else 
 
-                            If ( Abs(nColAnt - nColx) ) >= 5
+                            
 
-                                If (nColz2 > 1)
+                            If ( Abs(nColAnt - nColx) ) >= 10                                
 
-                                    nColz2--
+                                If (nColDrag <= 20)
+                              //  xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
+                                    Exit
+                                End If 
+
+
+
+
+                                nColDrag -= Abs(nColAnt - nColx) 
+                                nScroxY  -= Abs(nColAnt - nColx)
+                                //    ScrollCol( .f. , .f.  )
+                                nColAnt := nColx 
                                     
-                                    nW1 := xGetColWidth(  nColz2 )
-
-                                    nColDrag -= nW1 
-                                    nScroxY  -= nW1 
-                                    ScrollCol( .f. , .f.  )
-                                    nColAnt := nColx 
-
-                                    
-                                    SysWait(0.01)
-                                    xDcBarH()                    
-
-
-                                Else
-
-
-
-                                End If    
+                                SysWait(0.02)
+                                xDcBarH()                
 
                             Else 
 
