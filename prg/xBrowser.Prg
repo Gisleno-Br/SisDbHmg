@@ -68,6 +68,7 @@ Static cEspelhoBrw := ''
 Static cBarraVfrm := ''
 
 Static cBarraVSombra := ''
+Static nColLeft := 0
 
 Static nQTotCol := 0
 
@@ -458,8 +459,6 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 
 
 
-
-
 	DEFINE WINDOW &cEspelhoBrw ;
 		AT nRowIni,nCol  ;
 		CHILD ;
@@ -478,10 +477,9 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 		lHasHeader := xHeader( cHeaderName , aCabecalho , aTamanhos , cParent ,  cBrowserName ,  nLargTotal , aTipos , cTabela  )
 	End If 	
 
-	nTotal := xRetTotal( 0 )
-
+	
 	cBarrah := xBarraH( cParent ,  cBrowserName , nRowIni+(nTamPag * nItemBrwHeight)+2  , nLargTotal  ,  nLargX , cBrowserName , ;
-	(nQTotCol := xGetColQtd()) , nLarg1 - ((nLargTotal - nLargX) ) )
+	(nQTotCol := xGetColQtd()) , nLarg1 - ((nLargTotal - nLargX) )   , cHeaderName)
 
 
 	//SET WINDOW Win_Browser TRANSPARENT TO 0
@@ -768,18 +766,18 @@ Function ScrollCol( lFrente , lUpdHeader )
 				
     Local nColTam 
 
-	Local nTotal := xRetTotal( 0 )
+	//Local nTotal := xRetTotal( 0 )
 
 	Local nWidth := xGetColWidth(  nColEsquerda   )	- 3
 
 	DEFAULT lUpdHeader := .t. 
 
+	//msginfo( Str(xColMEsquerda( nLargX ))  )
+
 
 	If lFrente 
 
-		If (nColScrool >= (nLargTotal - nLargX))
-			//xDialog( Hb_AnsiToOem("Não Há Mais Colun\a a Rolar.") , .f.)
-			//msginfo( Str((nLargTotal - nLargX)) + '  zz ' + Str(nColScrool)   )
+		If (nColScrool >= (nLargTotal - nLargX))			
 			Return 	0 
 		End If 
 
@@ -787,25 +785,34 @@ Function ScrollCol( lFrente , lUpdHeader )
 			nWidth += 15
 		End If 				
 
+		//nColLeft := nColz1
+
 
 		nColScrool += nWidth				
 		SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  -(nWidth)    , 2 )				
 
 		nColEsquerda++
+
+		//msginfo('pok')
 		
 
 
-	Else 
+	Else 	
 
-		If nColEsquerda == 1
-			xDialog("Coluna numero um Atingida." , .f.)
-			Return 0
-		End If 
+		//msginfo(Str(nWidth)+ '   ' + Str(nColEsquerda))
+		//nWidth := xGetColWidth(  nColEsquerda   ) - 10
 
 		nColScrool -= nWidth
 		SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  nWidth    , 2 )				
 
-		nColEsquerda--
+		//nColEsquerda--
+
+		
+		If nColEsquerda == 1
+			nColScrool -= 15
+			SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  15    , 2 )							
+		End If 				
+
 
 
 	End If 	
@@ -828,8 +835,15 @@ Function ScrollCol( lFrente , lUpdHeader )
 	
 	Do Events				
 
-	UpdHeader(  cHeaderName ,    nWidth   )					
+	UpdHeader(  cHeaderName ,   Iif( lFrente , nWidth , -(nWidth)  ) )					
 	Do Events 
+
+
+	If (nColEsquerda == 1) .And. (!lFrente)
+		UpdHeader(  cHeaderName ,   - 15  )					
+		Do Events 
+	End If 
+
 	xDcToDc()			
 
 	DO EVENTS
@@ -837,19 +851,23 @@ Function ScrollCol( lFrente , lUpdHeader )
 
 REturn nWidth
 
+
+
+
 Function DoScrolly( nVert1 )
 
 	nColScrool += nVert1
-	SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  nVert1    , 2 )	
+	SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  -nVert1    , 2 )	
 
 	SysWait(0.02)
 	xDcToDc()
 
-	
-	UpdHeader(  cHeaderName ,    nVert1   )					
-	Do Events 
+	Do Events				
 
-Return 
+
+Return 	
+
+
 
 
 Function xTeclasBrow()
@@ -919,18 +937,25 @@ Function xTeclasBrow()
 			End If 
 			nColz1++
 
+			If nLParam = 15
+				//msginfo('ok2')
+				ScrollCol( .t. )
+				REturn 
+			End If 
+
 			xSelCol( nColz1 )
 			DO EVENTS 
 			
 
 			nWidth := xGetColWidth(  nColz1   )			
 			nPos1 := xGetInfC(   nColz1 , 2  )
-			nPos2 := xGetInfC(   nColz1 , 3  )
-			nTotal := xRetTotal( nColz1 )
+			nPos2 := xGetInfC(   nColz1 , 3  )	
 			lScrool1 := (nPos2 >= nLargz1) 
 					
 
 			If (lScrool1)
+
+				
 
 				ScrollCol( .t. )
 
@@ -942,64 +967,38 @@ Function xTeclasBrow()
 
 		
 
-			
-			//SysWait(0.04)
-
-			
-
-
-	   /*
-			
-			If (nColScrool <= nDiff )
-			//if !((nColScrool - (nLargTotal - nLargX  )) > 40 )
-				nColScrool += nHSCrool 
-
-				SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  -(nHSCrool)    , 2 )
-
-				Do Events
-
-
-							
-
-				Do Events 
-
-				If lHasHeader
-					SETVSCROLLVALUE( GetFormHandle( cHeaderName  )  ,  -(nHSCrool)    , 2 )
-					UpdHeader(  cHeaderName ,    (nHSCrool)   )					
-					Do Events 
-				End If 					
-				xDcToDc()
-
-				If (nLParam > 0)
-					UpdateBarH( nHSCrool )					
-				End If 
-
-				
-
-			Else 
-			    xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida. ") )
-
-
-			End If
-			*/
-			
-
 		End If
 		
 
 
 				
 		If (nWParam == VK_LEFT)
+
 			If  lNoHorzScr
 				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))
 				Return
 			End If
-			HMG_CleanLastVirtualKeyDown()
+		//	HMG_CleanLastVirtualKeyDown()
+
+			nColz1 := xGetColSel()			
 
 			
-			nColz1 := xGetColSel()
+			If nLParam = 353
+				//msginfo('ok2')
+				
+				nColEsquerda--
 
-		//	msginfo(Str(nColz1))
+				If nColEsquerda == 0
+					nColEsquerda := 1
+					xDialog("Coluna numero um Atingida." , .f.)
+					Return 0
+				End If 
+
+				ScrollCol( .f. )		
+
+				Return 
+			End If 
+
 
 
 			If nColz1 > 1 
@@ -1008,29 +1007,26 @@ Function xTeclasBrow()
 
 				xSelCol( nColz1 )
 				DO EVENTS 
+				lScrool1 := (nColz1 < nColEsquerda) 				
 
-				
-
-				nWidth := xGetColWidth(  nColz1   )			
-				nPos1 := xGetInfC(   nColz1 , 2  )
-				nPos2 := xGetInfC(   nColz1 , 3  )
-				nTotal := xRetTotal( nColz1 )
-				lScrool1 := (nPos2 >= nLargz1) 
-
-				//msginfo( Str((nLargTotal - nLargX)) + '   ' + Str(nLargTotal) + '  ' + Str(nLargX) + ' ' + str(nWidth)  )
-
-				If !lScrool1
-					//msginfo('ok2')	
+				If (lScrool1)
 					
-					ScrollCol( .f. )
+					nColEsquerda--
 
-				End If 	
-	
+					If nColEsquerda == 0
+						nColEsquerda := 1
+						xDialog("Coluna numero um Atingida." , .f.)
+						Return 0
+					End If 
+
+					ScrollCol( .f. )		
+
+				End If 				
 
 
 			Else 
-				
-				
+				nColEsquerda := 1
+				xDialog("Coluna Numero um Atingida." , .f.)				
 			End If 	
 
 

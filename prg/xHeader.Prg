@@ -594,6 +594,23 @@ Function xApagueH( cJanela1 )
 
 Return 
 
+/*
+
+Function DoScrolly( nVert1 )
+
+	nColScrool += nVert1
+	SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  nVert1    , 2 )	
+
+	SysWait(0.02)
+	xDcToDc()
+
+	
+	UpdHeader(  cHeaderJan ,    nVert1   )					
+	Do Events 
+
+Return 
+*/
+
 
 Function xRetTotal(   nCol1   )
 
@@ -602,7 +619,7 @@ Function xRetTotal(   nCol1   )
 
     For n1 := 1 To Len(aMapsCol)
 
-        If n1 >= nCol1 
+        If n1 <= nCol1 
             n2 += aMapsCol[n1][5]
         End If 
     Next 

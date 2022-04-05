@@ -12,6 +12,8 @@
  Maior Compra                                                                                          Pos1 :       2166   Pos2 :       2279  Tam :        112
  Inscrição                                                                                           Pos1 :       2278   Pos2 :       2391  Tam :        112
  Email                                                                                                 Pos1 :       2390   Pos2 :       2713  Tam :        322
+ 
+ 
  Código                                                                                               Pos1 :         17   Pos2 :        123  Tam :        105
  Nome                                                                                                  Pos1 :        122   Pos2 :        410  Tam :        287
  Cidade                                                                                                Pos1 :        409   Pos2 :        837  Tam :        427
