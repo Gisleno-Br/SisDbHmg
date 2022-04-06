@@ -761,10 +761,57 @@ Function RetScrPos()
 
 Return nWidth 
 
+Function xRtColEsq()
+REturn nColEsquerda
+
+Function CalcEtapas()
+
+	Local nCol2  := 1
+	Local nWidth := 0
+	Local nPos2
+	Local nLargz1 := nLargx
+	Local nRet := 0
+	Local nc1 := 0
+	Local nColEsq := 1
+
+
+	While .t. 
+
+			nWidth := xGetColWidth(  nCol2   )		
+			nPos2 := xGetInfC(   nCol2 , 3  )	
+			
+
+			If (nPos2 >= nLargz1) 
+
+				nWidth := xGetColWidth(  nColEsq   ) - 3
+				nc1 += nWidth
+			   	nRet++
+
+				nColEsq++   
+
+				//msginfo('lp2')
+
+				If (nC1 >= (nLargTotal - nLargX))			
+				    Exit
+				End If 
+
+			End If 
+
+			nCol2++
+
+
+	Enddo 
+
+	
+
+Return nRet 
+
 Function ScrollCol( lFrente , lUpdHeader )
 
 				
     Local nColTam 
+
+	Local lFim := .f. 
 
 	//Local nTotal := xRetTotal( 0 )
 
@@ -778,54 +825,52 @@ Function ScrollCol( lFrente , lUpdHeader )
 	If lFrente 
 
 		If (nColScrool >= (nLargTotal - nLargX))			
-			Return 	0 
+			lFim := .t.
+			Return lFim
 		End If 
 
+		
 		If nColEsquerda == 1
 			nWidth += 15
 		End If 				
-
-		//nColLeft := nColz1
-
-
 		nColScrool += nWidth				
 		SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  -(nWidth)    , 2 )				
 
-		nColEsquerda++
-
-		//msginfo('pok')
-		
+		nColEsquerda++		
 
 
 	Else 	
 
-		//msginfo(Str(nWidth)+ '   ' + Str(nColEsquerda))
-		//nWidth := xGetColWidth(  nColEsquerda   ) - 10
-
 		nColScrool -= nWidth
 		SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  nWidth    , 2 )				
-
-		//nColEsquerda--
-
 		
 		If nColEsquerda == 1
 			nColScrool -= 15
-			SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  15    , 2 )							
+			SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  15    , 2 )			
+		//	msginfo('p')
+			lFim := .t.				
 		End If 				
-
-
 
 	End If 	
 
 
+
 	If (lUpdHeader)
-		//msginfo( Str((nLargTotal - nLargX)) + '   ' + Str(nLargTotal) + '  ' + Str(nLargX)   )
-		If (nColScrool >= (nLargTotal - nLargX))		
-			nVal := xRetBarH()		
-			xGoBarR()
-		Else 	
-			UpdateBarH( nWidth    )		
-		End If 			
+		
+		If lFrente
+			If (nColScrool >= (nLargTotal - nLargX))		
+				nVal := xRetBarH()		
+				xGoBarR()
+			Else 	
+				UpdateBarH( nWidth    )		
+			End If 			
+		Else 
+			If (nColScrool < 21)						
+				xGoBarl()
+			Else 	
+				UpdateBarH(  -(nWidth)    )		
+			End If 			
+		End If 	
 		
     	xDcBarH()
 
@@ -840,7 +885,7 @@ Function ScrollCol( lFrente , lUpdHeader )
 
 
 	If (nColEsquerda == 1) .And. (!lFrente)
-		UpdHeader(  cHeaderName ,   - 15  )					
+		UpdHeader(  cHeaderName ,   -15  )					
 		Do Events 
 	End If 
 
@@ -849,7 +894,7 @@ Function ScrollCol( lFrente , lUpdHeader )
 	DO EVENTS
 
 
-REturn nWidth
+REturn lFim
 
 
 
@@ -937,32 +982,25 @@ Function xTeclasBrow()
 			End If 
 			nColz1++
 
-			If nLParam = 15
-				//msginfo('ok2')
+			If nLParam = 15				
 				ScrollCol( .t. )
 				REturn 
 			End If 
 
 			xSelCol( nColz1 )
 			DO EVENTS 
-			
+
+			SysWait(0.07)			
 
 			nWidth := xGetColWidth(  nColz1   )			
 			nPos1 := xGetInfC(   nColz1 , 2  )
 			nPos2 := xGetInfC(   nColz1 , 3  )	
-			lScrool1 := (nPos2 >= nLargz1) 
-					
+			lScrool1 := (nPos2 >= nLargz1) 					
 
-			If (lScrool1)
-
-				
-
+			If (lScrool1)		
 				ScrollCol( .t. )
-
-
 			Else 
-			//	nAcumTot2 := nPos2
-		
+			
 			End If 
 
 		
@@ -981,6 +1019,8 @@ Function xTeclasBrow()
 		//	HMG_CleanLastVirtualKeyDown()
 
 			nColz1 := xGetColSel()			
+
+			SysWait(0.07)
 
 			
 			If nLParam = 353

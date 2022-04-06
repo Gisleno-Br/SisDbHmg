@@ -56,6 +56,8 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
 
    cHead1 := cHeaderN1
 
+   nQ1 := CalcEtapas()
+
 
         
     DEFINE WINDOW &cJanName ;
@@ -278,6 +280,8 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
     Local nWidBarra := nTamBarra
   
 
+
+
     Local nLimite := nLarTotalx - nWidBarra   
     Local nLimite2 := (nLargJan - nWidBarra)  
 
@@ -287,6 +291,8 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
     Local lOk := .f. 
 
     Local nColAnt := 0
+
+    
 
     Local lOk2 := .f. 
 
@@ -360,98 +366,96 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                     If (nColx != nColAnt)
                         If (nColx > nColAnt)                            
 
-                            //Msginfo(Str(  Width   ))
+                         //   nColz2 := xRtColEsq() 
+                            nW1 := xGetColWidth( nColz2 ) - 3            
 
-                            nW1 := xGetColWidth( nColz2 ) - 3
-
-                         //   Msginfo(Str(  nW1   ))
+                    //        msginfo(Str(  nColz2 ))             
                                                        
                             If ((nColx - nColAnt) >= 10  )                                                               
+                                  
+                                nAcumZ1  += (nColx - nColAnt)                                     
+                                nColDrag += (nColx - nColAnt)                                
+                                nScroxY  += (nColx - nColAnt)                                
+                                nColAnt  := nColx      
 
-                                If ( ( nColDrag+nWidBarra  )  >= (Width - 20)    )
-                                    xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar."))                                      
-                                    Exit
-                                End 
+                                n12 := nw1
 
-                                  //  MsgInfo(Str(nColz2))  
+                                
+                                     
+                                If (nAcumZ1 >= nW1)                                       
+                                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,15  )    
+                                    nAcumZ1 := 0
 
-                                    nAcumZ1 += (nColx - nColAnt)                                     
+                                     If ( (nColDrag+nWidBarra)  >= (Width - 20)    )
+                                            DO EVENTS
+                                            SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,15  )    
+                                            DO EVENTS                                         
+                                     End If 
 
-                                    nColDrag += (nColx - nColAnt)                                
-                                    nScroxY  += (nColx - nColAnt)                                
-
-                              //      msginfo(Str(  nAcumZ1  )  + ' ' + Str(nW1)  )
-
-                                    nColAnt := nColx       
-
-
-                                    n12 := nw1
-
-                                    If (nAcumZ1 >= nW1) 
-                                      //  msginfo('ok2')    
-                                      /*
-                                        lOk := .t.                                                                        
-                                        nColz2++                                
-                                        DoScrolly( n12 )                                    
-                                        Do Events     
-                                        UpdHeader( cHead1 , n12 )                                    
-                                        SysWait(0.01)
-                                        xDcToDc()	
-
-                                        DO EVENTS
-
-                                        nAcumZ1 := 0
-                                        */
-
-                                         SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,15  )    
-                                         nAcumZ1 := 0
-
-                                    End If 
-
+                                End If 
+                             
                                     
+                                If ( (nColDrag+nWidBarra)  >= (Width - 20)    )
+                                    xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar."))                                      
+                                    xGoBarR()                                     
+                                    SysWait(0.02)
+                                    nAcumZ1 := 0
+                                Else                                                                                                                                                           
 
-                                    If ( (nColDrag+nWidBarra)  >= (Width - 20)    )
-                                        xGoBarR()                                     
-                                        SysWait(0.02)
-                                      //  msginfo('lp2')
-                                    Else                                        
-                                            
-
-                                    End If     
-
-                                    xDcBarH()   
-
-                              //  End If                                  
+                                End If     
 
 
-
-                               // Else                                     
-                                 //   lTracking26 := .t. 
-                                   // xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar."))
-                                    //Exit 
-                                //End If     
-
+                                xDcBarH()   
+                              
 
                             End If           
 
                         Else 
-
                             
 
                             If ( Abs(nColAnt - nColx) ) >= 10                                
 
+                                nColz2 := xRtColEsq() 
+                                /*
                                 If (nColDrag <= 20)
-                              //  xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
+                                    xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
+                                    nAcumZ1 := 0
                                     Exit
                                 End If 
+                                */
 
+                                nW1 := xGetColWidth( nColz2 ) - 3    
 
-
+                                nAcumZ1 += Abs(nColAnt - nColx) 
 
                                 nColDrag -= Abs(nColAnt - nColx) 
-                                nScroxY  -= Abs(nColAnt - nColx)
-                                //    ScrollCol( .f. , .f.  )
+                                nScroxY  -= Abs(nColAnt - nColx)                                
                                 nColAnt := nColx 
+
+
+                                If (nAcumZ1 >= nW1)                                       
+                                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,353  )    
+                                    //msginfo(  Str(nW1) + '   ' +  Str( nColz2  ) + '   ' + Str(nAcumZ1) )
+                                    nAcumZ1 := 0
+
+                                    If (nColDrag <= 21  )
+                                        DO EVENTS
+                                        msginfo('f2')
+                                        SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,353  )    
+                                        DO EVENTS
+                                    End If 
+
+                                End If 
+
+                            
+                                If (nColDrag <= 21  )
+                                  //  msginfo(  Str(nW1) + '   ' +  Str( nColz2  ) + '   ' + Str(nAcumZ1) )
+                                    xGoBarL()                                     
+                                    SysWait(0.02)
+                                    nAcumZ1 := 0
+                                  //  msginfo('lp2')
+                                End If 
+                            
                                     
                                 SysWait(0.02)
                                 xDcBarH()                
@@ -459,28 +463,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                             Else 
 
                             End If     
-
-                            /*
-                            If ( Abs(nColAnt - nColx) ) >= 10
-                                If nScroxy > 21
-                                    n1 := (nColAnt - nColx)
-                                    nHSCrool := n1 
-                                    nScroxy -= nHSCrool     
-                                    nColDrag -= nHSCrool 
-                                  //  SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,0  )                                    
-
-                                    xDcBarH()
-                                    SysWait(0.09)
-                                    lTte := .f. 
-                                    lOk := .t.      
-                                    nColAnt := nColx                              
-                                Else 
-                                    lTte := .t. 
-                                End If 
-                            Else 
-
-                            End If 
-                            */
+                       
                         End If 
 
 
@@ -488,9 +471,13 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                             SysWait(0.01)
                         End If     
 
-
                       
-                    End If                                                           
+                    End If   
+
+                    For i := 1 To 255
+                        GetAsyncKeyState(i)
+                    Next i
+                                                                   
 
             Enddo  
 
@@ -498,13 +485,11 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
             //msginfo('out')
 
             If lFirst
-                lDragMode := .f.            
-                //xShowBrw(   cTabela    )
+                lDragMode := .f.                            
                 lTracking26 := .f.            
                 lTracking37 := .f.            
                 lFirst := .f.         
             End If 
-
 
             
             For i := 1 To 255
@@ -547,55 +532,39 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
 
             If (nModeBut = 2) .And. (!lTracking26)                                        
-
                     
-                    For i := 1 To 255
-                         GetAsyncKeyState(i)
-                    Next i
+                For i := 1 To 255
+                    GetAsyncKeyState(i)
+                Next i              
+                 
+                DO EVENTS
               
-                 //   SysWait(0.05)
-                    DO EVENTS
+                   
+                While (nModeBut = 2) .And. (!lTracking26)                                 
 
+                        If (GetAsyncKeyState(VK_LBUTTON)) == 0					
+                            SysWait(0.03)                                   
+                            Exit 
+                        End If    
 
-              
-                   //If (GetAsyncKeyState(VK_LBUTTON)) != 0	
-                       // msginfo('ok2  ' + Str(nModeBut) + '  ' + Iif(lTracking26 , ' Tr ', ' Tr2 ' )     )
-                        While (nModeBut = 2) .And. (!lTracking26)                                 
-
-                                If (GetAsyncKeyState(VK_LBUTTON)) == 0					
-                                    SysWait(0.03)                                   
-                                    Exit 
-                                End If    
-
-                                ScrollCol( .t. )
+                        If ScrollCol( .t. )
+                        End If 
 
                               
-                                SysWait(0.05)
-                                For i := 1 To 255
-                                    GetAsyncKeyState(i)
-                                Next i
+                        SysWait(0.05)
+
+                        For i := 1 To 255
+                            GetAsyncKeyState(i)
+                        Next i
 
 
-                                HMG_CleanLastMouseMessage()
+                        HMG_CleanLastMouseMessage()
 
-                        Enddo 
+                        //msginfo('lp2')
 
-                        
-                    //End If 
+                Enddo 
 
-              /*
-                Else         
-                    xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.") + '   ' + Str((nLargJan+nScroxy))  +'   ' + Str(nLarTotalx+18  ))
-                    nScroxy -= nHSCrool  
-                    Do Events                    
-                    BT_ClientAreaInvalidateAll(cBarraName)                                    
-                    SysWait(0.04)
-                    lTracking26 := .t. 
-                    
-                End If     
-                */
-                 //Return        
-
+                 
             End If 
 
 
