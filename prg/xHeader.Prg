@@ -612,6 +612,7 @@ Return
 */
 
 
+
 Function xRetTotal(   nCol1   )
 
     Local n1 := 0

@@ -207,6 +207,7 @@ Function TestBrow( cParent1 , cTabx  )
 	Local aResults := { }
 
 
+
 	aMtrHeader := {}
 	aCampos  := GetCamposDic( cTabela, 'S' , .t. , .t. )
 	//Local aCabec  := GetCamposDic( cTabela, 'S' , .f. , .t. )
@@ -856,7 +857,7 @@ Function ScrollCol( lFrente , lUpdHeader )
 
 
 	If (lUpdHeader)
-		
+		//msginfo('lp232')
 		If lFrente
 			If (nColScrool >= (nLargTotal - nLargX))		
 				nVal := xRetBarH()		
@@ -983,7 +984,7 @@ Function xTeclasBrow()
 			nColz1++
 
 			If nLParam = 15				
-				ScrollCol( .t. )
+				ScrollCol( .t. , .f.  )
 				REturn 
 			End If 
 
@@ -1034,7 +1035,7 @@ Function xTeclasBrow()
 					Return 0
 				End If 
 
-				ScrollCol( .f. )		
+				ScrollCol( .f. , .f.  )		
 
 				Return 
 			End If 

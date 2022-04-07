@@ -38,10 +38,16 @@ Static cHead1 := ''
 
 Static nAcumZ1 := 0
 
+Static nEtapas := 0 
+
+Static nQ1 := 0
+Static nQContador := 0
+
 
 Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela  , cBrowser , nTotCol , nTamBar , cHeaderN1   )
 
 
+   
    Private cJanName   := 'Win_Bh' + Left(cActiveJan,4)
    Private cJanSombra := 'Win_SombraBh' + Left(cActiveJan,4)
    cBarraSombra := cJanSombra
@@ -50,6 +56,8 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
    cBrwName     := cBrowser
    nLargJan     := nLargJanela
 
+
+   
    
    nColTotal := nTotCol   
    nTamBarra := nTamBar
@@ -57,6 +65,8 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
    cHead1 := cHeaderN1
 
    nQ1 := CalcEtapas()
+
+   //msginfo(Str(   nQ1 ) )
 
 
         
@@ -86,10 +96,13 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
     END WINDOW  
 
 
-	
+
+    If nQ1 > 0 
+        nEtapas :=  Int( (GetProperty(  cBrowserName , 'Width'  ) - nTamBarra)  /   nQ1 )                
+    End If     	
     
     lEnabled := (nTamBarra > 0)
-    //lEnabled := .f. 
+ 
 
 
     SET WINDOW &cJanName TRANSPARENT TO Iif(!lEnabled , 167 , 0)
@@ -304,6 +317,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
     Local n1 := 0
     Local nMaior := 0
+    Local nZ1 := 0
 
     
 
@@ -365,45 +379,45 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
                     If (nColx != nColAnt)
                         If (nColx > nColAnt)                            
-
-                         //   nColz2 := xRtColEsq() 
-                            nW1 := xGetColWidth( nColz2 ) - 3            
-
-                    //        msginfo(Str(  nColz2 ))             
+                         
+                            nW1 := xGetColWidth( nColz2 ) - 3                                
                                                        
-                            If ((nColx - nColAnt) >= 10  )                                                               
-                                  
-                                nAcumZ1  += (nColx - nColAnt)                                     
-                                nColDrag += (nColx - nColAnt)                                
-                                nScroxY  += (nColx - nColAnt)                                
-                                nColAnt  := nColx      
+                            If ((nColx - nColAnt) >= 2  )                                                                                         
 
-                                n12 := nw1
 
-                                
-                                     
-                                If (nAcumZ1 >= nW1)                                       
-                                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,15  )    
-                                    nAcumZ1 := 0
-
-                                     If ( (nColDrag+nWidBarra)  >= (Width - 20)    )
-                                            DO EVENTS
-                                            SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,15  )    
-                                            DO EVENTS                                         
-                                     End If 
-
+                                If (nQContador >= nQ1)
+                                     xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar. " + Str(nZ1)))           
+                                     nAcumZ1 := 0
+                                     SysWait(0.05)
+                                     nColAnt  := nColx                                     
+                                     LOOP
                                 End If 
-                             
+
+                                  
+                                nAcumZ1  += (nColx - nColAnt)
+                                nColDrag += (nColx - nColAnt)
+                                nScroxY  += (nColx - nColAnt)
+                                nColAnt  := nColx      
+                                n12 := nw1                                
+                                     
+
+                                If (nAcumZ1 >= (nEtapas - 1) )                                       
                                     
-                                If ( (nColDrag+nWidBarra)  >= (Width - 20)    )
-                                    xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar."))                                      
-                                    xGoBarR()                                     
-                                    SysWait(0.02)
+                                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,15  )                                   
+                                    nZ1  += nEtapas                                                                     
+
                                     nAcumZ1 := 0
-                                Else                                                                                                                                                           
+                                    nQContador++                              
 
-                                End If     
+                                    If (nQContador >= nQ1)
+                                        xGoBarR()
+                                    End If 
 
+                                End If                              
+                                    
+                             
+                                BT_ClientAreaInvalidateAll(cBarraName)  
+                                SysWait(0.03)
 
                                 xDcBarH()   
                               
@@ -413,50 +427,35 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                         Else 
                             
 
-                            If ( Abs(nColAnt - nColx) ) >= 10                                
+                            If ( Abs(nColAnt - nColx) ) >= 2                                 
 
-                                nColz2 := xRtColEsq() 
-                                /*
-                                If (nColDrag <= 20)
+                                                                
+                                If (nColDrag <= 20)                                    
+                                    nAcumZ1 := 0
+                                    nColAnt := nColx 
                                     xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
-                                    nAcumZ1 := 0
-                                    Exit
-                                End If 
-                                */
-
-                                nW1 := xGetColWidth( nColz2 ) - 3    
-
-                                nAcumZ1 += Abs(nColAnt - nColx) 
-
-                                nColDrag -= Abs(nColAnt - nColx) 
-                                nScroxY  -= Abs(nColAnt - nColx)                                
-                                nColAnt := nColx 
+                                    LOOP
+                                End If                                 
 
 
-                                If (nAcumZ1 >= nW1)                                       
-                                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,353  )    
-                                    //msginfo(  Str(nW1) + '   ' +  Str( nColz2  ) + '   ' + Str(nAcumZ1) )
+                                nAcumZ1  += Abs(nColAnt - nColx)
+
+                                nColDrag -= Abs(nColAnt - nColx)
+                                nScroxY  -= Abs(nColAnt - nColx)                                                        
+                                nColAnt  := nColx 
+
+                               
+
+                                If (nAcumZ1 >= nEtapas)                               
+                                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,353  )  
                                     nAcumZ1 := 0
 
-                                    If (nColDrag <= 21  )
-                                        DO EVENTS
-                                        msginfo('f2')
-                                        SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,353  )    
-                                        DO EVENTS
-                                    End If 
+                                     nQContador--
 
-                                End If 
-
-                            
-                                If (nColDrag <= 21  )
-                                  //  msginfo(  Str(nW1) + '   ' +  Str( nColz2  ) + '   ' + Str(nAcumZ1) )
-                                    xGoBarL()                                     
-                                    SysWait(0.02)
-                                    nAcumZ1 := 0
-                                  //  msginfo('lp2')
-                                End If 
+                                End If                                                                       
                             
                                     
+                                BT_ClientAreaInvalidateAll(cBarraName)     
                                 SysWait(0.02)
                                 xDcBarH()                
 
