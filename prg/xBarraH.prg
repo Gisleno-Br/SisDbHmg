@@ -395,23 +395,29 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
                                   
                                 nAcumZ1  += (nColx - nColAnt)
-                                nColDrag += (nColx - nColAnt)
-                                nScroxY  += (nColx - nColAnt)
+                                nColDrag += (nColx - nColAnt) 
+                                nScroxY  += (nColx - nColAnt) 
                                 nColAnt  := nColx      
-                                n12 := nw1                                
-                                     
+                                n12 := nw1     
 
-                                If (nAcumZ1 >= (nEtapas - 1) )                                       
+
+
+
+
+                                If (nAcumZ1 >= nEtapas )
+
+                                    If ( (nQContador+1) >= nQ1 )                                    
+                                        ncolDrag -= 10
+                                        nScroxY  -= 10                                        
+                                    End If                         
+
                                     
                                     SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,15  )                                   
                                     nZ1  += nEtapas                                                                     
 
                                     nAcumZ1 := 0
                                     nQContador++                              
-
-                                    If (nQContador >= nQ1)
-                                        xGoBarR()
-                                    End If 
+                                 
 
                                 End If                              
                                     
@@ -429,13 +435,15 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
                             If ( Abs(nColAnt - nColx) ) >= 2                                 
 
-                                                                
-                                If (nColDrag <= 20)                                    
+                                    /*                                     
+                                If (nColDrag <= 0)                                    
                                     nAcumZ1 := 0
                                     nColAnt := nColx 
                                     xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
                                     LOOP
                                 End If                                 
+                                */
+
 
 
                                 nAcumZ1  += Abs(nColAnt - nColx)
@@ -447,10 +455,26 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                                
 
                                 If (nAcumZ1 >= nEtapas)                               
+
+                                    If nqContador == 1
+                                        ncolDrag += 6                                        
+                                        nScroxY  += 6           
+                                    End If 
+
+
                                     SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,353  )  
                                     nAcumZ1 := 0
 
                                      nQContador--
+
+                                     //msginfo(Str(nQcontador))
+
+                                     
+                                    If (nQContador <= 0)
+                                         SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,353  )  
+                                       // xGoBarL()
+                                        
+                                    End If 
 
                                 End If                                                                       
                             
