@@ -110,6 +110,8 @@ FUNCTION Main
 
 	Public nColTamMenu := 189
 
+	Public nConst1 := 60
+
 	Public FONTBROWSER := 'Lucida Sans Typewriter'
 	//'Lucida Sans Typewriter'
 

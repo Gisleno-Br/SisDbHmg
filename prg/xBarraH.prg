@@ -44,6 +44,8 @@ Static nQ1 := 0
 Static nQContador := 0
 
 
+
+
 Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela  , cBrowser , nTotCol , nTamBar , cHeaderN1   )
 
 
@@ -57,16 +59,21 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
    nLargJan     := nLargJanela
 
 
-   
+   nQ1 := CalcEtapas()
+
+
+
+   //msginfo( Str(   nQ1 ) + '  ' + Str(nLargJanela) + '   ' + Str(nLarguraTot2)  )
    
    nColTotal := nTotCol   
-   nTamBarra := nTamBar
+   nTamBarra := nLargJanela -  ( nQ1 * nConst1 )
+   //nTamBar + ( nQ1 *nConst1 )
 
    cHead1 := cHeaderN1
 
-   nQ1 := CalcEtapas()
+   
 
-   //msginfo(Str(   nQ1 ) )
+   //
 
 
         
@@ -98,7 +105,9 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
 
 
     If nQ1 > 0 
-        nEtapas :=  Int( (GetProperty(  cBrowserName , 'Width'  ) - nTamBarra)  /   nQ1 )                
+        nEtapas :=  Int( (GetProperty(  cBrowserName , 'Width'  ) - nTamBarra)  /   nQ1 )
+        //msginfo( Str(nEtapas) )
+        //nQ1 )                
     End If     	
     
     lEnabled := (nTamBarra > 0)
@@ -350,6 +359,8 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
             nZacum := 0
             SysWait(0.02)
 
+            //nEtapas := 65
+
             For i := 1 To 255
                 GetAsyncKeyState(i)
             Next i
@@ -382,107 +393,94 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                          
                             nW1 := xGetColWidth( nColz2 ) - 3                                
                                                        
-                            If ((nColx - nColAnt) >= 2  )                                                                                         
+                            If ((nColx - nColAnt) >= 1  )      
 
 
-                                If (nQContador >= nQ1)
-                                     xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar. " + Str(nZ1)))           
-                                     nAcumZ1 := 0
-                                     SysWait(0.05)
-                                     nColAnt  := nColx                                     
-                                     LOOP
+                                If (nQContador  == nQ1)
+                                    xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar."))
+                                    Exit
                                 End If 
+
+
+                                If ( (nColDrag+nWidBarra) > (Width - 7))                                                                    
+                                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,15  )                                           
+                                    nAcumZ1 := 0
+                                    SysWait(0.02)
+                                    nQContador++
+                                    nColAnt  := nColx                                     
+                                    EXIT                                 
+                                End If 
+
 
                                   
                                 nAcumZ1  += (nColx - nColAnt)
-                                nColDrag += (nColx - nColAnt) 
-                                nScroxY  += (nColx - nColAnt) 
+//                                nColDrag += (nColx - nColAnt) 
+                                //nScroxY  += (nColx - nColAnt) 
                                 nColAnt  := nColx      
                                 n12 := nw1     
+                             
+                                If (nAcumZ1 >= nConst1 )                                                                      
 
-
-
-
-
-                                If (nAcumZ1 >= nEtapas )
-
-                                    If ( (nQContador+1) >= nQ1 )                                    
-                                        ncolDrag -= 10
-                                        nScroxY  -= 10                                        
-                                    End If                         
-
+                                    nColDrag += nConst1
+                                    nScroxY  += nConst1
                                     
                                     SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,15  )                                   
                                     nZ1  += nEtapas                                                                     
 
                                     nAcumZ1 := 0
-                                    nQContador++                              
-                                 
+                                    nQContador++                                                                  
 
-                                End If                              
-                                    
-                             
-                                BT_ClientAreaInvalidateAll(cBarraName)  
+                                End If                                                                                       
+
                                 SysWait(0.03)
+                                BT_ClientAreaInvalidateAll(cBarraName)                                      
+                                xDcBarH()                                    
 
-                                xDcBarH()   
-                              
+                                Do Events                                   
 
                             End If           
 
                         Else 
                             
 
-                            If ( Abs(nColAnt - nColx) ) >= 2                                 
+                            If ( Abs(nColAnt - nColx) ) >= 1
 
-                                    /*                                     
-                                If (nColDrag <= 0)                                    
+                                If (nQContador == 0)
+                                    xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
+                                    Exit
+                                End If 
+
+
+                                If (nColDrag <= 21)                                    
                                     nAcumZ1 := 0
                                     nColAnt := nColx 
-                                    xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
-                                    LOOP
+                                    nQContador--
+                                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,353  )  
+                                    DO EVENTS                                
+                                    Exit 
                                 End If                                 
-                                */
 
 
-
-                                nAcumZ1  += Abs(nColAnt - nColx)
-
-                                nColDrag -= Abs(nColAnt - nColx)
-                                nScroxY  -= Abs(nColAnt - nColx)                                                        
+                                nAcumZ1  += Abs(nColAnt - nColx)                                    
                                 nColAnt  := nColx 
-
                                
 
-                                If (nAcumZ1 >= nEtapas)                               
+                                If (nAcumZ1 >= nConst1)                               
 
-                                    If nqContador == 1
-                                        ncolDrag += 6                                        
-                                        nScroxY  += 6           
-                                    End If 
+                                    nColDrag -= nConst1
+                                    nScroxY  -= nConst1
 
-
-                                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,353  )  
+                                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,353  )                                     
                                     nAcumZ1 := 0
+                                    nQContador--                                                                                                                
 
-                                     nQContador--
+                                End If                                                
 
-                                     //msginfo(Str(nQcontador))
+                                BT_ClientAreaInvalidateAll(cBarraName)                                      
+                                xDcBarH()                                         
 
-                                     
-                                    If (nQContador <= 0)
-                                         SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,353  )  
-                                       // xGoBarL()
-                                        
-                                    End If 
-
-                                End If                                                                       
-                            
-                                    
-                                BT_ClientAreaInvalidateAll(cBarraName)     
-                                SysWait(0.02)
-                                xDcBarH()                
-
+                                Do Events
+                      
                             Else 
 
                             End If     
@@ -504,6 +502,11 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
             Enddo  
 
+            nZacum := 0
+
+            //msginfo(Str(nAcumZ1)+ '  ' + Str(nConst1) )
+
+
 
             //msginfo('out')
 
@@ -521,35 +524,38 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
 
 
-            While (nModeBut = 1) .And. (!lTracking26)           
+            If (nModeBut = 1) .And. (!lTracking26)  
 
-                If nScroxy > 21
-                   // nScroxy -= nHSCrool                     
-                    SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,353  ) 
+                While (nModeBut = 1) .And. (!lTracking26)           
 
-                    HMG_CleanLastMouseMessage()
+                        If (GetAsyncKeyState(VK_LBUTTON)) == 0					
+                            SysWait(0.03)                                   
+                            Exit 
+                        End If    
+                        
+                        If !xBarInicio()
 
-                  //  BT_ClientAreaInvalidateAll(cBarraName)                
-                    Do Events                     
-                    If (GetAsyncKeyState(VK_LBUTTON)) == 0					
-                        lTracking26 := .t.                         
-                        nModeBut := 0  
-                        SysWait(0.03) 
-                        Exit                       
-                    End If 	
-                   // xDcBarH()
-                    SysWait(0.01)
-                Else 
+                            DecrLeft()    
+                            If ScrollCol( .f. , .f. )
+                            End If 
+                            
+                            UpdateBarH( -nConst1     )	
+                            xDcBarH()                                
+                            SysWait(0.03)
+                                
+                        Else 
+                            xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
+                        End If     
 
-                    Do Events                    
-                    BT_ClientAreaInvalidateAll(cBarraName)                                    
-                    SysWait(0.04)
-                    lTracking26 := .t. 
-                    xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida."))
+                        For i := 1 To 255
+                            GetAsyncKeyState(i)
+                        Next i
 
-                End If     
+                        HMG_CleanLastMouseMessage()                      
+                
+                Enddo 
+
             End If 
-
             
 
 
@@ -560,8 +566,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                     GetAsyncKeyState(i)
                 Next i              
                  
-                DO EVENTS
-              
+                DO EVENTS              
                    
                 While (nModeBut = 2) .And. (!lTracking26)                                 
 
@@ -570,20 +575,23 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                             Exit 
                         End If    
 
-                        If ScrollCol( .t. )
-                        End If 
+                        If !xBarFim()
 
-                              
-                        SysWait(0.05)
+                            If ScrollCol( .t. , .f. )
+                            End If 
+                            UpdateBarH( nConst1     )	
+                            xDcBarH()                                
+                            SysWait(0.03)
+
+                        Else 
+                            xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar."))
+                        End If     
 
                         For i := 1 To 255
                             GetAsyncKeyState(i)
                         Next i
 
-
-                        HMG_CleanLastMouseMessage()
-
-                        //msginfo('lp2')
+                        HMG_CleanLastMouseMessage()                        
 
                 Enddo 
 
@@ -697,6 +705,10 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
 
 Return 
+
+
+
+
 
 
 

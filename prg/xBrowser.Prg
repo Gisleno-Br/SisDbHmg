@@ -807,20 +807,54 @@ Function CalcEtapas()
 
 Return nRet 
 
+
+Function xSrolUni( nW1  )
+
+    nColScrool += nW1
+	SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  nW1    , 2 )			
+
+	Do Events
+
+	UpdHeader(  cHeaderName ,   nW1  )		
+	
+	xDcToDc()			
+
+
+	DO EVENTS
+
+
+
+
+REturn 
+
+
+Function xBarInicio()
+REturn (nColEsquerda == 1)	
+
+
+
+Function xBarFim()
+REturn (nColScrool >= (nLargTotal - nLargX))	
+
+Function DecrLeft()
+	nColEsquerda--
+Return 	
+
+
 Function ScrollCol( lFrente , lUpdHeader )
 
 				
     Local nColTam 
+	Local lFim := .f. 	
 
-	Local lFim := .f. 
+	Local nWidth := Iif( nColEsquerda > 0 , xGetColWidth(  nColEsquerda   )	- 3 , 0 )
 
-	//Local nTotal := xRetTotal( 0 )
 
-	Local nWidth := xGetColWidth(  nColEsquerda   )	- 3
+	DEFAULT lUpdHeader := .t. 	
 
-	DEFAULT lUpdHeader := .t. 
-
-	//msginfo( Str(xColMEsquerda( nLargX ))  )
+	If nWidth == 0
+		REturn 
+	End If 
 
 
 	If lFrente 
@@ -834,6 +868,7 @@ Function ScrollCol( lFrente , lUpdHeader )
 		If nColEsquerda == 1
 			nWidth += 15
 		End If 				
+
 		nColScrool += nWidth				
 		SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  -(nWidth)    , 2 )				
 
@@ -844,20 +879,26 @@ Function ScrollCol( lFrente , lUpdHeader )
 
 		nColScrool -= nWidth
 		SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  nWidth    , 2 )				
+
+		
 		
 		If nColEsquerda == 1
 			nColScrool -= 15
-			SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  15    , 2 )			
-		//	msginfo('p')
+			SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  15    , 2 )					
 			lFim := .t.				
 		End If 				
 
+		//nColEsquerda--
+
 	End If 	
 
-
+	
+	//nWidth := nConst1
+		
 
 	If (lUpdHeader)
 		//msginfo('lp232')
+
 		If lFrente
 			If (nColScrool >= (nLargTotal - nLargX))		
 				nVal := xRetBarH()		
@@ -897,6 +938,14 @@ Function ScrollCol( lFrente , lUpdHeader )
 
 REturn lFim
 
+
+Function xUpHead(  nValor    )
+
+
+	UpdHeader(  cHeaderName ,   nValor  )					
+	Do Events 
+
+Return 
 
 
 
@@ -996,10 +1045,25 @@ Function xTeclasBrow()
 			nWidth := xGetColWidth(  nColz1   )			
 			nPos1 := xGetInfC(   nColz1 , 2  )
 			nPos2 := xGetInfC(   nColz1 , 3  )	
-			lScrool1 := (nPos2 >= nLargz1) 					
+			lScrool1 := (nPos2 >= nLargz1) 					 
 
 			If (lScrool1)		
-				ScrollCol( .t. )
+				ScrollCol( .t. , .f. )
+
+				//If !xBarFim()
+
+				If !(nColScrool > (nLargTotal - nLargX))	
+
+					nColz1 := xGetColSel()
+
+					//msginfo(Str(nQTotCol) + '   ' + Str(nColz1))
+					
+					UpdateBarH( nConst1     )	
+					xDcBarH()                                
+					SysWait(0.03)					
+
+				End If 	
+
 			Else 
 			
 			End If 
