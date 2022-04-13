@@ -82,6 +82,8 @@ Static nAcumTot2 := 0
 Static cHeaderName  := ''
 Static cHSombraName := ''
 
+Static nQEtp := 0
+
 
 
 
@@ -434,7 +436,8 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 
 	cHeaderName := 'Win_Header' + Left(cBrowserName,4)
 
-	
+	nQEtp := 0
+
 	
 
 	If Len(aDatas1) > 0 
@@ -621,10 +624,31 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 	xDcBarH()
 
 
+	Do Events 
+
+	
+	SysWait(0.05)
+
+	//_ShowWindow(    )
+	//BT_ClientAreaInvalidateAll( cHeaderName)
+
+	
+	_ShowWindow( xGetHeadName(1) )
+	BT_ClientAreaInvalidateAll(xGetHeadName(1))
+
+
+	_ShowWindow( xGetHeadName(2 ) )
+	BT_ClientAreaInvalidateAll(xGetHeadName(2))
+
+
+
+	xDcBarHeader()
 
 
     Do Events
     Do Events
+
+	//msginfo('ko2')
 
 
 Return
@@ -702,7 +726,21 @@ Function xShowBrw(  cTable1 , lDisplay   )
 
 		SysWait(0.03)
 		xDcToDEspe()	
+
+		DO EVENTS
+
+		
+		_ShowWindow( xGetBarName(1) )
+		BT_ClientAreaInvalidateAll(xGetBarName(1))
+
+
+		_ShowWindow( xGetBarName(2 ) )
+		BT_ClientAreaInvalidateAll(xGetBarName(2))
+
+		Do Events 
+
 		xDcBarH()
+
 
 	End If 
 
@@ -765,6 +803,14 @@ Return nWidth
 Function xRtColEsq()
 REturn nColEsquerda
 
+
+Function SetLargx(n1 )
+
+ nLargx := n1
+
+REturn 
+
+
 Function CalcEtapas()
 
 	Local nCol2  := 1
@@ -774,6 +820,8 @@ Function CalcEtapas()
 	Local nRet := 0
 	Local nc1 := 0
 	Local nColEsq := 1
+
+	//msginfo(Str(  nLargz1    ))
 
 
 	While .t. 
@@ -1042,25 +1090,30 @@ Function xTeclasBrow()
 
 			SysWait(0.07)			
 
+			nQTotEt := CalcEtapas()
+
 			nWidth := xGetColWidth(  nColz1   )			
 			nPos1 := xGetInfC(   nColz1 , 2  )
 			nPos2 := xGetInfC(   nColz1 , 3  )	
 			lScrool1 := (nPos2 >= nLargz1) 					 
 
 			If (lScrool1)		
+
 				ScrollCol( .t. , .f. )
+				nColz1 := xGetColSel()
 
-				//If !xBarFim()
-
-				If !(nColScrool > (nLargTotal - nLargX))	
-
-					nColz1 := xGetColSel()
-
-					//msginfo(Str(nQTotCol) + '   ' + Str(nColz1))
-					
+				If ( nQEtp < nQTotEt)
+										
 					UpdateBarH( nConst1     )	
 					xDcBarH()                                
-					SysWait(0.03)					
+					SysWait(0.03)		
+					nQEtp++
+
+				//	msginfo(  Str(nQEtp) + '   ' + Str(nQTotEt)   )
+
+					xDcBarHeader()
+
+					DO EVENTS 
 
 				End If 	
 
@@ -1124,7 +1177,16 @@ Function xTeclasBrow()
 						Return 0
 					End If 
 
-					ScrollCol( .f. )		
+					ScrollCol( .f.  , .f.  )		
+
+					UpdateBarH( -nConst1     )	
+					xDcBarH()                                
+					SysWait(0.03)	
+					xDcBarHeader()
+
+					nQEtp--
+
+					DO EVENTS 	
 
 				End If 				
 
@@ -1548,7 +1610,7 @@ Return
 
 
 
-FUNCTION  QtAcento(cString)
+FUNCTION QtAcento(cString)
 	Local cChar  := ""
 	Local nX     := 0
 	Local nY     := 0
@@ -1714,6 +1776,9 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			If (lHasHeader)
 				xApagueH( cHeaderName )
 				xLimpMode()
+				DO EVENTS 
+				xDcBarHeader()
+				DO EVENTS 
 			End If 
 
 			If  _isWindowDefined("Win_Msg")
@@ -1831,6 +1896,10 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 			If (lHasHeader)
 				xApagueH( cHeaderName )
+				SysWait(0.03)
+				xDcBarHeader()
+				SysWait(0.03)
+				//msginfo('ok2')
 			End If 
 
 
@@ -1953,6 +2022,9 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 			If (lHasHeader)
 				xApagueH( cHeaderName )
+				DO EVENTS 
+				xDcBarHeader()
+				DO EVENTS 
 			End If 
 
 			If (nHasFocus > 0) 					
@@ -2894,13 +2966,15 @@ Function xCursorWait( lOn )
 
 
 	If lOn 
-		SetWindowCursor( GetFormHandle( cFormPrin )  , 'CURSOR1'  )
-		SetWindowCursor( GetFormHandle( cEspelhoBrw )  , 'CURSOR1'  )
+		//SetWindowCursor( GetFormHandle( cFormPrin )  , 'CURSOR1'  )
+		SetWindowCursor( GetActiveWindow()  , 'CURSOR1'  )
 		
 	Else 
 
-		SetWindowCursor( GetFormHandle( cFormPrin )  , IDC_ARROW  )
-		SetWindowCursor( GetFormHandle(cEspelhoBrw )  , IDC_ARROW  )	
+		//SetWindowCursor( GetFormHandle( cFormPrin )  , IDC_ARROW  )
+		//SetWindowCursor( GetFormHandle(cEspelhoBrw )  , IDC_ARROW  )	
+
+		SetWindowCursor( GetActiveWindow()  ,IDC_ARROW  )
 		
 		
 	End If 	

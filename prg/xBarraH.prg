@@ -48,7 +48,6 @@ Static nQContador := 0
 
 Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela  , cBrowser , nTotCol , nTamBar , cHeaderN1   )
 
-
    
    Private cJanName   := 'Win_Bh' + Left(cActiveJan,4)
    Private cJanSombra := 'Win_SombraBh' + Left(cActiveJan,4)
@@ -61,20 +60,13 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
 
    nQ1 := CalcEtapas()
 
+   //msginfo(Str(   nq1 ))
 
-
-   //msginfo( Str(   nQ1 ) + '  ' + Str(nLargJanela) + '   ' + Str(nLarguraTot2)  )
-   
    nColTotal := nTotCol   
    nTamBarra := nLargJanela -  ( nQ1 * nConst1 )
-   //nTamBar + ( nQ1 *nConst1 )
 
    cHead1 := cHeaderN1
-
    
-
-   //
-
 
         
     DEFINE WINDOW &cJanName ;
@@ -105,9 +97,7 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
 
 
     If nQ1 > 0 
-        nEtapas :=  Int( (GetProperty(  cBrowserName , 'Width'  ) - nTamBarra)  /   nQ1 )
-        //msginfo( Str(nEtapas) )
-        //nQ1 )                
+        nEtapas :=  Int( (GetProperty(  cBrowserName , 'Width'  ) - nTamBarra)  /   nQ1 )                
     End If     	
     
     lEnabled := (nTamBarra > 0)
@@ -123,6 +113,24 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
      
 Return cJanName    
 
+
+Function SetBarraTam(nTamanho , nQz)
+  //nWidBarra := nTamanho    
+
+  nTamBarra := nTamanho  
+  
+
+  nQ1 := nQz 
+
+  // CalcEtapas()
+  nEtapas :=  Int( (GetProperty(  cBrwName , 'Width'  ) - nTamBarra)  /   nQ1 )                
+
+  BT_ClientAreaInvalidateAll(cBarraName)  
+  xDcBarH()
+
+  Do Events 
+
+REturn 
 
 Function xShowHint( nRow1 , nCol1 , cMsg )
 
@@ -160,8 +168,6 @@ Function xGoBarR()
     
     BT_ClientAreaInvalidateAll(cBarraName)  
     xDcBarH()
-
-
     
     Do Events
     Do Events
@@ -327,12 +333,6 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
     Local n1 := 0
     Local nMaior := 0
     Local nZ1 := 0
-
-    
-
-    
-
-
 	
 
 	//If (_IsWindowDefined(cBarraName)) .And.  (nHWnd == GetProperty(  cBarraName , "HANDLE" ))		
@@ -410,12 +410,8 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                                     nColAnt  := nColx                                     
                                     EXIT                                 
                                 End If 
-
-
                                   
                                 nAcumZ1  += (nColx - nColAnt)
-//                                nColDrag += (nColx - nColAnt) 
-                                //nScroxY  += (nColx - nColAnt) 
                                 nColAnt  := nColx      
                                 n12 := nw1     
                              
@@ -436,7 +432,11 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                                 BT_ClientAreaInvalidateAll(cBarraName)                                      
                                 xDcBarH()                                    
 
-                                Do Events                                   
+                                Do Events     
+
+                                xDcBarHeader()
+
+					            DO EVENTS                               
 
                             End If           
 
@@ -480,6 +480,8 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                                 xDcBarH()                                         
 
                                 Do Events
+                                xDcBarHeader()
+					            DO EVENTS 
                       
                             Else 
 
@@ -542,6 +544,9 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                             UpdateBarH( -nConst1     )	
                             xDcBarH()                                
                             SysWait(0.03)
+
+                            xDcBarHeader()
+					        DO EVENTS 
                                 
                         Else 
                             xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
@@ -582,6 +587,9 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                             UpdateBarH( nConst1     )	
                             xDcBarH()                                
                             SysWait(0.03)
+
+                            xDcBarHeader()
+					        DO EVENTS 
 
                         Else 
                             xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar."))
