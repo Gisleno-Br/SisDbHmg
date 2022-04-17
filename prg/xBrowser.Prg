@@ -1061,8 +1061,12 @@ Function xTeclasBrow()
 	Local nMaxItem := Int(nTamSubMenuConsulta / nItemSubHeight)
 
 
+	
+
 
 	If nMsg == WM_KEYDOWN
+
+
 		
 		If (nWParam == VK_RIGHT)
 
@@ -1082,6 +1086,7 @@ Function xTeclasBrow()
 
 			If nLParam = 15				
 				ScrollCol( .t. , .f.  )
+			//	IncContador(.t.)	
 				REturn 
 			End If 
 
@@ -1100,6 +1105,7 @@ Function xTeclasBrow()
 			If (lScrool1)		
 
 				ScrollCol( .t. , .f. )
+				IncContador(.t.)	
 				nColz1 := xGetColSel()
 
 				If ( nQEtp < nQTotEt)
@@ -1108,6 +1114,7 @@ Function xTeclasBrow()
 					xDcBarH()                                
 					SysWait(0.03)		
 					nQEtp++
+					
 
 				//	msginfo(  Str(nQEtp) + '   ' + Str(nQTotEt)   )
 
@@ -1152,7 +1159,8 @@ Function xTeclasBrow()
 					Return 0
 				End If 
 
-				ScrollCol( .f. , .f.  )		
+				ScrollCol( .f. , .f.  )	
+			//	IncContador(.f.)	
 
 				Return 
 			End If 
@@ -1178,6 +1186,7 @@ Function xTeclasBrow()
 					End If 
 
 					ScrollCol( .f.  , .f.  )		
+					IncContador(.f.)	
 
 					UpdateBarH( -nConst1     )	
 					xDcBarH()                                
@@ -1764,6 +1773,13 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	//Local nRow1 := GetProperty('Win_Role1','Height') - 20
 
 	
+	
+	If HMG_GetLastMouseMessage() == WM_LBUTTONDBLCLK
+		msginfo('ok455555')
+	End If 	
+
+
+	
 	IF nHWnd == GetProperty(  cActiveJan   , "HANDLE" )				
 		If nMsg == WM_MOUSEMOVE
 		
@@ -1796,6 +1812,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 
 
+
 	
 	
 
@@ -1816,6 +1833,9 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 		End If 	
 
+		If nmsg == WM_LBUTTONDBLCLK
+			msginfo('lp3333')	
+		End If	
 
 
 		If (nMsg == WM_LBUTTONDOWN) 			

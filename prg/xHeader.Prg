@@ -76,6 +76,9 @@ Static nColDrag := 0
 
 Static nOrdCol := 0
 
+Static s1 := ''
+Static s2 := ''
+
 
 Static nColSele := 1
 
@@ -121,7 +124,7 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
 		PARENT &cParent1 ;
 		WIDTH nLarg1+1 HEIGHT 30 VIRTUAL HEIGHT Nil   ;
 		TITLE 'xHeaderSombra1' + Left(cHName,4)  	;
-		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR RGB(242,242,242)  
+		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR RGB(242,242,242)                 
 	END WINDOW
 
     SET WINDOW &cHName TRANSPARENT TO Iif(!lEnabled1 , 167 , 0)
@@ -132,13 +135,68 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
         xMapCols( aCabecs , aColsTam , aTipsy )
 
         If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventHeader"  ) )  ) = 0
-            InstallEventHandler( "EventHeader" )		
+            InstallEventHandler( "EventHeader" )	            
         End If
+
+        nIndex23 := 452
+
+        //CREATE EVENT PROCNAME EditBox_DBLCLICK() HWND GetFormHandle(cHeaderSombra) STOREINDEX nIndex23
+        //EventProcessAllHookMessage (nIndex23, .T.)
+        
 
     End If 
 
 
 Return .t. 
+
+
+Function xCheckOk()
+
+    lOCAL A1 := Seconds()
+    Local nDiff := 150000
+
+    DO EVENTS 
+
+    
+
+        DO EVENTS     
+
+        If Empty(s1)
+            s1 := Str(a1)
+        Else 
+            s2 := Str(a1)    
+            nDiff := Val(s2) - Val(s1)
+            //msginfo(Str(nDiff))   
+        End If 
+
+        If (nDiff <= 0.20)
+            //msginfo(s1 + ' ' + s2 + '   ' + Str(nDiff))    
+
+            s1:=''
+            s2:=''
+        End If     
+        //msginfo( Str(a1)  )
+    
+
+
+Return (nDiff <= 0.20)
+
+
+
+Function EditBox_DBLCLICK()
+    LOCAL nHWnd   := EventHWND()
+    LOCAL nWParam := EventWPARAM()
+    LOCAL lCtrl   := HMG_VirtualKeyIsPressed( VK_CONTROL )       
+
+
+	IF HMG_GetLastMouseMessage (@nHWnd) == WM_LBUTTONDBLCLK   
+        msginfo('ok')
+
+    End If 	
+
+
+
+    Return NIL
 
 
 
@@ -444,12 +502,26 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
         Return 
     End If 
 
+    /*
+    IF GetNotifyCode ( nLParam ) == -3
+        msginfo('lp33')
+        
+
+    ENDIF
+    */  
+
     
 	
 	If nHWnd == GetProperty(  cHeaderSombra   , "HANDLE" )
 
      
         If (nMsg == WM_LBUTTONDOWN)	
+
+            DO EVENTS
+
+            If xCheckOk()
+               msginfo('Dbl Click' )     
+            End If     
              
             //msginfo(Str(nColSel1))
 
@@ -557,6 +629,13 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
         End If     
 
 
+
+        If (nMsg = WM_LBUTTONDBLCLK) 
+
+             msginfo(' 5555555555555555555  ')   
+        End If     
+
+
         If (nMsg == WM_LBUTTONUP)	
 
             lSizeMode := .f.
@@ -572,6 +651,9 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
             For i := 1 To 255
                 GetAsyncKeyState(i)
             Next i
+
+            s1 := ''
+            s2 := ''
 
 
             GetCursorPos (@nCol, @nRow)

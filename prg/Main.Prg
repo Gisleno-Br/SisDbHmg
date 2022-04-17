@@ -652,6 +652,8 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 	*// Eventos Sub menu.
 	*// Barra Superior 
 
+
+
 	If nHWnd == GetProperty(  'Main' , "HANDLE" )
 
 		If (nMsg == 71)
@@ -662,7 +664,18 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 			End If 
 
 
+
 		End If 
+
+		
+
+		
+
+		If (nmsg == WM_LBUTTONDBLCLK) 
+			  //.or.  (nMsg == WM_LBUTTONDOWN) 
+			msginfo('lp3333')	
+		End If	
+
 
 	End If 
 
