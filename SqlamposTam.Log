@@ -80,3 +80,4 @@
  update dicionario set tamdisp = 35 where tabela = 'Clientes' and camposistema = 'Nome'
  update dicionario set tamdisp = 47 where tabela = 'Clientes' and camposistema = 'Nome'
  update dicionario set tamdisp = 56 where tabela = 'Clientes' and camposistema = 'Nome'
+ update dicionario set tamdisp = 35 where tabela = 'Clientes' and camposistema = 'Cpf/Cnpj'

@@ -103,7 +103,8 @@ FUNCTION Main
 
 
 	Public nVirtualMenu := Nil
-	
+
+
 
 	Public aRotHnd := {}
 	Public lAtivaBlack := .f.
@@ -127,7 +128,7 @@ FUNCTION Main
 	Public nHSCrool := 10
 	Public cJanx
 
-	Private lExit := .f. 
+	Private lExit := .f.
 
 	Public CURSORHAND := "img\Hand_Cursor.cur"
 
@@ -138,12 +139,12 @@ FUNCTION Main
 	Private  lTracking42 := .f.
 	Private  lTracking142 := .f.
 
-	Private aBmpSv1 := Nil 
+	Private aBmpSv1 := Nil
 
-	
+
 	PRIVATE nFontSize  := 8
 
-	
+
 
 	Private cObjSelected := ''
 
@@ -160,8 +161,8 @@ FUNCTION Main
 	PUBLIC fColor := {|| iif( ( LastRec() > 0 ) .AND. ( AllTrim(Status ) == 'Ativo' ), { 78,78,78 },  { 255, 0, 0 } )  }
 
 	Public HOURGLASS := 'IMG\HourGlass.Cur'
-	
-	Private lFlagOk := .f. 
+
+	Private lFlagOk := .f.
 
 
 	Public bColorGrid := {|| iif( ( LastRec() > 0 ) .AND. ( RecNo() / 2 == Int(RecNo() / 2 ) ), { 235,243,242 }, {211,231,230} ) }
@@ -360,7 +361,7 @@ FUNCTION Main
 	Private hBit2      := 0
 	Private hBitMain   := 0
 
-	
+
 
 
 	Private hBit10      := 0
@@ -391,8 +392,8 @@ FUNCTION Main
 	Private hBitmap4 := 0
 	Private hBitmap5 := 0
 
-	
-	
+
+
 
 
 	Private hBitmap25 := 0
@@ -511,7 +512,7 @@ FUNCTION Main
 
 
 
-		
+
 
 	Private nRowIni := 10
 
@@ -611,25 +612,41 @@ END LABEL
 
 
 
+	Private aButTop := {}
 
 
-Private aButTop := {}
+	//CREATE EVENT PROCNAME ProcWindowMsg()  STOREINDEX nIndex22   // ADD
+	//EventProcessHMGWindowsMessage (nIndex22, .F.)
 
 
 
 
-xMenuMain( 70 , 1  , aOpcoes , aItens )
+	xMenuMain( 70 , 1  , aOpcoes , aItens )
 
 
 //SysWait(.3)
 
-Main.Activate
+	Main.Activate
 
 
 
 
 
 RETURN
+
+
+
+
+Function ProcWindowMsg()
+
+       // msginfo('ok2')
+      IF EventMSG() == WM_LBUTTONDBLCLK  
+    //     msginfo('Dblckkkk') 
+      
+      ENDIF
+
+
+Return 
 
 
 Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
@@ -659,25 +676,25 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 		If (nMsg == 71)
 			//WM_WINDOWPOSCHANGED
 
-			If (_IsWindowDefined( cActiveJan)) .And. (cActiveJan != "Main")				
-				xShowBrw(  cTabela  )				
-			End If 
+			If (_IsWindowDefined( cActiveJan)) .And. (cActiveJan != "Main")
+				xShowBrw(  cTabela  )
+			End If
 
 
 
-		End If 
-
-		
-
-		
-
-		If (nmsg == WM_LBUTTONDBLCLK) 
-			  //.or.  (nMsg == WM_LBUTTONDOWN) 
-			msginfo('lp3333')	
-		End If	
+		End If
 
 
-	End If 
+
+
+
+		If (nmsg == WM_LBUTTONDBLCLK)
+			//.or.  (nMsg == WM_LBUTTONDOWN)
+			msginfo('lp3333')
+		End If
+
+
+	End If
 
 	If nHWnd == GetProperty(  'fSplit2' , "HANDLE" )
 
@@ -735,12 +752,12 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 		End If
 
 
-		
+
 	End If
 
 
 
-	
+
 
 
 Return
@@ -1939,9 +1956,9 @@ Function OpenOpcao( cCadastro , cTitulo , nHandle1 )
 			CadCli()
 
 
-			
+
 		End If
-		
+
 
 	End If
 
@@ -2303,44 +2320,44 @@ Return
 		}
 
 
-HB_FUNC ( GETVSCROLLVALUE )
+	HB_FUNC ( GETVSCROLLVALUE )
 
-{
+	{
 
 	HWND hwnd;
-	SCROLLINFO si; 
+		SCROLLINFO si;
 
 	hwnd = (HWND) HMG_parnl (1);
-	GetScrollInfo (hwnd, SB_HORZ, &si);
-	
-   
-    hb_retni( si.nTrackPos  );
+		GetScrollInfo (hwnd, SB_HORZ, &si);
 
-}
 
-		
-HB_FUNC ( SETVSCROLLVALUE )
-{
+	hb_retni( si.nTrackPos  );
+
+	}
+
+
+	HB_FUNC ( SETVSCROLLVALUE )
+	{
 
 //	SendMessage ( (HWND) HMG_parnl (1), WM_VSCROLL , (WPARAM) MAKEWPARAM (SB_THUMBPOSITION , hb_parni(2) ) , 0 ) ;
 
 
 	HWND hwnd;
-	HDC hdc; 
-	PAINTSTRUCT ps; 
-	TEXTMETRIC tm; 
-	SCROLLINFO si; 
+		HDC hdc;
+		PAINTSTRUCT ps;
+		TEXTMETRIC tm;
+		SCROLLINFO si;
 
-	int nBt1 ; 
-	 
-	static int yPos;        // current vertical scrolling position 
-	 
-	int yChar;       // vertical scrolling unit 
+	int nBt1 ;
+
+	static int yPos;        // current vertical scrolling position
+
+	int yChar;       // vertical scrolling unit
 
 	int yTipo =  hb_parni(3);;
 
 	hwnd = (HWND) HMG_parnl (1);
-	yChar = hb_parni(2);
+		yChar = hb_parni(2);
 
 	RECT rect3;
 
@@ -2349,91 +2366,91 @@ HB_FUNC ( SETVSCROLLVALUE )
 	GetClientRect(hwnd, &rect3);
 
 	rect3.right  += 1335;
-	rect3.bottom += 1335;
+		rect3.bottom += 1335;
 
-	
-   // VERT 
+
+	// VERT
 	if (yTipo == 1)
 		{
 
 		// Get all the vertial scroll bar information.
 		si.cbSize = sizeof (si);
-		si.nTrackPos = yChar;
-		si.fMask  = SIF_ALL;
-		//si.fMask  = SIF_TRACKPOS;
+			si.nTrackPos = yChar;
+			si.fMask  = SIF_ALL;
+			//si.fMask  = SIF_TRACKPOS;
 
 
 
 		SetScrollInfo (hwnd, SB_VERT, &si, TRUE);
-		GetScrollInfo (hwnd, SB_VERT, &si);
+			GetScrollInfo (hwnd, SB_VERT, &si);
 
-		
+
 		yPos = si.nPos;
-		si.nPos -= 1;
-		ScrollWindow(hwnd, 0, yChar * (yPos - si.nPos)   , NULL , NULL );
+			si.nPos -= 1;
+			ScrollWindow(hwnd, 0, yChar * (yPos - si.nPos)   , NULL , NULL );
 
-		} 
-	 else 
+		}
+	else
 
-	 { 
+		{
 
 		si.cbSize = sizeof (si);
-		si.nTrackPos = yChar;
-		si.fMask  = SIF_ALL;
-		//si.fMask  = SIF_TRACKPOS;
-		SetScrollInfo (hwnd, SB_HORZ, &si, TRUE);
-		GetScrollInfo (hwnd, SB_HORZ, &si);
-		
+			si.nTrackPos = yChar;
+			si.fMask  = SIF_ALL;
+			//si.fMask  = SIF_TRACKPOS;
+			SetScrollInfo (hwnd, SB_HORZ, &si, TRUE);
+			GetScrollInfo (hwnd, SB_HORZ, &si);
+
 		yPos = si.nPos;
-		si.nPos -= 1;
+			si.nPos -= 1;
 
 
 		ScrollWindow(hwnd, yChar  ,  0   , NULL , NULL );
 
 		si.nTrackPos = yChar;
-		SetScrollInfo (hwnd, SB_HORZ, &si, TRUE);
+			SetScrollInfo (hwnd, SB_HORZ, &si, TRUE);
 
 
 
-	 }
+		}
 
-	// * (yPos - si.nPos)
-
-
-	UpdateWindow(hwnd);	
-
-	
-}
+		// * (yPos - si.nPos)
 
 
-#define BMP_ERASE        0     // Borra la imagen de fondo de la ventana
-#define BMP_COPY_NORMAL  1     // Pega la imagen al fondo con el tamaño original de la misma
-#define BMP_COPY_SCALE   2     // Ajusta proporcionalmente la imagen para que se vea completa en la ventana
-#define BMP_COPY_STRETCH 3     // Aju
+		UpdateWindow(hwnd);
 
 
-HB_FUNC (BMP_LOAD_FILE)
-{   
-   HBITMAP hBitmap;    
-   char *cFileName;
+		}
 
-   cFileName = (char *) hb_parcx (1);
-    
-   hBitmap = (HBITMAP)LoadImage(NULL, cFileName, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-          
-   if (hBitmap == NULL)
-       hBitmap = (HBITMAP)LoadImage(GetModuleHandle(NULL), cFileName, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
-                          
-   hb_retnl( (LONG) hBitmap );      
-}
+
+		#define BMP_ERASE        0     // Borra la imagen de fondo de la ventana
+		#define BMP_COPY_NORMAL  1     // Pega la imagen al fondo con el tamaño original de la misma
+		#define BMP_COPY_SCALE   2     // Ajusta proporcionalmente la imagen para que se vea completa en la ventana
+		#define BMP_COPY_STRETCH 3     // Aju
+
+
+		HB_FUNC (BMP_LOAD_FILE)
+		{
+		HBITMAP hBitmap;
+			char *cFileName;
+
+		cFileName = (char *) hb_parcx (1);
+
+		hBitmap = (HBITMAP)LoadImage(NULL, cFileName, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+
+		if (hBitmap == NULL)
+			hBitmap = (HBITMAP)LoadImage(GetModuleHandle(NULL), cFileName, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
+
+			hb_retnl( (LONG) hBitmap );
+				}
 
 //*************************************************************************************************
 // BMP_RELEASE_HANDLE (hBitmap)
 //*************************************************************************************************
-HB_FUNC (BMP_RELEASE_HANDLE)
-{   
-   hb_retni ((int) DeleteObject ((HBITMAP) hb_parnl (1)));
-}
+			HB_FUNC (BMP_RELEASE_HANDLE)
+			{
+			hb_retni ((int) DeleteObject ((HBITMAP) hb_parnl (1)));
+				}
 
 
 
@@ -2444,79 +2461,78 @@ HB_FUNC (BMP_RELEASE_HANDLE)
 
 
 
-HB_FUNC (BMP_PAINT)
-{
-   HWND hWnd;
-   HBITMAP hBitmap;
-   HDC memDC, hDC;
-   RECT rect;
-   BITMAP bm;
-   int nMode;
-
-   
-   hWnd     = (HWND)  hb_parnl (1);
-   hBitmap  = (HBITMAP) hb_parnl  (2);
-   nMode    = hb_parni (3);
+			HB_FUNC (BMP_PAINT)
+			{
+			HWND hWnd;
+				HBITMAP hBitmap;
+				HDC memDC, hDC;
+				RECT rect;
+				BITMAP bm;
+				int nMode;
 
 
-   
-   GetClientRect(hWnd, &rect);
-
-   hDC = GetDC (hWnd);   // obtine un hDC para toda el area del cliente (se puede pintar en cualquier lugar del area del cliente)
-   PAINTSTRUCT ps;   
-   hDC = BeginPaint (hWnd, &ps);  // obtiene un hDC solo para el area invalida (area que debe ser repintada) en un mensaje WM_PAINT    
-		
-   if (nMode == BMP_ERASE)
-       FillRect(hDC,&rect,(HBRUSH) GetSysColorBrush(COLOR_BTNFACE));    
-   else
-   {
-       FillRect(hDC,&rect,(HBRUSH) GetSysColorBrush(COLOR_BTNFACE)); // borra la imagen anterior antens de asignar otra
-     
-       memDC = CreateCompatibleDC(hDC);
-              
-       SelectObject(memDC, hBitmap);
-       
-       rect.top    = hb_parnl (4);
-       rect.left   = hb_parnl (5);
- 
-       if (nMode == BMP_COPY_NORMAL)           
-	   {    
-	       rect.bottom = hb_parnl (6);	   
-           rect.right  = hb_parnl (7);
-		   BitBlt(hDC, rect.left, rect.top, rect.right, rect.bottom, memDC, 0, 0, SRCCOPY);
-	   }
-     
-		
-       GetObject(hBitmap, sizeof(BITMAP), (LPSTR)&bm);
-                
-       if (nMode == BMP_COPY_SCALE)
-       {  if ((int) bm.bmWidth * rect.bottom / bm.bmHeight <= rect.right)
-		      rect.right= (int) bm.bmWidth * rect.bottom / bm.bmHeight;
-	      else		
-		      rect.bottom = (int) bm.bmHeight * rect.right / bm.bmWidth;
-                 
-          StretchBlt(hDC, rect.left, rect.top, rect.right, rect.bottom, memDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
-       }
-                
-       if (nMode == BMP_COPY_STRETCH)
-           StretchBlt(hDC, rect.left, rect.top, rect.right, rect.bottom, memDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
-                        
-       DeleteDC(memDC);     
-   }
-
-
-   //EndPaint (hWnd, hDC); //Elimina el hDC y Valida el area pintada    
-   ReleaseDC(hWnd, hDC);   //Elimina el hDC pero NO Valida el area pintada
-                           //Al no validar el area pintada permite que los procesos de pintura siguientes encadenados puedan usar hDC = BeginPaint (hWnd, &ps); 
-
-}
-
-		
-
-	#pragma ENDDUMP
+			hWnd     = (HWND)  hb_parnl (1);
+				hBitmap  = (HBITMAP) hb_parnl  (2);
+				nMode    = hb_parni (3);
 
 
 
+			GetClientRect(hWnd, &rect);
+
+			hDC = GetDC (hWnd);   // obtine un hDC para toda el area del cliente (se puede pintar en cualquier lugar del area del cliente)
+			PAINTSTRUCT ps;
+				hDC = BeginPaint (hWnd, &ps);  // obtiene un hDC solo para el area invalida (area que debe ser repintada) en un mensaje WM_PAINT
+
+			if (nMode == BMP_ERASE)
+				FillRect(hDC,&rect,(HBRUSH) GetSysColorBrush(COLOR_BTNFACE));
+				else
+				{
+				FillRect(hDC,&rect,(HBRUSH) GetSysColorBrush(COLOR_BTNFACE)); // borra la imagen anterior antens de asignar otra
+
+				memDC = CreateCompatibleDC(hDC);
+
+				SelectObject(memDC, hBitmap);
+
+				rect.top    = hb_parnl (4);
+					rect.left   = hb_parnl (5);
+
+				if (nMode == BMP_COPY_NORMAL)
+					{
+					rect.bottom = hb_parnl (6);
+						rect.right  = hb_parnl (7);
+						BitBlt(hDC, rect.left, rect.top, rect.right, rect.bottom, memDC, 0, 0, SRCCOPY);
+						}
 
 
-	
+					GetObject(hBitmap, sizeof(BITMAP), (LPSTR)&bm);
+
+					if (nMode == BMP_COPY_SCALE)
+						{  if ((int) bm.bmWidth * rect.bottom / bm.bmHeight <= rect.right)
+						rect.right= (int) bm.bmWidth * rect.bottom / bm.bmHeight;
+						else
+						rect.bottom = (int) bm.bmHeight * rect.right / bm.bmWidth;
+
+						StretchBlt(hDC, rect.left, rect.top, rect.right, rect.bottom, memDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
+							}
+
+						if (nMode == BMP_COPY_STRETCH)
+							StretchBlt(hDC, rect.left, rect.top, rect.right, rect.bottom, memDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
+
+							DeleteDC(memDC);
+								}
+
+
+							//EndPaint (hWnd, hDC); //Elimina el hDC y Valida el area pintada
+							ReleaseDC(hWnd, hDC);   //Elimina el hDC pero NO Valida el area pintada
+							//Al no validar el area pintada permite que los procesos de pintura siguientes encadenados puedan usar hDC = BeginPaint (hWnd, &ps);
+
+							}
+
+
+
+							#pragma ENDDUMP
+
+
+
+
+

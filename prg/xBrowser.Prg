@@ -402,6 +402,7 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 
 	Local nTamWidth := xRetLargura()
 	Local nTam1 := GetTextoTam( ' '  , cActiveJan )
+	Local nIndex22
 	Private aOpx1 := 0
 	DEFAULT nLarg1  := GetDeskTopWidth() - 40
 	DEFAULT nCol := 10
@@ -583,8 +584,9 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 
 	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventBrowser"  ) )  ) = 0
 		InstallEventHandler( "EventBrowser" )
-		nIndexEventZ := EventCreate (  { ||   xTeclasBrow( )   }  )
+		nIndexEventZ := EventCreate (  { ||   xTeclasBrow( )   }  )		
 	End If
+
 
 	
 	_ShowWindow(cBarraVfrm)
@@ -1056,9 +1058,40 @@ Function xTeclasBrow()
 
 	Local nTotal := 0
 
+	Local lDownMouse := .f. 
+
+	Local lUpMouse := .f. 
+
 
 	//xFechaMen
 	Local nMaxItem := Int(nTamSubMenuConsulta / nItemSubHeight)
+
+	
+
+	If HMG_GetLastMouseMessage (@nHWnd) == 513
+	//	msginfo(Str(    HMG_GetLastMouseMessage (@nHWnd)   ))
+	//	msginfo( Str(nWParam)  )
+	End If 
+
+
+	If HMG_GetLastMouseMessage (@nHWnd) == WM_MOUSEWHEEL
+
+	  HMG_CleanLastMouseMessage()
+	  Do Events
+	  Do Events
+
+
+      If HIWORD( nWParam ) == 120
+	  	lUpMouse := .t.        
+		 
+      Else 
+	  	lDownMouse := .t. 
+
+      End If 
+		
+
+
+	End If 
 
 
 	
@@ -1113,11 +1146,7 @@ Function xTeclasBrow()
 					UpdateBarH( nConst1     )	
 					xDcBarH()                                
 					SysWait(0.03)		
-					nQEtp++
-					
-
-				//	msginfo(  Str(nQEtp) + '   ' + Str(nQTotEt)   )
-
+					nQEtp++					
 					xDcBarHeader()
 
 					DO EVENTS 
@@ -1303,8 +1332,7 @@ Function xTeclasBrow()
 			BT_ClientAreaInvalidateAll(cBrowserName)			
 			xDcToDc()
 
-			msginfo('lp2')
-
+			
 
 		End If
 
@@ -1323,9 +1351,11 @@ Function xTeclasBrow()
 	End If 
 
 
-	If (nWParam == VK_DOWN)
+	If (nWParam == VK_DOWN) .or. (lDownMouse)
 
 		lHitt := .f.
+
+		lDownMouse := .f. 
 
 		If (lHitt)
 			nItemx5 := 1
@@ -1378,9 +1408,11 @@ Function xTeclasBrow()
 
 	End If
 
-	If (nWParam == VK_UP) 			
+	If (nWParam == VK_UP) .or. (lUpMouse) 			
 
 		HMG_CleanLastVirtualKeyUp()	
+
+		lUpMouse := .f. 
 
 		If nItemx5 > 1
 			nItemx5--
@@ -1775,7 +1807,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	
 	
 	If HMG_GetLastMouseMessage() == WM_LBUTTONDBLCLK
-		msginfo('ok455555')
+	//	msginfo('ok455555')
 	End If 	
 
 

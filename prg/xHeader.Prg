@@ -79,6 +79,9 @@ Static nOrdCol := 0
 Static s1 := ''
 Static s2 := ''
 
+Static nOrdemSel := 0
+Static lAscending := .f. 
+
 
 Static nColSele := 1
 
@@ -88,6 +91,8 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
     Local nRowIni := GetProperty( cBrwName1 , 'Row')
     Local nCol    := GetProperty( cBrwName1 , 'Col')
     Local nLarg1  := GetProperty( cBrwName1 , 'Width')
+
+    Local nIndex22 
 
     DEFAULT lAtivo := .t. 
 
@@ -125,7 +130,37 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
 		WIDTH nLarg1+1 HEIGHT 30 VIRTUAL HEIGHT Nil   ;
 		TITLE 'xHeaderSombra1' + Left(cHName,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR RGB(242,242,242)                 
+
+        
+            DEFINE LABEL Label2
+                ROW    0
+                COL    0
+                WIDTH  nLarg1+1
+                HEIGHT 30
+                VALUE "Nome  zzzzzzzzzzzzz" 
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .T.
+                TRANSPARENT .T.
+                ACTION Nil
+                AUTOSIZE .F.
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+            END LABEL
+
+
+
+
 	END WINDOW
+
+    CREATE EVENT PROCNAME EventHeader() HWND GetControlHandle(  'Label2' ,  cHeaderSombra ) STOREINDEX nIndex22 
+    EventProcessAllHookMessage(nIndex22 , .t.)
 
     SET WINDOW &cHName TRANSPARENT TO Iif(!lEnabled1 , 167 , 0)
 
@@ -135,14 +170,9 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
         xMapCols( aCabecs , aColsTam , aTipsy )
 
         If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventHeader"  ) )  ) = 0
-            InstallEventHandler( "EventHeader" )	            
-        End If
+           // InstallEventHandler( "EventHeader" )	            
+        End If        
 
-        nIndex23 := 452
-
-        //CREATE EVENT PROCNAME EditBox_DBLCLICK() HWND GetFormHandle(cHeaderSombra) STOREINDEX nIndex23
-        //EventProcessAllHookMessage (nIndex23, .T.)
-        
 
     End If 
 
@@ -150,53 +180,48 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
 Return .t. 
 
 
+Function SetOrdGrid( nColuna1 , lAsc1 )
+
+ 
+    nOrdemSel  := nColuna1
+    lAscending := lAsc1
+
+    BT_ClientAreaInvalidateAll(cHeaderJan)
+
+    DO EVENTS     
+	xDcBarHeader()
+
+    SysWait(0.02)                        
+
+
+Return 
+
+
 Function xCheckOk()
 
     lOCAL A1 := Seconds()
     Local nDiff := 150000
 
-    DO EVENTS 
+      //  DO EVENTS    
 
-    
-
-        DO EVENTS     
+       // DO EVENTS     
 
         If Empty(s1)
             s1 := Str(a1)
         Else 
             s2 := Str(a1)    
-            nDiff := Val(s2) - Val(s1)
-            //msginfo(Str(nDiff))   
+            nDiff := Val(s2) - Val(s1)        
         End If 
 
-        If (nDiff <= 0.20)
-            //msginfo(s1 + ' ' + s2 + '   ' + Str(nDiff))    
-
+        If (nDiff <= 0.20)        
             s1:=''
             s2:=''
         End If     
-        //msginfo( Str(a1)  )
-    
+           
 
 
 Return (nDiff <= 0.20)
 
-
-
-Function EditBox_DBLCLICK()
-    LOCAL nHWnd   := EventHWND()
-    LOCAL nWParam := EventWPARAM()
-    LOCAL lCtrl   := HMG_VirtualKeyIsPressed( VK_CONTROL )       
-
-
-	IF HMG_GetLastMouseMessage (@nHWnd) == WM_LBUTTONDBLCLK   
-        msginfo('ok')
-
-    End If 	
-
-
-
-    Return NIL
 
 
 
@@ -257,6 +282,61 @@ Function xLimpMode()
     lTrack39 := .f.
 
 Return 
+
+Static Function xOrdene( nCol1 , lAsc1 )
+
+    Local aCampos := GetCamposDic( cTabela, 'S' , .t. , .t. )
+	Local aCabec  := GetCamposDic( cTabela, 'S', .F. , .f. )	
+	Local aTips   := GetCamposInf( cTabela, 'TIPO' )    
+    Local aZZ1    := xRetArray()
+    Local aM1     := aMapsCol[nCol1]
+    Local nPos1
+    Local nTam1 
+    Local aM4 
+    Local nTipo 
+
+    nPos1 := aM1[7]
+    nTam1 := aM1[6]
+    nTipo := Alltrim(aM1[4])
+
+    If (nTipo == 'C')
+        If lAsc1
+            aM4 := Asort(aZZ1 ,,, { |a,b|  Substr(a[1] , nPos1 , nTam1 ) < Substr(b[1] , nPos1 , nTam1 )  })
+        Else 
+            aM4 := Asort(aZZ1 ,,, { |a,b|  Substr(a[1] , nPos1 , nTam1 ) > Substr(b[1] , nPos1 , nTam1 )  })
+        End If 
+    End If     
+
+    If (nTipo $ 'IB')
+        If lAsc1
+            aM4 := Asort(aZZ1 ,,, { |a,b|  Val(Substr(a[1] , nPos1 , nTam1 )) < Val(Substr(b[1] , nPos1 , nTam1 ))  })
+        Else 
+            aM4 := Asort(aZZ1 ,,, { |a,b|  Val(Substr(a[1] , nPos1 , nTam1 )) > Val(Substr(b[1] , nPos1 , nTam1 ))  })
+        End If 
+    End If     
+
+    
+    If (nTipo == 'D')
+        If lAsc1
+            aM4 := Asort(aZZ1 ,,, { |a,b|  Ctod( xFormDt(a[1] , nPos1 , nTam1 )) < Ctod( xFormDt(b[1] , nPos1 , nTam1 ))  })
+        Else 
+            aM4 := Asort(aZZ1 ,,, { |a,b|  Ctod( xFormDt(a[1] , nPos1 , nTam1 )) > Ctod( xFormDt(b[1] , nPos1 , nTam1 ))  })
+        End If 
+    End If     
+
+
+    Do Events 
+    SetArray( aM4 )    
+
+    xShowBrw(  cTabela , .t.  )       
+    xGoTop()
+
+    SysWait(0.03)
+
+Return 
+
+Function xFormDt(cData , n1 , n2 )
+REturn Left(  Alltrim(  Substr(cData , n1 , n2)     ) , 10  )
 
 
 Static Function xAtuDados(   nIndice1 , lAscedente , aTams )
@@ -477,7 +557,8 @@ Function xSelCol( nCol1 )
 
 Return 
 
-Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
+Function EventHeader()
+  //( nHWnd, nMsg, nWParam, nLParam  )
 
     Local nRow 
     //Local nCol 
@@ -490,6 +571,11 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
     Local Height := GetProperty( cHeaderJan  , 'Height')
     Local nColx2 := 0
     Local i 
+
+    LOCAL  nHWnd   := EventHWND()
+	LOCAL  nMsg    := EventMSG()
+	LOCAL  nWParam := EventWPARAM()
+	LOCAL  nLParam := EventLPARAM()
 
   //  Local nUnit := xRetUnit()
    // Local nColx 
@@ -511,21 +597,44 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
     */  
 
     
-	
-	If nHWnd == GetProperty(  cHeaderSombra   , "HANDLE" )
+	If nHWnd == GetControlHandle(  'Label2' ,  cHeaderSombra )
+	//If nHWnd == GetProperty(  cHeaderSombra   , "HANDLE" )
+
+
+        If (nMsg == WM_LBUTTONDBLCLK)	
+
+            nColSele := nColSel1            
+
+            lAscending    := !lAscending
+            nOrdemSel     := nColSele             
+
+             
+            BT_ClientAreaInvalidateAll(cHeaderJan)
+            SysWait(0.02)          
+            xDcBarHeader()              
+
+            xOrdene( nOrdemSel , lAscending )
+
+        End If 
 
      
         If (nMsg == WM_LBUTTONDOWN)	
 
             DO EVENTS
 
-            If xCheckOk()
-               msginfo('Dbl Click' )     
-            End If     
+            //msginfo('ok2')
              
             //msginfo(Str(nColSel1))
 
             nColSele := nColSel1            
+
+          //  If xCheckOk()
+             //  msginfo('Dbl Click' )     
+             //  lAscending    := !lAscending
+             //  nOrdemSel     := nColSele
+         //   End If     
+
+
             BT_ClientAreaInvalidateAll(cHeaderJan)
             SysWait(0.02)          
             xDcBarHeader()                  
@@ -572,11 +681,9 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
                                aColsTam[nSaveCol1]    -= Int(Abs(nColx2 - nColx) / nUnit)                                                          
                             End If                           
 
-                            xMapCols( aCabecs , aColsTam , aTipsy )          
-                            
+                            xMapCols( aCabecs , aColsTam , aTipsy )                                      
 
-                            BT_ClientAreaInvalidateAll(cHeaderJan)
-                            //SysWait(0.01)       
+                            BT_ClientAreaInvalidateAll(cHeaderJan)                            
                             xDcBarHeader()                     
 
                             SysWait(0.05)                            
@@ -585,7 +692,6 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
                             nColx := nColx2 
 
                         End If 
-
 
                         SysWait(0.02)                        
 
@@ -629,11 +735,6 @@ Function EventHeader( nHWnd, nMsg, nWParam, nLParam  )
         End If     
 
 
-
-        If (nMsg = WM_LBUTTONDBLCLK) 
-
-             msginfo(' 5555555555555555555  ')   
-        End If     
 
 
         If (nMsg == WM_LBUTTONUP)	
@@ -798,8 +899,7 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
     Local BTstruct
     Local nQAcento 
     Local nTam12 := 0
-
-
+    Local nAcum := 1
 
 
     hDC = BT_CreateDC ( cHeaderJan  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct )
@@ -819,8 +919,10 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
         n12 := GetTextWidth( hDC , cTexto , hfont )
         nTam := n12
 
-        Aadd( aMapsCol , {   aCabs[n1] , nColx , nColx +  nTam + 1 , aTipos1[n1] ,   nTam    }  )
+        Aadd( aMapsCol , {   aCabs[n1] , nColx , nColx +  nTam + 1 , aTipos1[n1] ,   nTam ,  aTamx1[n1] , nAcum   }  )
         nColx += nTam 
+
+        nAcum += aTamx1[n1]+1
 
         nTam12 += nTam 
 
@@ -922,6 +1024,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
     Local cTexto  := ''
     Local cTexto1 := ''
     Local n1     := 1
+    Local nCol21
     Local nTam1 := 0
     Local nTamx1 := GetTextoTam( 'A'  , cActiveJan ) 
     Local hFont 
@@ -934,6 +1037,10 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
     Local nCol := -(nColHeader)
     Local nColx := 17
     Local hBitOk := BT_BitmapLoadFile ('OKMARK22')
+
+
+    Local hBitOrd1 := BT_BitmapLoadFile ('SETTA')
+    Local hBitOrd2 := BT_BitmapLoadFile ('SETAB')
     
 	hDC = BT_CreateDC ( cJanela  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct )
 	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    ,  {117,124,131}  , {137,143,150} )
@@ -950,6 +1057,8 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
     BT_DrawBitmap (hDC  , 6 ,  (0+nColx) - 16  , 15  , 15 , BT_STRETCH, hBitOk)
     hFont := HMG_CreateFont (  hDC , FONTBROWSER, FONTBROWSERSIZE, .f., .f., .f., .f. )
+
+    nCol21 := 0
 
 
     For n1 := 1 To Len(aMapsCol)
@@ -978,13 +1087,22 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
         BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
         BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
-        nColx += nTam1 
+
+        
+       If (nOrdemSel == n1)
+          nCol21 := nColx+4            
+       End If 
+
+       nColx += nTam1 
+       
 
     Next 
 
     BT_DrawText ( hDC , 10  , 17+nCol ,   Hb_Utf8ToStr(cTexto1) , FONTBROWSER  , FONTBROWSERSIZE , WHITE,  {230,230,230}   , ;
 				nTypeText ,	nAlingText, nOrientation )
 
+
+    
 
 
      If (nColSele > 0)                 
@@ -1000,8 +1118,6 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
         cTexto1 := aMapsCol[nColSele][1]              
 
         //msginfo('ok2')
-
-
         
 
         nQAcento := QtAcento(Alltrim( aMapsCol[nColSele][1]  ) )
@@ -1016,7 +1132,12 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
        Else 
             BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 350   ,    Height    ,  {163,168,173} , {128,128,128} )               
        End If 
-       
+
+       If nOrdemSel == nColSele 
+          BT_DrawBitmapTransparent (hDC  , 6 ,  nColx+2 , 16  , 16 , BT_STRETCH, Iif(lAscending ,  hBitOrd1 ,  hBitOrd2 ) )
+       End If              
+
+
     
         
        BT_DrawText ( hDC , 10  , nColx,   Hb_Utf8ToStr(cTexto1) , FONTBROWSER  , FONTBROWSERSIZE , WHITE,  {230,230,230}   , ;
@@ -1029,6 +1150,9 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
     BT_DeleteDC (BTstruct )
     BT_BitmapRelease (hBitOk)
+
+    BT_BitmapRelease (hBitOrd1)
+    BT_BitmapRelease (hBitOrd2)
 
 
 

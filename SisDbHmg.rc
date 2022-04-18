@@ -34,6 +34,9 @@
     DIREITAD    BITMAP  img\SetaDireita_d.bmp 
 
 
+    SETTA   BITMAP  img\Setaa.Bmp 
+    SETAB   BITMAP  img\setab.Bmp 
+
 
 
     CHAVE      PNG     img\chave2.png
