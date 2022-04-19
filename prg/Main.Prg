@@ -112,6 +112,7 @@ FUNCTION Main
 	Public nColTamMenu := 189
 
 	Public nConst1 := 60
+	Public nConst2 := 0
 
 	Public FONTBROWSER := 'Lucida Sans Typewriter'
 	//'Lucida Sans Typewriter'
@@ -407,7 +408,7 @@ FUNCTION Main
 	Private cFontName  := 'Arial'
 	Private FontSize  := 8
 
-	Private nColScrool := 0
+	//Private nColScrool := 0
 
 
 	Private lScrool := .t.
@@ -449,7 +450,6 @@ FUNCTION Main
 
 
 	SET DATE BRIT
-
 	SET(_SET_DATEFORMAT,"DD/MM/YYYY")
 
 	SET NAVIGATION EXTENDED
@@ -1218,6 +1218,7 @@ Function FechaJan(  cJanela  , lExclBut , nI1 , nI2)
 	//Refreshall('fSplitSubMenu')
 
 
+
 	//xHMenuPrin()
 	xMenuPrin()
 
@@ -1324,14 +1325,14 @@ Function ScrolVert(nDirecao)
 		If nacumz > ncumt
 			//msginfo('tingido')
 		Else
-			nColScrool +=  130
+		//	nColScrool +=  130
 			nacumz     +=  130
 		End If
 
 	Else
 
 		If nacumz > GetProperty('fSplit2','Width')
-			nColScrool -= 130
+			//nColScrool -= 130
 			nacumz     -=  130
 		Else
 			nacumz := GetProperty('fSplit2','Width')
@@ -1343,7 +1344,7 @@ Function ScrolVert(nDirecao)
 	End If
 
 	//SysWait(.4)
-	_HMG_PRINTER_SETHSCROLLVALUE( GetFormHandle(  'fSplit2'  )  , nColScrool)
+//	_HMG_PRINTER_SETHSCROLLVALUE( GetFormHandle(  'fSplit2'  )  , nColScrool)
 
 	//RefreshAll('fSplit2')
 
@@ -2234,14 +2235,22 @@ END IMAGE
 
 SetProperty(cJanela1,Sclavel01,"Enabled",.F.)
 
-RETURN
+RETURN 
+
+
+
 
 
 Function SaveLog(cArqLog,cTexto)
 
-	Local cText := hb_memoRead(cArqLog)
+	Local cText := cTexto
 
-	hb_memowrit(cArqLog , cText +' '+ cTexto )
+	If File(cArqLog)
+		cText := hb_memoRead(cArqLog)+' '+cTexto 
+	End If 
+
+
+	hb_memowrit(cArqLog , cText + QUEBRA )
 
 Return
 

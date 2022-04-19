@@ -46,6 +46,8 @@ Static nQContador := 0
 
 
 
+
+
 Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela  , cBrowser , nTotCol , nTamBar , cHeaderN1   )
 
    
@@ -67,6 +69,7 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
 
    cHead1 := cHeaderN1
    
+
 
         
     DEFINE WINDOW &cJanName ;
@@ -93,6 +96,7 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
         NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR RGB(242,242,242) ;
         ON MOUSEMOVE (cObjSelected := 'BarraH')	
     END WINDOW  
+
 
 
 
@@ -569,7 +573,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                             Exit 
                         End If    
                         
-                        If !xBarInicio()
+                        If !(nQContador == 0)
 
                             DecrLeft()    
                             If ScrollCol( .f. , .f. )
@@ -616,7 +620,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                             Exit 
                         End If    
 
-                        If !xBarFim()
+                        If !(nQContador  == nQ1)
 
                             If ScrollCol( .t. , .f. )
                             End If 

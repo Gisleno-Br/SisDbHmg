@@ -294,49 +294,95 @@ Static Function xOrdene( nCol1 , lAsc1 )
     Local nTam1 
     Local aM4 
     Local nTipo 
+    Local nTamPg := xRetTamPg()
+    Local nPagNum := 1
+    Local nCont5 := 0
 
     nPos1 := aM1[7]
     nTam1 := aM1[6]
     nTipo := Alltrim(aM1[4])
 
+    xCursorWait(.t.)
+
+    DO EVENTS
+
     If (nTipo == 'C')
         If lAsc1
-            aM4 := Asort(aZZ1 ,,, { |a,b|  Substr(a[1] , nPos1 , nTam1 ) < Substr(b[1] , nPos1 , nTam1 )  })
+            aM4 := Asort(aZZ1 ,,, { |a,b|  Substr(a[1] , nPos1 , nTam1 + QtAcento(a[1]) ) < Substr(b[1] , nPos1 , nTam1 + QtAcento(b[1]) )  })
         Else 
-            aM4 := Asort(aZZ1 ,,, { |a,b|  Substr(a[1] , nPos1 , nTam1 ) > Substr(b[1] , nPos1 , nTam1 )  })
+            aM4 := Asort(aZZ1 ,,, { |a,b|  Substr(a[1] , nPos1 , nTam1 + QtAcento(a[1]) ) > Substr(b[1] , nPos1 , nTam1 + QtAcento(b[1]) )  })
         End If 
     End If     
 
-    If (nTipo $ 'IB')
+    If (nTipo = 'I')
         If lAsc1
-            aM4 := Asort(aZZ1 ,,, { |a,b|  Val(Substr(a[1] , nPos1 , nTam1 )) < Val(Substr(b[1] , nPos1 , nTam1 ))  })
+            aM4 := Asort(aZZ1 ,,, { |a,b|  Val(Substr(a[1] , nPos1 , nTam1 + QtAcento(a[1]) )) < Val(Substr(b[1] , nPos1 , nTam1 + QtAcento(b[1]) ))  })
         Else 
-            aM4 := Asort(aZZ1 ,,, { |a,b|  Val(Substr(a[1] , nPos1 , nTam1 )) > Val(Substr(b[1] , nPos1 , nTam1 ))  })
+            aM4 := Asort(aZZ1 ,,, { |a,b|  Val(Substr(a[1] , nPos1 , nTam1 + QtAcento(a[1]) )) > Val(Substr(b[1] , nPos1 , nTam1 + QtAcento(b[1]) ))  })
+        End If 
+    End If   
+
+
+
+    If (nTipo = 'B')
+        If lAsc1
+            aM4 := Asort(aZZ1 ,,, { |a,b|  Rtrans(Substr(a[1] , nPos1 , nTam1 + QtAcento(a[1])   )) < Rtrans(Substr(b[1] , nPos1 , nTam1 + QtAcento(b[1]) ))  })
+        Else 
+            aM4 := Asort(aZZ1 ,,, { |a,b|  Rtrans(Substr(a[1] , nPos1 , nTam1 + QtAcento(a[1]) )) > Rtrans(Substr(b[1] , nPos1 , nTam1 + QtAcento(b[1]) ))  })
         End If 
     End If     
 
     
     If (nTipo == 'D')
+     //   msginfo(Str(  Len(aZZ1)     ))
         If lAsc1
-            aM4 := Asort(aZZ1 ,,, { |a,b|  Ctod( xFormDt(a[1] , nPos1 , nTam1 )) < Ctod( xFormDt(b[1] , nPos1 , nTam1 ))  })
+            aM4 := Asort(aZZ1 ,,, { |a,b|  ( xFormDt(a[1] , nPos1 , nTam1 + QtAcento(a[1]) )) < ( xFormDt(b[1] , nPos1 , nTam1 + QtAcento(b[1])  ))  })
         Else 
-            aM4 := Asort(aZZ1 ,,, { |a,b|  Ctod( xFormDt(a[1] , nPos1 , nTam1 )) > Ctod( xFormDt(b[1] , nPos1 , nTam1 ))  })
+            aM4 := Asort(aZZ1 ,,, { |a,b|  ( xFormDt(a[1] , nPos1 , nTam1  + QtAcento(a[1]))) > ( xFormDt(b[1] , nPos1 , nTam1 + QtAcento(b[1]) ))  })
         End If 
-    End If     
+    //    msginfo(Str(  Len(aM4)     ))
+    End If  
+
+
+    For n1 := 1 To Len(aM4)
+
+        nCont5++
+
+		If nCont5 > nTamPg
+			nPagNum++
+			nCont5 := 1
+		End If 
+        
+        aM4[n1][3] := nPagNum
+
+    Next        
+
 
 
     Do Events 
     SetArray( aM4 )    
 
+    //SysWait(0.01)
+
     xShowBrw(  cTabela , .t.  )       
     xGoTop()
 
-    SysWait(0.03)
+    xCursorWait(.f.)
+   // SysWait(0.03)
 
 Return 
 
+
 Function xFormDt(cData , n1 , n2 )
-REturn Left(  Alltrim(  Substr(cData , n1 , n2)     ) , 10  )
+  //SaveLog('Debug22.Log' ,Alltrim(Left(  Alltrim(  Substr(cData , n1 , n2 + QtAcento(cData) )     ) , 10  ))  )
+  
+  Local cD1 := Alltrim(Left(  Alltrim(  Substr(cData , n1 , n2  )     ) , 10  ) )
+
+  SaveLog('Debug234.Log' , Left(cData,10) + '  ' +  cd1 + '   ->  '  +  Right(cD1,4) + Substr(Cd1,4,2) + Left(cD1,2) +'    ' + Str(n1) + '  ' + Str(n2)  )
+
+  SaveLog('Debug2233.Log' ,cData + '  ' + Str(  QtAcento(cData)   ) )
+
+Return Right(cD1,4) + Substr(Cd1,4,2) + Left(cD1,2)
 
 
 Static Function xAtuDados(   nIndice1 , lAscedente , aTams )
@@ -452,6 +498,8 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams )
     Do Events 
     SetArray( aM4 )
   
+
+
     Do Events 
   
     If _IsWindowDefined(c_BrowName)      

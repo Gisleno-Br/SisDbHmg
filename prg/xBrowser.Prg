@@ -151,6 +151,8 @@ Function xRetLargura()
 REturn nLargura
 
 
+Function xRetTamPg()
+Return nTamPag
 
 
 Function DoMatriz( cParentx , cTabela )
@@ -207,6 +209,8 @@ Function TestBrow( cParent1 , cTabx  )
 	Local nCont5 := 0
 
 	Local aResults := { }
+
+
 
 
 
@@ -293,11 +297,10 @@ Function TestBrow( cParent1 , cTabx  )
 				cValor := Padl(oRow:FieldGet(nx1) ,10)
 			End If
 
-
 			lNum := .f.
 
 			If Alltrim(aTips[nx1]) == 'B'
-				cValor := alltrim(Transform( oRow:FieldGet(nx1) , "@E 999,999,999.99" ))
+				cValor := alltrim(Transform( oRow:FieldGet(nx1) , "999,999,999.99" ))
 				lNum := .t.
 			End If
 
@@ -830,19 +833,24 @@ Function CalcEtapas()
 
 			nWidth := xGetColWidth(  nCol2   )		
 			nPos2 := xGetInfC(   nCol2 , 3  )	
-			
 
+			
 			If (nPos2 >= nLargz1) 
+
+				//msginfo(Str( nColEsq  ))
+
 
 				nWidth := xGetColWidth(  nColEsq   ) - 3
 				nc1 += nWidth
 			   	nRet++
 
+
+
 				nColEsq++   
 
 				//msginfo('lp2')
 
-				If (nC1 >= (nLargTotal - nLargX))			
+				If (nC1 >= (nLargTotal - nLargX - 15))			
 				    Exit
 				End If 
 
@@ -852,6 +860,10 @@ Function CalcEtapas()
 
 
 	Enddo 
+
+	nConst2 := int((nLargTotal - nLargX) / nRet)
+
+	//msginfo(Str( nRet ) + '  ' + Str(nConst2) )
 
 	
 
@@ -2638,6 +2650,8 @@ Function xGoBottom()
 	BT_ClientAreaInvalidateAll(cBarraVfrm)
 
 	
+
+
 	
 	SysWait(0.05)
 
@@ -2663,7 +2677,7 @@ Function xGoTop()
 	lHitt := .t.
 
 	nLinScrool := 0
-	nColScrool := 0
+//	nColScrool := 0
 
 	EncheMVis( nTamPag )
 
