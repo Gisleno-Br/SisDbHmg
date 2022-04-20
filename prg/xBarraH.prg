@@ -136,6 +136,7 @@ Function SetBarraTam(nTamanho , nQz)
 
 REturn 
 
+
 Function xShowHint( nRow1 , nCol1 , cMsg )
 
 

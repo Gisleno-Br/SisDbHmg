@@ -2241,6 +2241,8 @@ RETURN
 
 
 
+
+
 Function SaveLog(cArqLog,cTexto)
 
 	Local cText := cTexto

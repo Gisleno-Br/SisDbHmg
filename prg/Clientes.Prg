@@ -4177,9 +4177,11 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 
 		
-		If nmsg == WM_MOUSEMOVE
-			//msginfo('k2222k')		
-			
+		If (nMsg == WM_MOUSEMOVE)			
+		    If IsWindowDefined( 'Brw' + Left(cTabela,4))
+            //   xOffBarVert( Nil )
+             //  SysWait(0.01)
+			End If    
 		End If 
 		
 
@@ -4884,6 +4886,7 @@ Function OrdeneCol( nIndice )
 		yAviso( Hb_AnsiToOem("Opção Não Disponivel no Momento.") , .f. )
 		Return
 	End If
+
 
 
 	For n21 := 1 to nCount1

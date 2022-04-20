@@ -109,6 +109,7 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
     c_BrowName := cBrwName1
 
     cTable := cTabela
+
         
 	DEFINE WINDOW &cHName ;
 		AT nRowIni - 92 , nCol  ;
@@ -135,9 +136,9 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
             DEFINE LABEL Label2
                 ROW    0
                 COL    0
-                WIDTH  nLarg1+1
+                WIDTH  nLarg1+1 
                 HEIGHT 30
-                VALUE "Nome  zzzzzzzzzzzzz" 
+                VALUE " "
                 FONTNAME "Arial"
                 FONTSIZE 9
                 TOOLTIP ""
@@ -292,19 +293,42 @@ Static Function xOrdene( nCol1 , lAsc1 )
     Local aM1     := aMapsCol[nCol1]
     Local nPos1
     Local nTam1 
-    Local aM4 
+    Local aM4 := {}
+    
     Local nTipo 
     Local nTamPg := xRetTamPg()
     Local nPagNum := 1
     Local nCont5 := 0
 
+    Local aZZ2 := {}
+    Local aZZ3 := {}
+    Local nX1 
+
     nPos1 := aM1[7]
     nTam1 := aM1[6]
     nTipo := Alltrim(aM1[4])
 
-    xCursorWait(.t.)
+    SetWindowCursor( GetFormHandle(cHeaderJan)  , 'CURSOR1'  )
+
+
+   /*
+    For nx1 := 1 To Len(aZZ1)
+        Aadd( aZZ2 , aZZ1[nx1][6]   )
+    Next 
+    */
 
     DO EVENTS
+
+    //msginfo('1')
+
+    If lAsc1
+    //    aM4 := Asort(aZZ2 ,,, { |a,b| a[nCol1]  <  b[nCol1]    })
+    Else 
+    //    aM4 := Asort(aZZ2 ,,, { |a,b|  a[nCol1]  > b[nCol1]   })
+    End If 
+
+
+  /*
 
     If (nTipo == 'C')
         If lAsc1
@@ -344,6 +368,15 @@ Static Function xOrdene( nCol1 , lAsc1 )
     End If  
 
 
+    //msginfo('1')
+
+    */
+
+
+
+   // msginfo('2')
+
+  /*
     For n1 := 1 To Len(aM4)
 
         nCont5++
@@ -356,11 +389,12 @@ Static Function xOrdene( nCol1 , lAsc1 )
         aM4[n1][3] := nPagNum
 
     Next        
+    */
 
-
+    xAtuDados(   nCol1 , lAsc1 , aColsTam  )
 
     Do Events 
-    SetArray( aM4 )    
+    //SetArray( aM4 )    
 
     //SysWait(0.01)
 
@@ -385,7 +419,7 @@ Function xFormDt(cData , n1 , n2 )
 Return Right(cD1,4) + Substr(Cd1,4,2) + Left(cD1,2)
 
 
-Static Function xAtuDados(   nIndice1 , lAscedente , aTams )
+Static Function xAtuDados(   nIndice1 , lAscedente , aTams  )
 
 
     Local aCampos := GetCamposDic( cTabela, 'S' , .t. , .t. )
@@ -395,7 +429,7 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams )
     Local aMz1    
     Local aZZ1    := xRetArray()
     Local cTexto  := ''
-    Local aM4     := {}
+  //  Local aM4     := {}
     Local aZ1     := {}
     Local nQAcento := 0
     Local nTam 
@@ -404,23 +438,25 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams )
     Local nNum2
     Local cTxt1 := ''
     Local cTipo := ''
-    Local nX1 
+    Local nX1  := 1
     Local cCOrd := ''
     Local cChaveOrd := ''
     Local nQ1 
+    Local l1 := .f. 
 
     Local nTot2 := 0
+    Local Val1 := ''
+    Local aM4  := {}
 
 
     DEFAULT nIndice1   := 0
     DEFAULT lAscedente := .f. 
-    
-	//xCursorWait( .t. )
+
+   
 
     For nx1 := 1 To Len(aZZ1)
 
-        aMz1 := aZZ1[nx1][4]     
-
+        aMz1 := aZZ1[nx1][4] 
         aZ1  := {}   
 
         lAtivo := aZZ1[nx1][2]
@@ -431,29 +467,33 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams )
 
         For n1 := 1 To Len(aCampos)
 
-            cTxt1 := ''           
-
-
+            cTxt1 := ''      
             //nx1 := n1 
             cTxt1 := aMz1[n1][1]
 
+            Val1 := cTxt1
+
             If  Alltrim(aTips[n1]) == 'D'
-				cTxt1 := Padl(aMz1[n1][1] ,10)
+				cTxt1 := Padl(aMz1[n1][1] ,15)
+                Val1  := Ctod(Alltrim( cTxt1   ))
 			End If
 
 			lNum := .f.
 
 			If Alltrim(aTips[n1]) == 'B'
-				cTxt1 := alltrim(Transform( rTrans(aMz1[n1][1]  ) , "@E 999,999,999.99" ))
+				cTxt1 := alltrim(Transform( rTrans(aMz1[n1][1]  ) , "999,999,999.99" ))
+                Val1 := Rtrans(cTxt1)
 				lNum := .t.
 			End If
 
 			If ( Alltrim(aTips[n1]) == 'I')
 				If (n1 > 1)
 					cTxt1 := alltrim( Str(   Val( aMz1[n1][1] )    )  )
+                    Val1  := Val( aMz1[n1][1] )  
 					lNum := .t.
 				Else
 					cTxt1 := Alltrim( Str(   Val( aMz1[n1][1] )    ) )
+                    Val1  := Val( aMz1[n1][1] )  
 				End If
 			End If
 
@@ -471,7 +511,8 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams )
 
             If (nIndice1 > 0)
                 If (nIndice1 = n1)
-                    cChaveOrd := cTxt1
+                    cChaveOrd := Val1
+                    //cTxt1                    
                 End If 
             End If 
 
@@ -497,8 +538,8 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams )
 
     Do Events 
     SetArray( aM4 )
-  
 
+  
 
     Do Events 
   
@@ -506,7 +547,7 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams )
 
         nTot2 := xMapCols( aCabec , aTams , aTips  )          
 
-        SysWait(0.02)
+      //  SysWait(0.02)
 
         nQ1 := CalcEtapas()
       
@@ -516,7 +557,7 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams )
         xShowBrw(  cTabela , .t.  )       
         xGoTop()
 
-        SysWait(0.03)
+       // SysWait(0.03)
 
     End If      
 
@@ -644,6 +685,10 @@ Function EventHeader()
     ENDIF
     */  
 
+    If nHWnd == GetProperty(  cHeaderSombra   , "HANDLE" )
+    //   msginfo('12')
+    end If 
+
     
 	If nHWnd == GetControlHandle(  'Label2' ,  cHeaderSombra )
 	//If nHWnd == GetProperty(  cHeaderSombra   , "HANDLE" )
@@ -658,7 +703,7 @@ Function EventHeader()
 
              
             BT_ClientAreaInvalidateAll(cHeaderJan)
-            SysWait(0.02)          
+            SysWait(0.01)          
             xDcBarHeader()              
 
             xOrdene( nOrdemSel , lAscending )
@@ -797,6 +842,10 @@ Function EventHeader()
             
             //.And. (!lSizeMode) .And. (!lDragMode)
 
+            xOffBarVert( Nil )
+            SysWait(0.01)
+				
+
             For i := 1 To 255
                 GetAsyncKeyState(i)
             Next i
@@ -829,11 +878,13 @@ Function EventHeader()
                 xDcBarHeader()
                 DO EVENTS 
                 Return 
-            End If            
+            End If        
+
+               
 
 
             If ((nColx2 := xSearchLim(  nColx )) > 0)
-                xDoHint(    , 'Redimensiona a Coluna ' + Hb_Utf8ToStr(Alltrim(aMapsCol[nColx2][1])) + '  '  + Str(nColSel1))                
+                xDoHint(    , 'Redimensiona a Coluna ' + Alltrim(aMapsCol[nColx2][1]) + '  '  + Str(nColSel1))                
                 SetWindowCursor( nHWnd  , 'CURSORSIZE' )
                 DO EVENTS                              
                 lSizeMode := .t.
@@ -904,6 +955,9 @@ Function xApagueH( cJanela1 )
     If (nColSel1 > 0)
 
         lTrack39 := .f.               
+
+        //xOffBarVert( Nil )
+
 
         n1 := aMapsCol[  nColSel1  ][2]
         n3 := aMapsCol[  nColSel1  ][5]

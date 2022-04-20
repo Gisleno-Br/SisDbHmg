@@ -206,6 +206,7 @@ Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds)
 //   msginfo(   Hb_AnsiToOem(cMsg) )
 
 
+
 	DEFINE WINDOW Win_Msg AT nTop, nLeft WIDTH nWidth HEIGHT nHeight TITLE 'xHint'  ;
 		NOMAXIMIZE NOMINIMIZE NOSIZE CHILD NOSYSMENU NOCAPTION BACKCOLOR aBcolor
 
@@ -214,7 +215,7 @@ Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds)
 			COL         1
 			WIDTH       450
 			HEIGHT      15
-			VALUE       Hb_AnsiToOem(cMsg)
+			VALUE       cMsg
 			FONTNAME    XFONT1
 			FONTSIZE    8
 			FONTBOLD    .F.
@@ -568,7 +569,7 @@ Function xDispHint( cMsg1 , nRow1 , nCol1 )
 		SetProperty( 'Win_Msg' , 'Col' , nCol1  )
 	End If 
 
-	SetProperty( 'Win_Msg' , 'Label_1' , 'Value' , Alltrim(  hb_AnsiToOem(cMsg1) ) )
+	SetProperty( 'Win_Msg' , 'Label_1' , 'Value' , Alltrim(  Hb_utf8ToStr(cMsg1) ) )
 
 
 Return

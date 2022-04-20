@@ -209,6 +209,7 @@ Function TestBrow( cParent1 , cTabx  )
 	Local nCont5 := 0
 
 	Local aResults := { }
+	Local aRes2    := {}
 
 
 
@@ -238,6 +239,7 @@ Function TestBrow( cParent1 , cTabx  )
 
 
 
+
 	If (Select(calias) > 0)
 		dbSelectArea( cAlias )
 		Use
@@ -245,7 +247,7 @@ Function TestBrow( cParent1 , cTabx  )
 
 
 	cSqlx2 := cSqlx1
-	SaveLog("st121.txt" , cSq2 + XQUEBRA )
+	SaveLog("st121.txt" , cSq2  )
 
 	//msginfo( cSq2 )
 
@@ -282,6 +284,7 @@ Function TestBrow( cParent1 , cTabx  )
 		lAtivo := .t.
 
 		aResults := {}
+		aRes2	 := {}
 
 		For nx1 := 1 To Len(oRow[1])
 
@@ -322,13 +325,16 @@ Function TestBrow( cParent1 , cTabx  )
 			nTam := If( (nQAcento =  0)   , aTams[nx1] ,  aTams[nx1] + nQAcento )
 
 			If ( Alltrim(aTips[nx1]) = 'C') //.or. ( Alltrim(aTips[nx1]) = 'D')
+
 				Aadd(aM1 , { Padr( (cValor) ,nTam , " " )  ,  nTam          }  )
-
 				Aadd(aResults , {   Padr( (cValor) ,nTam , " " )  ,    oRow:FieldName(nx1)  , nx1  , nTam  }   )
-			Else
-				Aadd(aM1 , { Padl( (cValor) ,nTam , " ")  ,  nTam          }  )
+				Aadd(aRes2 ,  oRow:FieldGet(nx1)  )
 
+			Else
+
+				Aadd(aM1 , { Padl( (cValor) ,nTam , " ")  ,  nTam          }  )
 				Aadd(aResults , {   Padl( (cValor) ,nTam , " " )  ,    oRow:FieldName(nx1)  , nx1  , nTam }   )
+				Aadd(aRes2 , oRow:FieldGet(nx1) )
 
 			End If		
 
@@ -355,7 +361,7 @@ Function TestBrow( cParent1 , cTabx  )
 		End If 
 
 
-		Aadd(aItens , { c1 , lAtivo , nPagNum  , aResults , ''}  )
+		Aadd(aItens , { c1 , lAtivo , nPagNum  , aResults , '' , aRes2}  )
 		
 	Next
 
@@ -556,17 +562,11 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 	END WINDOW
 
 
-		//366
-		//+90
-
 	SET WINDOW &cBarraVfrm TRANSPARENT TO 0
 	_ShowWindow(cBrowserName )
 
 
 	xCalcBarV()
-
-
-	//SETSCROLLRANGE (GetFormHandle(cBrowserName ) , SB_HORZ, 0, 2500 , .T. )
 
 
 	ShowScrollbar (GetFormHandle(cBrowserName ) , 0, .f.)
@@ -1953,10 +1953,12 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 
 
+
 		If (nMsg == WM_MOUSEMOVE) 			
 
 			Do Events	
 			Do Events	
+
 
 			If (lHasHeader)
 				xApagueH( cHeaderName )
@@ -1977,6 +1979,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 			nRow1 := ar1[1]
 			nId := 0 
+
 
 			If (nRow1 >= nLimteLin)			
 
@@ -2029,17 +2032,29 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 			
 			If (nId > 0) .And. (!lTracking75)			
-				nModeBrw := xDoHint(   nId  )
-				Do Events 
+			//    msginfo('lp22')
+				nModeBrw := xDoHint(   nId  ,  , .t.  )
+			//	Do Events 
 				CursorHand1( nHWnd  )				
-				Do Events 				
+			//	Do Events 				
 				nHasFocus := nId
-				xRefreshBut()
+				//SysWait(0.02)
+			//	msginfo(Str(nId))
+				BT_ClientAreaInvalidateAll( cBarraVfrm )
+				//xRefreshBut()
 				Do Events 
 				xDcToDEspe()
+				Do Events
+				Do Events
+
+		
 				lTracking135 := .t.
 				lTracking75  := .t.
+		
 			End If 	
+
+			
+
 				
 
 			
@@ -2168,14 +2183,15 @@ Return
 
 
 
-Function xDoHint(   nIdBut , cMsg  )
+Function xDoHint(   nIdBut , cMsg , lNoHint   )
 
 	Local cTp1 := ''
 	Local nModeBrw := 0
 	Local nRow , nCol 
 
 	DEFAULT cMsg := Nil 
-	
+	DEFAULT lNoHint := .F. 
+
 	If (cMsg = Nil)
 		If nIdBut = 855
 			cTp1 := "Retorna uma Registro para Tras no Grid."
@@ -2215,21 +2231,25 @@ Function xDoHint(   nIdBut , cMsg  )
 	 	 cTp1 := cMsg
 	End If 
 
-	Do Events 
 
+	//Do Events 
+    
+	If !lNoHint
 
-	GetCursorPos( @nCol , @nRow )
+ 	    GetCursorPos( @nCol , @nRow )
 
 	
-	If !_isWindowDefined("Win_Msg")
-		CrieJanTip( nRow  - 20 , nCol - 15   ,   Alltrim(cTp1)      ,, 0.5 )
-	Else
-		xDispHint( cTp1 , nRow  - 20,  nCol - 15  )
-	End If
+	    If !_isWindowDefined("Win_Msg")
+		    CrieJanTip( nRow  - 20 , nCol - 15   ,   Alltrim( cTp1 )     ,, 0.5 )
+    	Else
+	    	xDispHint( cTp1 , nRow  - 20,  nCol - 15  )
+	    End If
 
-	xDispUpTam(cTp1 )
+	    xDispUpTam(cTp1 )
 
-	BringTop('xHint')
+    	BringTop('xHint')
+
+	End If 
 
 	
 REturn nModeBrw
@@ -2334,9 +2354,11 @@ Function xOffBarVert( nWh1 )
 	lTracking75 := .f. 
 	lTracking135 := .f.
 	nHasFocus := 0				
-	//SetWindowCursor( nHWnd , IDC_ARROW )
-	xRefreshBut()				
+	
+	//xRefreshBut()				
+
 	Do Events 	
+	BT_ClientAreaInvalidateAll( cBarraVfrm )
 
 	xOffBarra( cBarrah  )
 
@@ -2347,6 +2369,7 @@ Function xOffBarVert( nWh1 )
 	If  _isWindowDefined("Win_Msg")
 		xHidehint()
 	End If
+
 	Do EVENTS
 
 
@@ -2395,6 +2418,28 @@ Function xPaintScroll( cJanela )
 	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    ,  {230,230,230}  , {230,230,230} )
 
 
+
+	nLAst := nRow1 - 63
+	
+
+	If (nItemX5 == 1)		
+		BT_DrawFillRoundRect ( hDC , nRIni ,  2   , Width - 5 , nAltura , 5 ,5 ,   {152 , 152 ,152}   , {152 , 152 ,152}  , 0 ) 				
+	Else
+
+		If (nItemX5 == nMaxItem1 )			
+			BT_DrawFillRoundRect ( hDC , nLimteLin - nAltura ,  2   , Width - 5 , nAltura , 5 ,5 ,   {152 , 152 ,152}   , {152 , 152 ,152}  , 0 ) 				
+		
+			
+		Else				
+
+			yPos := nLimteLin - nRIni - nAltura
+			nFator := Int(( nItemX5 * yPos     ) /	nMaxItem1)
+			BT_DrawFillRoundRect ( hDC ,   (nrIni  + nFator )  ,  2   , Width - 5 , nAltura , 5 ,5 ,  {152 , 152 ,152}   , {152 , 152 ,152}  , 0 ) 				
+			
+		End If
+	End If
+
+
 	For n1 := 1 To Len(aMtrz1)
 
 		aImgs := xRetImgs(  aMtrz1[n1]   )
@@ -2410,42 +2455,24 @@ Function xPaintScroll( cJanela )
 		cImg := aImgs[1]
 
 
+
 		If (nHasFocus == aMtrz1[n1] )
-			cImg := aImgs[2]
+			cImg := aImgs[2]			
+			//msginfo('111')
+			//BT_DrawGradientFillVertical ( hDC ,   nLinha , 0  , 18 ,   18    , RED , RED )
 		End If 	
 
 
 
-		BT_DrawBitmap (hDC  , nLinha  , 0  	, 18  , 18  ,      BT_COPY,   BT_BitMapLoadFile( cImg   )    )
+		BT_DrawBitmap (hDC  , nLinha  , 0  	, 18  , 18  ,      BT_COPY,   BT_BitMapLoadFile( cImg   )    )	    
 		nLinha += 21
+
+
 
 	Next 	
 
-	Do Events 
 
-
-	nLAst := nRow1 - 63
-
-	If (nItemX5 == 1)
-		
-		BT_DrawFillRoundRect ( hDC , nRIni ,  2   , Width - 5 , nAltura , 5 ,5 ,   {152 , 152 ,152}   , {152 , 152 ,152}  , 0 ) 				
-
-	Else
-
-		If (nItemX5 == nMaxItem1 )			
-			BT_DrawFillRoundRect ( hDC , nLimteLin - nAltura ,  2   , Width - 5 , nAltura , 5 ,5 ,   {152 , 152 ,152}   , {152 , 152 ,152}  , 0 ) 				
-		
-			
-		Else				
-
-			yPos := nLimteLin - nRIni - nAltura
-			nFator := Int(( nItemX5 * yPos     ) /	nMaxItem1)
-
-			BT_DrawFillRoundRect ( hDC ,   (nrIni  + nFator )  ,  2   , Width - 5 , nAltura , 5 ,5 ,  {152 , 152 ,152}   , {152 , 152 ,152}  , 0 ) 				
-			
-
-		End If
-	End If
+	
 
 	BT_DeleteDC (BTstruct2 )
 //	BT_BitmapRelease (zRolagem)
