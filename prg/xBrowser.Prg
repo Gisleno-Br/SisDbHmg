@@ -1092,15 +1092,15 @@ Function xTeclasBrow()
 	  Do Events
 	  Do Events
 
+	  //MSGINFO('ok2')
+
 
       If HIWORD( nWParam ) == 120
-	  	lUpMouse := .t.        
-		 
+	  	lUpMouse := .t.        		 
       Else 
 	  	lDownMouse := .t. 
+      End If 		
 
-      End If 
-		
 
 
 	End If 
@@ -1779,6 +1779,26 @@ Function xCriaButs()
 Return (nRow1 - 46)
 
 
+Function xLimpBarV()
+
+	lTracking75 := .f. 
+	lTracking135 := .f.
+	nHasFocus := 0				
+	
+	//xRefreshBut()				
+
+	Do Events 	
+	BT_ClientAreaInvalidateAll( cBarraVfrm )
+
+	xDcToDEspe()											
+	Do Events 	
+		
+
+
+
+REturn 
+
+
 
 Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
@@ -1826,7 +1846,10 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	
 	IF nHWnd == GetProperty(  cActiveJan   , "HANDLE" )				
 		If nMsg == WM_MOUSEMOVE
-		
+
+			xLimpBarV()
+				
+
 
 			GetCursorPos (@nCol1, @nRow1)
 			ar1 := GetPos_ScreenToClient(   nHWnd , nRow1, nCol1 )
@@ -1972,8 +1995,9 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
          	GetCursorPos (@nCol, @nRow)
 			ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
 
-			If (ar1[2] > 21)				
+			If (ar1[2] > 21) .or. (ar1[2] < 0)				
 				xOffBarVert( nHWnd )
+				//msginfo('lp2')
 				Return 
 			End If 
 
@@ -1997,6 +2021,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			Else 
 				If nRow1 <= 20
 					nId := 855
+					//msginfo('ok2 ' + Str( ar1[2] ) )
 				Else 
 					
 					If (nRow1 >= 41) .And. (nRow1 <= 61)
@@ -2044,7 +2069,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				//xRefreshBut()
 				Do Events 
 				xDcToDEspe()
-				Do Events
+				//Do Events
 				Do Events
 
 		

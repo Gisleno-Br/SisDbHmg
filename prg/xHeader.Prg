@@ -62,7 +62,7 @@ Static nColAntx := 0
 Static lTrack39 := .f. 
 
 Static lSizeMode := .f. 
-Static lDragMode := .f. 
+//Static lDragMode := .f. 
 
 Static cTable := ''
 
@@ -84,6 +84,15 @@ Static lAscending := .f.
 
 
 Static nColSele := 1
+
+Static lDragMode := .f.
+Static nSteps    := 5
+Static nColx5    := 0
+
+
+Static nColMove := 0
+Static nColY1   := 0
+Static nIncr1   := 0
 
 
 Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1 , aTps , cTabela , lAtivo  )
@@ -196,32 +205,6 @@ Function SetOrdGrid( nColuna1 , lAsc1 )
 
 
 Return 
-
-
-Function xCheckOk()
-
-    lOCAL A1 := Seconds()
-    Local nDiff := 150000
-
-      //  DO EVENTS    
-
-       // DO EVENTS     
-
-        If Empty(s1)
-            s1 := Str(a1)
-        Else 
-            s2 := Str(a1)    
-            nDiff := Val(s2) - Val(s1)        
-        End If 
-
-        If (nDiff <= 0.20)        
-            s1:=''
-            s2:=''
-        End If     
-           
-
-
-Return (nDiff <= 0.20)
 
 
 
@@ -407,14 +390,9 @@ Static Function xOrdene( nCol1 , lAsc1 )
 Return 
 
 
-Function xFormDt(cData , n1 , n2 )
-  //SaveLog('Debug22.Log' ,Alltrim(Left(  Alltrim(  Substr(cData , n1 , n2 + QtAcento(cData) )     ) , 10  ))  )
-  
+Function xFormDt(cData , n1 , n2 ) 
   Local cD1 := Alltrim(Left(  Alltrim(  Substr(cData , n1 , n2  )     ) , 10  ) )
 
-  SaveLog('Debug234.Log' , Left(cData,10) + '  ' +  cd1 + '   ->  '  +  Right(cD1,4) + Substr(Cd1,4,2) + Left(cD1,2) +'    ' + Str(n1) + '  ' + Str(n2)  )
-
-  SaveLog('Debug2233.Log' ,cData + '  ' + Str(  QtAcento(cData)   ) )
 
 Return Right(cD1,4) + Substr(Cd1,4,2) + Left(cD1,2)
 
@@ -666,6 +644,8 @@ Function EventHeader()
 	LOCAL  nWParam := EventWPARAM()
 	LOCAL  nLParam := EventLPARAM()
 
+    Local nZ1 := 0
+
   //  Local nUnit := xRetUnit()
    // Local nColx 
 
@@ -687,7 +667,7 @@ Function EventHeader()
 
     If nHWnd == GetProperty(  cHeaderSombra   , "HANDLE" )
     //   msginfo('12')
-    end If 
+    End If 
 
     
 	If nHWnd == GetControlHandle(  'Label2' ,  cHeaderSombra )
@@ -713,24 +693,19 @@ Function EventHeader()
      
         If (nMsg == WM_LBUTTONDOWN)	
 
-            DO EVENTS
-
-            //msginfo('ok2')
-             
-            //msginfo(Str(nColSel1))
+            DO EVENTS       
 
             nColSele := nColSel1            
 
-          //  If xCheckOk()
-             //  msginfo('Dbl Click' )     
-             //  lAscending    := !lAscending
-             //  nOrdemSel     := nColSele
-         //   End If     
-
-
             BT_ClientAreaInvalidateAll(cHeaderJan)
             SysWait(0.02)          
-            xDcBarHeader()                  
+            xDcBarHeader()     
+            
+            GetCursorPos (@nCol, @nRow)
+            ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
+            nColx := ar1[2]    
+
+            nColx5 := nColX
 
             If (lSizeMode)                
 	
@@ -739,10 +714,6 @@ Function EventHeader()
                 Next i
 
                 lAndamento := .t.
-
-                GetCursorPos (@nCol, @nRow)
-                ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
-                nColx := ar1[2]    
 
                 nSaveCol1 := nColSel1 
                 nUnit := xRetUnit()
@@ -821,7 +792,18 @@ Function EventHeader()
 
                 lSizeMode := .f. 
                 lAndamento := .f. 
-                //msginfo('Exit ')
+            
+            Else 
+                
+                *// Drag Mode
+
+                If lDragMode 
+
+
+
+                End If 
+                  
+                
 
             End If
 
@@ -836,15 +818,20 @@ Function EventHeader()
             lDragMode := .f.
             lAndamento := .f. 
 
+            nColx5 := 0
+            msginfo('3332')
+
+
+
         End If     
         		
 		If (nMsg == WM_MOUSEMOVE) 
             
             //.And. (!lSizeMode) .And. (!lDragMode)
 
-            xOffBarVert( Nil )
-            SysWait(0.01)
-				
+            //xOffBarVert( Nil )
+            xLimpBarV()
+            SysWait(0.01)				
 
             For i := 1 To 255
                 GetAsyncKeyState(i)
@@ -858,6 +845,61 @@ Function EventHeader()
             ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
             nColx := ar1[2]            
           //  msginfo(Str(  nUnit  ))
+
+            If (nColx5 > 0)
+
+                If ((nColx - nColx5) > 2)
+                    lDragMode := .t. 
+
+                    nColx5 := nColx    
+
+                    While lDragMode 
+
+                            For i := 1 To 255
+                                GetAsyncKeyState(i)
+                            Next i
+
+                            If (GetAsyncKeyState(VK_LBUTTON)) == 0					
+                                lDragMode := .f. 
+                                nColx5 := 0
+                                nColMove := 0
+                                nColY1   := 0
+                                nIncr1   := 0
+                            End If 		
+
+                            GetCursorPos (@nCol, @nRow)
+                            ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
+                            nZ1 := ar1[2] 
+
+                            If (nZ1 != nColx5)
+                                
+
+                                If nZ1 > nColx5
+                                    nIncr1++  
+                                Else 
+                                    nIncr1--  
+                                End If 
+
+                                xMoveWin( nColSele ,1   )
+
+                                nColx5 := nZ1
+
+                               // msginfo(Str(nIncr1))
+
+                              //xDoHint()
+
+                                //SysWait(0.03)
+
+                            End If 
+
+                    Enddo
+                    
+                    msginfo('ok233')
+
+
+                End If 
+                
+            End If     
 
                 
 
@@ -943,6 +985,29 @@ Function EventHeader()
 
 
 Return 
+
+
+Static function xMoveWin( nColuna , NColIni   )
+    
+
+    nColMove := nColuna 
+    nColY1   := nColIni
+
+    // msginfo(Str( nColMove ))
+
+    BT_ClientAreaInvalidateAll(   cHeaderJan )
+    
+    DO EVENTS         
+    xDcBarHeader()
+    DO EVENTS 
+
+    Do Events 
+     
+
+
+Return     
+
+
 
 
 Function xApagueH( cJanela1 )
@@ -1247,6 +1312,19 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
         
             
     End If       
+
+
+    If lDragMode 
+
+        
+        nColx1 := aMapsCol[nColMove][2]+nIncr1 
+        nColx2 := aMapsCol[nColMove][5]
+
+        //nTam1 := nColX + aMapsCol[nColMove][2]
+        BT_DRAWEDGE (hDC, 1, nColx1  , nColx1+nColx2  , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
+        BT_DRAWEDGE (hDC, 1, nColx+1 , nColx1+nColx2+1  , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
+
+    End If      
 
 
 
