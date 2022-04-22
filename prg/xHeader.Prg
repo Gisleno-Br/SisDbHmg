@@ -94,6 +94,9 @@ Static nColMove := 0
 Static nColY1   := 0
 Static nIncr1   := 0
 
+Static nColSav1 := 0
+Static nColTam1 := 0
+Static nColTarget := 0
 
 Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1 , aTps , cTabela , lAtivo  )
 
@@ -645,6 +648,7 @@ Function EventHeader()
 	LOCAL  nLParam := EventLPARAM()
 
     Local nZ1 := 0
+    Local lFrente1 := .f. 
 
   //  Local nUnit := xRetUnit()
    // Local nColx 
@@ -695,7 +699,11 @@ Function EventHeader()
 
             DO EVENTS       
 
-            nColSele := nColSel1            
+            nColSele := nColSel1    
+
+            nColSav1 := aMapsCol[nColSele][2]       
+            nColTam1 := aMapsCol[nColSele][5]       
+
 
             BT_ClientAreaInvalidateAll(cHeaderJan)
             SysWait(0.02)          
@@ -750,7 +758,7 @@ Function EventHeader()
                             BT_ClientAreaInvalidateAll(cHeaderJan)                            
                             xDcBarHeader()                     
 
-                            SysWait(0.05)                            
+                            SysWait(0.02)                            
 
                             lOk  := .t. 
                             nColx := nColx2 
@@ -818,8 +826,10 @@ Function EventHeader()
             lDragMode := .f.
             lAndamento := .f. 
 
+            nColSav1 := 0
+
             nColx5 := 0
-            msginfo('3332')
+            //msginfo('3332')
 
 
 
@@ -848,10 +858,16 @@ Function EventHeader()
 
             If (nColx5 > 0)
 
-                If ((nColx - nColx5) > 2)
+                If ( Abs(nColx - nColx5) > 2)
                     lDragMode := .t. 
 
                     nColx5 := nColx    
+
+                    //Msginfo(Str(nColx5))
+
+
+                    xDoHint(  Nil ,   'Click e Arraste a Coluna para Mudar de Posição.' )    
+                    DO EVENTS            
 
                     While lDragMode 
 
@@ -865,37 +881,44 @@ Function EventHeader()
                                 nColMove := 0
                                 nColY1   := 0
                                 nIncr1   := 0
+                                nColSav1 := 0
+                                nColTam1 := 0
+                                nColTarget := 0
+                                If  _isWindowDefined("Win_Msg")
+                                    xHidehint()
+                                End If
+                                Exit
                             End If 		
 
                             GetCursorPos (@nCol, @nRow)
                             ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
-                            nZ1 := ar1[2] 
+                            nZ1 := ar1[2]    
 
-                            If (nZ1 != nColx5)
-                                
+                            If (nZ1 != nColx5)                                
 
                                 If nZ1 > nColx5
-                                    nIncr1++  
+                                    lFrente1 := .t.
+                                    nColSav1 += (  nZ1 - nColx5  ) 
                                 Else 
-                                    nIncr1--  
+                                    lFrente1 := .f.
+                                    nColSav1 -= (  nColx5 - nZ1  ) 
                                 End If 
+                                
+                                nTarget := xBusqTar( nColSav1 + nColTam1 )
 
-                                xMoveWin( nColSele ,1   )
+                                xMoveWin( nColSele , nColSav1 , lFrente1 )
+
+                                If nTarget > 0
+                                    xDoHint(    , 'Trocar a Posição , Coluna ' + Alltrim(Str(nTarget))   )                
+                                End If                                     
 
                                 nColx5 := nZ1
-
-                               // msginfo(Str(nIncr1))
-
-                              //xDoHint()
-
-                                //SysWait(0.03)
+                               
 
                             End If 
 
                     Enddo
                     
-                    msginfo('ok233')
-
 
                 End If 
                 
@@ -986,6 +1009,19 @@ Function EventHeader()
 
 Return 
 
+Static Function xBusqTar( nPoint )
+
+  Local nColz1 := 0
+
+  //Aadd( aMapsCol , {   aCabs[n1] , nColx , nColx +  nTam + 1 , aTipos1[n1] ,   nTam ,  aTamx1[n1] , nAcum   }  )
+
+  N1 := Ascan( aMapsCol , { |a| Abs(a[3] - nPoint) <= 25     })
+
+  nColz1 := n1 
+
+
+Return nColz1
+
 
 Static function xMoveWin( nColuna , NColIni   )
     
@@ -997,12 +1033,11 @@ Static function xMoveWin( nColuna , NColIni   )
 
     BT_ClientAreaInvalidateAll(   cHeaderJan )
     
-    DO EVENTS         
+  //  DO EVENTS         
     xDcBarHeader()
-    DO EVENTS 
-
+  //  DO EVENTS 
+//
     Do Events 
-     
 
 
 Return     
@@ -1247,7 +1282,6 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
                 BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 250 ,    Height    , {163,168,173} , {163,168,173} )        
             End If     
 
-
         Else 
             
         End If     
@@ -1319,6 +1353,13 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
         
         nColx1 := aMapsCol[nColMove][2]+nIncr1 
         nColx2 := aMapsCol[nColMove][5]
+
+
+        nColx1 := nColY1
+
+        If (nColHeader != 0)
+            nColX1 +=  -(nColHeader)
+        End If 
 
         //nTam1 := nColX + aMapsCol[nColMove][2]
         BT_DRAWEDGE (hDC, 1, nColx1  , nColx1+nColx2  , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)

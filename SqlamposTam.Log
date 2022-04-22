@@ -1,0 +1,2 @@
+update dicionario set tamdisp = 29 where tabela = 'Clientes' and camposistema = 'Nascimento'
+
