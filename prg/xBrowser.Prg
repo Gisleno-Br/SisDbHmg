@@ -903,7 +903,7 @@ Function DecrLeft()
 Return 	
 
 
-Function ScrollCol( lFrente , lUpdHeader )
+Function ScrollCol( lFrente , lUpdBar )
 
 				
     Local nColTam 
@@ -912,10 +912,10 @@ Function ScrollCol( lFrente , lUpdHeader )
 	Local nWidth := Iif( nColEsquerda > 0 , xGetColWidth(  nColEsquerda   )	- 3 , 0 )
 
 
-	DEFAULT lUpdHeader := .t. 	
+	DEFAULT lUpdBar := .t. 	
 
 	If nWidth == 0
-		REturn 
+		REturn -1
 	End If 
 
 
@@ -923,8 +923,10 @@ Function ScrollCol( lFrente , lUpdHeader )
 
 		If (nColScrool >= (nLargTotal - nLargX))			
 			lFim := .t.
-			Return lFim
+			//msginfo('End')
+			Return -1
 		End If 
+
 
 		
 		If nColEsquerda == 1
@@ -947,7 +949,7 @@ Function ScrollCol( lFrente , lUpdHeader )
 		If nColEsquerda == 1
 			nColScrool -= 15
 			SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  15    , 2 )					
-			lFim := .t.				
+			//nWidth := -1
 		End If 				
 
 		//nColEsquerda--
@@ -958,7 +960,7 @@ Function ScrollCol( lFrente , lUpdHeader )
 	//nWidth := nConst1
 		
 
-	If (lUpdHeader)
+	If (lUpdBar)
 		//msginfo('lp232')
 
 		If lFrente
@@ -977,6 +979,7 @@ Function ScrollCol( lFrente , lUpdHeader )
 		End If 	
 		
     	xDcBarH()
+		
 
 	End If 	
 
@@ -998,7 +1001,7 @@ Function ScrollCol( lFrente , lUpdHeader )
 	DO EVENTS
 
 
-REturn lFim
+REturn nWidth
 
 
 Function xUpHead(  nValor    )

@@ -574,11 +574,11 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                             Exit 
                         End If    
                         
-                        If !(nQContador == 0)
+                        If (nQContador >= 0)
 
                             DecrLeft()    
-                            If ScrollCol( .f. , .f. )
-                            End If 
+                            ScrollCol( .f. , .f. )
+                            
 
                             nQContador--
                             
@@ -592,6 +592,8 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                         Else 
                             xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
                         End If     
+
+                        SysWait(0.05)
 
                         For i := 1 To 255
                             GetAsyncKeyState(i)
@@ -623,8 +625,8 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
                         If !(nQContador  == nQ1)
 
-                            If ScrollCol( .t. , .f. )
-                            End If 
+                            ScrollCol( .t. , .f. )
+                            
                             UpdateBarH( nConst1     )	
                             xDcBarH()                                
                             SysWait(0.03)
@@ -632,10 +634,13 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                             //msginfo('lp33333')
 
                             xDcBarHeader()
-					        DO EVENTS 
+					        //DO EVENTS 
+
+                            SysWait(0.05)
 
                         Else 
-                            xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar."))
+                            xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar.zz"))
+                            SysWait(0.05)
                         End If     
 
                         For i := 1 To 255
@@ -695,7 +700,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
 
                     If (nCol < 18)  
-                      //  CursorHand1( nHWnd  )
+                      
                         nAcende := 1
                         BT_ClientAreaInvalidateRect( cBarraName  , 0,0,25,20 , .t.    )
                         nModeBut := 1
@@ -706,21 +711,14 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                     End If 
 
                     If (nCol >= (Width - 18)) 
-                 //       CursorHand1( nHWnd  )
+                 
                         nAcende := 2
                         BT_ClientAreaInvalidateRect( cBarraName  , 0,  (Width - 25)    ,25,20 , .t.    )
                         nModeBut := 2            
                         lTracking26 := .f. 
-
-                     //   msginfo('ok22')
-                        
-                        lTracking37 := .t. 
-
-                        //SysWait(0.02)
+                        lTracking37 := .t.                         
                         xDcBarH()
-
                       
-                     //   msginfo('z1')
                     End If 
 
                 End If 
