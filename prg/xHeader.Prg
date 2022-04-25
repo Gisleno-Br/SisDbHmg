@@ -649,6 +649,7 @@ Function EventHeader()
 
     Local nZ1 := 0
     Local lFrente1 := .f. 
+    Local nLastro1 := 0
 
   //  Local nUnit := xRetUnit()
    // Local nColx 
@@ -706,7 +707,9 @@ Function EventHeader()
 
             If (nColSele <= 0) .Or. (nColSele > Len(aMapsCol) )
                 Return      
-            End If     
+            End If   
+
+
 
             nColSav1 := aMapsCol[nColSele][2]       
             nColTam1 := aMapsCol[nColSele][5]       
@@ -886,9 +889,10 @@ Function EventHeader()
                     xDoHint(  Nil ,   'Click e Arraste a Coluna para Mudar de Posição.' )    
                     DO EVENTS            
 
-                    If xBarFim()                       
-                       nQDrag1 := nQTotEt
-                    End If     
+                    //If xBarFim()                       
+                    nQDrag1 := xRetPgNum()
+                    //   msginfo(Str(nQDrag1))
+                    //End If     
 
                     While lDragMode 
 
@@ -917,6 +921,20 @@ Function EventHeader()
 
                             If (nZ1 != nColx5) .or. (nZ1 <= 1)
 
+                                DO EVENTS
+
+
+                                If nLastro1 == 0
+                                    nLastro1 := Abs(   (-(nColHeader) + nColX5)  - nColSav1)    
+                                  //  msginfo(Str(nLastro1) + '  ' + Str(nColSav1) + ' ' + Str( -(nColHeader) + nColX5) + '  ' + Str(nColTam1) )                             
+
+                                    If (nColTam1 <= nLastro1)
+                                        nLastro1 := int(nColTam1/2)                                       
+                                    End If 
+
+                                End If 
+
+
                                 If nZ1 > nColx5
                                     lFrente1 := .t.
                                     nColSav1 += (  nZ1 - nColx5  ) 
@@ -925,12 +943,9 @@ Function EventHeader()
                                 Else 
                                     lFrente1 := .f.
                                     nColSav1 -= (  nColx5 - nZ1  ) 
-                                    nTarget := xBusqTar( nColSav1  , lFrente1 )
+                                    nTarget := xBusqTar( nColSav1  , lFrente1 )                                    
                                     lScrool1 := ( nZ1 <= 1)
-
-                                    //nColEsq := xColMEsquerda( GetProperty( c_BrowName , 'Width') )
-                                  //  msginfo('Voltando ' + Str(nColEsq))
-                                End If                                     
+                                End If  
 
 
                                 xMoveWin( nColSele , nColSav1 , lFrente1 )
@@ -976,17 +991,13 @@ Function EventHeader()
 
                                         If (nZp1 != -1) 
 
-                                            SysWait(0.03)
-                                            SysWait(0.09)                                                                                        
+                                            SysWait(0.03)                                                                                                                    
                                             
                                             If lFrente1
                                                 nQDrag1++
-                                                UpdateBarH( nConst1  )	
-                                                IncContador(.t.)
+                                                UpdateBarH( nConst1  )	                                             
                                             Else 
                                                 nQDrag1--
-                                                                                             
-                                                
                                             End If 
 
                                             xDcBarH()                                
@@ -1006,14 +1017,13 @@ Function EventHeader()
 
                                         SysWait(0.02)
                                         xMoveWin( nColSele , nColSav1 , lFrente1 )
-                                        SysWait(0.08)       
+                                      //  SysWait(0.08)       
                                         
                                         //msginfo('Exit ' + Str(nQDrag1) + '  ' + Str(nQTotEt))
 
                                         
 
                                         If (lFrente1)
-
                                             If (nQDrag1 >= nQTotEt)
                                                 lFrente1 := .f. 
                                                 nColx5 := nZ1  
@@ -1023,8 +1033,26 @@ Function EventHeader()
                                             
                                             If nQDrag1 == 0
                                                //msginfo( Str(nColSele))
+
+                                               nColHeader := 0
+
+                                                nColTarget := 1
+                                               // BT_ClientAreaInvalidateAll(   cHeaderJan )
+
                                                 lFrente1 := .t. 
                                                 nColx5 := nZ1  
+                                                nColSav1 := -(nLastro1)                                                
+
+                                                //msginfo( Str(nColSav1))
+
+                                                SysWait(0.02)                                                
+
+                                                xMoveWin( nColSele , nColSav1 , .f. )
+                                                SysWait(0.01)
+
+                                                xZeraContador()
+                                                
+
                                                 Exit 
                                             End If 
 
@@ -1033,15 +1061,8 @@ Function EventHeader()
                              
                                     Enddo 
 
-                                  //  msginfo('Exit')
-                                    
-                                    //End If 
 
-                                Else 
-
-                                  
-                                    
-                                    // msginfo('lp22')
+                                Else                                   
                         
                                 End If     
                                
@@ -1504,7 +1525,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
     End If       
 
 
-    If lDragMode 
+    If (lDragMode) .And. (nColMove > 0) .And. (nColMove <= Len(aMapsCol)) 
 
         
         nColx1 := aMapsCol[nColMove][2]+nIncr1 

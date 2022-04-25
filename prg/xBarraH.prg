@@ -296,6 +296,10 @@ Function xGetBarName(nTipo)
 Return Iif(nTipo = 1, cBarraName, cBarraSombra)
 
 
+Function xZeraContador()
+   nQContador := 0
+REturn 
+
 Function IncContador( lFrente )
 
     If lFrente     

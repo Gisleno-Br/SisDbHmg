@@ -122,6 +122,8 @@ Static nColH1 := 0
 
 Static nColEsquerda := 1
 
+Static nPageNum := 0
+
 //DECLARE WINDOW Win_Browser
 
 
@@ -671,6 +673,9 @@ REturn
 
 Function xRetArray()
 Return aMt1 
+
+Function xRetPgNum()
+REturn nPageNum
    
 
 Function xCalcPosV(nReg1)
@@ -938,6 +943,8 @@ Function ScrollCol( lFrente , lUpdBar )
 
 		nColEsquerda++		
 
+		nPageNum++
+
 
 	Else 	
 
@@ -950,7 +957,9 @@ Function ScrollCol( lFrente , lUpdBar )
 			nColScrool -= 15
 			SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  15    , 2 )					
 			//nWidth := -1
-		End If 				
+		End If 	
+
+		nPageNum--			
 
 		//nColEsquerda--
 
@@ -1133,8 +1142,7 @@ Function xTeclasBrow()
 			nColz1++
 
 			If nLParam = 15				
-				ScrollCol( .t. , .f.  )
-			//	IncContador(.t.)	
+				ScrollCol( .t. , .f.  )			
 				REturn 
 			End If 
 
@@ -1155,6 +1163,8 @@ Function xTeclasBrow()
 				ScrollCol( .t. , .f. )
 				IncContador(.t.)	
 				nColz1 := xGetColSel()
+
+				
 
 				If ( nQEtp < nQTotEt)
 										
@@ -1204,8 +1214,6 @@ Function xTeclasBrow()
 				End If 
 
 				ScrollCol( .f. , .f.  )	
-			//	IncContador(.f.)	
-
 				Return 
 			End If 
 
