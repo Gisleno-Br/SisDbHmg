@@ -47,8 +47,6 @@ DECLARE WINDOW fFiltro
 Function EditConsulta( cTabela , nIdConsu , lMovTable )
 
 
-
-
 	LOCAL aCabec  := GetCamposDic( cTabela, ' ', .F. )
 	LOCAL n1 := 1
 	Local lDEsc := .t.
@@ -78,7 +76,7 @@ Function EditConsulta( cTabela , nIdConsu , lMovTable )
 	Local cSql := "select mascara,tipo,tamdisp,camposistema,campo,conscampos.* from conscampos,dicionario  "
 	cSql += " where conscampos.idconsulta = " + alltrim(Str(nIdConsu)) +" and iddicionario = idcampo "
 
-	SaveLog(  "c26712.txt" , cSql  )
+	SaveLog(  "Logs\EdtConsulta"  + Dtos(Date()) + ".txt" , cSql  )
 
 	
 	Private nIndexFiltro := 0

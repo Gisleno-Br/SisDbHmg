@@ -1424,9 +1424,9 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 
 	cSqlx2 := cSqlx1
 
-	SaveLog("st121.txt" , cSq2 )
+	SaveLog("Logs\OpenReg_" + cTabela + "_"  + Dtos(Date()) + ".Log" , cSq2 )
 
-
+ 
 
 	aItens := {}
 

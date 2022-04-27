@@ -2252,7 +2252,7 @@ Function SaveLog(cArqLog,cTexto)
 	End If 
 
 
-	hb_memowrit(cArqLog , cText + QUEBRA )
+	hb_memowrit(cArqLog ,cUserName + ' ' + Dtoc(date()) + ' ' + Time() + '   ' +  cText + QUEBRA )
 
 Return
 

@@ -690,9 +690,6 @@ Function xMove1()
 	ar1 := GetPos_ScreenToClient(   GetFormHandle(  'fSplit6'  )  , nRow, nCol )
 
 
-	SaveLog("mouse2321.txt" , Str(ar1[1]) + "   " + Str(nRow) +  chr(13) + Chr(10))
-
-
 Return ar1
 
 

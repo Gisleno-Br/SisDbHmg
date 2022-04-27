@@ -1,0 +1,10 @@
+Admin 27/04/2022 15:34:59   Admin 27/04/2022 15:28:56   Admin 27/04/2022 15:26:20   Admin 27/04/2022 15:21:45   Admin 27/04/2022 15:16:41   update dicionario set tamdisp = 30 where tabela = 'Clientes' and camposistema = 'Bairro'
+
+ update dicionario set tamdisp = 29 where tabela = 'Clientes' and camposistema = 'Cidade'
+
+ update dicionario set tamdisp = 21 where tabela = 'Clientes' and camposistema = 'Cidade'
+
+ update dicionario set tamdisp = 43 where tabela = 'Clientes' and camposistema = 'Residência'
+
+ update dicionario set tamdisp = 25 where tabela = 'Clientes' and camposistema = 'Cidade'
+

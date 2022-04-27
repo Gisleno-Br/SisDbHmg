@@ -77,6 +77,96 @@ Function SetCampoOrdem(cTabela , cCampo , nOrdem1 )
 
 Return lOk
 
+
+Function TroqOrdens(cTabela1 , nOrd1 , nOrd2  , cCampoName )
+
+	LOCAL oServ   := GetConexao()
+	LOCAL aCampos := {}
+	Local nOrdem := 0
+
+	Local lOk := .t.
+
+	LOCAL i := 1
+
+	LOCAL oQuery
+	Local oRow
+
+	Local cSql1 := ''
+	Local cSql2 := ''
+
+
+	If nOrd1 == nOrd2 
+		REturn 
+	End If 
+
+
+	If (nOrd2 > 1) .And. (nOrd1 < nOrd2)
+		cSql1  := "update dicionario set ordem = ordem - 1 "  
+		cSQl1 += " where tabela = '" + AllTrim( cTabela1 ) + "' and ordem > " + Alltrim(Str(  nOrd1   )) + " and Ordem <= " + Alltrim(Str(  nOrd2   )) + ";"
+
+		cSql2  := "update dicionario set ordem = " + Alltrim(Str(  nOrd2   ))
+		cSQl2 += " where tabela = '" + AllTrim( cTabela1 ) + "' and ordem = " + Alltrim(Str(  nOrd1   )) +  " and camposistema = '" + Alltrim(cCampoName) + "';"   
+	Else 
+
+
+
+		If  (nOrd1 > nOrd2)
+
+			//msginfo('ok2')
+
+			cSql1  := "update dicionario set ordem = ordem + 1 "  
+			cSQl1 += " where tabela = '" + AllTrim( cTabela1 ) + "' and ordem >= " + Alltrim(Str(  nOrd2   )) + " and Ordem < " + Alltrim(Str(  nOrd1   )) + ";"
+
+			cSql2  := "update dicionario set ordem = " + Alltrim(Str(  nOrd2   ))
+			cSQl2 += " where tabela = '" + AllTrim( cTabela1 ) + "' and ordem = " + Alltrim(Str(  nOrd1   )) +  " and camposistema = '" + Alltrim(cCampoName) + "';" 
+
+
+		End If 
+
+
+
+	End If 	
+
+	SaveLog("Logs\SqlTrocaCampos"  + Dtos(Date()) + ".Log"  , cSql1   )
+	SaveLog("Logs\SqlTrocaCampos"  + Dtos(Date()) + ".Log"  , cSql2   )
+
+	oServer := GetConexao()
+
+	//oQuery := oServer:Query( 'START TRANSACTION;')
+
+	oServer:StartTransaction()
+
+	oQuery := oServer:Query( cSql1)
+
+	IF oQuery:NetErr()		
+		xDialog( Hb_AnsiToOem('(CampoTam1) Erro ao Executar Atualização -> ' + Chr( 10 ) + Chr( 13 ) + oQuery:Error() ), .f.  )
+		RETURN .f.
+	END IF
+	
+
+	oQuery := oServer:Query( cSql2)
+
+	IF oQuery:NetErr()		
+		xDialog( Hb_AnsiToOem('(CampoTam2) Erro ao Executar Atualização -> ' + Chr( 10 ) + Chr( 13 ) + oQuery:Error() ), .f.  )
+		RETURN .f.
+	END IF
+
+	
+	oServer:Commit()
+
+	lOk := .t.
+
+	oServer:Destroy()
+	oServer := Nil
+
+	oQuery:Destroy()
+	
+
+Return lOk
+
+
+
+
 Function SetCampoTam(cTabela , cCampo , nOrdem1 )
 
 	LOCAL oServ   := GetConexao()
@@ -96,7 +186,7 @@ Function SetCampoTam(cTabela , cCampo , nOrdem1 )
 	cSQl += " where tabela = '" + AllTrim( cTabela ) + "' and camposistema = '" + cCampo + "'"
 
 
-	SaveLog('SqlamposTam.Log' , cSql + QUEBRA )
+	SaveLog("Logs\SqlTrocaTamanho_" + Dtos(Date()) + ".Log" , cSql + QUEBRA )
 	oServer := GetConexao()
 	oQuery := oServer:Query( cSql)
 
@@ -112,6 +202,7 @@ Function SetCampoTam(cTabela , cCampo , nOrdem1 )
 
 	oServer:Destroy()
 	oServer := Nil
+
 
 Return lOk
 
@@ -236,7 +327,7 @@ FUNCTION GetSql( cTabela, lWhere )
 		cSql1 += " from " + cTabela
 	END IF
 
-	SaveLog('sqlfunc.txt',cSql1)
+	SaveLog('Logs\sqlfunc_GetSql_' + Dtos(date()) + '.txt',cSql1)
 
 	//msginfo( cSql)
 
@@ -496,8 +587,6 @@ Return
 
 
 
-
-
 Function Proc_ON_PAINT(wJanela)
 
 //LOCAL Width  := BT_ClientAreaWidth  ( ThisWindow.name )
@@ -591,9 +680,7 @@ Function Proc_ON_PAINT(wJanela)
 
 	CASE cont = 13
 
-		savelog('lo23.txt' , alltrim(wJanela) + '   ' +  alltrim(cLblSelected )  + '  ' + str(Height) + ' ' + str(Width) + QUEBRA)
-
-
+		
 		If (alltrim(wJanela) != alltrim(cLblSelected))
 			BT_DrawGradientFillVertical ( hDC,   0,       0,  Width,  Height, { 9, 111, 137 }, {9,111,137} )
 		Else

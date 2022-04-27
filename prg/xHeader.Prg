@@ -296,99 +296,18 @@ Static Function xOrdene( nCol1 , lAsc1 )
 
     SetWindowCursor( GetFormHandle(cHeaderJan)  , 'CURSOR1'  )
 
-
-   /*
-    For nx1 := 1 To Len(aZZ1)
-        Aadd( aZZ2 , aZZ1[nx1][6]   )
-    Next 
-    */
-
     DO EVENTS
-
-    //msginfo('1')
-
-    If lAsc1
-    //    aM4 := Asort(aZZ2 ,,, { |a,b| a[nCol1]  <  b[nCol1]    })
-    Else 
-    //    aM4 := Asort(aZZ2 ,,, { |a,b|  a[nCol1]  > b[nCol1]   })
-    End If 
-
-
-  /*
-
-    If (nTipo == 'C')
-        If lAsc1
-            aM4 := Asort(aZZ1 ,,, { |a,b|  Substr(a[1] , nPos1 , nTam1 + QtAcento(a[1]) ) < Substr(b[1] , nPos1 , nTam1 + QtAcento(b[1]) )  })
-        Else 
-            aM4 := Asort(aZZ1 ,,, { |a,b|  Substr(a[1] , nPos1 , nTam1 + QtAcento(a[1]) ) > Substr(b[1] , nPos1 , nTam1 + QtAcento(b[1]) )  })
-        End If 
-    End If     
-
-    If (nTipo = 'I')
-        If lAsc1
-            aM4 := Asort(aZZ1 ,,, { |a,b|  Val(Substr(a[1] , nPos1 , nTam1 + QtAcento(a[1]) )) < Val(Substr(b[1] , nPos1 , nTam1 + QtAcento(b[1]) ))  })
-        Else 
-            aM4 := Asort(aZZ1 ,,, { |a,b|  Val(Substr(a[1] , nPos1 , nTam1 + QtAcento(a[1]) )) > Val(Substr(b[1] , nPos1 , nTam1 + QtAcento(b[1]) ))  })
-        End If 
-    End If   
-
-
-
-    If (nTipo = 'B')
-        If lAsc1
-            aM4 := Asort(aZZ1 ,,, { |a,b|  Rtrans(Substr(a[1] , nPos1 , nTam1 + QtAcento(a[1])   )) < Rtrans(Substr(b[1] , nPos1 , nTam1 + QtAcento(b[1]) ))  })
-        Else 
-            aM4 := Asort(aZZ1 ,,, { |a,b|  Rtrans(Substr(a[1] , nPos1 , nTam1 + QtAcento(a[1]) )) > Rtrans(Substr(b[1] , nPos1 , nTam1 + QtAcento(b[1]) ))  })
-        End If 
-    End If     
-
     
-    If (nTipo == 'D')
-     //   msginfo(Str(  Len(aZZ1)     ))
-        If lAsc1
-            aM4 := Asort(aZZ1 ,,, { |a,b|  ( xFormDt(a[1] , nPos1 , nTam1 + QtAcento(a[1]) )) < ( xFormDt(b[1] , nPos1 , nTam1 + QtAcento(b[1])  ))  })
-        Else 
-            aM4 := Asort(aZZ1 ,,, { |a,b|  ( xFormDt(a[1] , nPos1 , nTam1  + QtAcento(a[1]))) > ( xFormDt(b[1] , nPos1 , nTam1 + QtAcento(b[1]) ))  })
-        End If 
-    //    msginfo(Str(  Len(aM4)     ))
-    End If  
-
-
-    //msginfo('1')
-
-    */
-
-
-
-   // msginfo('2')
-
-  /*
-    For n1 := 1 To Len(aM4)
-
-        nCont5++
-
-		If nCont5 > nTamPg
-			nPagNum++
-			nCont5 := 1
-		End If 
-        
-        aM4[n1][3] := nPagNum
-
-    Next        
-    */
 
     xAtuDados(   nCol1 , lAsc1 , aColsTam  )
 
     Do Events 
-    //SetArray( aM4 )    
-
-    //SysWait(0.01)
-
+  
     xShowBrw(  cTabela , .t.  )       
     xGoTop()
 
     xCursorWait(.f.)
-   // SysWait(0.03)
+  
 
 Return 
 
@@ -400,16 +319,16 @@ Function xFormDt(cData , n1 , n2 )
 Return Right(cD1,4) + Substr(Cd1,4,2) + Left(cD1,2)
 
 
-Static Function xAtuDados(   nIndice1 , lAscedente , aTams  )
+Static Function xAtuDados(   nIndice1 , lAscedente , aTams  , lTrocaCol )
 
 
     Local aCampos := GetCamposDic( cTabela, 'S' , .t. , .t. )
-	Local aCabec  := GetCamposDic( cTabela, 'S', .F. , .f. )
-	//Local aTams   := GetCamposInf( cTabela, 'TAM' )
+	Local aCabec  := GetCamposDic( cTabela, 'S', .F. , .f. )	
 	Local aTips   := GetCamposInf( cTabela, 'TIPO' )
     Local aMz1    
     Local aZZ1    := xRetArray()
     Local cTexto  := ''
+
   //  Local aM4     := {}
     Local aZ1     := {}
     Local nQAcento := 0
@@ -424,6 +343,7 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams  )
     Local cChaveOrd := ''
     Local nQ1 
     Local l1 := .f. 
+    Local aMtr1 := {}
 
     Local nTot2 := 0
     Local Val1 := ''
@@ -432,24 +352,42 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams  )
 
     DEFAULT nIndice1   := 0
     DEFAULT lAscedente := .f. 
-
+    DEFAULT lTrocaCol := .f. 
    
 
     For nx1 := 1 To Len(aZZ1)
 
         aMz1 := aZZ1[nx1][4] 
+
+        aMtr1 := {}
+
+        If (lTrocaCol)
+
+            For n1 := 1 To Len(aCampos)
+
+                nIz1 := Ascan(aMz1 , { |a|  a[2] == Alltrim(aCampos[n1]) })
+
+                If nIz1 > 0
+                    Aadd(aMtr1 ,  {  aMz1[nIz1][1] ,  aMz1[nIz1][2] , aMz1[nIz1][3]  ,  aMz1[nIz1][4]  } )
+                End If 
+
+            Next 
+
+            aMZ1 := Aclone(aMtr1)
+
+        End If 
+
         aZ1  := {}   
 
         lAtivo := aZZ1[nx1][2]
         nNum2  := aZZ1[nx1][3]
-        cTexto := ''
+        cTexto := ''        
 
         cChaveOrd := ''
 
         For n1 := 1 To Len(aCampos)
 
-            cTxt1 := ''      
-            //nx1 := n1 
+            cTxt1 := ''                              
             cTxt1 := aMz1[n1][1]
 
             Val1 := cTxt1
@@ -492,8 +430,7 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams  )
 
             If (nIndice1 > 0)
                 If (nIndice1 = n1)
-                    cChaveOrd := Val1
-                    //cTxt1                    
+                    cChaveOrd := Val1                                
                 End If 
             End If 
 
@@ -599,11 +536,9 @@ Function xColsVisible(nPos1 )
    Local n1 := 0
 
    For n1 := 1 To Len(  aMapsCol )
-        //SaveLog('Out1.txt' ,  aMapsCol[n1][1] + '  Pos1 : ' + Str(aMapsCol[n1][2])  + '   Pos2 : ' +  Str(aMapsCol[n1][3]) + '  Tam : ' + Str(aMapsCol[n1][5]) + XQUEBRA  )
+        
         If (aMapsCol[n1][3] <= (nPos1+3) )
-            Aadd(aM1 , n1)
-
-            
+            Aadd(aM1 , n1)            
         End If 
    Next    
 
@@ -679,8 +614,7 @@ Function EventHeader()
 
     
 	If nHWnd == GetControlHandle(  'Label2' ,  cHeaderSombra )
-	//If nHWnd == GetProperty(  cHeaderSombra   , "HANDLE" )
-
+	
 
         If (nMsg == WM_LBUTTONDBLCLK)	
 
@@ -692,9 +626,12 @@ Function EventHeader()
              
             BT_ClientAreaInvalidateAll(cHeaderJan)
             SysWait(0.01)          
-            xDcBarHeader()              
+            xDcBarHeader()       
 
-            xOrdene( nOrdemSel , lAscending )
+            If (nOrdemSel >= 0) .And. (nOrdemSel <= Len(aCabecs))       
+                xOrdene( nOrdemSel , lAscending )
+            End If    
+
 
         End If 
 
@@ -769,28 +706,28 @@ Function EventHeader()
                             BT_ClientAreaInvalidateAll(cHeaderJan)                            
                             xDcBarHeader()                     
 
-                            SysWait(0.02)                            
+                           // SysWait(0.01)                            
 
                             lOk  := .t. 
                             nColx := nColx2 
 
                         End If 
 
-                        SysWait(0.02)                        
+                        SysWait(0.01)                        
 
                 Enddo                 
 
                 If lOk 
 
 
-                    SetWindowCursor( GetActiveWindow()  , 'CURSOR1'  )
+                      SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'CURSOR1'  )   
 
                     DO EVENTS 
 
                     xMapCols( aCabecs , aColsTam , aTipsy )
 
                     If !SetCampoTam(	cTabela  , Alltrim(   aCabecs[nSaveCol1]      ) , aColsTam[nSaveCol1] )
-                        xDialog( Hb_AnsitoOem("Não Foi Possivel Atualizar o Dicionario.") )
+                        xDialog( Hb_AnsitoOem("Não Foi Possivel Atualizar o Dicionario.") , .f. )
                     End If 
 
                     //SysWait(0.02)
@@ -802,9 +739,11 @@ Function EventHeader()
 
                     xAtuDados( 3 , .t. ,  aColsTam  )
 
-                    SetWindowCursor( GetActiveWindow()  , 'IDC_ARROW'  )
+                    SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'IDC_ARROW'  )   
 
                     DO EVENTS 
+
+                    nColx5 := 0
 
 
                 End If     
@@ -812,17 +751,8 @@ Function EventHeader()
                 lSizeMode := .f. 
                 lAndamento := .f. 
             
-            Else 
-                
-                *// Drag Mode
-
-                If lDragMode 
-
-
-
-                End If 
-                  
-                
+            Else                 
+                          
 
             End If
 
@@ -848,9 +778,7 @@ Function EventHeader()
         		
 		If (nMsg == WM_MOUSEMOVE) 
             
-            //.And. (!lSizeMode) .And. (!lDragMode)
-
-            //xOffBarVert( Nil )
+      
             xLimpBarV()
             SysWait(0.01)				
 
@@ -900,7 +828,28 @@ Function EventHeader()
                                 GetAsyncKeyState(i)
                             Next i
 
+
                             If (GetAsyncKeyState(VK_LBUTTON)) == 0					
+                                
+
+                                If TroqOrdens(cTabela , nColSele , nColTarget , aCabecs[nColSele] )
+
+                                    DO EVENTS
+                                    
+                                    SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'CURSOR1'  )                                  
+                                    aColsTam := GetCamposInf( cTabela, 'TAM' )                                                                    
+
+
+                                    xAtuDados( nOrdemSel, lAscending ,  aColsTam  , .t.  )
+                           
+  
+                                    xShowBrw(  cTabela , .t.  )       
+                                    xGoTop()
+                                    
+                                    SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'IDC_ARROW'  )    
+
+                                End If 
+
                                 lDragMode := .f. 
                                 nColx5 := 0
                                 nColMove := 0
@@ -1098,15 +1047,13 @@ Function EventHeader()
                 DO EVENTS 
                 Return 
             End If        
-
                
-
 
             If ((nColx2 := xSearchLim(  nColx )) > 0)
                 xDoHint(    , 'Redimensiona a Coluna ' + Alltrim(aMapsCol[nColx2][1]) + '  '  + Str(nColSel1))                
                 SetWindowCursor( nHWnd  , 'CURSORSIZE' )
                 DO EVENTS                              
-                lSizeMode := .t.
+                lSizeMode := .t.               
                 Return 
             Else 
 

@@ -578,7 +578,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                             Exit 
                         End If    
                         
-                        If (nQContador >= 0)
+                        If (nQContador > 0)
 
                             DecrLeft()    
                             ScrollCol( .f. , .f. )
