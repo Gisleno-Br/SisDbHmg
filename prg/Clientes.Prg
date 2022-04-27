@@ -1097,6 +1097,8 @@ Function InitTela(  lIni1  , nColz1)
 
 	DoMethod( cFormPrin , 'SetFocus')
 
+//	SysWait(0.04)
+
 		   
 Return
 
