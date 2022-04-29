@@ -720,7 +720,7 @@ Function EventHeader()
                 If lOk 
 
 
-                      SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'CURSOR1'  )   
+                    SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'CURSOR1'  )   
 
                     DO EVENTS 
 
@@ -1460,9 +1460,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
        If nOrdemSel == nColSele 
           BT_DrawBitmapTransparent (hDC  , 6 ,  nColx+2 , 16  , 16 , BT_STRETCH, Iif(lAscending ,  hBitOrd1 ,  hBitOrd2 ) )
-       End If              
-
-
+       End If    
     
         
        BT_DrawText ( hDC , 10  , nColx,   Hb_Utf8ToStr(cTexto1) , FONTBROWSER  , FONTBROWSERSIZE , WHITE,  {230,230,230}   , ;
