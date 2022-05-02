@@ -124,6 +124,8 @@ Static nColEsquerda := 1
 
 Static nPageNum := 0
 
+Static lAtivo1 := .t. 
+
 //DECLARE WINDOW Win_Browser
 
 
@@ -237,8 +239,7 @@ Function TestBrow( cParent1 , cTabx  )
 		cSq2 := GetSql( cTabela  , .f. )
 	End If
 
-	cSq2 += " order by codigo limit 500"
-
+	cSq2 += " order by codigo limit 46"
 
 
 
@@ -408,7 +409,7 @@ Function EncheMVis( nRec , lFrente , lCalcPage  )
 Return
 
 
-Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  , aCabecalho , aTamanhos , aTipos)
+Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  , aCabecalho , aTamanhos , aTipos , lDicionario , lEnabled1)
 
 
 	Local nTamWidth := xRetLargura()
@@ -420,10 +421,11 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 	DEFAULT nRowIni   := 145
 	//145
 	DEFAULT aCabecalho := {}
+	DEFAULT lDicionario := .t. 
+	DEFAULT lEnabled1   := .t.
 
 
-
-	//msginfo(Str(  nLarg1  ))
+	lAtivo1 := lEnabled1
 
 
 	nLargx := nLarg1 
@@ -467,7 +469,7 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 		CHILD ;
 		PANEL ;
 		PARENT &cParent ;
-		WIDTH nLarg1 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) VIRTUAL WIDTH nLargTotal+1  ;
+		WIDTH nLarg1 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT Iif(  Len(aMt1) > nTamPag , (Len(aMt1) * nItemBrwHeight) , Nil) VIRTUAL WIDTH Iif( nLargTotal+1 > nLarg1 ,  nLargTotal+1 , Nil) ;
 		TITLE 'xBrowser' + Left(cActiveJan,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR Nil  ;		
 		ON PAINT (xPaintBrowser( ThisWindow.Name , aMt1 , nItemx5 ,     nClearIt2  , .t.  )  ) 		
@@ -480,28 +482,31 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 		CHILD ;
 		PANEL ;
 		PARENT &cParent ;
-		WIDTH nLarg1 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT (Len(aMt1) * nItemBrwHeight) VIRTUAL WIDTH nLargTotal+1  ;
+		WIDTH nLarg1 HEIGHT (nTamPag * nItemBrwHeight) VIRTUAL HEIGHT Iif(  Len(aMt1) > nTamPag ,(Len(aMt1) * nItemBrwHeight) , Nil) VIRTUAL WIDTH Iif( nLargTotal+1 > nLarg1 ,  nLargTotal+1 , Nil)  ;
 		TITLE 'xEspelho' + Left(cActiveJan,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR BLACK ;
 		ON MOUSEMOVE ( xCheckObj() ,   cObjSelected := 'Browser')				
 	END WINDOW
 
+	
+	lAtivo1 := ((nLargTotal+1) > nLarg1) 	
 
 
 	
-	If Len(aCabecalho) > 0
-		lHasHeader := xHeader( cHeaderName , aCabecalho , aTamanhos , cParent ,  cBrowserName ,  nLargTotal , aTipos , cTabela  )
+	If Len(aCabecalho) > 0		
+		lHasHeader := xHeader( cHeaderName , aCabecalho , aTamanhos , cParent ,  cBrowserName ,  nLargTotal , aTipos , cTabela , lAtivo1 , lDicionario )		
 	End If 	
 
-	
+
 	cBarrah := xBarraH( cParent ,  cBrowserName , nRowIni+(nTamPag * nItemBrwHeight)+2  , nLargTotal  ,  nLargX , cBrowserName , ;
-	(nQTotCol := xGetColQtd()) , nLarg1 - ((nLargTotal - nLargX) )   , cHeaderName)
+	(nQTotCol := xGetColQtd()) , nLarg1 - ((nLargTotal - nLargX) )   , cHeaderName , ((nLargTotal+1) > nLarg1) 	 ) 
 
 
 	//SET WINDOW Win_Browser TRANSPARENT TO 0
-	//msginfo(Str(  nQTotCol  ))
 
-	SET WINDOW &cBrowserName TRANSPARENT TO 0
+	
+
+	SET WINDOW &cBrowserName TRANSPARENT TO Iif(  lAtivo1 , 0 , 190 )
 
 
 
@@ -564,7 +569,7 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 	END WINDOW
 
 
-	SET WINDOW &cBarraVfrm TRANSPARENT TO 0
+	SET WINDOW &cBarraVfrm TRANSPARENT TO Iif(  lAtivo1 , 0 , 190 )
 	_ShowWindow(cBrowserName )
 
 
@@ -615,7 +620,7 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 		
 	Do Events 
 
-	SysWait(0.03)
+	SysWait(0.01)
 	xDcToDEspe()
 
 
@@ -634,7 +639,7 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 	Do Events 
 
 	
-	SysWait(0.05)
+	SysWait(0.01)
 
 	//_ShowWindow(    )
 	//BT_ClientAreaInvalidateAll( cHeaderName)
@@ -653,7 +658,7 @@ Function xBrowser( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  ,
 
 
     Do Events
-    Do Events
+    //Do Events
 
 	//msginfo('ko2')
 
@@ -696,6 +701,10 @@ Function xCalcBarV()
 	Local nTamBar := GetProperty(cBarraVfrm , 'Height') - 83
 
 	nCalc := Int (( nTamBar *  nTamPag ) / Len(aMt1))
+
+	If Len(aMt1) <= nTamPag
+		nCalc := GetProperty(cBarraVfrm , 'Height') - 135 
+	End If 
 
 
 Return nCalc 
@@ -785,15 +794,7 @@ Function xRetImgs(  nId  )
   
 	If (nId == 860)      
 		aMtr1 := { 'SCRDOWN1' , 'SCRDOWN1_1', 1 ,  'SCRDOWN1_D'}
-	End If 
-	
-
-//	If (nId == 6652)      
-	//	aMtr1 := { 'OKVERDE1' , 'OKVERDE2', 3 , 'SCRUP1_D' }
-//	End If
-
-	
-  
+	End If 	
 
    
 Return aMtr1
@@ -1393,6 +1394,7 @@ Function xTeclasBrow()
 		End If
 
 
+
 		If (nItemx5 <= nMaxItem1 )
 
 			If (lHitB)
@@ -1416,7 +1418,7 @@ Function xTeclasBrow()
 		Else
 
 			//msginfo('ok')	
-			xDialog('Maximo Atingido! ' + Str(nItemx5) + '  ' + Str(nMaxItem1) + '   '  + Str(nLinScrool)  )
+			xDialog('Maximo Atingido! ' , .F.  )
 			nLinhaBarra := nTamPag
 			lHtb := .t.
 			nItemx5 := nMaxItem1
@@ -1440,16 +1442,23 @@ Function xTeclasBrow()
 		If nItemx5 > 1
 			nItemx5--
 			lHitB := .f.
-			If (nLinhaBarra = 1)
+			If (nLinhaBarra = 1)				
 				lHitt := .t.
 			Else
 				nLinhaBarra--
 			End If
 
+			//MSGINFO('OK2 ' + Str(nLinhaBarra))
+
 			If (lHitt)
 				//SysWait(0.09)
 				xSelItem( nItemx5  , .t. , .f.  )
-				ScrolUp1(.t.)				
+
+
+				If nLinhaBarra == 1	
+					ScrolUp1(.t.)				
+				End If 	
+
 				EncheMVis( nItemx5  , .t. )
 				SysWait(0.04)
 				HMG_CleanLastMouseMessage()
@@ -1457,7 +1466,18 @@ Function xTeclasBrow()
 
 				xSelItem( nItemx5  , .f.  , .f. )				
 				SysWait(0.07)
-			End If				
+			End If		
+			
+			
+			If nItemX5 == 1
+				lHitt := .t.
+				nClearIt2 := 1
+				nLinScrool := 0
+				nLinhaBarra := 1			
+				nPageNumber := 1
+				//msginfo('333')	
+
+			End If 
 
 		Else
 			lHitt := .t.
@@ -1465,6 +1485,7 @@ Function xTeclasBrow()
 			nClearIt2 := 1
 			nLinScrool := 0
 			nLinhaBarra := 1			
+			nPageNumber := 1
 			xDialog('Top Atingido!' , .f.  )			
 		End If
 
@@ -1588,8 +1609,6 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 	End If
 
 	nIndice := -9999
-
-
 	
 
 	For n1 := 1 To Len(aMtrOp) 
@@ -1609,7 +1628,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 		   n12 := (Len(cTexto) * nTam1 )
 
 		   If !lPaint 				
-				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 0  , n12  ,    (nTamPag+2) * nItemBrwHeight     ,  RED  , RED   )	
+				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 0  , n12   ,    (nTamPag+2) * nItemBrwHeight     ,  WHITE  , {218,218,218}   )	
 		   End If 	
 
 		   lPaint := .t. 
@@ -1626,10 +1645,13 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 				nFontCor 	 := BLACK
 			End If 	
 
-		
 
-			BT_DrawText ( hDC2 , nLine + nRow  , 17+nCol ,   cTexto , xFont2  , 9 , nFontCor ,  SELCOR   , ;
+
+		
+			If lAtivo1
+				BT_DrawText ( hDC2 , nLine + nRow  , 17+nCol ,   cTexto , xFont2  , 9 , nFontCor ,  SELCOR   , ;
 				nTypeText ,	nAlingText, nOrientation )
+			End If
 
 
 			If (nSelLine == n1) .And. (nColScrool == 0)
@@ -1748,43 +1770,6 @@ Function xCriaButs()
 
 	Local nRow1 := GetProperty(cBarraVfrm,'Height') - 20
 
-	/*
-
-    OBTN_Create( cJanx,  855 , "&A", 0    , 0 ,  20 ,  20  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont  )
-    OBTN_Create( cJanx,  856 , "&A", 21   , 0 ,  20 ,  20  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont  )
-    OBTN_Create( cJanx,  857 , "&A", 41   , 0 ,  20 ,  20 ,  .T., .T., .T. ,  8, RetColor1( 1 ), aBtnFont  )
-
-
-
-	EventProcessAllHookMessage( EventCreate( {|| EventRole1() }  ,   OBTN_Handle( cJanx, 855 )   ), .T. )	
-	EventProcessAllHookMessage( EventCreate( {|| EventRole1() }  ,   OBTN_Handle( cJanx,  856 )   ), .T. )			
-	EventProcessAllHookMessage( EventCreate( {|| EventRole1() }  ,   OBTN_Handle( cJanx, 857 )   ), .T. )
-
-
-
-	OBTN_Font( cJanx, 855,  { cFontName, nFontSize, .F., .F., .F., .F. } )
- 	OBTN_Font( cJanx, 856,  { cFontName, nFontSize, .F., .F., .F., .F. } )
-	OBTN_Font( cJanx, 857,  { cFontName, nFontSize, .F., .F., .F., .F. } )
-
-
-	   
-	OBTN_Create( cJanx,  858 , "&4", nRow1 - 6    , 0  ,  20,  20  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-	OBTN_Create( cJanx,  859 , "&R", nRow1 - 26   , 0  ,  20,  20  ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-	OBTN_Create( cJanx,  860 , "&T", nRow1 - 46   , 0  ,  20,  20 ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-
-
-	EventProcessAllHookMessage( EventCreate( {|| EventRole1()  },   OBTN_Handle( cJanx, 858 )   ), .T. )		
-	EventProcessAllHookMessage( EventCreate( {|| EventRole1() },   OBTN_Handle( cJanx,  859 )   ), .T. )			
-	EventProcessAllHookMessage( EventCreate( {|| EventRole1() },   OBTN_Handle( cJanx, 860 )   ), .T. )
-
-	OBTN_Font( cJanx, 858,  { cFontName, nFontSize, .F., .F., .F., .F. } )
-	OBTN_Font( cJanx, 859,  { cFontName, nFontSize, .F., .F., .F., .F. } )
-	OBTN_Font( cJanx, 860,  { cFontName, nFontSize, .F., .F., .F., .F. } )
-
-	*/
-
-
-
 
    
 Return (nRow1 - 46)
@@ -1859,7 +1844,8 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 		If nMsg == WM_MOUSEMOVE
 
 			xLimpBarV()
-				
+
+			
 
 
 			GetCursorPos (@nCol1, @nRow1)
@@ -1873,6 +1859,8 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				DO EVENTS 
 				xDcBarHeader()
 				DO EVENTS 
+				xDragOff()				
+				Do Events
 			End If 
 
 			If  _isWindowDefined("Win_Msg")
@@ -1935,8 +1923,14 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 	
 
-			While( nModeBrw = 3) .And. (!lTracking45)				
+			While( nModeBrw = 3) .And. (!lTracking45)	
+				
+				For i := 1 To 255
+					GetAsyncKeyState(i)
+				Next i				
+			
 				SendMessage( GetFormHandle(cBrowserName)  , WM_KEYDOWN , VK_UP , 0 )				
+				
 				If (GetAsyncKeyState(VK_LBUTTON)) == 0					
 					lTracking45 := .t. 
 				End If 				
@@ -1946,14 +1940,29 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			
 			
 			While (nModeBrw = 6) .And. (!lTracking45)
-				SendMessage( GetFormHandle(cBrowserName)  , WM_KEYDOWN , VK_DOWN , 0 )				
+
+				
+				For i := 1 To 255
+					GetAsyncKeyState(i)
+				Next i
+			
+				SendMessage( GetFormHandle(cBrowserName)  , WM_KEYDOWN , VK_DOWN , 0 )	
+				
 				If (GetAsyncKeyState(VK_LBUTTON)) == 0					
 					lTracking45 := .t. 
 				End If 										
+
+				SysWait(0.03)
+
 			End  
 
 
 			While (nModeBrw = 5) .And. (!lTracking45)			
+
+				For i := 1 To 255
+					GetAsyncKeyState(i)
+				Next i
+
 				SysWait(0.02)
 				xGoPgDn()				
 				SysWait(0.02)				
@@ -1965,6 +1974,11 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 
 			While (nModeBrw = 2) .And. (!lTracking45)	
+
+				For i := 1 To 255
+					GetAsyncKeyState(i)
+				Next i
+
 				SysWait(0.02)
 				xGoPgUp()
 				SysWait(0.02)					
@@ -1977,10 +1991,8 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 			SysWait(0.02)
 			
-//			HMG_CLEANLASTMOUSEMESSAGE()
-
 			lTracking45 := .f. 
-			SysWait(0.09)
+			//SysWait(0.09)
 			
 		
 		End If 	
@@ -1991,7 +2003,9 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 		If (nMsg == WM_MOUSEMOVE) 			
 
 			Do Events	
+		//	CursorArrow1(nHWnd)
 			Do Events	
+			
 
 
 			If (lHasHeader)
@@ -2000,6 +2014,9 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				xDcBarHeader()
 				SysWait(0.03)
 				//msginfo('ok2')
+
+				xDragOff()				
+				Do Events
 			End If 
 
 
@@ -2007,8 +2024,9 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
 
 			If (ar1[2] > 21) .or. (ar1[2] < 0)				
-				xOffBarVert( nHWnd )
-				//msginfo('lp2')
+				CursorArrow1(nHWnd)
+				DO EVENTS	
+				xOffBarVert( nHWnd )				
 				Return 
 			End If 
 
@@ -2021,33 +2039,56 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				nL := GetProperty(cBarraVfrm,'Height') - 20
 
 			    If (nRow1 > (nL + 1))
-				    nId := 858
+					If (Len(aMt1) > nTamPag)
+				    	nId := 858						
+					Else
+						nModeBrw := 0	
+					End If 	
 				Else 
+
 					If (nRow1 <= (nLimteLin + 20   ))
 					    nId := 860
 					Else 
-					   nId := 859	
+
+						If (Len(aMt1) > nTamPag)							
+					   		nId := 859	
+						Else 
+							nModeBrw := 0		   
+						End If 
+
 					End If 
+
 				End If 	
 			Else 
 				If nRow1 <= 20
-					nId := 855
-					//msginfo('ok2 ' + Str( ar1[2] ) )
+					nId := 855					
 				Else 
 					
-					If (nRow1 >= 41) .And. (nRow1 <= 61)
-						nId := 857					
-					Else 
-						If (nRow1 >= 21) .And. (nRow1 <= 40)
-							nId := 856
+					If (Len(aMt1) > nTamPag)
+						If (nRow1 >= 41) .And. (nRow1 <= 61)
+							nId := 857					
+						Else 
+							If (nRow1 >= 21) .And. (nRow1 <= 40)
+								nId := 856
+							End If 
 						End If 
-					End If 
+					Else 
+						nModeBrw := 0		
+					End	If 
 
 				End If 
-			End If 
+			End If 					
 
 
-					
+			If (nId = 0)
+			//	msginfo('ll21 ' + Str(nModeBrw) + '  ' + Str(nHasFocus))
+			    SysWait(0.01)
+				xLimpBarV()
+				//SysWait(0.01)
+				Return 
+
+			End If 	
+
 
 			If (nRow1 >= 61) .And. (nRow1 <= (GetProperty(cBarraVfrm,'Height') - 61) ) .And. (nId = 0) 							
 				xOffBarVert( nHWnd )
@@ -2068,24 +2109,22 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 			
 			If (nId > 0) .And. (!lTracking75)			
-			//    msginfo('lp22')
-				nModeBrw := xDoHint(   nId  ,  , .t.  )
-			//	Do Events 
-				CursorHand1( nHWnd  )				
-			//	Do Events 				
-				nHasFocus := nId
-				//SysWait(0.02)
-			//	msginfo(Str(nId))
+			
+				nModeBrw := xDoHint(   nId  ,  , .t.  )			
+				CursorHand1( nHWnd  )	
+				
+				//msginfo('222222 ' + Str(nId))
+			
+				nHasFocus := nId		
 				BT_ClientAreaInvalidateAll( cBarraVfrm )
-				//xRefreshBut()
 				Do Events 
-				xDcToDEspe()
-				//Do Events
+				xDcToDEspe()				
 				Do Events
-
 		
 				lTracking135 := .t.
 				lTracking75  := .t.
+
+				SysWait(0.03)
 		
 			End If 	
 
@@ -2140,6 +2179,8 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				DO EVENTS 
 				xDcBarHeader()
 				DO EVENTS 
+				xDragOff()				
+				Do Events
 			End If 
 
 			If (nHasFocus > 0) 					
@@ -2376,6 +2417,7 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 
 	nPerCent := ( nItemx5 / nMaxItem1) * 100
 
+
 	nI := 63
 	nR := (nTamPag * nItemBrwHeight) - 83
 
@@ -2389,7 +2431,8 @@ Function xOffBarVert( nWh1 )
 
 	lTracking75 := .f. 
 	lTracking135 := .f.
-	nHasFocus := 0				
+	nHasFocus := 0		
+	nModeBrw := 0		
 	
 	//xRefreshBut()				
 
@@ -2438,6 +2481,7 @@ Function xPaintScroll( cJanela )
 	LOCAL Width  := BT_ClientAreaWidth  (cJanela)
 	LOCAL Height := BT_ClientAreaHeight (cJanela)
 
+
 	Local nRow1 := Height - 20
 
 	Local n11 := xCriaButs()
@@ -2466,14 +2510,25 @@ Function xPaintScroll( cJanela )
 			BT_DrawFillRoundRect ( hDC , nLimteLin - nAltura ,  2   , Width - 5 , nAltura , 5 ,5 ,   {152 , 152 ,152}   , {152 , 152 ,152}  , 0 ) 				
 		
 			
-		Else				
+		Else			
+
 
 			yPos := nLimteLin - nRIni - nAltura
 			nFator := Int(( nItemX5 * yPos     ) /	nMaxItem1)
+
+			If (Len(aMt1) <= nTamPag)
+				nFator := 0	
+			End If 
+
 			BT_DrawFillRoundRect ( hDC ,   (nrIni  + nFator )  ,  2   , Width - 5 , nAltura , 5 ,5 ,  {152 , 152 ,152}   , {152 , 152 ,152}  , 0 ) 				
 			
 		End If
 	End If
+
+	If !lAtivo1		
+		BT_DeleteDC (BTstruct2 )	
+		REturn 
+	End If 
 
 
 	For n1 := 1 To Len(aMtrz1)
@@ -2488,15 +2543,23 @@ Function xPaintScroll( cJanela )
 			
 		End If 	
 
+
 		cImg := aImgs[1]
 
 
 
+
 		If (nHasFocus == aMtrz1[n1] )
-			cImg := aImgs[2]			
-			//msginfo('111')
-			//BT_DrawGradientFillVertical ( hDC ,   nLinha , 0  , 18 ,   18    , RED , RED )
+			cImg := aImgs[2]						
 		End If 	
+
+		If (Len(aMt1) <= nTamPag)
+
+			If (aMtrz1[n1] != 855) .And. (aMtrz1[n1] != 860)
+				cImg := aImgs[4]
+			End If 
+
+		End If 
 
 
 
@@ -2504,14 +2567,10 @@ Function xPaintScroll( cJanela )
 		nLinha += 21
 
 
-
 	Next 	
 
-
-	
-
 	BT_DeleteDC (BTstruct2 )
-//	BT_BitmapRelease (zRolagem)
+
 
 
 Return
@@ -2635,6 +2694,8 @@ Function xGoPgDn()
 	nClear1     := nItemX5
 
 	nSelLine := nItemx5	
+
+
 	EncheMVis( nLast1 , .f. , .f.   )
 
 	BT_ClientAreaInvalidateAll(cBrowserName)
@@ -2703,7 +2764,9 @@ Function xGoBottom()
 	_HMG_PRINTER_SETVSCROLLVALUE(   GetFormHandle(cBrowserName)  , nPos1 )
 
 	nLinScrool := nPos1
+	
 	EncheMVis( nTamPag )
+
 
 	nPageNumber := nPageTotal
 
@@ -2780,8 +2843,11 @@ Function xDcToDEspe()
 
 	//BT_DrawDCtoDC (hDC2, 0, 0, Width2, Height2, BT_SCALE, hDC1, 90 , 0, Width1, 366 )
 
-
-	BT_DrawDCtoDC (hDC2, 0, 0 , Width2, Height2, BT_SCALE, hDC1, 0 , 0, Width1, Height1 )
+	If lAtivo1
+		BT_DrawDCtoDC (hDC2, 0, 0 , Width2, Height2, BT_SCALE, hDC1, 0 , 0, Width1, Height1 )
+	else
+		BT_DrawDCtoDCAlphaBlend (hDC2, 0, 0, Width2, Height2, 135, BT_SCALE, hDC1, 0, 0, Width1, Height1)
+	End If 
 
 
 
@@ -2815,8 +2881,11 @@ Function xDcToDc()
 	hDC1 = BT_CreateDC (cBrowserName, BT_HDC_ALLCLIENTAREA, @BTstruct1)
 	hDC2 = BT_CreateDC (cEspelhoBrw, BT_HDC_ALLCLIENTAREA, @BTstruct2)
 
-	BT_DrawDCtoDC (hDC2, 0, 0, Width2, Height2, BT_SCALE, hDC1, 0, 0, Width1, Height1)
-//    BT_DrawDCtoDCAlphaBlend (hDC2, 0, 0, Width2, Height2, 50, BT_SCALE, hDC1, 0, 0, Width1, Height1)
+	If lAtivo1
+		BT_DrawDCtoDC (hDC2, 0, 0, Width2, Height2, BT_SCALE, hDC1, 0, 0, Width1, Height1)
+	Else 
+	    BT_DrawDCtoDCAlphaBlend (hDC2, 0, 0, Width2, Height2, 135, BT_SCALE, hDC1, 0, 0, Width1, Height1)
+	End If 	
 
 
 	nTypeText    := BT_TEXT_TRANSPARENT    

@@ -1,0 +1,10 @@
+Admin 30/04/2022 09:54:42   Admin 30/04/2022 09:54:42   Admin 30/04/2022 09:54:29   Admin 30/04/2022 09:54:29   Admin 30/04/2022 09:49:16   Admin 30/04/2022 09:49:16   Admin 30/04/2022 09:32:38   Admin 30/04/2022 09:32:38   Admin 30/04/2022 09:08:48   Admin 30/04/2022 09:08:48   update dicionario set ordem = ordem - 1  where tabela = 'Clientes' and ordem > 2 and Ordem <= 5;
+ update dicionario set ordem = 5 where tabela = 'Clientes' and ordem = 2 and camposistema = 'Nome';
+ update dicionario set ordem = ordem - 1  where tabela = 'Clientes' and ordem > 2 and Ordem <= 8;
+ update dicionario set ordem = 8 where tabela = 'Clientes' and ordem = 2 and camposistema = 'Cpf/Cnpj';
+ update dicionario set ordem = ordem - 1  where tabela = 'Clientes' and ordem > 4 and Ordem <= 5;
+ update dicionario set ordem = 5 where tabela = 'Clientes' and ordem = 4 and camposistema = 'Nome';
+ update dicionario set ordem = ordem - 1  where tabela = 'Clientes' and ordem > 3 and Ordem <= 5;
+ update dicionario set ordem = 5 where tabela = 'Clientes' and ordem = 3 and camposistema = 'Residência';
+ update dicionario set ordem = ordem - 1  where tabela = 'Clientes' and ordem > 2 and Ordem <= 4;
+ update dicionario set ordem = 4 where tabela = 'Clientes' and ordem = 2 and camposistema = 'Cidade';

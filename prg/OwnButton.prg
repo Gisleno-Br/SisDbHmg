@@ -639,6 +639,15 @@ HB_FUNC( CURSORHAND1 )
 }
 
 
+HB_FUNC( CURSORARROW1 )
+{
+  
+   HWND hWnd1   = (HWND)  hb_parnl (1);
+   SetClassLongPtr(  hWnd1  , GCLP_HCURSOR, ( LONG ) LoadCursor( 0 , IDC_ARROW ) );
+
+}
+
+
 
 HB_FUNC( _OWNBUTTONDRAW )
 {

@@ -96,7 +96,7 @@ Function TroqOrdens(cTabela1 , nOrd1 , nOrd2  , cCampoName )
 
 
 	If nOrd1 == nOrd2 
-		REturn 
+		Return 
 	End If 
 
 

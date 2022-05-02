@@ -1082,22 +1082,18 @@ Function InitTela(  lIni1  , nColz1)
 
 
 	EfectEnd(cActiveJan , aMz1 )
-
 	
 	
 	SetWindowCursor( GetFormHandle( cFormPrin )  , IDC_ARROW  )
 
 
 
-	xBrowser(  , aMtrDados , cFormPrin , nLarg , 'Brw' + Left(cTabela,4)  ,, aCabec , aTams , aTipos1 )
-
+	xBrowser(  , aMtrDados , cFormPrin , nLarg , 'Brw' + Left(cTabela,4)  ,, aCabec , aTams , aTipos1 , .t. , .t.   )
 	DoMethod( 'Brw' + Left(cTabela,4) , 'Activate')
-
-	//DoMethod( cFormPrin , 'Activate')
 
 	DoMethod( cFormPrin , 'SetFocus')
 
-//	SysWait(0.04)
+
 
 		   
 Return

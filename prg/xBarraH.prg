@@ -26,7 +26,7 @@ Static nSaveCol := 0
 Static lDragMode := .f. 
 Static nLargJan := 0
 Static nScroxy := 18
-Static lEnabled := .t. 
+Static lEnabledy := .t. 
 Static cBrwName := ''
 
 Static nTamBarra := 0
@@ -48,7 +48,7 @@ Static nQContador := 0
 
 
 
-Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela  , cBrowser , nTotCol , nTamBar , cHeaderN1   )
+Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela  , cBrowser , nTotCol , nTamBar , cHeaderN1  , lDispo1  )
 
    
    Private cJanName   := 'Win_Bh' + Left(cActiveJan,4)
@@ -59,16 +59,15 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
    cBrwName     := cBrowser
    nLargJan     := nLargJanela
 
+   lEnabledy := lDispo1
 
    nQ1 := CalcEtapas()
 
-   //msginfo(Str(   nq1 ))
+
 
    nColTotal := nTotCol   
    nTamBarra := nLargJanela -  ( nQ1 * nConst1 )
-
-   cHead1 := cHeaderN1
-   
+   cHead1 := cHeaderN1   
 
 
         
@@ -79,7 +78,7 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
         PARENT &cParent ;
         WIDTH  GetProperty(  cBrowserName , 'Width'  )+22   HEIGHT 20 ;
         TITLE 'xScroxRoleol1' + Left(cBrowserName,4)  	;
-        NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR WHITE   ;
+        NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR BLACK   ;
         ON PAINT xPaintBarraH( ThisWindow.Name , nAcende , nColDrag )
     END WINDOW  
 
@@ -98,18 +97,25 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
     END WINDOW  
 
 
+    
+    SET WINDOW &cJanName TRANSPARENT TO Iif(!lEnabledy , 167 , 0)
+
+
+
 
 
     If nQ1 > 0 
         nEtapas :=  Int( (GetProperty(  cBrowserName , 'Width'  ) - nTamBarra)  /   nQ1 )                
     End If     	
-    
-    lEnabled := (nTamBarra > 0)
+
+    If lEnabledy     
+       lEnabledy := (nTamBarra > 0)
+    End If 
  
 
 
-    SET WINDOW &cJanName TRANSPARENT TO Iif(!lEnabled , 167 , 0)
-    If (Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventBarra"  ) )  ) = 0) .And. (lEnabled)
+    SET WINDOW &cJanName TRANSPARENT TO Iif(!lEnabledy , 167 , 0)
+    If (Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventBarra"  ) )  ) = 0) .And. (lEnabledy)
 		InstallEventHandler( "EventBarra" )		
 	End If
     HMG_ChangeWindowStyle(  GetProperty(  cJanName , 'HANDLE' ) , WS_BORDER, NIL, .T. )
@@ -250,7 +256,7 @@ Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
 
     End If 
 
-    If (!lEnabled)
+    If (!lEnabledy)
         yEsquerda := BT_BitMapLoadFile('ESQUERDAD')
         yDireita  := BT_BitMapLoadFile('DIREITAD')
     End If 
@@ -266,12 +272,22 @@ Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
     If Abs(nScroxy - Width) <= 10
      //   msginfo('lp2')
     End If 
+/*
+    If !lEnabled
+        BT_BitmapRelease (yEsquerda)
+        BT_BitmapRelease (yDireita)
+	    BT_DeleteDC (BTstruct )
+        msginfo('ok2')
+      //  Return 
 
-    If (!lDragMode) .And. (lEnabled)
+    End If 
+    */
+
+    If (!lDragMode) .And. (lEnabledy)
         BT_DrawFillRoundRect (hDC2 , 4 , nScroxy , nWidBarra , 10 , 5 ,5 ,   {178 , 178 ,178}   , {178 , 178 ,178}  , 0)
     Else 
 
-        If lEnabled
+        If lEnabledy
 
             If (lDragMode) 
                 BT_DrawFillRoundRect (hDC2 , 4 , nCol1   , nWidBarra    , 10 , 5 ,5 ,  {12,134,166}   , {166 , 166 , 166}  , 0)
@@ -686,8 +702,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
             If (nCol > 18) .And. (nCol < (Width - 18)) 
                 nModeBut := 0
 
-            Else 
-                        
+            Else                         
             
                 If (!lTracking37)					
 
@@ -714,14 +729,19 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                         xDcBarH()
                     End If 
 
-                    If (nCol >= (Width - 18)) 
+                    If (nCol >= (Width - 25)) 
+
+                        //SysWait(0.01)
                  
                         nAcende := 2
-                        BT_ClientAreaInvalidateRect( cBarraName  , 0,  (Width - 25)    ,25,20 , .t.    )
+                        //BT_ClientAreaInvalidateRect( cBarraName  , 0,  (Width - 25)    ,25,20 , .t.    )
+                        BT_ClientAreaInvalidateAll(cBarraName)
                         nModeBut := 2            
                         lTracking26 := .f. 
-                        lTracking37 := .t.                         
+                        lTracking37 := .t.  
+                        Do Events                        
                         xDcBarH()
+                        //msginfo('ok2')
                       
                     End If 
 
@@ -831,18 +851,14 @@ Function xDcBarH()
 	hDC1 = BT_CreateDC (cBarraName, BT_HDC_ALLCLIENTAREA, @BTstruct1)
 	hDC2 = BT_CreateDC (cBarraSombra, BT_HDC_ALLCLIENTAREA, @BTstruct2)
 
-//	BT_DrawDCtoDC (hDC2, 0, 0, Width2, Height2, BT_SCALE, hDC1, 0, 0, Width1, Height1)
-    If !lEnabled
-        BT_DrawDCtoDCAlphaBlend (hDC2, 0, 0, Width2, Height2, 185 , BT_SCALE, hDC1, 0, 0, Width1, Height1)
+
+    If !lEnabledy        
+        BT_DrawDCtoDCAlphaBlend (hDC2, 0, 0, Width2, Height2, 245 , BT_SCALE, hDC1, 0, 0, Width1, Height1)
     Else 
         BT_DrawDCtoDC (hDC2, 0, 0, Width2, Height2, BT_SCALE, hDC1, 0, 0, Width1, Height1)
     End If     
 
 
-	//nTypeText    := BT_TEXT_TRANSPARENT    
-	//nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP 
-	//nOrientation := BT_TEXT_DIAGONAL_ASCENDANT
-	//BT_DrawText (hDC2, 300, 50, "Mirror of the Win1", "Times", 42, YELLOW, BLACK, nTypeText, nAlingText, nOrientation)
 
 	BT_DeleteDC (BTstruct1)
 	BT_DeleteDC (BTstruct2)
