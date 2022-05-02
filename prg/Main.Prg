@@ -2115,8 +2115,7 @@ Function D1Black(cJan,zBitMap)
 
 	LOCAL BTstruct
 
-	If lAtivaBlack
-		
+	If lAtivaBlack	
 
 
 

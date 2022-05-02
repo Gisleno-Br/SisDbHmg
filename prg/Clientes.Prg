@@ -2670,6 +2670,7 @@ Function xAbreOpMenu( cF1 , cContrl1 )
 
 		xButConsul( .t. , .f. )
 
+		
 
 
 		lHitBottom := .f.
