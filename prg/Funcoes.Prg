@@ -305,7 +305,8 @@ FUNCTION GetSql( cTabela, lWhere )
 			End If
 
 		Else
-			cSql1 += AllTrim( aCampos[ ni ] ) + ","
+			//cSql1 += AllTrim( aCampos[ ni ] ) + ","
+			cSql1 +=  "ifNull(" + AllTrim( aCampos[ ni ] ) + " ,' ') As " +  alltrim(aCampos[ ni ]) + ","
 		End If
 
 

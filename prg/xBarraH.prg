@@ -48,6 +48,7 @@ Static nQContador := 0
 
 
 
+
 Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela  , cBrowser , nTotCol , nTamBar , cHeaderN1  , lDispo1  )
 
    

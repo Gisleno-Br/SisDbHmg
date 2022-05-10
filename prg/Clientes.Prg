@@ -1063,7 +1063,7 @@ Function InitTela(  lIni1  , nColz1)
 
 	aMtrDados := {}		
 	aMz1 := yEfect(  cActiveJan , .t.   )	
-	aMtrDados := DoMatriz( cActiveJan , cTabela ) 
+	//aMtrDados := DoMatriz( cActiveJan , cTabela ) 
 	
 
 	//xMsgRun( "Aguarde Criando Estrutura .... "  , { || aMtrDados := xRodaImp()   }   , .f.  )
@@ -1071,7 +1071,10 @@ Function InitTela(  lIni1  , nColz1)
 
 	//aMtrDados := xRodaImp()
 
-	nLarg := xRetLargura()
+	//xRetLArgura
+	//nLarg := xRetLArgura
+	
+	//GetDeskTopWidth( - 135)
 
 
 	
@@ -1088,7 +1091,8 @@ Function InitTela(  lIni1  , nColz1)
 
 
 
-	xBrowser(  , aMtrDados , cFormPrin , nLarg , 'Brw' + Left(cTabela,4)  ,, aCabec , aTams , aTipos1 , .t. , .t.   )
+	xBrowser( 'Clientes' , aMtrDados , cFormPrin ,  'Brw' + Left(cTabela,4)  ,, aCabec , aTams , aTipos1 , .t. ,   .t. , 165   )
+
 	DoMethod( 'Brw' + Left(cTabela,4) , 'Activate')
 
 	DoMethod( cFormPrin , 'SetFocus')

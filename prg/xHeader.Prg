@@ -1263,6 +1263,7 @@ Function xRetUnit()
     n12 := GetTextWidth( hDC , Replicate(' ' ,  1  ) , hfont )
 
     BT_DeleteDC (BTstruct )
+    
 
 
 REturn n12 
@@ -1330,6 +1331,7 @@ Function UpdHeader( cHeader1 ,  nValor   )
     
    nColHeader += nValor    
    BT_ClientAreaInvalidateAll (cHeader1)	
+   
 
 return 
 
@@ -1339,6 +1341,7 @@ REturn (lDragMode)
 
 Function xDragOff()
 
+    nClearit  := 0
     lSizeMode := .f.
     lDragMode := .f.
     lAndamento := .f. 

@@ -2117,6 +2117,7 @@ Function D1Black(cJan,zBitMap)
 
 	If lAtivaBlack	
 
+		
 
 
 		hDC    = BT_CreateDC ( cJan  , BT_HDC_INVALIDCLIENTAREA, @BTstruct)
