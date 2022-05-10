@@ -753,16 +753,21 @@ Function xCalcBarV()
 
 	Local nTamBar := GetProperty(cBarraVfrm , 'Height') - 83
 
-	nCalc := Int (( nTamBar *  nTamPag ) / Len(aMt1))
+	If RecCount() == 0
+		Return 0
+	End If 	
 
-	If Len(aMt1) <= nTamPag
+	nCalc := Int (( nTamBar *  Recno() ) / RecCount()    )
+
+	If (RecCount() <= nTamPag)
 		nCalc := GetProperty(cBarraVfrm , 'Height') - 135 
 	End If 
 
 	If nCalc <= 30
 	   nCalc := 30
 	End If 
-
+    
+	
 
 Return nCalc 
 
@@ -1208,6 +1213,7 @@ Function xRecords(  nRecs , lFrente )
 	DEFAULT lFrente := .t.
 	DEFAULT nRecs := nTamPag 
 	//Local nContador :=
+
 
 
 	//SaveLog()
@@ -1662,8 +1668,8 @@ Function xTeclasBrow()
 			Else			
 				
 				xSelItem( Recno()  , .f.  )
-				SysWait(0.01)				
-				BT_ClientAreaInvalidateAll(cBrowserName)
+			//	SysWait(0.01)				
+				//BT_ClientAreaInvalidateAll(cBrowserName)
 			
 
 			End If		
@@ -1682,7 +1688,7 @@ Function xTeclasBrow()
 				
 		End If
 
-		DO EVENTS
+		//DO EVENTS
 
 		BT_ClientAreaInvalidateAll (cBarraVfrm)		
 		xDcToDc()				
@@ -1738,7 +1744,7 @@ Function xTeclasBrow()
 					SETVSCROLLVALUE( GetFormHandle(  cBrowserName )  , nItemBrwHeight  , 1 )
 
 					//ScrolUp1(.t. , nItemBrwHeight)	
-					//BT_ClientAreaInvalidateAll(cBrowserName)
+					BT_ClientAreaInvalidateAll(cBrowserName)
 
 
 					//msginfo('2l')
@@ -1752,29 +1758,19 @@ Function xTeclasBrow()
 				
 
 				EncheMVis( Recno()  , .t. )
-				xSelItem( Recno()  , .t. , .f.  )	
-
-				//EncheMVis( nItemx5  , .t. )
+				xSelItem( Recno()  , .t. , .f.  )					
 				SysWait(0.02)
-				//HMG_CleanLastMouseMessage()			
+				
 				
 				nSelLine := nItemx5			
 
 
-
-
-				//msginfo('l')
-				
-
-
 			Else
 
-
 		
-				//SysWait(0.02)				
+				
 				xSelItem( nItemx5  , .f.  , .f. )			
-
-				SysWait(0.01)
+				//SysWait(0.01)
 
 
 			End If		
@@ -2025,6 +2021,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 			BT_DrawText ( hDC2 , nLine + nRow  , 17+nCol  ,  cTexto , xFont2, 9 ,  cCor , nCorBk , nTypeText, nAlingText, nOrientation )
 
 		End If
+
 
 		nLine += nItemBrwHeight
 
@@ -2506,6 +2503,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 			nClearIt2 := 0
 			nitemx5   := 0
 
+
 			BT_ClientAreaInvalidateAll(cBrowserName)
 	
 		End If
@@ -2750,10 +2748,10 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 	
 
 	If (nClearIt2 > 0) 
-		//.and. (nClearIt2 <= Len(aMt1))		
-	
+		//.and. (nClearIt2 <= Len(aMt1))			
 
 		//DbGoto(   aMt1[nClearIt2][1][7]    )			
+
 		DbGoto(nClearIt2)
 
 		nIndice1 := Ascan(aMVisible , { |a| a[2] == Recno() })
@@ -2787,24 +2785,22 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 	nSelLine := nItemx5
 
 
-	If (nItemx5 > 0)
-		//BT_ClientAreaInvalidateRect( cBrowserName,  nRow1  +  ( ( nItemx5 - 1 ) * nItemBrwHeight)  , 0 , GetProperty( cBrowserName,'Width')  ,  nItemBrwHeight   , .t. )
+	If (nItemx5 > 0)		
 
-		nRow1 := 0
-
-		//If nLinhaBarra > 1
+		nRow1 := 0		
 		BT_ClientAreaInvalidateRect( cBrowserName,  ( (nLinhaBarra - 1) * nItemBrwHeight) - nRow1    , 0 , GetProperty( cBrowserName,'Width')  ,  nItemBrwHeight   , .t. )
-		//End If	
-		//msginfo(   Str(  ( (nLinhaBarra - 1) * nItemBrwHeight) - nRow1   )    )
+		
 	End If
 
-	nPerCent := ( nItemx5 / nMaxItem1) * 100
-
+	nPerCent := ( Recno() /  Reccount()  ) * 100
+/*
 
 	nI := 63
 	nR := (nTamPag * nItemBrwHeight) - 83
 
 	BT_ClientAreaInvalidateRect(cBarraVfrm   ,  nI  ,0,  20,  (nR - nI) + 45  , .t.  )
+	*/
+
 
 
 Return
@@ -3061,6 +3057,9 @@ Function xGoPgUp()
 	EncheMVis( Recno() - nTamPag  , .t. )
 		
 	DbSkip(-1)	
+
+
+
 	
 
 	If !Bof()
@@ -3115,13 +3114,14 @@ Function xGoPgUp()
 	BT_ClientAreaInvalidateAll(cBrowserName)
 
 	
-	//Do Events 
+	Do Events 
+
 
 	xDcToDc()				
 	xDcToDEspe()
 
 	
-	//SysWait(0.01)		
+	SysWait(0.01)		
 
 
 	
@@ -3230,6 +3230,7 @@ Return
 
 
 
+
 Function xGoBottom()
 
 
@@ -3288,9 +3289,6 @@ Function xGoBottom()
 
 	nClearIt2   := Recno()
 
-//	nClear1     := nItemX5
-
-	//msginfo(Str(  Recno()  ))
     
 
 	nSelLine := nItemx5	
@@ -3443,6 +3441,7 @@ Function xDcToDc()
 
 	LOCAL hDC1, BTstruct1
 	LOCAL hDC2, BTstruct2
+
 
 
 	Local Width2  := BT_ClientAreaWidth  (cEspelhoBrw)
