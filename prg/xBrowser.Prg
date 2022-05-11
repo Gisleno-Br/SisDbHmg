@@ -476,20 +476,6 @@ Function xBrowser( cTabx ,   aDatas1 , cParent   ,  cBrwName , nCol  , aCabecalh
 	aMt1 := {}
 
 	
-	/*
-
-	If Len(aDatas1) > 0 
-		nLArg1 := (Len( aDatas1[1][1]) * nTam1)+18
-		If (nLarg1 > GetDeskTopWidth() - 40)		
-			nLarg1  := GetDeskTopWidth() - 40			
-			nLargx := nLarg1 		
-		End If 
-	End If 
-	*/
-
-
-
-	
 	dbUseArea( .T.,,  cSqlp , cAlias )
 	dbSelectArea( cAlias )
 	dbGoTop()
@@ -503,11 +489,6 @@ Function xBrowser( cTabx ,   aDatas1 , cParent   ,  cBrwName , nCol  , aCabecalh
 	DbGotop()
 
 	nMaxItem1 := RecCount()
-
-
-	//msginfo(Str(  nMaxItem1  ))
-
-
 
 	DEFINE WINDOW &cBrowserName ;
 		AT nRowIni,nCol  ;
@@ -757,16 +738,17 @@ Function xCalcBarV()
 		Return 0
 	End If 	
 
-	nCalc := Int (( nTamBar *  Recno() ) / RecCount()    )
+
+	
+	nCalc := nTamBar *  Val(Transform(nTamPag / RecCount() , "999,999.999999"))
 
 	If (RecCount() <= nTamPag)
 		nCalc := GetProperty(cBarraVfrm , 'Height') - 135 
 	End If 
 
 	If nCalc <= 30
-	   nCalc := 30
-	End If 
-    
+	   nCalc := 30	   
+	End If   
 	
 
 Return nCalc 
@@ -1663,14 +1645,9 @@ Function xTeclasBrow()
 				nItemx5 := nSav2
 				nSelLine := nItemx5			
 
-
-
-			Else			
-				
+			Else							
 				xSelItem( Recno()  , .f.  )
-			//	SysWait(0.01)				
-				//BT_ClientAreaInvalidateAll(cBrowserName)
-			
+				SysWait(0.03)		
 
 			End If		
 
@@ -1741,19 +1718,12 @@ Function xTeclasBrow()
 			
 
 					Do Events 
-					SETVSCROLLVALUE( GetFormHandle(  cBrowserName )  , nItemBrwHeight  , 1 )
-
-					//ScrolUp1(.t. , nItemBrwHeight)	
+					SETVSCROLLVALUE( GetFormHandle(  cBrowserName )  , nItemBrwHeight  , 1 )					
 					BT_ClientAreaInvalidateAll(cBrowserName)
-
-
-					//msginfo('2l')
-
 
 
 				Else 
 					ScrolUp1(.t. )						
-
 				End If 		
 				
 
@@ -1770,7 +1740,7 @@ Function xTeclasBrow()
 		
 				
 				xSelItem( nItemx5  , .f.  , .f. )			
-				//SysWait(0.01)
+				SysWait(0.03)
 
 
 			End If		
@@ -1943,9 +1913,11 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 	For n1 := 1 To Len(aMtrOp) 
 
-		cTexto :=   Alltrim(Str(nLine + nRow )) + '   '  + Alltrim(Str(nRow )) + '  '   + Alltrim(Str(nLine ))  + ' ' + ;
-		Alltrim(StrZero(n1,3)) + '  '  + Hb_Utf8ToStr(aMtrOp[n1][1][1]) + Replicate(' ',200)
-		nLinb++
+		cTexto :=  Hb_Utf8ToStr(aMtrOp[n1][1][1]) + Replicate(' ',200)
+		
+		//Alltrim(Str(nLine + nRow )) + '   '  + Alltrim(Str(nRow )) + '  '   + Alltrim(Str(nLine ))  + ' ' + ;
+		//Alltrim(StrZero(n1,3)) + '  '  + Hb_Utf8ToStr(aMtrOp[n1][1][1]) + Replicate(' ',200)
+		//nLinb++
 
 		//msginfo(Str(Len(aMtrOp)))
 
@@ -2892,19 +2864,19 @@ Function xPaintScroll( cJanela )
 
 	If (nItemX5 == 1)		
 		BT_DrawFillRoundRect ( hDC , nRIni ,  2   , Width - 5 , nAltura , 5 ,5 ,   {152 , 152 ,152}   , {152 , 152 ,152}  , 0 ) 				
-	Else
-
-		If (nItemX5 == nMaxItem1 )			
-			BT_DrawFillRoundRect ( hDC , nLimteLin - nAltura ,  2   , Width - 5 , nAltura , 5 ,5 ,   {152 , 152 ,152}   , {152 , 152 ,152}  , 0 ) 				
+	Else			
 		
-			
-		Else			
+		
+		If (Recno() == nMaxItem1 )	
+			nAltura := xCalcBarV()
+			BT_DrawFillRoundRect ( hDC , nLimteLin - nAltura ,  2   , Width - 5 , nAltura , 5 ,5 ,   {152 , 152 ,152}   , {152 , 152 ,152}  , 0 ) 								
+		Else	
 
 
 			yPos := nLimteLin - nRIni - nAltura
-			nFator := Int(( nItemX5 * yPos     ) /	nMaxItem1)
+			nFator := Int(( Recno() * yPos     ) /	RecCount())
 
-			If (Len(aMt1) <= nTamPag)
+			If (RecCount() <= nTamPag)
 				nFator := 0	
 			End If 
 					
@@ -3258,6 +3230,8 @@ Function xGoBottom()
 		Return
 	End If 
 
+	nItemX5 := nMaxItem1
+
 
 	xCursorWait( .t. )	
 
@@ -3290,6 +3264,12 @@ Function xGoBottom()
 	nClearIt2   := Recno()
 
     
+	dbGoBottom()
+
+	SysWait(0.01)		
+
+	//msginfo(Str(Recno()))
+
 
 	nSelLine := nItemx5	
 	BT_ClientAreaInvalidateAll(cBrowserName)

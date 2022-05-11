@@ -427,7 +427,7 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 		AAdd( aDynBack, bColor )
 		AAdd( aForBack, fColor )
 	NEXT
-
+/*
 
 	PRIVATE nTxColorE  := Rgb( 79, 79, 79 )
 	PRIVATE nFrColorE  := Rgb( 207, 207, 207 )
@@ -465,6 +465,8 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 
 	PRIVATE aBtnFont  := { cFontName , 8 , .F., .F., .F., .F. }
 
+	*/
+
 
 	Private aLbly1 := {}
 
@@ -475,12 +477,22 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 	Private fColorGrid
 	Private bColorGrid
 
+	/*
 
 	PRIVATE aBtnColor := ;
 		{ { nTxColorE, nFrColorE, nBkColorE1, nBkColorE2, nGradDirE }, { nTxColorD, nFrColorD, nBkColorD1, nBkColorD2, nGradDirD }, { nTxColorF, nFrColorF, nBkColorF1, nBkColorF2, 		 					nGradDirF } }
 
 	PRIVATE aBtnSel := ;
 		{ { nTxColorF, nFrColorF, nBkColorF1, nBkColorF2, nGradDirF }, { nTxColorD, nFrColorD, nBkColorD1, nBkColorD2, nGradDirD }, { nTxColorF, nFrColorF, nBkColorF1, nBkColorF2, 						nGradDirF } }
+
+	PRIVATE aBtnnG1 := ;
+		{ { Rgb(255,255,255) , Rgb( 178 , 178 , 178 ) , Rgb( 58 , 174 , 203 ) , Rgb( 58 , 174 , 203 ), nGradDirE }, { Rgb( 178 , 178 , 178 ) , nFrColorD, Rgb( 178 , 178 , 178 ), nBkColorD2, nGradDirD }, { RGB(255,255,255) , nFrColorF, Rgb( 54 , 100 , 109 )  , Rgb( 54 , 100 , 109 )  , 		 					nGradDirF } }
+
+	PRIVATE aBtnG2 := ;
+		{ { Rgb(255,255,255) , {54,100,109} , Rgb( 44 , 169 , 139 ) , Rgb( 20 , 158 , 192 ), nGradDirE }, { {255,255,255}  , nFrColorD, nBkColorD1, nBkColorD2, nGradDirD }, { RGB(255,255,255) , Rgb( 54 , 100 , 109 ) , Rgb( 54 , 100 , 109 ) ,  Rgb( 54 , 100 , 109 )  , 		 					nGradDirF } }
+	
+	*/
+
 
 
 	//PRIVATE aButtons := Aclone( aOpcoes )
@@ -1062,7 +1074,7 @@ Function InitTela(  lIni1  , nColz1)
 
 
 	aMtrDados := {}		
-	aMz1 := yEfect(  cActiveJan , .t.   )	
+	//aMz1 := yEfect(  cActiveJan , .t.   )	
 	//aMtrDados := DoMatriz( cActiveJan , cTabela ) 
 	
 
@@ -1084,18 +1096,45 @@ Function InitTela(  lIni1  , nColz1)
 	//xCloseMsg()
 
 
-	EfectEnd(cActiveJan , aMz1 )
+	//EfectEnd(cActiveJan , aMz1 )
+
+	nB1 := 5490
+	OBTN_Create( cFormPrin, nB1,  'Refresh'  ,  50 , 35 ,  75,  25 ,  .T., .T., .T.,  8 ,  aBtnColor  , aBtnFont )
+	OBTN_Font( cFormPrin , nB1 ,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
+
+	nIndexEve1 := EventCreate( { || EventButton()  }  , OBTN_Handle(  cFormPrin , Nb1    )     ) 
+	EventProcessAllHookMessage( nIndexEve1 ,   .T.)
+
+
+	nB1++
+	OBTN_Create( cFormPrin, nB1,  'Filtrar'  ,  50 , 115 ,  75,  25 ,  .T., .T., .T.,  8 ,  aBtnG1  , aBtnFont )
+	OBTN_Font( cFormPrin , nB1 ,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
+
+	nIndexEve1 := EventCreate( { || EventButton()  }  , OBTN_Handle(  cFormPrin , Nb1    )     ) 
+	EventProcessAllHookMessage( nIndexEve1 ,   .T.)
+
+
+	nB1++
+	OBTN_Create( cFormPrin, nB1,  Hb_AnsiToOem('Mais Opções')  ,  50 , 192 ,  85,  25 ,  .T., .T., .T.,  8 ,  aBtnG1  , aBtnFont )
+	OBTN_Font( cFormPrin , nB1 ,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
+
+	nIndexEve1 := EventCreate( { || EventButton()  }  , OBTN_Handle(  cFormPrin , Nb1    )     ) 
+	EventProcessAllHookMessage( nIndexEve1 ,   .T.)
+
+	
 	
 	
 	SetWindowCursor( GetFormHandle( cFormPrin )  , IDC_ARROW  )
 
 
 
-	xBrowser( 'Clientes' , aMtrDados , cFormPrin ,  'Brw' + Left(cTabela,4)  ,, aCabec , aTams , aTipos1 , .t. ,   .t. , 165   )
+	xBrowser( 'Clientes' , aMtrDados , cFormPrin ,  'Brw' + Left(cTabela,4)  ,, aCabec , aTams , aTipos1 , .t. ,   .t. , 115   )
 
 	DoMethod( 'Brw' + Left(cTabela,4) , 'Activate')
 
 	DoMethod( cFormPrin , 'SetFocus')
+
+	Do Events 
 
 
 
@@ -3431,6 +3470,20 @@ FUNCTION EventButton()
 
 
 
+
+	//nB1 := 5490
+
+	For N1 := 5480 to 5500
+
+		IF ( OBTN_Handle( cActiveJan   , n1) == nHWnd )
+			nIdBut := n1
+			msginfo(Str(nIdBut))
+		END IF
+
+	Next 	
+
+
+	
 	If !_IsWindowDefined(cFormx)
 		Return 
 	End If 
@@ -3439,6 +3492,8 @@ FUNCTION EventButton()
 
 
 	//msginfo(cFormx)
+
+	/*
 
 	nInd1 := AScan( aButtons, {| a| a[ 5 ] == nWParam } )
 
@@ -3485,6 +3540,8 @@ FUNCTION EventButton()
 
 
 	Next 
+
+	*/
 
 
 	*// Eventos Botoes	
@@ -4161,19 +4218,12 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 	End If
 
 	
-
-	
-//If (GetProperty(  cActiveJan   , "HANDLE" ) = GetProperty(cForm, "HANDLE"))
-
-//	End If 	
-
-
 	IF nHWnd == GetProperty(  cActiveJan   , "HANDLE" )
 
 		// msginfo('ok')
 		// Return
 		IF nMsg == WM_DRAWITEM
-			IF (nWParam >=  5457) .and. ( nWParam <=  5461  )
+			IF (nWParam >=  5457) .and. ( nWParam <=  5500  )
 				OBTN_Draw( nHWnd,  nWParam , nLParam )
 			END IF
 		END IF

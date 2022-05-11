@@ -142,8 +142,39 @@ FUNCTION Main
 
 	Private aBmpSv1 := Nil
 
+	Public nGradDirF  := 0
+	Public cFontName  := 'Arial'
+	Public nFontSize  := 8
 
-	PRIVATE nFontSize  := 8
+
+
+	Public nTxColorE  := Rgb( 79, 79, 79 )
+	Public nFrColorE  := Rgb( 207, 207, 207 )
+
+	Public nPosScr := 0
+
+	Public nBkColorE1 := Rgb( 251, 251, 251 )
+	Public nBkColorE2 := Rgb( 230, 230, 230 )
+
+	Public nGradDirE  := 0
+	Public nTxColorD  := 0x808080
+
+	Public nFrColorD  := Rgb( 232,232,232 )
+	//{ 9, 111, 137 }
+
+	Public nBkColorD1 := 0XE0E0E0
+	Public nBkColorD2 := 0XE0E0E0
+	Public nGradDirD  := 0
+	Public nTxColorF  := Rgb( 45, 55, 56 )
+	Public nFrColorF  := nFrColorE
+
+	Public nTxColorG := Rgb( 64 , 128 , 128 )
+	Public nBkColorG1 := Rgb( 64 , 128 , 128 )
+	//Private nFrColorG
+
+
+	Public nBkColorF1 :=  0xFFFFFF
+	Public nBkColorF2 :=  Rgb( 192, 192, 192 )
 
 
 
@@ -168,10 +199,26 @@ FUNCTION Main
 
 	Public bColorGrid := {|| iif( ( LastRec() > 0 ) .AND. ( RecNo() / 2 == Int(RecNo() / 2 ) ), { 235,243,242 }, {211,231,230} ) }
 
+	
+	Public aBtnG1 := ;
+		{ { Rgb(255,255,255) , Rgb( 178 , 178 , 178 ) , Rgb( 58 , 174 , 203 ) , Rgb( 58 , 174 , 203 ), nGradDirE }, { Rgb( 178 , 178 , 178 ) , nFrColorD, Rgb( 178 , 178 , 178 ), nBkColorD2, nGradDirD }, { RGB(255,255,255) , nFrColorF, Rgb( 54 , 100 , 109 )  , Rgb( 54 , 100 , 109 )  , 		 					nGradDirF } }
+	
+	Public aBtnG2 := ;
+		{ { Rgb(255,255,255) , {54,100,109} , Rgb( 44 , 169 , 139 ) , Rgb( 20 , 158 , 192 ), nGradDirE }, { {255,255,255}  , nFrColorD, nBkColorD1, nBkColorD2, nGradDirD }, { RGB(255,255,255) , Rgb( 54 , 100 , 109 ) , Rgb( 54 , 100 , 109 ) ,  Rgb( 54 , 100 , 109 )  , 		 					nGradDirF } }
+	
+
 	Public lVScrool := .f.
 
 	Public lTelaToda := .f.
 
+
+	Public lBold      := .t.
+	Public lItalic    := .F.
+	Public lUnderline := .F.
+	Public lStrikeOut := .F.
+
+	
+	
 /*
 	Private aOpx1 := {}
 
@@ -405,7 +452,7 @@ FUNCTION Main
 	Private BkColorF2 :=  Rgb( 192, 192, 192 )
 
 	Private GradDirF  := 0
-	Private cFontName  := 'Arial'
+	//Private cFontName  := 'Arial'
 	Private FontSize  := 8
 
 	//Private nColScrool := 0
@@ -413,13 +460,19 @@ FUNCTION Main
 
 	Private lScrool := .t.
 
-	Private aBtnFont  := { "Arial", 8, .F., .F., .F., .F. }
+	Private aBtnFont  := { cFontName , 8, .F., .F., .F., .F. }
 
 	Public aBtnCorSl := ;
 		{ { TxColorE, FrColorE, BkColorE1, BkColorE2, GradDirE }, { TxColorD, FrColorD, BkColorD1, BkColorD2, GradDirD }, { TxColorF, FrColorF, BkColorF1, BkColorF2,GradDirF } }
 
 	Public aBtnSl := ;
 		{ { TxColorF, FrColorF, BkColorF1, BkColorF2, GradDirF }, { TxColorD, FrColorD, BkColorD1, BkColorD2, GradDirD }, { TxColorF, FrColorF, BkColorF1, BkColorF2,	GradDirF } }
+
+	
+
+	Public aBtnColor := ;
+		{ { nTxColorE, nFrColorE, nBkColorE1, nBkColorE2, nGradDirE }, { nTxColorD, nFrColorD, nBkColorD1, nBkColorD2, nGradDirD }, { nTxColorF, nFrColorF, nBkColorF1, nBkColorF2, 		 					nGradDirF } }
+	
 
 	Public nDesktopHeight := GetDesktopHeight()
 
