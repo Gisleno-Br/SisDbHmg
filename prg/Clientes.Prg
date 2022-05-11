@@ -1,6 +1,8 @@
 #require "rddsql"
 #require "sddmy"
 
+#include "common.ch"
+
 
 
 
@@ -191,6 +193,8 @@ FUNCTION CadCli()
 	Private nObjDrag  := 0
 
 	Private lDrawOk := .f.
+
+	Private nIndicex := 1 
 
 	private cButVerde := ".&Filtrar."
 
@@ -1069,6 +1073,7 @@ Function InitTela(  lIni1  , nColz1)
 	Local aCabec   := GetCamposDic( cTabela, 'S', .F. , .f. )
 	Local aTams    := GetCamposInf( cTabela, 'TAM' )
 	Local aTipos1   := GetCamposInf( cTabela, 'TIPO' )
+	Local aIndices := GetIndexes( cTabela )
 
 	//LOCAL aTips    := GetCamposInf( wCad, 'CABEC' )
 
@@ -1121,6 +1126,28 @@ Function InitTela(  lIni1  , nColz1)
 	nIndexEve1 := EventCreate( { || EventButton()  }  , OBTN_Handle(  cFormPrin , Nb1    )     ) 
 	EventProcessAllHookMessage( nIndexEve1 ,   .T.)
 
+
+	
+	nB1++
+	OBTN_Create( cFormPrin, nB1,  'Pesquisar'  ,  50 , GetDeskTopWidth() - 115 ,  85,  25 ,  .T., .T., .T.,  8 ,  aBtnColor  , aBtnFont )
+	OBTN_Font( cFormPrin , nB1 ,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
+
+	nIndexEve1 := EventCreate( { || EventButton()  }  , OBTN_Handle(  cFormPrin , Nb1    )     ) 
+	EventProcessAllHookMessage( nIndexEve1 ,   .T.)
+
+
+	@55, GetDeskTopWidth() - 550 LABEL Lbl2a OF &(cActiveJan) Value "Busca Rapida : " WIDTH 95 HEIGHT 15 BOLD Font cFontName Size 9
+	SetProperty( cActiveJan ,  'Lbl2a' , 'FONTCOLOR' , {78,78,78} )
+	
+
+	nIndicex := 1 
+	@ 52,GetDeskTopWidth() - 450 COMBOBOX Combo_1 OF &(cActiveJan) ITEMS aIndices VALUE nIndicex WIDTH 135 HEIGHT 20
+
+	@ 52 , GetDeskTopWidth() - 313 TEXTBOX TextBusca OF &(cActiveJan) ;
+		VALUE Space(35) WIDTH 200 HEIGHT 20 ;
+		FONT 'Arial' SIZE 10 ON GOTFOCUS gColor1(Thiswindow.Name , This.Name) ;
+			ON LOSTFOCUS gColor2(Thiswindow.Name , This.Name) 
+
 	
 	
 	
@@ -1140,6 +1167,17 @@ Function InitTela(  lIni1  , nColz1)
 
 		   
 Return
+
+Static Function xRetImgs( nId )
+
+
+	Local aMtr1 := {}	 
+
+	If (nId == 5493)
+		aMtr1 := {'LUPA1'  , 'LUPA2' , 3}
+	End If 
+ 
+Return aMtr1
 
 function ShowBrowser()
 
@@ -3468,7 +3506,7 @@ FUNCTION EventButton()
 		Return
 	End If
 
-
+	
 
 
 	//nB1 := 5490
@@ -3476,18 +3514,23 @@ FUNCTION EventButton()
 	For N1 := 5480 to 5500
 
 		IF ( OBTN_Handle( cActiveJan   , n1) == nHWnd )
+			cFormx := cActiveJan
 			nIdBut := n1
-			msginfo(Str(nIdBut))
+			//msginfo(Str(nIdBut))
 		END IF
 
 	Next 	
-
 
 	
 	If !_IsWindowDefined(cFormx)
 		Return 
 	End If 
 
+
+
+
+
+	
 	
 
 
@@ -3544,6 +3587,7 @@ FUNCTION EventButton()
 	*/
 
 
+
 	*// Eventos Botoes	
 	If ( nIdBut > 0  )
 
@@ -3563,6 +3607,20 @@ FUNCTION EventButton()
 
 
 			SetWindowCursor(  OBTN_Handle( cFormX , nIdBut )  , CURSORHAND   )
+
+			If (nIdBut = 5490)
+				SetToolTip ( nHWnd  ,  "Atualiza Dados no Browser de Dados." ,  GetFormToolTipHandle (cFormx)  )
+			End If
+
+			If (nIdBut = 5491)
+				SetToolTip ( nHWnd  ,  "Realiza o Processo de Filtragem de Registros." ,  GetFormToolTipHandle (cFormx)  )
+			End If
+
+			If (nIdBut = 5492)
+				SetToolTip ( nHWnd  ,  "Diversas Opções." ,  GetFormToolTipHandle (cFormx)  )
+			End If
+
+			/*
 
 
 			nindx := Ascan( aButtons , { |a| a[1] == OBTN_Caption(cFormx , nIDBut) } )
@@ -3597,6 +3655,8 @@ FUNCTION EventButton()
 
 			End If
 
+			*/
+
 			//sysWait(.1)
 		
 
@@ -3624,6 +3684,7 @@ FUNCTION EventButton()
 
 
 		*// Eventos Handle Header LstView
+		/*
 		If  (nHWnd = ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan ) )  )
 
 		
@@ -3750,6 +3811,8 @@ FUNCTION EventButton()
 	
 
 		End If 
+
+		*/
 
 
 
@@ -3933,6 +3996,7 @@ FUNCTION EventButton()
 
 
 		*// Eventos Grid 
+		/*
 	If (nHWnd = GetControlHandle( 'br_Grid', cActiveJan ))
 		
 
@@ -4020,6 +4084,7 @@ FUNCTION EventButton()
 		End If
 
 	End If
+	*/
 
 
 RETURN
@@ -4224,7 +4289,13 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 		// Return
 		IF nMsg == WM_DRAWITEM
 			IF (nWParam >=  5457) .and. ( nWParam <=  5500  )
-				OBTN_Draw( nHWnd,  nWParam , nLParam )
+
+				If nWParam == 5493
+					OBTN_Draw( nHWnd,  nwParam, nLParam , .t., xRetImgs( nWParam ) , .t. , 25 )
+				Else 	
+					OBTN_Draw( nHWnd,  nWParam , nLParam )
+				End If	
+
 			END IF
 		END IF
 
@@ -4252,6 +4323,26 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 				nID := GetDlgCtrlID( GetFocus() )
 			ENDIF
 
+			If (nId == 5491)
+				PushButton( cFormPrin  , nid )
+				//msginfo('1')	
+				
+			End If 	
+
+			If (nId == 5492)
+				PushButton( cFormPrin  , nid )
+				msginfo('2')	
+			End If 	
+
+			
+			If (nId == 5490)
+				PushButton( cFormPrin  , nid )
+				xBrwRefresh(  'Brw' + Left(cTabela,4)  )
+				//msginfo('3')	
+			End If 	
+
+
+			/*	
 		
 
 			If (nId == 5458)
@@ -4365,6 +4456,8 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 				lTracking12 := .f.	
 
 			END IF
+
+			*/
 
 
 		END IF

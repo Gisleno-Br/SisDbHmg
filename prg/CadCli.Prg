@@ -257,6 +257,10 @@ FUNCTION gColor1( cJan, cObj )
    SetProperty(  cJan, cObj, "BACKCOLOR", { 28, 157, 189 } )
    SetProperty(  cJan, cObj, "FONTCOLOR", { 255, 255, 255 } )
 
+   If Empty(Alltrim(  GetProperty( cJan , cObj , 'Value')          ))
+      SetProperty( cJan , cObj , 'Value' , '')  
+   End If    
+
 // HabilGrv()
 
 RETURN

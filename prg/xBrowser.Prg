@@ -131,6 +131,8 @@ Static cTabelay := ''
 Static aTam2     := {}
 Static aTips2    := {}
 
+Static cSqlp := ''
+
 
 //DECLARE WINDOW Win_Browser
 
@@ -190,7 +192,7 @@ Function TestBrow( cParent1 , cTabx  )
 	Local aTips
 	LOCAL nQReg
 	Local qReg1   := 200
-	Local calias  := "TMP"
+	Local calias  := "T_" + Left(cTabela,3)
 	local cTab1
 	local aCabex:={}
 	Local cTabela := cTabx
@@ -427,8 +429,11 @@ Function xBrowser( cTabx ,   aDatas1 , cParent   ,  cBrwName , nCol  , aCabecalh
 	Private aOpx1 := 0
 	Private cAlias := Left(cTabx,4)
 
-	Private cSqlp  := GetSql( cTabx  , .f. )
+	
 	Private nLarg1  := GetDeskTopWidth() - 40
+
+
+	cSqlp  := GetSql( cTabx  , .f. )
 
 	DEFAULT nCol := 10
 	DEFAULT nRowIni   := 145
@@ -1183,6 +1188,7 @@ Function xRecords(  nRecs , lFrente )
 	Local nCont1 := 0
 	Local nTotz := 0
 	Local nIndz := 0
+	Local lSort := .f. 
 
 	Local nTamz1 := GetTextoTam( ' '  , cActiveJan )
 	Local bBlock := { || Eof()}
@@ -1215,15 +1221,22 @@ Function xRecords(  nRecs , lFrente )
 
 		  nCont1++	
 
+
 		  nIndz := Ascan(aMt1 , { |a| a[1][7] == Recno() }  )
 
 		  If nIndz == 0 					
-			  Aadd(aMt1 , aRet )			
-			  nLastadd := Len(aMt1)
+			  Aadd(aMt1 , aRet )						  
+			  lSort := .t.
+		  Else 
+			  aMt1[nIndz][1][1]	:= aRet[1][1]	  			  
+			  aMt1[nIndz][1][4]	:= Aclone(aRet[1][4] )	  
+			  
+			  //msginfo( aRet[1][1]  )
 		  End If 	
 
 		  Do Events 
-		  
+
+
 
 		  If (nCont1 >= nRecs)
 			  Exit 
@@ -1239,7 +1252,9 @@ Function xRecords(  nRecs , lFrente )
 	Enddo
 
 
-	aMt1 := Asort( aMt1 ,,, { |a,b|  a[1][7] < b[1][7]    })
+	If (lSort)
+		aMt1 := Asort( aMt1 ,,, { |a,b|  a[1][7] < b[1][7]    })
+	End If 
 
 	Do Events 
 
@@ -3072,6 +3087,9 @@ Function xGoPgUp()
 			ScrolUp1(.t. ,nDiff1)	
 		End If 	
 
+		
+		SysWait(0.04)
+
 	Else 
 		xDialog("Inicio das informações Atingido." , .f. )		
 	End If 	
@@ -3086,17 +3104,14 @@ Function xGoPgUp()
 	BT_ClientAreaInvalidateAll(cBrowserName)
 
 	
-	Do Events 
+	//Do Events 
 
 
 	xDcToDc()				
 	xDcToDEspe()
 
 	
-	SysWait(0.01)		
-
-
-	
+	SysWait(0.01)			
 
 	
 		
@@ -3369,6 +3384,52 @@ Function xGoTop( lScrol1 )
 
 
 REturn
+
+
+Function xBrwRefresh(cFormObj)
+
+	Local nRec1 := Recno()
+	Local cAlias  := "T_" + Left(cTabela,3)
+
+
+	Use 
+
+	SysWait(0.03)
+
+	
+	dbUseArea( .T.,,  cSqlp , cAlias )
+	dbSelectArea( cAlias )
+
+	
+
+	//msginfo(RddName())
+
+	xCursorWait(.t.)
+
+	
+	If _isWindowDefined(cFormObj)		
+
+		DbGoto( aMVisible[1][2]  )	
+		xRecords()	
+
+
+		DbGoto(nRec1)
+		BT_ClientAreaInvalidateAll(cBrowserName)
+		SysWait(0.01)			
+
+
+		Do Events
+		BT_ClientAreaInvalidateAll(cBarraVfrm)
+
+		xDcToDc()	
+		xDcToDEspe()
+
+	End If 
+
+	xCursorWait(.f.)
+	
+
+Return 
 
 
 
@@ -3718,14 +3779,14 @@ Function xCursorWait( lOn )
 
 	If lOn 
 		//SetWindowCursor( GetFormHandle( cFormPrin )  , 'CURSOR1'  )
-		SetWindowCursor( GetActiveWindow()  , 'CURSOR1'  )
+		SetWindowCursor( GetFocus()  , 'CURSOR1'  )
 		
 	Else 
 
 		//SetWindowCursor( GetFormHandle( cFormPrin )  , IDC_ARROW  )
 		//SetWindowCursor( GetFormHandle(cEspelhoBrw )  , IDC_ARROW  )	
 
-		SetWindowCursor( GetActiveWindow()  ,IDC_ARROW  )
+		SetWindowCursor( GetFocus()  ,IDC_ARROW  )
 		
 		
 	End If 	
