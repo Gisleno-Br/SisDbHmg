@@ -450,6 +450,7 @@ FUNCTION Main
 
 
 
+	
 
 	Private hBitmap25 := 0
 
@@ -464,6 +465,8 @@ FUNCTION Main
 
 	//Private nColScrool := 0
 
+
+	
 
 	Private lScrool := .t.
 

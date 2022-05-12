@@ -526,6 +526,7 @@ Function OBTN_GetBitMap1( nId  , lFocus )
 
 
 
+
    
   //, 'SCRDOWN1' , 0 , 'SCRDOWN1')
 
@@ -840,11 +841,10 @@ HB_FUNC( _OWNBUTTONDRAW )
          rcF.top    = 0;
          rcF.left   = ncolbmp - 1;
          rcF.right  = nTamanho;
-         rcF.bottom = nTamanho;
-         
+         rcF.bottom = nTamanho;         
 
-
-         FillRect(pDIS->hDC , &rcF, hBrush4);  
+         // retirado
+        // FillRect(pDIS->hDC , &rcF, hBrush4);  
 
          DrawBitmapX( pDIS->hDC, hBitMap1 , 1 ,  ncolbmp  , nTamanho , nTamanho , 0 );
          

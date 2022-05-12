@@ -385,6 +385,10 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 	PRIVATE aHeaderDb := aHeader
 	PRIVATE aCamposDb := aCampos
 
+	Private nIndicex := 1
+
+	Private aIndices := GetIndexes( cTabelax )
+
 	Private lOpcaoAberta := .f.
 
 	Private cTabela := cTabelax
@@ -1073,7 +1077,7 @@ Function InitTela(  lIni1  , nColz1)
 	Local aCabec   := GetCamposDic( cTabela, 'S', .F. , .f. )
 	Local aTams    := GetCamposInf( cTabela, 'TAM' )
 	Local aTipos1   := GetCamposInf( cTabela, 'TIPO' )
-	Local aIndices := GetIndexes( cTabela )
+	
 
 	//LOCAL aTips    := GetCamposInf( wCad, 'CABEC' )
 
@@ -1124,12 +1128,13 @@ Function InitTela(  lIni1  , nColz1)
 	OBTN_Font( cFormPrin , nB1 ,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
 	nIndexEve1 := EventCreate( { || EventButton()  }  , OBTN_Handle(  cFormPrin , Nb1    )     ) 
-	EventProcessAllHookMessage( nIndexEve1 ,   .T.)
+	EventProcessAllHookMessage( nIndexEve1 ,   .T.)	
 
 
-	
+
+
 	nB1++
-	OBTN_Create( cFormPrin, nB1,  'Pesquisar'  ,  50 , GetDeskTopWidth() - 115 ,  85,  25 ,  .T., .T., .T.,  8 ,  aBtnColor  , aBtnFont )
+	OBTN_Create( cFormPrin, nB1,  ''  ,  50 , GetDeskTopWidth() - 110 ,  35,  25 ,  .T., .T., .T.,  8 ,  aBtnColor  , aBtnFont )
 	OBTN_Font( cFormPrin , nB1 ,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
 	nIndexEve1 := EventCreate( { || EventButton()  }  , OBTN_Handle(  cFormPrin , Nb1    )     ) 
@@ -1139,6 +1144,7 @@ Function InitTela(  lIni1  , nColz1)
 	@55, GetDeskTopWidth() - 550 LABEL Lbl2a OF &(cActiveJan) Value "Busca Rapida : " WIDTH 95 HEIGHT 15 BOLD Font cFontName Size 9
 	SetProperty( cActiveJan ,  'Lbl2a' , 'FONTCOLOR' , {78,78,78} )
 	
+
 
 	nIndicex := 1 
 	@ 52,GetDeskTopWidth() - 450 COMBOBOX Combo_1 OF &(cActiveJan) ITEMS aIndices VALUE nIndicex WIDTH 135 HEIGHT 20
@@ -1173,9 +1179,15 @@ Static Function xRetImgs( nId )
 
 	Local aMtr1 := {}	 
 
+
 	If (nId == 5493)
 		aMtr1 := {'LUPA1'  , 'LUPA2' , 3}
 	End If 
+
+
+
+
+
  
 Return aMtr1
 
@@ -3620,6 +3632,10 @@ FUNCTION EventButton()
 				SetToolTip ( nHWnd  ,  "Diversas Opções." ,  GetFormToolTipHandle (cFormx)  )
 			End If
 
+			If (nIdBut = 5493)
+				SetToolTip ( nHWnd  ,  "Faz uma Consulta Rapida(" + Alltrim(aIndices[nIndicex]) + ")" ,  GetFormToolTipHandle (cFormx)  )
+			End If
+
 			/*
 
 
@@ -4282,8 +4298,10 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 	End If
 
+
 	
 	IF nHWnd == GetProperty(  cActiveJan   , "HANDLE" )
+
 
 		// msginfo('ok')
 		// Return
@@ -4291,10 +4309,11 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 			IF (nWParam >=  5457) .and. ( nWParam <=  5500  )
 
 				If nWParam == 5493
-					OBTN_Draw( nHWnd,  nwParam, nLParam , .t., xRetImgs( nWParam ) , .t. , 25 )
+					OBTN_Draw( nHWnd,  nwParam, nLParam , .f., xRetImgs( nWParam ) , .f. , 25 )
 				Else 	
 					OBTN_Draw( nHWnd,  nWParam , nLParam )
 				End If	
+
 
 			END IF
 		END IF

@@ -22,8 +22,10 @@
     OKMARK22    PNG     img\ngi22.png    
 
 
+
+
     LUPA1   PNG     img\LUPA001.Png   
-    LUPA2   BITMAP  img\Pesq1.Bmp
+    LUPA2   PNG     img\LUPA002.Png 
 
 
     ESQUERDA    BITMAP  img\SetEsquerda1.bmp 
