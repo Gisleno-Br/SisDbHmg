@@ -2119,6 +2119,38 @@ Function xLimpBarV()
 
 REturn 
 
+Function xDoPesq( cCampo1  , cBrwName , cValor  )
+
+	Local cSqlp  := GetSql( cTabela  , .f. )
+	Local aCabec  := GetCamposDic( cTabela, 'N', .f. , .f. )
+	LOCAL aCampos := GetCamposDic( cTabela, 'N', .t. , .f. )
+	Local nindice 
+
+
+	Msginfo(Hb_UTF8ToStr(aCabec[1]) + '   ' + cCampo1 )
+
+
+
+	If _isWindowDefined( cBrwName  )
+		
+		If Hb_UTF8ToStr(aCabec[1]) == Alltrim( cCampo1) 
+			nIndice := 1
+		Else 
+			nindice := Ascan(aCabec , Alltrim( Hb_UTF8ToStr(cCampo1))   )
+		End If 
+
+		msginfo(Str(  nindice ) + '   ' + cCampo1 +  '   ' + aCampos[nindice])
+
+		cSQlp += " Where " + cCampo1 + " = '" + Alltrim(cValor) + "' " + aCampos[nindice]
+
+
+
+
+	End If 
+
+
+REturn 	
+
 
 
 Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )

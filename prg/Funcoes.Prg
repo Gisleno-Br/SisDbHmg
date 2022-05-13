@@ -245,14 +245,18 @@ FUNCTION GetCamposDic( cTabela, cBrowse, lCmpTab , lOem )
 							AAdd( aCampos,   AllTrim(oRow:FieldGet(3 ))     )
 						End If
 					Else						
-						AAdd( aCampos,   oRow:FieldGet( 5 )  )
+						AAdd( aCampos,   Alltrim(oRow:FieldGet( 5 ))  )
 					End If
 				End If
 			End If
 
 		Else 
 			If !Empty( oRow:FieldGet( 5 ) )
-				AAdd( aCampos,  oRow:FieldGet( 5 )  )
+				If lCmpTab
+					AAdd( aCampos,  Alltrim(oRow:FieldGet( 3 ))  )	
+				Else 	
+					AAdd( aCampos,  Alltrim(oRow:FieldGet( 5 ))  )
+				End If 	
 			End If
 		End If
 
@@ -352,10 +356,12 @@ FUNCTION GetIndexes( cTabela )
 	cSql += "       AND s.INDEX_NAME = t.CONSTRAINT_NAME "
 	cSql += "LEFT OUTER JOIN dicionario b ON b.tabela = s.TABLE_NAME AND b.camporeal = s.COLUMN_NAME "
 	cSql += "WHERE 0 = 0 "
-	cSql += "      AND t.CONSTRAINT_NAME IS NULL "
+	//cSql += "      AND t.CONSTRAINT_NAME IS NULL "
 	cSql += "AND s.TABLE_SCHEMA = '"  + AllTrim( cBanco ) + "' and s.TABLE_NAME = '" + cTabela + "'"
 
 	// hb_MemoWrit("Con1.txt", cSql )
+
+	SaveLog(  'Sqlp01.txt' , cSql )
 
 	oServer := GetConexao()
 	oQuery  := oServer:Query( cSql )
@@ -364,7 +370,7 @@ FUNCTION GetIndexes( cTabela )
 
 		oGet := oQuery:GetRow( n1 )
 
-		AAdd( aM1, oGet:FieldGet( 2 ) )
+		AAdd( aM1, Hb_UTF8ToStr(oGet:FieldGet( 2 )) )
 
 		oQuery:Skip( 1 )
 

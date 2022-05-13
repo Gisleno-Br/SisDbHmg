@@ -222,6 +222,8 @@ FUNCTION CadCli()
 
 	Private cBrowName := ''
 
+	Private lSelBut1 := .f. 
+
 
 	Private nColOrder  := 0
 
@@ -1134,7 +1136,7 @@ Function InitTela(  lIni1  , nColz1)
 
 
 	nB1++
-	OBTN_Create( cFormPrin, nB1,  ''  ,  50 , GetDeskTopWidth() - 110 ,  35,  25 ,  .T., .T., .T.,  8 ,  aBtnColor  , aBtnFont )
+	OBTN_Create( cFormPrin, nB1,  ''  ,  48 , GetDeskTopWidth() - 110 ,  35,  25 ,  .T., .T., .T.,  8 ,  aBtnColor  , aBtnFont )
 	OBTN_Font( cFormPrin , nB1 ,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
 	nIndexEve1 := EventCreate( { || EventButton()  }  , OBTN_Handle(  cFormPrin , Nb1    )     ) 
@@ -1152,9 +1154,7 @@ Function InitTela(  lIni1  , nColz1)
 	@ 52 , GetDeskTopWidth() - 313 TEXTBOX TextBusca OF &(cActiveJan) ;
 		VALUE Space(35) WIDTH 200 HEIGHT 20 ;
 		FONT 'Arial' SIZE 10 ON GOTFOCUS gColor1(Thiswindow.Name , This.Name) ;
-			ON LOSTFOCUS gColor2(Thiswindow.Name , This.Name) 
-
-	
+			ON LOSTFOCUS gColor2(Thiswindow.Name , This.Name) 	
 	
 	
 	SetWindowCursor( GetFormHandle( cFormPrin )  , IDC_ARROW  )
@@ -1183,9 +1183,6 @@ Static Function xRetImgs( nId )
 	If (nId == 5493)
 		aMtr1 := {'LUPA1'  , 'LUPA2' , 3}
 	End If 
-
-
-
 
 
  
@@ -3608,6 +3605,10 @@ FUNCTION EventButton()
 
 			lTracking35 := TrackMouseEvent( nHWnd ) // TME_LEAVE is default flag
 
+			If (nIdBut = 5493)
+				lSelBut1 := .t.
+			End If 				
+
 
 			If (Alltrim(OBTN_Caption(cFormx, nIdBut )) $ cButVerde )
 				OBTN_Color( cFormx, nIdBut, aBtnG2 , .T. )
@@ -3633,7 +3634,8 @@ FUNCTION EventButton()
 			End If
 
 			If (nIdBut = 5493)
-				SetToolTip ( nHWnd  ,  "Faz uma Consulta Rapida(" + Alltrim(aIndices[nIndicex]) + ")" ,  GetFormToolTipHandle (cFormx)  )
+				//lSelBut1 := .t.
+				SetToolTip ( nHWnd  ,  "Faz uma Consulta Rapida(" + Alltrim(aIndices[nIndicex]) + ")" ,  GetFormToolTipHandle (cFormx)  )			
 			End If
 
 			/*
@@ -3679,7 +3681,12 @@ FUNCTION EventButton()
 		End If
 
 
+
 		If ( nMsg == WM_MOUSELEAVE )
+
+			If (nIdBut = 5493)
+				lSelBut1 := .f.				
+			End If
 
 			If (Alltrim(OBTN_Caption(cFormx , nIdBut )) $ cButVerde)
 				OBTN_Color( cFormx,  nIdBut, aBtnG1 , .T. )		
@@ -3689,6 +3696,8 @@ FUNCTION EventButton()
 
 			OBTN_Enable( cFormx, nIdBut, .T. )
 			OBTN_Visible( cFormx, nIdBut, .T. )
+
+		
 
 			lTracking35 := .F.
 
@@ -4268,6 +4277,8 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 	//Local cForm    := ''
 	Local cControl := ''
+	Local n1 
+	Local c1 
 
 	STATIC lTracking30 := .F.
 
@@ -4309,7 +4320,7 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 			IF (nWParam >=  5457) .and. ( nWParam <=  5500  )
 
 				If nWParam == 5493
-					OBTN_Draw( nHWnd,  nwParam, nLParam , .f., xRetImgs( nWParam ) , .f. , 25 )
+					OBTN_Draw( nHWnd,  nwParam, nLParam , lSelBut1 , xRetImgs( nWParam ) , .f. , 25 )
 				Else 	
 					OBTN_Draw( nHWnd,  nWParam , nLParam )
 				End If	
@@ -4359,6 +4370,25 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 				xBrwRefresh(  'Brw' + Left(cTabela,4)  )
 				//msginfo('3')	
 			End If 	
+
+
+			If (nId = 5493)
+
+				DO EVENTS 
+
+				PushButton( cFormPrin  , nid )
+				n1 := GetProperty(cActiveJan , "Combo_1" , "Value" )				
+
+				c1 := Alltrim(GetProperty(cActiveJan , "Combo_1" , "Item" , n1 ))				
+
+			//	msginfo(' 333 ' + c1)
+
+				DO EVENTS 
+				xDoPesq(  c1 , 'Brw' + Left(cTabela,4) ,  GetProperty(cActiveJan , "TextBusca" , "Value" )  )
+			End If 		
+
+
+
 
 
 			/*	

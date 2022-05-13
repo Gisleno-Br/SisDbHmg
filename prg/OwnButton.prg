@@ -557,7 +557,8 @@ FUNCTION OBTN_Draw( nHParent, nID, nDRAWITEMSTRUCT , lFocus , aMtBmp  , lBorda ,
 
       If lFocus 
          cBmpFile := aMtBmp[2]
-      End If 
+      End If       
+      
 
       nColx := aMtBmp[3]
 
