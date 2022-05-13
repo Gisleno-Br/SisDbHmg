@@ -61,7 +61,7 @@ Static nItemBrwHeight := 0
 Static nItemx5 := 1
 Static nClearIt2 := 1
 Static cOpMainSel  := ''
-Static nPageNumber := 1
+Static nPageNumber := 0
 Static hBitOk
 Static cBrowserName := ''
 Static cEspelhoBrw := ''
@@ -1163,8 +1163,6 @@ Function xRetReg()
 
 		End If		
 
-		
-
 		//Do Events
 
 	Next
@@ -1173,10 +1171,10 @@ Function xRetReg()
 
 	Aadd(aMVisible , {    Len(aMVisible)+1 ,    Recno()   })
 
-	nPagNum := Int(Recno() / nTamPag )+1
+	nPagNum := Int(Recno() / nTamPag )
 
 	
-	Aadd(aItens , { c1 , lAtivo , nPagNum  , aResults , '' , aRes2 , Recno()  , nTam1  }  )
+	Aadd(aItens , { c1 , lAtivo , nPagNum  , aResults , '' , aRes2 , Recno()  , nTam1  , 0 }  )
 	
 
 
@@ -1195,6 +1193,7 @@ Function xRecords(  nRecs , lFrente )
 	
 
 	Local aRet   := {}
+	Local nBarra := 0
 
 	Local cDump1 := 'Dump1566_' + Right(Time(),2) + '.txt'
 
@@ -1214,6 +1213,8 @@ Function xRecords(  nRecs , lFrente )
 	While !Eval(bBlock)
 
 		  aRet := xRetReg()
+		  nBarra++
+		  aRet[1][9] := nBarra 
 
 		  If nTotz == 0
 			 nTotz := (aRet[1][8] * nTamz1)			 
@@ -1230,8 +1231,6 @@ Function xRecords(  nRecs , lFrente )
 		  Else 
 			  aMt1[nIndz][1][1]	:= aRet[1][1]	  			  
 			  aMt1[nIndz][1][4]	:= Aclone(aRet[1][4] )	  
-			  
-			  //msginfo( aRet[1][1]  )
 		  End If 	
 
 		  Do Events 
@@ -2125,9 +2124,17 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 	Local aCabec  := GetCamposDic( cTabela, 'N', .f. , .f. )
 	LOCAL aCampos := GetCamposDic( cTabela, 'N', .t. , .f. )
 	Local nindice 
+	Local cSalva := Alias()
+	Local nInd1 
+	Local nRecSalva := Recno()
+
+	LOCAL cAlias1 := 'T_' + Left(Alltrim(Str(Int( hb_Random( 234355 ) ))),4)
+	Local nRec1 := 0
+
+	nClearIt2 := Recno()
 
 
-	Msginfo(Hb_UTF8ToStr(aCabec[1]) + '   ' + cCampo1 )
+	//Msginfo(Hb_UTF8ToStr(aCabec[1]) + '   ' + cCampo1 )
 
 
 
@@ -2139,12 +2146,117 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 			nindice := Ascan(aCabec , Alltrim( Hb_UTF8ToStr(cCampo1))   )
 		End If 
 
-		msginfo(Str(  nindice ) + '   ' + cCampo1 +  '   ' + aCampos[nindice])
+		csqlp := "Select Numreg from " + cTabela + "  Where " + aCampos[nindice] + " = " + QuotedStr(Alltrim(cValor)) 
 
-		cSQlp += " Where " + cCampo1 + " = '" + Alltrim(cValor) + "' " + aCampos[nindice]
+		
+		SaveLog('Sqlp.Txt' , cSqlp )		
+		dbUseArea( .T.,,  cSqlp , cAlias1 )
+		dbSelectArea( cAlias1 )
+		dbGoTop()
+
+
+		If Eof()
+			xDialog( Hb_Utf8ToStr("Pesquisa Não Localizada.")   , .f.  )
+		Else 
+
+			nRec1 := NumReg 
+			
+			dbSelectArea( cAlias1 )
+			Use 
+			DbSelectArea(  cSAlva  )			
+
+			DbGoto(nRecSalva)
+
+			If ( nRec1 <= nTamPag)					
+
+				nInd1 := Ascan(  aMVisible , { |a|  a[2] == nRec1   }   )
+
+				If nInd1 > 0				
+					nLinhaBarra := aMVisible[   nInd1  ][1]					
+					DbGoto(        aMVisible[   nInd1  ][2]	   )				
+				End If 					
+	
+				nItemx5 := 	Recno()
+				nSelLine := nItemx5			
+	
+				lHitb := (nLinhaBarra = nTamPag)
+				lHitt := (nLinhaBarra = 1)			
+				Do Events
+				xDcToDc()			
+				Do Events				
+
+			Else 
+
+				nIndz := Ascan(aMt1 , { |a| a[1][7] == nRec1 }  )		
+
+				If (nIndz == 0)
+
+
+				Else 
+
+
+					nPg1   := aMt1[nIndz][1][3]
+					nLBar  := aMt1[nIndz][1][9]
+
+					n1 := nRec1 - (nLBar - 1)
+
+					DbGoto(   n1 )  
+
+					EncheMVis( Recno()   , .t. )	
+					
+					nLinhaBarra := nLBar	
+					DbGoto(nRec1)
+
+					nClearIt2 := Recno()
 
 
 
+					lHitb := (nLinhaBarra = nTamPag)
+					lHitt := (nLinhaBarra = 1)		
+
+					//msginfo( Str(  Abs(   nPageNumber - nPg1      )	 ))
+
+					If (nPageNumber != nPg1) 
+						ScrolUp1(  (nPageNumber > nPg1)           ,  Abs(   nPageNumber - nPg1      )	*  (nItemBrwHeight * nTamPag)      )	
+
+						If (nLBar == nTamPag)
+						//	msginfo('ok2')
+							ScrolUp1(  (nPageNumber > nPg1)           ,   (nItemBrwHeight * nTamPag)      )	
+						End If 	
+						
+					End If 	
+					
+
+					xSelItem( Recno() , .f. , .f.  )
+					
+					
+					BT_ClientAreaInvalidateAll(cBrowserName)
+
+					Do Events
+					xDcToDc()			
+					Do Events		
+
+					n2 := nRec1 + (nTamPag - nLBar)
+
+					SysWait(0.02)
+
+
+				//	msginfo('Found! '  + Str(nPg1) + '  ' + Str(nPageNumber) + '   ' + Str(nLBar) + '   ' + Str(n1) + '    ' + Str(n2) )
+
+
+				End If
+				
+				
+			End If 
+
+
+		End If 
+
+
+
+
+
+		//msginfo( cAlias1 + '  '  + cSqlp)
 
 	End If 
 
@@ -2762,17 +2874,12 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 	Local nRec := Recno()
 	
 	Default lFrente := .t.
-
-
 	
 
 	If (nClearIt2 > 0) 
-		//.and. (nClearIt2 <= Len(aMt1))			
-
-		//DbGoto(   aMt1[nClearIt2][1][7]    )			
+	
 
 		DbGoto(nClearIt2)
-
 		nIndice1 := Ascan(aMVisible , { |a| a[2] == Recno() })
 
 		If nindice1 > 0			
@@ -3062,6 +3169,8 @@ Function xGoPgUp()
 
 	nRec1 := 0
 
+	SysWait(0.07)
+
 
 
 	If (aMVisible[1][2] > aMVisible[nTamPag][2] )
@@ -3076,9 +3185,6 @@ Function xGoPgUp()
 	EncheMVis( Recno() - nTamPag  , .t. )
 		
 	DbSkip(-1)	
-
-
-
 	
 
 	If !Bof()
@@ -3167,7 +3273,7 @@ Function xGoPgDn()
 
 
 	
-	nPageNumber := Int(Recno() / nTamPag)+1
+	//nPageNumber := Int(Recno() / nTamPag)+1
 
 //	nPos1 := ( (  (nPageNumber )  *  nTamPag) * nItemBrwHeight)
 
@@ -3187,6 +3293,8 @@ Function xGoPgDn()
 
 	lHitB := .f.
 	lHitt := .f.
+
+	SysWait(0.07)						
 		
 	ScrolUp1(.f. , nItemBrwHeight * nTamPag)			
 	nIndice := 1
@@ -3210,7 +3318,7 @@ Function xGoPgDn()
 	
 
 		If !Eof()
-			SysWait(0.05)						
+			
 			
 			xRecords()
 			nItemX5     := Recno()			
@@ -3221,6 +3329,8 @@ Function xGoPgDn()
 
 			nPageNumber++
 			BT_ClientAreaInvalidateAll(cBrowserName)
+
+			//msginfo(Str(  nPageNumber  ))
 
 			SysWait(0.02)						
 
@@ -3341,7 +3451,6 @@ Return
 
 Function xGoTop( lScrol1 )
 
-	
 
 	Local nPos1 := (nTamPAg * nItemBrwHeight) 
 
@@ -3362,6 +3471,8 @@ Function xGoTop( lScrol1 )
 
 	nLinScrool := 0
 
+	nPageNumber := 1
+
 	aMt1 := {}
 	DbGotop()
 	
@@ -3369,42 +3480,25 @@ Function xGoTop( lScrol1 )
 
 	SysWait(0.01)
 
-
-	//ScrolUp1(.t. ,  nPos1 )			
-
-	//dbGoBottom()		
-	//nLinScrool := nSav
 	
 	SysWait(0.01)		
-
-	//DbGoto(   Recno()           )
 	DbGotop()
 	
 	EncheMVis( Recno() , .t. )	
-	
-
-    
+	   
 	
 	nLinhaBarra := 1
-
 	nItemX5     := 1
 
 	nClearIt2   := Recno()
 	nClear1     := nItemX5
 
-
-    //msginfo( Str(nItemX5) + '   ' + Str(Recno()) )
-
 	nSelLine := nItemx5		
 	BT_ClientAreaInvalidateAll(cBrowserName)
-
 	SysWait(0.01)			
 
-
 	Do Events
-
 	BT_ClientAreaInvalidateAll(cBarraVfrm)
-
 
 	xDcToDc()	
 	xDcToDEspe()
