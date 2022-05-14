@@ -1283,7 +1283,9 @@ Return nTotz
 
 
 
+
 Function xTeclasBrow()
+
 
 
 	LOCAL  nHWnd   := EventHWND()
@@ -1639,7 +1641,7 @@ Function xTeclasBrow()
 			nLinhaBarra++
 		End If
 
-
+		
 		If (!Eof())
 
 			If (lHitB) .And. (!Eof())
@@ -1648,6 +1650,7 @@ Function xTeclasBrow()
 				
 				nLinhaBarra := nTamPag
 				aRet := xRetReg()	 
+				aRet[1][3] := nPgNum1
 
 				nIndz := Ascan(aMt1 , { |a| a[1][7] == Recno() }  )
 
@@ -1667,9 +1670,7 @@ Function xTeclasBrow()
 				nPageNumber := aRet[1][3]
 
 				nSav2 := nItemx5				
-				xSelItem( Recno()  , .t.  )
-
-			//	nPageNumber := Int(Recno() / nTamPag )
+				xSelItem( Recno()  , .t.  )			
 
 			
 				SysWait(0.01)				
@@ -1681,8 +1682,8 @@ Function xTeclasBrow()
 				nSelLine := nItemx5			
 
 			Else							
-				xSelItem( Recno()  , .f.  )				
-			//	nPageNumber := Int(Recno() / nTamPag )
+
+				xSelItem( Recno()  , .f.  )							
 				SysWait(0.03)		
 
 			End If		
@@ -2170,7 +2171,7 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 
 	//Msginfo(Hb_UTF8ToStr(aCabec[1]) + '   ' + cCampo1 )
 
-	msginfo(Str(nPageNumber)  )
+	//msginfo(Str(nPageNumber)  )
 
 
 
@@ -2235,6 +2236,72 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 
 				If (nIndz == 0)
 
+					DbGoTo( nRec1 - 1)
+		
+					EncheMVis( Recno() + 1   , .t. )			
+					DbSkip()
+
+				
+
+					If !Eof()
+
+												
+						xRecords()
+
+						DbGoTo( nRec1 )
+
+						//msginfo(Codigo)
+
+						nItemX5     := Recno()			
+						nClearIt2   := Recno()
+						nClear1     := nItemX5	
+						nSelLine    := nItemx5		
+
+						//msginfo(Str( nPgNum1 - 1 ))
+
+						nPageNumber := nPgNum1 - 1
+
+						//nPageNumber++
+
+						Do Events 
+
+						//nLinScrool += (nItemBrwHeight * nTamPag) 
+
+
+						If nLinScrool == 0						
+							ScrolUp1(.f. , (nPageNumber - 1) * nItemBrwHeight * nTamPag)	
+						Else 
+							nPageNumber++
+							nLinScrool := ((nPageNumber - 1) * nItemBrwHeight * nTamPag)
+							//msginfo('Here')
+						End If 
+
+
+						SysWait(0.01)
+
+						
+
+						xSelItem( Recno() , .f. , .f.  )
+
+
+						BT_ClientAreaInvalidateAll(cBrowserName)
+						SysWait(0.02)						
+
+						Do Events
+						xDcToDc()			
+						Do Events		
+	
+							
+						SysWait(0.02)
+
+					Else 			
+						xDialog("Fim do Arquivo Atingido!" , .f. )
+					End If 	
+
+
+					//msginfo(Codigo )
+
+
 
 				Else 
 
@@ -2265,20 +2332,8 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 					If (nPageNumber != nPg1) 
 					
 						Do Events 
-
 						nLinScrool := ((nPg1 - 1) *  (nItemBrwHeight * nTamPag) )
-
-						SysWait(0.01)
-
-											msginfo('ok2')
-
-                       /*
-						If (nLBar == nTamPag)
-							msginfo('ok2')
-							ScrolUp1(  (nPageNumber > nPg1)           ,   (nItemBrwHeight * nTamPag)      )	
-						End If 	
-						*/
-						
+						SysWait(0.01)						
 						
 					End If 	
 					
