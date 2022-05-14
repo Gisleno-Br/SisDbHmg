@@ -4385,6 +4385,10 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 				DO EVENTS 
 				xDoPesq(  c1 , 'Brw' + Left(cTabela,4) ,  GetProperty(cActiveJan , "TextBusca" , "Value" )  )
+
+				DoMethod('Brw' + Left(cTabela,4)  , 'SetFocus'  )
+
+				SysWait(0.03)
 			End If 		
 
 

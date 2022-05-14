@@ -61,7 +61,7 @@ Static nItemBrwHeight := 0
 Static nItemx5 := 1
 Static nClearIt2 := 1
 Static cOpMainSel  := ''
-Static nPageNumber := 0
+Static nPageNumber := 1
 Static hBitOk
 Static cBrowserName := ''
 Static cEspelhoBrw := ''
@@ -113,6 +113,9 @@ Static lTracking75 := .f.
 Static lTracking45 := .f.
 Static nHasFocus := 0
 
+Static nPgNum1 := 1
+
+
 Static nLargX := 0
 
 Static cBarrah := ''
@@ -124,6 +127,8 @@ Static nColH1 := 0
 Static nColEsquerda := 1
 
 Static nPageNum := 0
+
+Static nLastPage := 0
 
 Static lAtivo1 := .t. 
 Static cTabelay := ''
@@ -1166,16 +1171,11 @@ Function xRetReg()
 		//Do Events
 
 	Next
-
-
+	
 
 	Aadd(aMVisible , {    Len(aMVisible)+1 ,    Recno()   })
-
-	nPagNum := Int(Recno() / nTamPag )
-
 	
-	Aadd(aItens , { c1 , lAtivo , nPagNum  , aResults , '' , aRes2 , Recno()  , nTam1  , 0 }  )
-	
+	Aadd(aItens , { c1 , lAtivo , 0  , aResults , '' , aRes2 , Recno()  , nTam1  , 0 }  )	
 
 
 Return aItens 
@@ -1216,6 +1216,7 @@ Function xRecords(  nRecs , lFrente )
 		  nBarra++
 		  aRet[1][9] := nBarra 
 
+		
 		  If nTotz == 0
 			 nTotz := (aRet[1][8] * nTamz1)			 
 		  End If 	
@@ -1226,7 +1227,15 @@ Function xRecords(  nRecs , lFrente )
 		  nIndz := Ascan(aMt1 , { |a| a[1][7] == Recno() }  )
 
 		  If nIndz == 0 					
-			  Aadd(aMt1 , aRet )						  
+
+			  aRet[1][3] := nPgNum1
+
+			  Aadd(aMt1 , aRet )	
+			  
+			  If Mod(  Len(aMt1) , nTamPag      ) == 0				 				 
+				 nPgNum1++
+			  End If 	
+
 			  lSort := .t.
 		  Else 
 			  aMt1[nIndz][1][1]	:= aRet[1][1]	  			  
@@ -1644,11 +1653,23 @@ Function xTeclasBrow()
 
 				If nIndz == 0 					
 					Aadd(aMt1 , aRet )			
+
+					aRet[1][3] := nPgNum1
+
+					If Mod(  Len(aMt1) , nTamPag      ) == 0												
+						nPgNum1++
+					End If 		   
+
 					nLastadd := Len(aMt1)								
+
 				End If 	
+
+				nPageNumber := aRet[1][3]
 
 				nSav2 := nItemx5				
 				xSelItem( Recno()  , .t.  )
+
+			//	nPageNumber := Int(Recno() / nTamPag )
 
 			
 				SysWait(0.01)				
@@ -1660,7 +1681,8 @@ Function xTeclasBrow()
 				nSelLine := nItemx5			
 
 			Else							
-				xSelItem( Recno()  , .f.  )
+				xSelItem( Recno()  , .f.  )				
+			//	nPageNumber := Int(Recno() / nTamPag )
 				SysWait(0.03)		
 
 			End If		
@@ -1725,15 +1747,23 @@ Function xTeclasBrow()
 
 					nRec := Recno()		
 					aRet := xRetReg()
+					aRet[1][3] := nPgNum1
+
 					
 					Aadd(aMt1 , aRet )					
-					aMt1 := Asort( aMt1 ,,, { |a,b|  a[1][7] < b[1][7]    })
 
-			
+					If Mod(  Len(aMt1) , nTamPag      ) == 0												
+						nPgNum1++
+					End If 		   
+
+					aMt1 := Asort( aMt1 ,,, { |a,b|  a[1][7] < b[1][7]    })					
 
 					Do Events 
 					SETVSCROLLVALUE( GetFormHandle(  cBrowserName )  , nItemBrwHeight  , 1 )					
 					BT_ClientAreaInvalidateAll(cBrowserName)
+
+					nPageNumber := aRet[1][3]
+
 
 
 				Else 
@@ -1741,6 +1771,7 @@ Function xTeclasBrow()
 				End If 		
 				
 
+			//	nPageNumber := Int(Recno() / nTamPag )				
 				EncheMVis( Recno()  , .t. )
 				xSelItem( Recno()  , .t. , .f.  )					
 				SysWait(0.02)
@@ -1927,7 +1958,8 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 	For n1 := 1 To Len(aMtrOp) 
 
-		cTexto :=  Hb_Utf8ToStr(aMtrOp[n1][1][1]) + Replicate(' ',200)
+
+		cTexto :=  StrZero(aMtrOp[n1][1][3],5)   + Alltrim(Str(nRow ))  + '  ' + Hb_Utf8ToStr(aMtrOp[n1][1][1]) + Replicate(' ',200)
 		
 		//Alltrim(Str(nLine + nRow )) + '   '  + Alltrim(Str(nRow )) + '  '   + Alltrim(Str(nLine ))  + ' ' + ;
 		//Alltrim(StrZero(n1,3)) + '  '  + Hb_Utf8ToStr(aMtrOp[n1][1][1]) + Replicate(' ',200)
@@ -2010,6 +2042,8 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 
 		nLine += nItemBrwHeight
+
+		//msginfo(Str(nItemBrwHeight   ))
 
 	Next
 
@@ -2136,6 +2170,10 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 
 	//Msginfo(Hb_UTF8ToStr(aCabec[1]) + '   ' + cCampo1 )
 
+	msginfo(Str(nPageNumber)  )
+
+
+
 
 
 	If _isWindowDefined( cBrwName  )
@@ -2155,7 +2193,12 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 		dbGoTop()
 
 
+
 		If Eof()
+
+			dbSelectArea( cAlias1 )
+			Use 
+
 			xDialog( Hb_Utf8ToStr("Pesquisa Não Localizada.")   , .f.  )
 		Else 
 
@@ -2185,7 +2228,8 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 				xDcToDc()			
 				Do Events				
 
-			Else 
+			Else 				
+
 
 				nIndz := Ascan(aMt1 , { |a| a[1][7] == nRec1 }  )		
 
@@ -2194,9 +2238,9 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 
 				Else 
 
-
 					nPg1   := aMt1[nIndz][1][3]
 					nLBar  := aMt1[nIndz][1][9]
+
 
 					n1 := nRec1 - (nLBar - 1)
 
@@ -2210,22 +2254,35 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 					nClearIt2 := Recno()
 
 
-
 					lHitb := (nLinhaBarra = nTamPag)
 					lHitt := (nLinhaBarra = 1)		
 
-					//msginfo( Str(  Abs(   nPageNumber - nPg1      )	 ))
+					//msginfo( Str(nPageNumber) + '   ' + Str(nPg1) )
+
+					
+
 
 					If (nPageNumber != nPg1) 
-						ScrolUp1(  (nPageNumber > nPg1)           ,  Abs(   nPageNumber - nPg1      )	*  (nItemBrwHeight * nTamPag)      )	
+					
+						Do Events 
 
+						nLinScrool := ((nPg1 - 1) *  (nItemBrwHeight * nTamPag) )
+
+						SysWait(0.01)
+
+											msginfo('ok2')
+
+                       /*
 						If (nLBar == nTamPag)
-						//	msginfo('ok2')
+							msginfo('ok2')
 							ScrolUp1(  (nPageNumber > nPg1)           ,   (nItemBrwHeight * nTamPag)      )	
 						End If 	
+						*/
+						
 						
 					End If 	
 					
+
 
 					xSelItem( Recno() , .f. , .f.  )
 					
@@ -2239,6 +2296,8 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 					n2 := nRec1 + (nTamPag - nLBar)
 
 					SysWait(0.02)
+					
+					nPageNumber := nPg1 
 
 
 				//	msginfo('Found! '  + Str(nPg1) + '  ' + Str(nPageNumber) + '   ' + Str(nLBar) + '   ' + Str(n1) + '    ' + Str(n2) )
@@ -3148,7 +3207,7 @@ Function xGoPgUp()
 	Local nDiff1 
 
 
-	nPageNumber := Int(Recno() / nTamPag)+1	
+	nPageNumber := Int(Recno() / nTamPag)	
 
 	
 	If (nPageNumber = 1 )	
@@ -3332,6 +3391,8 @@ Function xGoPgDn()
 
 			//msginfo(Str(  nPageNumber  ))
 
+
+
 			SysWait(0.02)						
 
 		Else 			
@@ -3396,6 +3457,7 @@ Function xGoBottom()
 
 	aMt1 := {}
 	DbGotop()
+
 
 
 	nPageNumber := nPageTotal
@@ -3473,7 +3535,7 @@ Function xGoTop( lScrol1 )
 
 	nPageNumber := 1
 
-	aMt1 := {}
+	//aMt1 := {}
 	DbGotop()
 	
 	xRecords()	

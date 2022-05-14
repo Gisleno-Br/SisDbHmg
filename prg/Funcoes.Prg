@@ -370,7 +370,10 @@ FUNCTION GetIndexes( cTabela )
 
 		oGet := oQuery:GetRow( n1 )
 
-		AAdd( aM1, Hb_UTF8ToStr(oGet:FieldGet( 2 )) )
+//		msginfo(   oGet:FieldGet( 2 ) )
+		If !Empty(Alltrim( oGet:FieldGet( 2 )   ))
+			AAdd( aM1, Hb_UTF8ToStr(oGet:FieldGet( 2 )) )
+		End If 
 
 		oQuery:Skip( 1 )
 
