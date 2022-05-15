@@ -1181,6 +1181,45 @@ Function xRetReg()
 Return aItens 
 
 
+function xReordena( nRecno1 )
+
+	Local nPg1 := 1
+	Local n1 := 0
+	Local n2 := 0
+
+	
+	Local cDump1 := 'Logs\Dump1566_' + StrZero(Random(32322),7) + '.txt'
+	
+
+	For n1 := 1 To Len(aMt1)
+
+		
+		aMt1[n1][1][3] := nPg1
+
+		If (aMt1[n1][1][7] == nRecno1)
+            n2 := nPg1
+		End If 
+
+		If Mod(  n1 , nTamPag      ) == 0	
+			nPg1++
+		End If 
+
+	Next	
+
+
+	
+	Do Events 
+
+
+
+	For n1 := 1 To Len(aMt1)
+		SaveLog(cDump1 ,  'Pg Num : '  + Alltrim(Str( aMt1[n1][1][3])) + '   ' +   Alltrim(Str( aMt1[n1][1][7]))  + '   ' +  aMt1[n1][1][1]  )
+	Next 	
+
+
+
+Return n2	
+
 Function xRecords(  nRecs , lFrente , lNoq1 )
 
 	Local nCont1 := 0
@@ -1195,7 +1234,7 @@ Function xRecords(  nRecs , lFrente , lNoq1 )
 	Local aRet   := {}
 	Local nBarra := 0
 
-	Local cDump1 := 'Logs\Dump1566_' + Right(Time(),2) + '.txt'
+	Local cDump1 := 'Logs\Dump1566_' + StrZero(Random(32322),7) + '.txt'
 
 	DEFAULT lFrente := .t.
 	DEFAULT nRecs := nTamPag 
@@ -1268,15 +1307,11 @@ Function xRecords(  nRecs , lFrente , lNoq1 )
 		aMt1 := Asort( aMt1 ,,, { |a,b|  a[1][7] < b[1][7]    })
 	End If 
 
-	Do Events 
-
-
-
+	
 	For n1 := 1 To Len(aMt1)
 		SaveLog(cDump1 ,  'Pg Num : '  + Alltrim(Str( aMt1[n1][1][3])) + '   ' +   Alltrim(Str( aMt1[n1][1][7]))  + '   ' +  aMt1[n1][1][1]  )
 	Next 	
-
-
+	
 
 	
 
@@ -1638,6 +1673,8 @@ Function xTeclasBrow()
 		nItemx5++
 		DbSkip()
 
+		
+
 		If nLinhaBarra >= nTamPag
 			lHitB := .t.
 		Else
@@ -1660,11 +1697,15 @@ Function xTeclasBrow()
 				If nIndz == 0 					
 					Aadd(aMt1 , aRet )			
 
+					aMt1 := Asort( aMt1 ,,, { |a,b|  a[1][7] < b[1][7]    })		
+
 					aRet[1][3] := nPgNum1
 
 					If Mod(  Len(aMt1) , nTamPag      ) == 0												
 						nPgNum1++
 					End If 		   
+
+					//msginfo( 'Not F' +  Str(Recno()))
 
 					nLastadd := Len(aMt1)								
 
@@ -2168,6 +2209,7 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 
 	LOCAL cAlias1 := 'T_' + Left(Alltrim(Str(Int( hb_Random( 234355 ) ))),4)
 	Local nRec1 := 0
+	Local nRt1 := 0
 
 	nClearIt2 := Recno()
 
@@ -2246,22 +2288,37 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 							
 					
 
-					If !Eof()
-
-						//msginfo(Str(nPgNum1))
+					If !Eof()						
 
 						nLinhaBarra := 1
 
 						If (nLinScrool != 0)		
-							nPgNum1++
-							nPageNumber := nPgNum1							
+							nPgNum1 := aMt1[LEn(aMt1)][1][3] + 1 
+							nPageNumber := nPgNum1		
+							msginfo('ok2 ' + Str(    aMt1[LEn(aMt1)][1][3]       ))												
 						End If 							
 												
 						xRecords(  , , (nLinScrool != 0)   )
-
+						
 						DbGoTo( nRec1 )
 
-						msginfo(Codigo)
+						nSv1 := 0
+
+						nRt1 := 0
+
+					
+						If (nRecSalva > nRec1)
+
+							nRt1 := xReordena(  nRec1   )	
+							nSv1 := nPgNum1 
+							nPgNum1 := nRt1 + 2							
+					
+						End If 	
+						*/
+
+						//nRt1 := xReordena(  nRec1   )	
+
+						
 
 
 						nItemX5     := Recno()			
@@ -2270,16 +2327,33 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 						nSelLine    := nItemx5		
 
 
-						nPageNumber := nPgNum1 - 1
+						//- 1
+
+					//	msginfo(Str(  nPageNumber - 1 ) + '  ' + Str(nPgNum1) )
+
+						If nSv1 > 0
+							nPgNum1 := nSv1 
+						End If 
 
 						
 
 						Do Events 
 
 						If nLinScrool == 0						
-							ScrolUp1(.f. , (nPageNumber - 1) * nItemBrwHeight * nTamPag)	
-						Else 							
-							nLinScrool := ((nPageNumber - 1) * nItemBrwHeight * nTamPag)							
+							ScrolUp1(.f. ,  nItemBrwHeight * nTamPag)	
+						Else 		
+							
+							If nRt1 == 0
+								
+								nLinScrool := ((nPageNumber - 1  ) * nItemBrwHeight * nTamPag)							
+								msginfo('Not Reor '    )
+								
+							Else 
+								nLinScrool := ((nRt1 - 1 ) * nItemBrwHeight * nTamPag)							
+								nPageNumber := nRt1 
+								msginfo('Reor')
+							End If 
+
 						End If 
 
 
@@ -2312,9 +2386,13 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 					nLBar  := aMt1[nIndz][1][9]
 
 
+
+
 					n1 := nRec1 - (nLBar - 1)
 
 					DbGoto(   n1 )  
+
+				//	msginfo(' Found ' + Codigo)
 
 					EncheMVis( Recno()   , .t. )	
 					
@@ -2328,8 +2406,7 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 					lHitt := (nLinhaBarra = 1)		
 
 					//msginfo( Str(nPageNumber) + '   ' + Str(nPg1) )
-
-					
+				
 
 
 					If (nPageNumber != nPg1) 
@@ -3286,7 +3363,7 @@ Function xGoPgUp()
 
 	nRec1 := 0
 
-	SysWait(0.07)
+	SysWait(0.02)
 
 
 
@@ -3308,7 +3385,7 @@ Function xGoPgUp()
 		
 		nIndz := Ascan(aMt1 , { |a| a[1][7] == Recno() - nTamPag }  )		
 
-		SysWait(0.06)
+		SysWait(0.02)
 
 		xRecords(   , .f. )
 
@@ -3343,7 +3420,7 @@ Function xGoPgUp()
 		End If 	
 
 		
-		SysWait(0.04)
+		SysWait(0.01)
 
 	Else 
 		xDialog("Inicio das informações Atingido." , .f. )		
@@ -3353,8 +3430,6 @@ Function xGoPgUp()
 
 	SysWait(0.01)	
 	BT_ClientAreaInvalidateAll (cBarraVfrm)		
-
-
 	
 	BT_ClientAreaInvalidateAll(cBrowserName)
 
@@ -3508,6 +3583,8 @@ Function xGoBottom()
 
 	nItemX5 := nMaxItem1
 
+	/*
+
 
 	xCursorWait( .t. )	
 
@@ -3516,15 +3593,22 @@ Function xGoBottom()
 	aMt1 := {}
 	DbGotop()
 
+	*/
+	
 
 
 	nPageNumber := nPageTotal
+
+	
+	nLinScrool := (nTamPAg * nItemBrwHeight) 
+
+	aMt1 := {}
 	
 	xRecords()	
 	SysWait(0.01)
 
 
-	ScrolUp1(.f. ,  nPos1 )			
+	//ScrolUp1(.f. ,  nPos1 )			
 	dbGoBottom()		
 	
 	
@@ -3543,7 +3627,8 @@ Function xGoBottom()
     
 	dbGoBottom()
 
-	SysWait(0.01)		
+	SysWait(0.01)	
+
 
 	//msginfo(Str(Recno()))
 
@@ -3591,10 +3676,13 @@ Function xGoTop( lScrol1 )
 
 	nLinScrool := 0
 
+	nPgNum1 := 1
+
 	nPageNumber := 1
 
-	//aMt1 := {}
+	aMt1 := {}
 	DbGotop()
+
 	
 	xRecords()	
 
