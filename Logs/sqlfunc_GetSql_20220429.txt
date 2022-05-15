@@ -1,2 +1,0 @@
-Admin 29/04/2022 08:02:50   Admin 29/04/2022 08:02:49   select codigo,nome,cpf,endereco,bairro,cidade,ifNull(qtpeds ,0 ) As qtpeds ,fone1,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,status,email,ifNull(acumulado ,0 ) As acumulado ,ie,ifNull(maiorcompra ,0 ) As maiorcompra  from clientes
- select codigo,nome,cpf,endereco,bairro,cidade,ifNull(qtpeds ,0 ) As qtpeds ,fone1,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,status,email,ifNull(acumulado ,0 ) As acumulado ,ie,ifNull(maiorcompra ,0 ) As maiorcompra  from Clientes

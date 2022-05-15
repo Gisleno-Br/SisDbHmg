@@ -1181,7 +1181,7 @@ Function xRetReg()
 Return aItens 
 
 
-Function xRecords(  nRecs , lFrente )
+Function xRecords(  nRecs , lFrente , lNoq1 )
 
 	Local nCont1 := 0
 	Local nTotz := 0
@@ -1195,10 +1195,12 @@ Function xRecords(  nRecs , lFrente )
 	Local aRet   := {}
 	Local nBarra := 0
 
-	Local cDump1 := 'Dump1566_' + Right(Time(),2) + '.txt'
+	Local cDump1 := 'Logs\Dump1566_' + Right(Time(),2) + '.txt'
 
 	DEFAULT lFrente := .t.
 	DEFAULT nRecs := nTamPag 
+
+	DEFAULT lNoq1 := .f. 
 	//Local nContador :=
 
 
@@ -1233,7 +1235,9 @@ Function xRecords(  nRecs , lFrente )
 			  Aadd(aMt1 , aRet )	
 			  
 			  If Mod(  Len(aMt1) , nTamPag      ) == 0				 				 
-				 nPgNum1++
+				 If !lNoq1
+				    nPgNum1++
+				 End If 	
 			  End If 	
 
 			  lSort := .t.
@@ -1266,12 +1270,11 @@ Function xRecords(  nRecs , lFrente )
 
 	Do Events 
 
-/*
-	For n1 := 1 To Len(aMt1)
-		SaveLog(cDump1 , Alltrim(Str( aMt1[n1][1][7]))  + '   ' +  aMt1[n1][1][1]  )
-	Next 	
 
-	*/
+
+	For n1 := 1 To Len(aMt1)
+		SaveLog(cDump1 ,  'Pg Num : '  + Alltrim(Str( aMt1[n1][1][3])) + '   ' +   Alltrim(Str( aMt1[n1][1][7]))  + '   ' +  aMt1[n1][1][1]  )
+	Next 	
 
 
 
@@ -2239,48 +2242,48 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 					DbGoTo( nRec1 - 1)
 		
 					EncheMVis( Recno() + 1   , .t. )			
-					DbSkip()
-
-				
+					DbSkip()	
+							
+					
 
 					If !Eof()
 
+						//msginfo(Str(nPgNum1))
+
+						nLinhaBarra := 1
+
+						If (nLinScrool != 0)		
+							nPgNum1++
+							nPageNumber := nPgNum1							
+						End If 							
 												
-						xRecords()
+						xRecords(  , , (nLinScrool != 0)   )
 
 						DbGoTo( nRec1 )
 
-						//msginfo(Codigo)
+						msginfo(Codigo)
+
 
 						nItemX5     := Recno()			
 						nClearIt2   := Recno()
 						nClear1     := nItemX5	
 						nSelLine    := nItemx5		
 
-						//msginfo(Str( nPgNum1 - 1 ))
 
 						nPageNumber := nPgNum1 - 1
 
-						//nPageNumber++
+						
 
 						Do Events 
 
-						//nLinScrool += (nItemBrwHeight * nTamPag) 
-
-
 						If nLinScrool == 0						
 							ScrolUp1(.f. , (nPageNumber - 1) * nItemBrwHeight * nTamPag)	
-						Else 
-							nPageNumber++
-							nLinScrool := ((nPageNumber - 1) * nItemBrwHeight * nTamPag)
-							//msginfo('Here')
+						Else 							
+							nLinScrool := ((nPageNumber - 1) * nItemBrwHeight * nTamPag)							
 						End If 
 
 
-						SysWait(0.01)
-
-						
-
+						SysWait(0.01)					
 						xSelItem( Recno() , .f. , .f.  )
 
 
