@@ -1136,28 +1136,28 @@ Function InitTela(  lIni1  , nColz1)
 
 
 	nB1++
-	OBTN_Create( cFormPrin, nB1,  ''  ,  48 , GetDeskTopWidth() - 110 ,  35,  25 ,  .T., .T., .T.,  8 ,  aBtnColor  , aBtnFont )
+	OBTN_Create( cFormPrin, nB1,  ''  ,  50 , GetDeskTopWidth() - 113 ,  35,  25 ,  .T., .T., .T.,  8 ,  aBtnColor  , aBtnFont )
 	OBTN_Font( cFormPrin , nB1 ,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
 	nIndexEve1 := EventCreate( { || EventButton()  }  , OBTN_Handle(  cFormPrin , Nb1    )     ) 
 	EventProcessAllHookMessage( nIndexEve1 ,   .T.)
 
 
-	@55, GetDeskTopWidth() - 550 LABEL Lbl2a OF &(cActiveJan) Value "Busca Rapida : " WIDTH 95 HEIGHT 15 BOLD Font cFontName Size 9
+	@57, GetDeskTopWidth() - 555 LABEL Lbl2a OF &(cActiveJan) Value "Busca Rapida : " WIDTH 95 HEIGHT 15 BOLD Font cFontName Size 9
 	SetProperty( cActiveJan ,  'Lbl2a' , 'FONTCOLOR' , {78,78,78} )
 	
-
 
 	nIndicex := 1 
 	@ 52,GetDeskTopWidth() - 450 COMBOBOX Combo_1 OF &(cActiveJan) ITEMS aIndices VALUE nIndicex WIDTH 135 HEIGHT 20
 
 	@ 52 , GetDeskTopWidth() - 313 TEXTBOX TextBusca OF &(cActiveJan) ;
-		VALUE Space(35) WIDTH 200 HEIGHT 20 ;
+		VALUE Space(35) WIDTH 200 HEIGHT 23 ;
 		FONT 'Arial' SIZE 10 ON GOTFOCUS gColor1(Thiswindow.Name , This.Name) ;
 			ON LOSTFOCUS gColor2(Thiswindow.Name , This.Name) 	
 	
 	
 	SetWindowCursor( GetFormHandle( cFormPrin )  , IDC_ARROW  )
+	
 
 
 
