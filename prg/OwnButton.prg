@@ -486,6 +486,8 @@ FUNCTION OBTN_Color( cForm, nID, aColor, lRedraw )
 
 RETURN If( hb_HHasKey( hColor, cForm ) .AND. hb_HHasKey( hColor[ cForm ], nID ), hColor[ cForm ][ nID ], NIL )
 
+/*
+
 Function OBTN_GetBitMap1( nId  , lFocus )
 
    Local aMtr1 := {}
@@ -533,6 +535,8 @@ Function OBTN_GetBitMap1( nId  , lFocus )
 
 
 Return aMtr1
+
+*/
 
 
 

@@ -1458,6 +1458,7 @@ Function xTeclasBrow()
 			SysWait(0.07)			
 
 			nQTotEt := CalcEtapas()
+			
 
 			nWidth := xGetColWidth(  nColz1   )			
 			nPos1 := xGetInfC(   nColz1 , 2  )
@@ -1467,13 +1468,17 @@ Function xTeclasBrow()
 			If (lScrool1)		
 
 				ScrollCol( .t. , .f. )
-				IncContador(.t.)	
+
+
+				//IncContador(.t.)	
+
 				nColz1 := xGetColSel()
 
 				
 
 				If ( nQEtp < nQTotEt)
-										
+
+					IncContador(.t.)	
 					UpdateBarH( nConst1     )	
 					xDcBarH()                                
 					SysWait(0.03)		
@@ -1699,8 +1704,7 @@ Function xTeclasBrow()
 
 		
 		If Eof()
-			DbSkip(-1)
-			//msginfo('Gg22')
+			DbSkip(-1)			
 			Return
 		End If 	
 
@@ -1739,34 +1743,27 @@ Function xTeclasBrow()
 					If Mod(  Len(aMt1) , nTamPag      ) == 0												
 						nPgNum1++
 					End If 		 
-
-
-					//msginfo( 'Not F' +  Str(Recno()))
-
 					nLastadd := Len(aMt1)								
+
+					Do Events 
+					
 
 				End If 	
 
 				nPageNumber := aRet[1][3]
-
-				nSav2 := nItemx5				
-				xSelItem( Recno()  , .t.  )			
-
 			
+	
 				SysWait(0.01)				
-				ScrolUp1(.f.)		
-						
-
-				EncheMVis( Recno() )
-				nItemx5 := nSav2
-				nSelLine := nItemx5			
+				EncheMVis( Recno()  , .f. )	
+				ScrolUp1(.f.)					
+				xSelItem( Recno()  )
+				SysWait(0.01)
 
 			Else							
 
-				xSelItem( Recno()  , .f.  )							
-				SysWait(0.03)	
+				xSelItem( Recno()    )							
+				SysWait(0.01)			
 				
-				//msginfo('Here')
 
 			End If		
 
@@ -1820,13 +1817,9 @@ Function xTeclasBrow()
 
 
 			If (lHitt) .And. (!Bof())
-				//SysWait(0.09)
-
-				//SysWait(0.02)
-
+			
 				nIndz := Ascan(aMt1 , { |a| a[1][7] == Recno() }  )								
-				//msginfo( Str(nIndz) )
-
+			
 
 				If nIndz == 0 					
 
@@ -1834,10 +1827,8 @@ Function xTeclasBrow()
 					aRet := xRetReg()
 					aRet[1][3] := nPgNum1					
 					xAtuMtreg( Alltrim(Str( nPgNum1 )) , 1 )
-
 					
 					Aadd(aMt1 , aRet )					
-
 					If Mod(  Len(aMt1) , nTamPag      ) == 0												
 						nPgNum1++
 					End If 		   
@@ -1850,28 +1841,23 @@ Function xTeclasBrow()
 
 					nPageNumber := aRet[1][3]
 
-
-
 				Else 
-					ScrolUp1(.t. )						
+					ScrolUp1(.t. )					
 				End If 		
 				
 
-			//	nPageNumber := Int(Recno() / nTamPag )				
-				EncheMVis( Recno()  , .t. )
-				xSelItem( Recno()  , .t. , .f.  )					
-				SysWait(0.02)
-				
-				
-				nSelLine := nItemx5			
+				EncheMVis( Recno()  , .t. )				
+				xSelItem( Recno()  )
+				nSelLine := nItemx5	
+				SysWait(0.01)
 
 
 			Else
-
 		
-				//msginfo('Here ' + Str(Recno()))
-				xSelItem( Recno()  , .f.  , .f. )			
-				SysWait(0.03)
+
+				SysWait(0.01)				
+				xSelItem( Recno()  )
+				SysWait(0.01)				
 
 
 			End If		
@@ -2305,6 +2291,8 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 			Use 
 
 			xDialog( Hb_Utf8ToStr("Pesquisa Não Localizada.")   , .f.  )
+			DbSelectArea(  cSAlva  )	
+
 		Else 
 
 			nRec1 := NumReg 
@@ -2343,8 +2331,7 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 					DbGoTo( nRec1 - 1)
 		
 					EncheMVis( Recno() + 1   , .t. )			
-					DbSkip()	
-							
+					DbSkip()							
 					
 
 					If !Eof()						
@@ -2353,10 +2340,8 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 
 						If (nLinScrool != 0)		
 							nPgNum1 := aMt1[LEn(aMt1)][1][3] + 1 
-							nPageNumber := nPgNum1		
-							//msginfo('ok2 ' + Str(    aMt1[Len(aMt1)][1][3]       ))												
+							nPageNumber := nPgNum1									
 						End If 							
-
 
 						aMt1 := {}
 						aMatReg := {}
@@ -2364,25 +2349,12 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 
 						nLinScrool := 0
 
-						//(nLinScrool != 0)							
-
+						
 						xRecords(  , ,    )
 						
 						DbGoTo( nRec1 )
-
 						nSv1 := 0
-
-						nRt1 := 0
-
-					/*
-						If (nRecSalva > nRec1)
-
-							nRt1 := xReordena(  nRec1   )	
-							nSv1 := nPgNum1 
-							nPgNum1 := nRt1 + 2							
-					
-						End If 	
-						*/
+						nRt1 := 0				
 				
 
 						nItemX5     := Recno()			
@@ -2392,74 +2364,13 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 
 						If nSv1 > 0
 							nPgNum1 := nSv1 
-						End If 						
-
-						/*
-
-						Do Events 
-
-						If nLinScrool == 0						
-							ScrolUp1(.f. ,  nItemBrwHeight * nTamPag)	
-							//ok
-						Else 		
-							
-							If nRt1 == 0
-								
-
-								If (nLinScrool < (nItemBrwHeight * nTamPag))								
-
-									nL1 := 	(nLinScrool / nItemBrwHeight)		
-									nL2 :=  nTamPag - nL1 
-								
-									nLinScrool := ((nPageNumber - 1  ) * nItemBrwHeight * nTamPag) - (nL2 * nItemBrwHeight)
-									//Ok
-
-									msginfo( 'were 22' )
-
-
-								Else 
-
-
-																		
-									nL1 := xGetReg1( nPageNumber - 1  )
-									nL2 := nTamPag - nL1 
-
-
-
-									msginfo(Str(  nPageNumber - 1  )  + '  AA ' + Str(nL2))
-
-									If nl2 != 0 
-										nLinScrool := ((nPageNumber - 1  ) * nItemBrwHeight * nTamPag)	- (nL2 * nItemBrwHeight)
-									Else 
-										msginfo('Here')
-										nLinScrool := ((nPageNumber - 1 ) * nItemBrwHeight * nTamPag)	
-										
-									End If
-							
-
-
-								End If 	
-
-
-								
-							
-								
-							Else 
-								nLinScrool := ((nRt1 - 1 ) * nItemBrwHeight * nTamPag)							
-								nPageNumber := nRt1 
-								//Ok
-								//msginfo('Reor')
-
-							End If 
-
-
-						End If 
-
-						*/
-
+						End If 												
 
 						SysWait(0.01)					
-						xSelItem( Recno() , .f. , .f.  )
+						xSelItem( Recno()  , .t. )
+
+
+						//BT_ClientAreaInvalidateAll(cBarraVfrm)
 
 
 						BT_ClientAreaInvalidateAll(cBrowserName)
@@ -2486,14 +2397,9 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 					nPg1   := aMt1[nIndz][1][3]
 					nLBar  := aMt1[nIndz][1][9]
 
-
-
-
 					n1 := nRec1 - (nLBar - 1)
-
 					DbGoto(   n1 )  
-
-				//	msginfo(' Found ' + Codigo)
+			
 
 					EncheMVis( Recno()   , .t. )	
 					
@@ -2506,9 +2412,6 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 					lHitb := (nLinhaBarra = nTamPag)
 					lHitt := (nLinhaBarra = 1)		
 
-					//msginfo( Str(nPageNumber) + '   ' + Str(nPg1) )
-				
-
 
 					If (nPageNumber != nPg1) 
 					
@@ -2520,7 +2423,9 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 					
 
 
-					xSelItem( Recno() , .f. , .f.  )
+					xSelItem( Recno()  , .t. )
+
+					//BT_ClientAreaInvalidateAll(cBarraVfrm)
 					
 					
 					BT_ClientAreaInvalidateAll(cBrowserName)
@@ -2998,7 +2903,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 
 			nItemx5 := 	nItem
-			xSelItem( nItem , .f. , .f.  )
+			xSelItem( nItem  , .t. )
 
 
 			nClearIt2 := Recno()
@@ -3158,7 +3063,7 @@ REturn
 
 
 
-Function xSelItem( nItem1 , lScr1 , lFrente  )
+Function xSelItem( nItem1 , lRefresh)
 
 	Local nRow1 := 0
 	Local nItem := nItem1
@@ -3168,12 +3073,13 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 	Local nIndice1
 	Local nRec := Recno()
 	
-	Default lFrente := .t.
+	Default lRefresh := .f.
 	
 
-	If (nClearIt2 > 0) 
-	
+	If (nClearIt2 > 0) 	
 
+
+		
 		DbGoto(nClearIt2)
 		nIndice1 := Ascan(aMVisible , { |a| a[2] == Recno() })
 
@@ -3185,6 +3091,11 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 		BT_ClientAreaInvalidateRect( cBrowserName , ( (nLBar - 1) * nItemBrwHeight )        , 0 , GetProperty( cBrowserName,'Width') ,  nItemBrwHeight   , .t. )						
 
 	End If
+
+
+	
+	//SysWait(0.01)
+
 
 
 
@@ -3205,7 +3116,6 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 
 	nSelLine := nItemx5
 
-
 	If (nItemx5 > 0)		
 
 		nRow1 := 0		
@@ -3214,6 +3124,7 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 	End If
 
 	nPerCent := ( Recno() /  Reccount()  ) * 100
+
 /*
 
 	nI := 63
@@ -3221,6 +3132,23 @@ Function xSelItem( nItem1 , lScr1 , lFrente  )
 
 	BT_ClientAreaInvalidateRect(cBarraVfrm   ,  nI  ,0,  20,  (nR - nI) + 45  , .t.  )
 	*/
+
+	SysWait(0.02)
+
+	If lRefresh
+		SysWait(0.04)
+	End If 	
+
+	BT_ClientAreaInvalidateAll(cBarraVfrm)  
+	
+
+	If lRefresh
+		SysWait(0.04)
+	End If 	
+	
+	xDcToDc()				
+	xDcToDEspe()	
+
 
 
 
@@ -3357,19 +3285,37 @@ Function xPaintScroll( cJanela )
 		cImg := aImgs[1]
 
 
-
-
 		If (nHasFocus == aMtrz1[n1] )
 			cImg := aImgs[2]						
 		End If 	
 
-		If (Len(aMt1) <= nTamPag)
-
-			If (aMtrz1[n1] != 855) .And. (aMtrz1[n1] != 860)
-				cImg := aImgs[4]
-			End If 
-
+		
+		If (nPageNumber == 1) .And. (Recno() <= nTamPag)	
+			If (aMtrz1[n1] >= 855) .And. (aMtrz1[n1] <= 857)
+				If (aMtrz1[n1] = 855)
+					If (Recno() == 1) 						
+						cImg := aImgs[4]
+					End If 					
+				Else 
+					cImg := aImgs[4]	
+				End If 
+			End If 	
 		End If 
+
+
+		If (nPageNumber == nPageTotal)					  
+			If (aMtrz1[n1] >= 858) .And. (aMtrz1[n1] <= 860)
+				If (aMtrz1[n1] = 860)
+					If (Recno() == nMaxItem1) 						
+						cImg := aImgs[4]
+					End If 					
+				Else 
+					cImg := aImgs[4]	
+				End If 
+			End If 	
+		End If 
+
+		
 
 		yBmp4 := BT_BitMapLoadFile( cImg   )
 
@@ -3492,43 +3438,20 @@ Function xGoPgUp()
 	If !Bof()
 
 		
-		nIndz := Ascan(aMt1 , { |a| a[1][7] == Recno() - nTamPag }  )		
-
-		//SysWait(0.07)
-
-
-	//	msginfo('1')
-
-	//	msginfo(Recno())
+		nIndz := Ascan(aMt1 , { |a| a[1][7] == Recno() - nTamPag }  )				
 		xRecords(   , .f. )
-
-		//msginfo(Recno())
-
-		//aMVisible := {}
 		
 		If (nIndz > 0) .or. (nTamPag > Recno())					
 			ScrolUp1(.t. ,(nItemBrwHeight * nTamPag) )	
-			//msginfo('o2')
+
 		Else 		
 
-
 		End If 	
-
-		//ScrolUp1(.t. ,(nItemBrwHeight * nTamPag) )	
-
-		SysWait(0.09)
-
-
-
-
-
-		//nLinScrool := ((nPageNumber - 1  ) * nItemBrwHeight * nTamPag)
-
 		
 
+		SysWait(0.09)	
 		nItemX5     := Recno()
 		nClearIt2   := Recno()
-
 		
 
 		nSelLine := Recno()	
@@ -3539,11 +3462,6 @@ Function xGoPgUp()
 		nIndz := Ascan(aMt1 , { |a| a[1][7] == Recno() }  )
 
 		BT_ClientAreaInvalidateAll(cBrowserName)
-
-		//xSelItem(Recno())
-
-
-
 		nDiff1 := (nLinScrool - (nItemBrwHeight * nTamPag))
 
 		If (nDiff1 != 0) .And. (nDiff1 < 1000)			
@@ -3565,8 +3483,6 @@ Function xGoPgUp()
 	
 	BT_ClientAreaInvalidateAll(cBrowserName)
 
-
-	
 
 	
 	Do Events 
@@ -3748,13 +3664,9 @@ Function xGoBottom()
 	aMatReg := {}
 	
 	nPgNum1 := 1
-
-	
-	
 	
 	xRecords()	
 	SysWait(0.01)
-
 
 	//ScrolUp1(.f. ,  nPos1 )			
 	dbGoBottom()		
@@ -3790,7 +3702,9 @@ Function xGoBottom()
 
 
 	Do Events
-	BT_ClientAreaInvalidateAll(cBarraVfrm)
+
+	xSelItem( Recno() , .t.  )
+	//BT_ClientAreaInvalidateAll(cBarraVfrm)
 
 
 	xDcToDc()	
@@ -3863,7 +3777,9 @@ Function xGoTop( lScrol1 )
 	SysWait(0.01)			
 
 	Do Events
-	BT_ClientAreaInvalidateAll(cBarraVfrm)
+	//BT_ClientAreaInvalidateAll(cBarraVfrm)
+
+	xSelItem( Recno() , .t.  )
 
 	xDcToDc()	
 	xDcToDEspe()

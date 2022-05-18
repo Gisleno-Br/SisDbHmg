@@ -48,7 +48,6 @@ Static nQContador := 0
 
 
 
-
 Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela  , cBrowser , nTotCol , nTamBar , cHeaderN1  , lDispo1  )
 
    
@@ -320,11 +319,10 @@ REturn
 Function IncContador( lFrente )
 
     If lFrente     
-        nQContador++
-        //msginfo('g22')
+        nQContador++        
     Else 
         nQContador--
-    End If 
+    End If  
 
 REturn     
 
@@ -651,11 +649,11 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                             UpdateBarH( nConst1     )	
                             xDcBarH()                                
                             SysWait(0.03)
-                            nQContador++
-                            //msginfo('lp33333')
+                            nQContador++                           
+                            
 
                             xDcBarHeader()
-					        //DO EVENTS 
+					        
 
                             SysWait(0.05)
 
