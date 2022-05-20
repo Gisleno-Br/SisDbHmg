@@ -970,13 +970,12 @@ Function ScrollCol( lFrente , lUpdBar )
 	Local nWidth := Iif( nColEsquerda > 0 , xGetColWidth(  nColEsquerda   )	 , 0 )
 	//-3
 
-	msginfo(' z1 ' +   Str(nColEsquerda) + '   ' + Str(  nLargTotal )   + '   ' + Str( nLargX) + '   ' +  Str(nColScrool))
+	//msginfo(' z1 ' +   Str(nColEsquerda) + '   ' + Str(  nLargTotal )   + '   ' + Str( nLargX) + '   ' +  Str(nColScrool))
 
 	DEFAULT lUpdBar := .t. 	
 
 	
-	If nWidth == 0		
-		msginfo('End222')
+	If nWidth == 0				
 		Return -1
 	End If 
 
@@ -990,7 +989,7 @@ Function ScrollCol( lFrente , lUpdBar )
 			Return -1
 		End If 		
 		*/
-		
+
 
 		
 		If nColEsquerda == 1
