@@ -383,6 +383,12 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams  , lTrocaCol )
     Local nRec1 := Recno()
 	Local cAlias  := "T_" + Left(cTabela,3)
 
+    
+    //nQ1 := CalcEtapas()
+
+   // msginfo(Str( nQ1 ))
+      
+
     If nIndice1 <= 0
        // Return 
     End If 
@@ -404,11 +410,10 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams  , lTrocaCol )
 
 
     //msginfo(cSqlp)    
-
   
 
 	Use 
-	SysWait(0.03)
+	SysWait(0.01)
 
 	
 	dbUseArea( .T.,,  cSqlp , cAlias )
@@ -420,6 +425,7 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams  , lTrocaCol )
 
     Do Events 
     
+    
   
     If _IsWindowDefined(c_BrowName)      
 
@@ -427,15 +433,18 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams  , lTrocaCol )
 
       //  SysWait(0.02)
 
+        //If (!lTrocaCol)
         nQ1 := CalcEtapas()
+        //End If     
       
-     //   nTamBar1 := (GetProperty( c_BrowName , 'Width') - ( nQ1 * nConst1 ))
-       // SetBarraTam(  nTamBar1 , nQ1  )
+    
 
         xShowBrw(  cTabela , .t.  )       
         xGoTop()
 
-        SysWait(0.03)
+      //  msginfo(Str( nQ1 ))
+
+        //SysWait(0.03)
 
     End If      
 
@@ -932,16 +941,18 @@ Function EventHeader()
                                     SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'CURSOR1'  )                                  
                                     aColsTam := GetCamposInf( cTabela, 'TAM' )                                                                    
 
-                                    SysWait(0.05)                                    
+                                    SysWait(0.01)                                    
+
+                                    xAtuTams()
+
+                                    SysWait(0.02)                                    
 
                                     xAtuDados( nOrdemSel, lAscending ,  aColsTam  , .t.  )
-                                    
-                                 //   xShowBrw(  cTabela , .t.  )       
-                                   // xGoTop()                                    
-
+                                 
                                     SysWait(0.02)
                                     
                                     SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'IDC_ARROW'  )    
+                                    
 
                                 End If 
 
@@ -1343,6 +1354,7 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
         nTam12 += nTam 
 
     Next 
+
 
 Return nTam12 
 

@@ -642,9 +642,16 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                             Exit 
                         End If    
 
-                        If !(nQContador  == nQ1)
+                        If (nQContador < nQ1)
 
-                            ScrollCol( .t. , .f. )
+                          //  msginfo('ok2  ' + Str(nQContador) +  '   ' + Str(nQ1) )
+
+
+                            If ScrollCol( .t. , .f. ) == -1
+                                SysWait(0.03)                                   
+                                msginfo('end')
+                                Exit 
+                            End If     
                             
                             UpdateBarH( nConst1     )	
                             xDcBarH()                                

@@ -163,6 +163,13 @@ Function xRodaImp()
 
 Return aMResult
 
+Function xAtuTams()
+	 
+	aTam2     :=  GetCamposInf( cTabela, 'TAM' )
+	
+
+REturn 	
+
 
 
 Function xRetLargura()
@@ -960,24 +967,30 @@ Function ScrollCol( lFrente , lUpdBar )
     Local nColTam 
 	Local lFim := .f. 	
 
-	Local nWidth := Iif( nColEsquerda > 0 , xGetColWidth(  nColEsquerda   )	- 3 , 0 )
+	Local nWidth := Iif( nColEsquerda > 0 , xGetColWidth(  nColEsquerda   )	 , 0 )
+	//-3
 
+	msginfo(' z1 ' +   Str(nColEsquerda) + '   ' + Str(  nLargTotal )   + '   ' + Str( nLargX) + '   ' +  Str(nColScrool))
 
 	DEFAULT lUpdBar := .t. 	
 
-	If nWidth == 0
-		REturn -1
+	
+	If nWidth == 0		
+		msginfo('End222')
+		Return -1
 	End If 
 
 
 	If lFrente 
 
+		 /*
 		If (nColScrool >= (nLargTotal - nLargX))			
 			lFim := .t.
-			//msginfo('End')
+			msginfo('End 23 ')
 			Return -1
-		End If 
-
+		End If 		
+		*/
+		
 
 		
 		If nColEsquerda == 1
