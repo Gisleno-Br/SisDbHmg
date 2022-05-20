@@ -149,12 +149,14 @@ Function xHeader( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1
 	END WINDOW
 
 
+
     lScrool5 :=  (nLargTot1 > 0) .And. (nLargTot1 > (nLarg1+1)) 
 
     If (!lScrool5)
        //msginfo('no Scr')     
 
     End If 
+
 
 
     DEFINE WINDOW &cHeaderSombra ;
@@ -305,21 +307,22 @@ Static Function xOrdene( nCol1 , lAsc1 )
     Local aZZ3 := {}
     Local nX1 
 
+
+    /*
     nPos1 := aM1[7]
     nTam1 := aM1[6]
     nTipo := Alltrim(aM1[4])
+    */
 
     SetWindowCursor( GetFormHandle(cHeaderJan)  , 'CURSOR1'  )
-
     DO EVENTS
     
 
     xAtuDados(   nCol1 , lAsc1 , aColsTam  )
-
     Do Events 
   
     xShowBrw(  cTabela , .t.  )       
-    xGoTop()
+   // xGoTop()
 
     xCursorWait(.f.)
   
@@ -333,6 +336,17 @@ Function xFormDt(cData , n1 , n2 )
 
 Return Right(cD1,4) + Substr(Cd1,4,2) + Left(cD1,2)
 
+Function xRetOrdem()
+
+    Local aCampos := GetCamposDic( cTabela, 'S' , .t. , .t. )
+
+    //msginfo(  Alltrim(aCampos[nOrdemSel]) )
+
+Return Iif(nOrdemSel > 0 , Alltrim(aCampos[nOrdemSel]) , '')
+
+
+Function xRetAsced()
+Return lAscending
 
 Static Function xAtuDados(   nIndice1 , lAscedente , aTams  , lTrocaCol )
 
@@ -363,6 +377,79 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams  , lTrocaCol )
     Local nTot2 := 0
     Local Val1 := ''
     Local aM4  := {}
+
+    Local cSqlp
+
+    Local nRec1 := Recno()
+	Local cAlias  := "T_" + Left(cTabela,3)
+
+    If nIndice1 <= 0
+       // Return 
+    End If 
+   
+
+	cSqlp  := GetSql( cTabela  , .f. )
+
+    cOrdem1 := ''
+    
+
+    If nIndice1 > 0 
+        If !lAscedente        
+            cSqlp += '   Order by ' + Alltrim(aCampos[nIndice1] )  + ' Desc '
+        Else 
+            cSqlp += '   Order by ' + Alltrim(aCampos[nIndice1] )  + ' Asc '
+        End If 
+        cOrdem1 := Alltrim(aCampos[nIndice1] ) 
+    End If 
+
+
+    //msginfo(cSqlp)    
+
+  
+
+	Use 
+	SysWait(0.03)
+
+	
+	dbUseArea( .T.,,  cSqlp , cAlias )
+	dbSelectArea( cAlias )
+
+    DbGoTop()
+    xGoTop()
+    
+
+    Do Events 
+    
+  
+    If _IsWindowDefined(c_BrowName)      
+
+        nTot2 := xMapCols( aCabec , aTams , aTips  )          
+
+      //  SysWait(0.02)
+
+        nQ1 := CalcEtapas()
+      
+     //   nTamBar1 := (GetProperty( c_BrowName , 'Width') - ( nQ1 * nConst1 ))
+       // SetBarraTam(  nTamBar1 , nQ1  )
+
+        xShowBrw(  cTabela , .t.  )       
+        xGoTop()
+
+        SysWait(0.03)
+
+    End If      
+
+
+
+
+
+
+//    msginfo(Codigo)
+
+    
+
+
+    /*
 
 
     DEFAULT nIndice1   := 0
@@ -493,6 +580,8 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams  , lTrocaCol )
        // SysWait(0.03)
 
     End If      
+
+    */
 
 REturn     
 
@@ -747,10 +836,9 @@ Function EventHeader()
                         xDialog( Hb_AnsitoOem("Não Foi Possivel Atualizar o Dicionario.") , .f. )
                     End If 
 
-                    //SysWait(0.02)
-                    
+                                        
                     BT_ClientAreaInvalidateAll(cHeaderJan)
-                    //SysWait(0.02)
+                    
                     xDcBarHeader()
                     DO EVENTS 
 
@@ -835,8 +923,8 @@ Function EventHeader()
                                 GetAsyncKeyState(i)
                             Next i
 
-
                             If (GetAsyncKeyState(VK_LBUTTON)) == 0	  
+                                
 
                                 If (nColSele != nColTarget) .And. TroqOrdens(cTabela , nColSele , nColTarget , aCabecs[nColSele] )
 
@@ -844,9 +932,15 @@ Function EventHeader()
                                     SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'CURSOR1'  )                                  
                                     aColsTam := GetCamposInf( cTabela, 'TAM' )                                                                    
 
+                                    SysWait(0.05)                                    
+
                                     xAtuDados( nOrdemSel, lAscending ,  aColsTam  , .t.  )
-                                    xShowBrw(  cTabela , .t.  )       
-                                    xGoTop()                                    
+                                    
+                                 //   xShowBrw(  cTabela , .t.  )       
+                                   // xGoTop()                                    
+
+                                    SysWait(0.02)
+                                    
                                     SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'IDC_ARROW'  )    
 
                                 End If 
@@ -862,6 +956,9 @@ Function EventHeader()
                                 If  _isWindowDefined("Win_Msg")
                                     xHidehint()
                                 End If
+
+                                
+
                                 Exit
 
 

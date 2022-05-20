@@ -143,6 +143,7 @@ Function TroqOrdens(cTabela1 , nOrd1 , nOrd2  , cCampoName )
 		RETURN .f.
 	END IF
 	
+	
 
 	oQuery := oServer:Query( cSql2)
 

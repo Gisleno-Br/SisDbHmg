@@ -277,7 +277,7 @@ Function TestBrow( cParent1 , cTabx  )
 	oQuery := oServer:Query(  cSq2 )
 
 	If oServer:NetErr()
-		yAviso( "Error executing Query " + QUEBRA + cSq2 + " : " + QUEBRA + oServer:Error()  , .f. )
+		yAviso( "Error executing Query " + XQUEBRA + cSqlp + " : " + XQUEBRA + oServer:Error()  , .f. )
 		Return .f.
 	End If
 
@@ -897,16 +897,11 @@ Function CalcEtapas()
 			nPos2 := xGetInfC(   nCol2 , 3  )	
 
 			
-			If (nPos2 >= nLargz1) 
-
-				//msginfo(Str( nColEsq  ))
-
+			If (nPos2 >= nLargz1) 				
 
 				nWidth := xGetColWidth(  nColEsq   ) - 3
 				nc1 += nWidth
 			   	nRet++
-
-
 
 				nColEsq++   
 
@@ -921,13 +916,7 @@ Function CalcEtapas()
 			nCol2++
 
 
-	Enddo 
-
-	nConst2 := int((nLargTotal - nLargX) / nRet)
-
-	//msginfo(Str( nRet ) + '  ' + Str(nConst2) )
-
-	
+	Enddo 		
 
 Return nRet 
 
@@ -1962,6 +1951,7 @@ Return (GetTextWidth(  0,  'L' , FontHandle  )   )
 
 
 
+
 Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 
@@ -2049,7 +2039,7 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 	For n1 := 1 To Len(aMtrOp) 
 
 
-		cTexto :=  StrZero(aMtrOp[n1][1][3],5)   + Alltrim(Str(nRow ))  + '  ' + Hb_Utf8ToStr(aMtrOp[n1][1][1]) + Replicate(' ',200)
+		cTexto := Hb_Utf8ToStr(aMtrOp[n1][1][1]) + Replicate(' ',200)
 		
 		//Alltrim(Str(nLine + nRow )) + '   '  + Alltrim(Str(nRow )) + '  '   + Alltrim(Str(nLine ))  + ' ' + ;
 		//Alltrim(StrZero(n1,3)) + '  '  + Hb_Utf8ToStr(aMtrOp[n1][1][1]) + Replicate(' ',200)
@@ -2252,9 +2242,14 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 	Local nInd1 
 	Local nRecSalva := Recno()
 
+	Local oServer
+
 	LOCAL cAlias1 := 'T_' + Left(Alltrim(Str(Int( hb_Random( 234355 ) ))),4)
 	Local nRec1 := 0
 	Local nRt1 := 0
+
+	Local oRow
+	Local oQry 
 
 	nClearIt2 := Recno()
 
@@ -2275,16 +2270,87 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 			nindice := Ascan(aCabec , Alltrim( Hb_UTF8ToStr(cCampo1))   )
 		End If 
 
-		csqlp := "Select Numreg from " + cTabela + "  Where " + aCampos[nindice] + " = " + QuotedStr(Alltrim(cValor)) 
+		//csqlp := "Select Numreg from " + cTabela + "  Where " + aCampos[nindice] + " = " + QuotedStr(Alltrim(cValor)) 
+
+		oServer := GetConexao()
+
+		cCampo1 := xRetOrdem()
+
+		If Empty(Alltrim(cCampo1))
+			cCampo1 := 'Codigo'
+		End If 
+
+		cTb1 := "Tab_" + StrZero(Random(3454) , 6 )  
+
+		cSqlp := "set @row_num=0;"
+		oServer:Query( cSqlp )
+		SaveLog('SqlpBusca.Txt' , cSqlp )
+
+		cSqlp := "drop table if exists " + cTb1 + ";"
+		oServer:Query( cSqlp )
+		SaveLog('SqlpBusca.Txt' , cSqlp )
+
+		cSqlp := "create table "  + cTb1 + " as "  + XQUEBRA
+
+		If Alltrim(Upper(cCampo1)) != Alltrim( Upper(aCampos[nindice] ))
+			cSqlp += "select (@row_num:=@row_num+1) AS serial_num," + cCampo1 + ","   +  Alltrim(aCampos[nindice] ) + " from "  + cTabela + " order by " + cCampo1 + "  " + Iif( (!xRetAsced()) .And. (cCampo1 != 'Codigo') , " Desc " , "") + ";"
+		Else 
+			cSqlp += "select (@row_num:=@row_num+1) AS serial_num," + cCampo1 + " from "  + cTabela + " order by " + cCampo1 + "  " + Iif( (!xRetAsced()) .And. (cCampo1 != 'Codigo') , " Desc " , "") + ";"
+		End If 
+
+		oServer:Query( cSqlp )
+		SaveLog('SqlpBusca.Txt' , cSqlp )
+		
+		cSqlp := "select serial_num from " +  cTb1 + " where " + aCampos[nindice]  + " = "  + QuotedStr(Alltrim(cValor)) 
+		oQry := oServer:Query( cSqlp )
+
+		SaveLog('SqlpBusca.Txt' , cSqlp )
+		
+		IF oServer:NetErr()			
+
+			cError1 := "ErroLog" + StrZero(Random(7644) ,5 ) + "_" + StrZero(Random(9874) ,5 ) + ".Log"
+			SaveLog('Log\' + cError1 , oServer:Error() )
+		
+	  
+			oServer:Destroy()
+			oSErver := Nil
+	  
+	  
+			oQry:Destroy()
+			oQry := Nil
+			xDialog( "Error executing Query " + XQUEBRA +  " : " + XQUEBRA + oServer:Error() )
+			Return .f. 
+	  
+		 END IF
+
+
+		 If oQry:LastRec() > 0 
+
+			oRow := oQry:GetRow(1)
+			nRec1 := GetCampo(  oRow, oQry:FieldName(1 )  )
+
+		 Else 
+
+			xDialog( Hb_Utf8ToStr("Pesquisa Não Localizada.")   , .f.  )
+			DbSelectArea(  cSAlva  )				
+		
+		 End If 	 
 
 		
-		SaveLog('Sqlp.Txt' , cSqlp )		
+
+
+      /*
+		
+		SaveLog('SqlpBusca.Txt' , cSqlp )		
 		dbUseArea( .T.,,  cSqlp , cAlias1 )
 		dbSelectArea( cAlias1 )
 		dbGoTop()
 
+		REturn 
+		*/
 
 
+          /*
 		If Eof()
 
 			dbSelectArea( cAlias1 )
@@ -2294,16 +2360,23 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 			DbSelectArea(  cSAlva  )	
 
 		Else 
+			*/
+		
+		If (nRec1 > 0) 
 
-			nRec1 := NumReg 
+			//nRec1 := NumReg 
 			
-			dbSelectArea( cAlias1 )
-			Use 
+			//dbSelectArea( cAlias1 )
+			//Use 
 			DbSelectArea(  cSAlva  )			
+
+			DbGoto(  nREc1  )
+
+		//	msginfo(Codigo)
 
 			DbGoto(nRecSalva)
 
-			If ( nRec1 <= nTamPag)					
+			If ( nRec1 <= nTamPag)									
 
 				nInd1 := Ascan(  aMVisible , { |a|  a[2] == nRec1   }   )
 
@@ -2317,9 +2390,16 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 	
 				lHitb := (nLinhaBarra = nTamPag)
 				lHitt := (nLinhaBarra = 1)			
+
+				BT_ClientAreaInvalidateAll(cBrowserName)
+				SysWait(0.02)			
+
 				Do Events
 				xDcToDc()			
-				Do Events				
+				Do Events		
+
+				SysWait(0.01)			
+
 
 			Else 				
 
@@ -2355,6 +2435,8 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 						DbGoTo( nRec1 )
 						nSv1 := 0
 						nRt1 := 0				
+
+						//msginfo(Codigo)
 				
 
 						nItemX5     := Recno()			
@@ -2387,9 +2469,7 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 						xDialog("Fim do Arquivo Atingido!" , .f. )
 					End If 	
 
-
 					//msginfo(Codigo )
-
 
 
 				Else 
@@ -2399,6 +2479,7 @@ Function xDoPesq( cCampo1  , cBrwName , cValor  )
 
 					n1 := nRec1 - (nLBar - 1)
 					DbGoto(   n1 )  
+					
 			
 
 					EncheMVis( Recno()   , .t. )	

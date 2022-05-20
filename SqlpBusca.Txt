@@ -1,0 +1,73 @@
+Admin 20/05/2022 11:13:49   Admin 20/05/2022 11:13:49   Admin 20/05/2022 11:13:48   Admin 20/05/2022 11:13:48   Admin 20/05/2022 11:13:08   Admin 20/05/2022 11:13:07   Admin 20/05/2022 11:13:07   Admin 20/05/2022 11:13:07   Admin 20/05/2022 11:12:44   Admin 20/05/2022 11:12:44   Admin 20/05/2022 11:12:44   Admin 20/05/2022 11:12:44   Admin 20/05/2022 11:09:10   Admin 20/05/2022 11:09:10   Admin 20/05/2022 11:09:10   Admin 20/05/2022 11:09:10   Admin 20/05/2022 11:05:01   Admin 20/05/2022 11:05:01   Admin 20/05/2022 11:05:01   Admin 20/05/2022 11:05:01   Admin 20/05/2022 11:03:04   Admin 20/05/2022 11:03:04   Admin 20/05/2022 11:03:04   Admin 20/05/2022 11:03:04   Admin 20/05/2022 11:02:33   Admin 20/05/2022 11:02:33   Admin 20/05/2022 11:02:32   Admin 20/05/2022 11:02:32   Admin 20/05/2022 11:02:16   Admin 20/05/2022 11:02:16   Admin 20/05/2022 11:02:16   Admin 20/05/2022 11:02:16   Admin 20/05/2022 11:00:08   Admin 20/05/2022 11:00:08   Admin 20/05/2022 11:00:08   Admin 20/05/2022 11:00:08   Admin 20/05/2022 10:58:07   Admin 20/05/2022 10:58:07   Admin 20/05/2022 10:58:07   Admin 20/05/2022 10:58:07   Admin 20/05/2022 10:57:23   Admin 20/05/2022 10:57:23   Admin 20/05/2022 10:57:23   Admin 20/05/2022 10:57:22   Admin 20/05/2022 10:55:28   Admin 20/05/2022 10:55:28   Admin 20/05/2022 10:55:27   Admin 20/05/2022 10:55:27   Admin 20/05/2022 10:50:05   Admin 20/05/2022 10:50:05   Admin 20/05/2022 10:50:05   Admin 20/05/2022 10:50:05   Admin 20/05/2022 10:46:19   Admin 20/05/2022 10:45:06   Admin 20/05/2022 10:44:49   Admin 20/05/2022 10:43:07   Admin 20/05/2022 10:42:30   Admin 20/05/2022 10:42:19   Admin 20/05/2022 10:41:07   Admin 20/05/2022 10:31:48    select serial_num from Tab_002211 where codigo = '001950'
+ select serial_num from Tab_000960 where codigo = '001950'
+ select serial_num from Tab_002298 where cpf = '70156282445'
+ select serial_num from Tab_002437 where cpf = '70156282445'
+ select serial_num from Tab_000744 where cpf = '70156282445'
+ select serial_num from Tab_003179 where cpf = '70156282445'
+ select serial_num from Tab_001309 where cpf = '70156282445'
+ select serial_num from Tab_002522 where cpf = '70156282445'
+ set @row_num=0;
+ drop table if exists Tab_000240;
+ create table Tab_000240 as 
+select (@row_num:=@row_num+1) AS serial_num,Codigo,cpf from Clientes order by Codigo   Desc ;
+ select serial_num from Tab_000240 where cpf = '02725168481'
+ set @row_num=0;
+ drop table if exists Tab_001723;
+ create table Tab_001723 as 
+select (@row_num:=@row_num+1) AS serial_num,Codigo,cpf from Clientes order by Codigo   Desc ;
+ select serial_num from Tab_001723 where cpf = '02725168481'
+ set @row_num=0;
+ drop table if exists Tab_001095;
+ create table Tab_001095 as 
+select (@row_num:=@row_num+1) AS serial_num,Codigo,cpf from Clientes order by Codigo  ;
+ select serial_num from Tab_001095 where cpf = '02725168481'
+ set @row_num=0;
+ drop table if exists Tab_000079;
+ create table Tab_000079 as 
+select (@row_num:=@row_num+1) AS serial_num,Codigo,cpf from Clientes order by Codigo  ;
+ select serial_num from Tab_000079 where cpf = '02725168481'
+ set @row_num=0;
+ drop table if exists Tab_000089;
+ create table Tab_000089 as 
+select (@row_num:=@row_num+1) AS serial_num,Codigo,cpf from Clientes order by Codigo  ;
+ select serial_num from Tab_000089 where cpf = '02725168481'
+ set @row_num=0;
+ drop table if exists Tab_002758;
+ create table Tab_002758 as 
+select (@row_num:=@row_num+1) AS serial_num,Codigo,cpf from Clientes order by Codigo  ;
+ select serial_num from Tab_002758 where cpf = '02725168481'
+ set @row_num=0;
+ drop table if exists Tab_003290;
+ create table Tab_003290 as 
+select (@row_num:=@row_num+1) AS serial_num,Codigo,cpf from Clientes order by Codigo  ;
+ select serial_num from Tab_003290 where cpf = '02497001405'
+ set @row_num=0;
+ drop table if exists Tab_001784;
+ create table Tab_001784 as 
+select (@row_num:=@row_num+1) AS serial_num,Codigo,codigo from Clientes order by Codigo  ;
+ select serial_num from Tab_001784 where codigo = '001950'
+ set @row_num=0;
+ drop table if exists Tab_003438;
+ create table Tab_003438 as 
+select (@row_num:=@row_num+1) AS serial_num,Codigo,codigo from Clientes order by Codigo  ;
+ select serial_num from Tab_003438 where codigo = '001950'
+ set @row_num=0;
+ drop table if exists Tab_002616;
+ create table Tab_002616 as 
+select (@row_num:=@row_num+1) AS serial_num,Codigo from Clientes order by Codigo  ;
+ select serial_num from Tab_002616 where codigo = '001950'
+ set @row_num=0;
+ drop table if exists Tab_000160;
+ create table Tab_000160 as 
+select (@row_num:=@row_num+1) AS serial_num,Codigo,cpf from Clientes order by Codigo  ;
+ select serial_num from Tab_000160 where cpf = '31206956534'
+ set @row_num=0;
+ drop table if exists Tab_000496;
+ create table Tab_000496 as 
+select (@row_num:=@row_num+1) AS serial_num,Codigo from Clientes order by Codigo  ;
+ select serial_num from Tab_000496 where codigo = '002500'
+ set @row_num=0;
+ drop table if exists Tab_002113;
+ create table Tab_002113 as 
+select (@row_num:=@row_num+1) AS serial_num,nome,cpf from Clientes order by nome   Desc ;
+ select serial_num from Tab_002113 where cpf = '44516770415'
