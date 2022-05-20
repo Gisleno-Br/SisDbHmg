@@ -898,6 +898,7 @@ Function CalcEtapas()
 	//msginfo(Str(  nLargz1    ))
 
 
+
 	While .t. 
 
 			nWidth := xGetColWidth(  nCol2   )		
@@ -1107,6 +1108,8 @@ Function xRetReg()
 	Local aItens := {}
 
 	Local nTam1 := 0
+
+	Local lAtivo := .t.
 	
 
 	Local n1 := 1
@@ -1114,19 +1117,17 @@ Function xRetReg()
 
 	For n1 := 1 To FCount()
 			
-		lAtivo := .t.
 
 		aResults := {}
 		aRes2	 := {}
 		nQAcento := 0
 		cValor := ''
-
 	
 
 		If (Alltrim(aTips[n1]) == 'C')
-			cValor := &(FieldName(n1))			
-			nQAcento := QtAcento(cValor)		
 
+			cValor := &(FieldName(n1))			
+			nQAcento := QtAcento(cValor)
 			
 			If (Alltrim(cValor) = 'Inativo')
 				lAtivo := .f.
@@ -1178,7 +1179,7 @@ Function xRetReg()
 
 	Aadd(aMVisible , {    Len(aMVisible)+1 ,    Recno()   })
 	
-	Aadd(aItens , { c1 , lAtivo , 0  , aResults , '' , aRes2 , Recno()  , nTam1  , 0 }  )	
+	Aadd(aItens , { c1 , lAtivo , 0  , aResults , '' , aRes2 , Recno()  , nTam1  , 0 , lAtivo }  )	
 
 
 Return aItens 
@@ -1246,6 +1247,8 @@ Function xRecords(  nRecs , lFrente , lNoq1 )
 	Local nIndz := 0
 	Local lSort := .f. 
 
+	Local lAtivo := .t.
+
 	Local nTamz1 := GetTextoTam( ' '  , cActiveJan )
 	Local bBlock := { || Eof()}
 	
@@ -1275,6 +1278,8 @@ Function xRecords(  nRecs , lFrente , lNoq1 )
 		  aRet := xRetReg()
 		  nBarra++
 		  aRet[1][9] := nBarra 
+
+		  lAtivo := aRet[1][10]
 
 		
 		  If nTotz == 0
@@ -1815,12 +1820,11 @@ Function xTeclasBrow()
 			Else
 				nLinhaBarra--
 			End If
-
+			
 
 			If (lHitt) .And. (!Bof())
 			
-				nIndz := Ascan(aMt1 , { |a| a[1][7] == Recno() }  )								
-			
+				nIndz := Ascan(aMt1 , { |a| a[1][7] == Recno() }  )											
 
 				If nIndz == 0 					
 
@@ -2045,6 +2049,8 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 	End If
 
 	nIndice := -9999
+
+
 	
 	
 
@@ -3156,6 +3162,7 @@ REturn
 
 
 
+
 Function xSelItem( nItem1 , lRefresh)
 
 	Local nRow1 := 0
@@ -3167,11 +3174,10 @@ Function xSelItem( nItem1 , lRefresh)
 	Local nRec := Recno()
 	
 	Default lRefresh := .f.
+
 	
 
 	If (nClearIt2 > 0) 	
-
-
 		
 		DbGoto(nClearIt2)
 		nIndice1 := Ascan(aMVisible , { |a| a[2] == Recno() })
@@ -3234,6 +3240,7 @@ Function xSelItem( nItem1 , lRefresh)
 
 	BT_ClientAreaInvalidateAll(cBarraVfrm)  
 	
+
 
 	If lRefresh
 		SysWait(0.04)
@@ -3532,17 +3539,23 @@ Function xGoPgUp()
 
 		
 		nIndz := Ascan(aMt1 , { |a| a[1][7] == Recno() - nTamPag }  )				
+		
+		nLinScrool := 0
+		aMt1 := {}
 		xRecords(   , .f. )
 		
 		If (nIndz > 0) .or. (nTamPag > Recno())					
-			ScrolUp1(.t. ,(nItemBrwHeight * nTamPag) )	
+			//ScrolUp1(.t. ,(nItemBrwHeight * nTamPag) )	
 
 		Else 		
 
 		End If 	
 		
 
-		SysWait(0.09)	
+		//SysWait(0.09)	
+
+		SysWait(0.02)	
+
 		nItemX5     := Recno()
 		nClearIt2   := Recno()
 		
@@ -3633,9 +3646,12 @@ Function xGoPgDn()
 	lHitB := .f.
 	lHitt := .f.
 
-	SysWait(0.07)						
+//	SysWait(0.07)						
 		
-	ScrolUp1(.f. , nItemBrwHeight * nTamPag)			
+	//ScrolUp1(.f. , nItemBrwHeight * nTamPag)			
+	
+	nLinScrool := 0
+
 	nIndice := 1
 
 	If nIndice > 0
@@ -3658,7 +3674,8 @@ Function xGoPgDn()
 
 		If !Eof()
 			
-			
+			aMt1:={}
+
 			xRecords()
 			nItemX5     := Recno()			
 			nClearIt2   := Recno()
@@ -3668,12 +3685,9 @@ Function xGoPgDn()
 
 			nPageNumber++
 			BT_ClientAreaInvalidateAll(cBrowserName)
-
 			//msginfo(Str(  nPageNumber  ))
 
-
-
-			SysWait(0.03)						
+			SysWait(0.01)						
 
 		Else 			
 			xDialog("Fim do Arquivo Atingido!" , .f. )
@@ -3693,7 +3707,7 @@ Function xGoPgDn()
 	xDcToDEspe()
 
 	
-	SysWait(0.07)	
+	SysWait(0.01)	
 	
 Return 
 
