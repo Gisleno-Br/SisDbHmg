@@ -4355,7 +4355,10 @@ Function EventHndCli( nHWnd, nMsg, nWParam, nLParam )
 
 			If (nId == 5491)
 				PushButton( cFormPrin  , nid )
-				//msginfo('1')	
+				//msginfo('1')
+				
+				LoadFitros( cTabela )
+				
 				
 			End If 	
 

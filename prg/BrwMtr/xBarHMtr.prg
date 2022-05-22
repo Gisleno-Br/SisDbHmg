@@ -47,22 +47,23 @@ Static nQContador := 0
 
 
 
-
-Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela  , cBrowser , nTotCol , nTamBar , cHeaderN1  , lDispo1  )
+Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela  , cBrowser , nTotCol , nTamBar , cHeaderN1  , lDispo1  )
 
    
-   Private cJanName   := 'Win_Bh' + Left(cActiveJan,4)
-   Private cJanSombra := 'Win_SombraBh' + Left(cActiveJan,4)
+   Private cJanName   := 'Win_BhMtr' + Left(cParent,4)
+   Private cJanSombra := 'Win_SombraBhMtr' + Left(cParent,4)
    cBarraSombra := cJanSombra
    nLarTotalx   := nLarguraTot2
    cBarraName   := cJanName
    cBrwName     := cBrowser
    nLargJan     := nLargJanela
 
+
    lEnabledy := lDispo1
 
-   nQ1 := CalcEtapas()
 
+
+   nQ1 := yCalcEtap1()
 
 
    nColTotal := nTotCol   
@@ -115,16 +116,16 @@ Function xBarraH( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela
 
 
     SET WINDOW &cJanName TRANSPARENT TO Iif(!lEnabledy , 167 , 0)
-    If (Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventBarra"  ) )  ) = 0) .And. (lEnabledy)
-		InstallEventHandler( "EventBarra" )		
+    If (Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventBarMtr"  ) )  ) = 0) .And. (lEnabledy)
+		InstallEventHandler( "EventBarMtr" )		
 	End If
     HMG_ChangeWindowStyle(  GetProperty(  cJanName , 'HANDLE' ) , WS_BORDER, NIL, .T. )
 
      
 Return cJanName    
-/*
 
-Function SetBarraTam(nTamanho , nQz)
+
+Function ySetBarTam(nTamanho , nQz)
   //nWidBarra := nTamanho    
 
   nTamBarra := nTamanho  
@@ -132,20 +133,18 @@ Function SetBarraTam(nTamanho , nQz)
 
   nQ1 := nQz 
 
-  // CalcEtapas()
+  // yCalcEtap1()
   nEtapas :=  Int( (GetProperty(  cBrwName , 'Width'  ) - nTamBarra)  /   nQ1 )                
 
   BT_ClientAreaInvalidateAll(cBarraName)  
-  xDcBarH()
+  yDcBarH1()
 
   Do Events 
 
 REturn 
-*/
 
 
-
-Function xShowHint( nRow1 , nCol1 , cMsg )
+Static Function xShowHint( nRow1 , nCol1 , cMsg )
 
 
 	If !_isWindowDefined("Win_Msg")
@@ -162,8 +161,8 @@ REturn
 
 
 
-/*
-Function xCalcBarH( nWidth )
+
+Static Function xCalcBarH( nWidth )
 
 	Local nCalc := 0
     Local n2    := 0
@@ -172,17 +171,15 @@ Function xCalcBarH( nWidth )
 
 
 Return nLargTotal 
-*/
 
-
-Function xGoBarR()
+Function yGoBarR()
 
     nScroxy  := (GetProperty( cBarraName  , 'Width') ) - nTamBarra - 5
     nColDrag := (GetProperty( cBarraName  , 'Width') ) - nTamBarra - 5
 
     
     BT_ClientAreaInvalidateAll(cBarraName)  
-    xDcBarH()
+    yDcBarH1()
     
     Do Events
     Do Events
@@ -190,37 +187,34 @@ Function xGoBarR()
 
 Return     
 
-Function xGoBarl()
+Function yGoBarl()
 
     nScroxy  := 21
     nColDrag := 21
     
     BT_ClientAreaInvalidateAll(cBarraName)  
-    xDcBarH()
+    yDcBarH1()
 
     Do Events
     Do Events    
 
 REturn     
 
-/*
+
 
 Function xRetBarH()
 
 REturn nScroxy    
 
-*/
 
-
-
-Function UpdateBarH( nPos1 )
+Function yUpdatBha1( nPos1 )
 
     nScroxy += nPos1     
     nColDrag += nPos1 
 
 
     BT_ClientAreaInvalidateAll(cBarraName)  
-    xDcBarH()
+    yDcBarH1()
 
 
     Do Events
@@ -230,7 +224,7 @@ Function UpdateBarH( nPos1 )
 Return 
 
 
-Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
+Static Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
 
     //BT_DRAWEDGE
 
@@ -314,26 +308,27 @@ Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
 Return     
 
 
-Function xGetBarName(nTipo)
+Function yGetBarNome(nTipo)
 
 Return Iif(nTipo = 1, cBarraName, cBarraSombra)
 
 
-Function xZeraContador()
+Function yZeraConter()
    nQContador := 0
 REturn 
 
-Function IncContador( lFrente )
+Function yIncConter( lFrente )
 
     If lFrente     
-        nQContador++        
+        nQContador++
+        //msginfo('g22')
     Else 
         nQContador--
-    End If  
+    End If 
 
 REturn     
 
-Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
+Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
 	Local cOpcao := ''
 	Local nCol   := 0
@@ -424,8 +419,8 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                     End If 
 
                     If (GetAsyncKeyState(VK_LBUTTON)) == 0					
-                        xOffBarra(cBarraName)
-                        xDcBarH()
+                        yOffBarra(cBarraName)
+                        yDcBarH1()
                         lTracking26 := .t. 
                         Do Events          
                         //msginfo('22')        
@@ -444,7 +439,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                             End If     
                             
                          
-                            nW1 := xGetColWidth( nColz2 ) - 3                                
+                            nW1 := xGetColW1( nColz2 ) - 3                                
                                                        
                             If ((nColx - nColAnt) >= 1  )      
 
@@ -484,11 +479,11 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
                                 SysWait(0.01)
                                 BT_ClientAreaInvalidateAll(cBarraName)                                      
-                                xDcBarH()                                    
+                                yDcBarH1()                                    
 
                                 //Do Events     
 
-                                xDcBarHeader()
+                                yDcBarH1eMtr()
 
 					            DO EVENTS                               
 
@@ -541,10 +536,10 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                                 End If                                                
 
                                 BT_ClientAreaInvalidateAll(cBarraName)                                      
-                                xDcBarH()                                         
+                                yDcBarH1()                                         
 
                                 Do Events
-                                xDcBarHeader()
+                                yDcBarH1eMtr()
 					            DO EVENTS 
                       
                             Else 
@@ -602,17 +597,17 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                         
                         If (nQContador > 0)
 
-                            DecrLeft()    
-                            ScrollCol( .f. , .f. )
+                            yDecrLefa()    
+                            yScrollCaM( .f. , .f. )
                             
 
                             nQContador--
                             
-                            UpdateBarH( -nConst1     )	
-                            xDcBarH()                                
+                            yUpdatBha1( -nConst1     )	
+                            yDcBarH1()                                
                             SysWait(0.03)
 
-                            xDcBarHeader()
+                            yDcBarH1eMtr()
 					        DO EVENTS 
                                 
                         Else 
@@ -649,25 +644,18 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                             Exit 
                         End If    
 
-                        If (nQContador < nQ1)
+                        If !(nQContador  == nQ1)
 
-                          //  msginfo('ok2  ' + Str(nQContador) +  '   ' + Str(nQ1) )
-
-
-                            If ScrollCol( .t. , .f. ) == -1
-                                SysWait(0.03)                                   
-                                msginfo('end')
-                                Exit 
-                            End If     
+                            yScrollCaM( .t. , .f. )
                             
-                            UpdateBarH( nConst1     )	
-                            xDcBarH()                                
+                            yUpdatBha1( nConst1     )	
+                            yDcBarH1()                                
                             SysWait(0.03)
-                            nQContador++                           
-                            
+                            nQContador++
+                            //msginfo('lp33333')
 
-                            xDcBarHeader()
-					        
+                            yDcBarH1eMtr()
+					        //DO EVENTS 
 
                             SysWait(0.05)
 
@@ -706,7 +694,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
             If (ar1[1] >= 20)        
 
-                xOffBarra( cBarraName  )
+                yOffBarra( cBarraName  )
                 Return Nil
 
 
@@ -727,7 +715,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                         nAcende := 0
                         BT_ClientAreaInvalidateAll(cBarraName)
                         Do Events 
-                        xDcBarH()
+                        yDcBarH1()
                     End If 
 
 
@@ -739,7 +727,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                         lTracking26 := .f. 
                         lTracking37 := .t. 
                         Do Events 
-                        xDcBarH()
+                        yDcBarH1()
                     End If 
 
                     If (nCol >= (Width - 25)) 
@@ -753,7 +741,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                         lTracking26 := .f. 
                         lTracking37 := .t.  
                         Do Events                        
-                        xDcBarH()
+                        yDcBarH1()
                         //msginfo('ok2')
                       
                     End If 
@@ -775,7 +763,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 
                 BT_ClientAreaInvalidateAll( cBarraName )
                 Do Events 
-                xDcBarH()
+                yDcBarH1()
 
                // msginfo('ok')
 
@@ -799,11 +787,11 @@ Return
 
 
 
-Function xCheckObj()
+Function yCheckObj()
 
 	If (!Empty(Alltrim(cObjSelected)) ) .And. (cObjSelected != "Browser")
   		
-		xOffBarra(   cBarraName )
+		yOffBarra(   cBarraName )
 		SysWait(0.02)		
 
 	End If 	  
@@ -811,19 +799,19 @@ Function xCheckObj()
 REturn 
 
 
-Function xOffBarra( cBarName  )
+Function yOffBarra( cBarName  )
       
     lDragMode := .f.  
 	SetWindowCursor( GetFormHandle( cBarName )  , IDC_ARROW  )
                
     BT_ClientAreaInvalidateAll( cBarName )
     Do Events 
-    xDcBarH()
+    yDcBarH1()
                // msginfo('ok')
     nAcende := 0
     BT_ClientAreaInvalidateAll(cBarName)
 
-    xDcBarH()
+    yDcBarH1()
 
     lTracking26 := .f.
     lTracking37 := .f.    
@@ -831,8 +819,8 @@ Function xOffBarra( cBarName  )
     Do Events
 
 REturn 
-/*
-Function xLuzOff( cJanela )
+
+Static Function xLuzOff( cJanela )
 
     nAcende   :=  0
     lDragmode := .f. 
@@ -841,11 +829,12 @@ Function xLuzOff( cJanela )
   //  msginfo('ok')
 
 Return 
-*/
 
 
 
-Function xDcBarH()
+
+
+Function yDcBarH1()
 
 	Local Width1  := BT_ClientAreaWidth  (cBarraName)
 	Local Height1 := BT_ClientAreaHeight (cBarraName)

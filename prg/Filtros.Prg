@@ -8,6 +8,7 @@ REQUEST HB_CODEPAGE_PT850
 #define QUEBRA Chr(13)+Chr(10)
 
 DECLARE WINDOW fFiltro
+DECLARE WINDOW WinSombra3
 
 
 
@@ -38,16 +39,35 @@ FUNCTION LoadFitros( cTabela1 )
 
    PRIVATE cFiltrox1 := ''
 
+   Private aMtFiltr := {}
+
    Private lNextOp := .f. 
 
    
    SET LANGUAGE TO PORTUGUESE
    SET CODEPAGE TO PORTUGUESE
 
-   Load Window fFiltrosCad
+   
+	DEFINE WINDOW fFiltrosCad ;
+		AT 0,0  ;				
+		WIDTH 747 HEIGHT 350 ;
+		CHILD TITLE 'xProcFiltro'  ;		
+		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE  ; 
+		ON PAINT xProcDlg( ThisWindow.Name ,  'Filtros - ' + Alltrim(cTabela) )  				
+	END WINDOW	
+
+
+   
+
+   //Load Window fFiltrosCad
+
+   
+   HMG_ChangeWindowStyle( GetFormHandle('fFiltrosCad') , WS_EX_DLGMODALFRAME, NIL, .T., .T. )
 
 
    Center Window fFiltrosCad
+
+   /*
 
 
    HMG_ChangeWindowStyle(  fFiltrosCad.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
@@ -120,13 +140,81 @@ FUNCTION LoadFitros( cTabela1 )
       
    xLoadFiltros(cTabx , .t.  )
 
-   Activate Window fFiltrosCad
+   */
 
-   RemoveHandler( 'EventConsu' )  
+   //Private zBitMap := BT_BitmapCaptureDesktop ( 181 + 12 , 292 + 625  + 2 , 5 , 378 - 7  )
+
+
+   
+
+
+   //ON KEY ESCAPE of fFiltrosCad ACTION fFechaF()
+
+   //Center Window fFiltrosCad
+
+   //Activate Window fFiltrosCad
+
+   //RemoveHandler( 'EventConsu' )  
+
+   xInitFiltr()
+
+   aMtrFiltr := xLoadFiltros( cTabela  )
+
+   
+	WinSombra3.Show()
+   //Domethod( 'WinSombra21' , 'Show' )
+	Bt_ClientAreaInvalidateAll('WinSombra3')	
+	_ShowWindow('fFiltrosCad')
+
+   //747
+
+   xBrowserMtr( 15 ,  aMtrFiltr , 'fFiltrosCad'   , 250  , 'LstBoxFiltro' , 10  , { 'Codigo' , 'Descrição' , 'Filtro'} , ;
+      {15,35,55}  , {'C' , 'C' , 'C' } , .f. , .t. , 200 )
+
+
+   BringTop('xProcFiltro')
+
+   _ShowWindow('LstBoxFiltro')
+
+   sysWait(0.03)
+
+   //_ShowWindow('LstBoxFiltro')
+
 
 
 
 RETURN cFiltrox1
+
+Function xInitFiltr()
+
+
+   
+	Local nTop  := GetProperTy('fFiltrosCad' , 'Row') 
+	Local nLeft := GetProperTy('fFiltrosCad' , 'Col')
+   Local zBitMap := BT_BitmapCaptureDesktop ( nTop + 12 , nLeft + 12 , GetProperty('fFiltrosCad' , 'Width') - 7 , GetProperTy('fFiltrosCad' , 'Height') - 7  )
+
+   //BT_BitmapC
+   
+
+   BT_BitmapSaveFile ( zBitMap  , "zBit20.bmp")
+
+
+   
+	DEFINE WINDOW WinSombra3 AT nTop + 12 , nLeft + 12 WIDTH GetProperty('fFiltrosCad' , 'Width') - 8 HEIGHT GetProperty('fFiltrosCad' , 'Height') - 8 TITLE 'Sombra2' ;
+      NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
+      ON PAINT xSombra( ThisWindow.Name , nTop   , nLeft    , zBitMap ) 			
+   END WINDOW
+
+
+
+//   _ShowWindow('WinSombra2')
+
+
+   //sysWait(0.05)
+
+
+
+REturn    
 
 
 Function fFechaF()
@@ -244,14 +332,20 @@ FUNCTION xLoadFiltros( cTabela1  , lUltimo )
    LOCAL oServer := GetConexao()
    LOCAL oRow
    LOCAL oQuery  := oServer:Query( cSqlx1 )
+   Local aMtr1 := {}
+   Local cArqLog := ''
 
-   
-	If oServer:NetErr()         
-       oServer:Destroy()
-       oQuery:Destroy()
-       MsGInfo( "Error executing Query !" + QUEBRA + cSqlx1 + " : " + QUEBRA + oServer:Error() )
+   	If oServer:NetErr()                       
+
+        cArqLog := xSaveErro(oServer:Error())
+        xDialog( "Error Executing Query !" + QUEBRA + cSqlx1 + " : " + QUEBRA + "Arquivo de Log : " + cArqLog  , .f. )
+        oServer:Destroy()
+        oQuery:Destroy()
+      
        Return .f. 
+
    End If 
+
 
    //MsgInfo('loadf ')
 
@@ -259,28 +353,29 @@ FUNCTION xLoadFiltros( cTabela1  , lUltimo )
    Default lUltimo := .f. 
 
    If !_isWindowDefined('fFiltrosCad')
-      msginfo( Hb_AnsiToOem(  "Erro Inesperado , Refaça a Operação.") )     
+      xDialog( Hb_AnsiToOem(  "Erro Inesperado , Refaça a Operação.")  , .f.)     
       Return 
    End If 
 
 
-   fFiltrosCad .Gridfiltro. Deleteallitems()
+   //fFiltrosCad .Gridfiltro. Deleteallitems()
 
    FOR n1 := 1 TO oQuery:LastRec()
       oRow := oQuery:GetRow( n1 )
+      //Domethod( 'fFiltroscad', 'GridFiltro', 'addItem', { AllTrim( Str(GetCampo(oRow,'IdFiltros' ) ) ),   GetCampo( oRow,'descricao' )     , GetCampo( oRow,'filtro' ) } )
 
-      Domethod( 'fFiltroscad', 'GridFiltro', 'addItem', { AllTrim( Str(GetCampo(oRow,'IdFiltros' ) ) ),   GetCampo( oRow,'descricao' )     , GetCampo( oRow,'filtro' ) } )
+      Aadd(aMtr1 , {    StrZero(GetCampo(oRow,'IdFiltros' ) , 3) , GetCampo( oRow,'descricao' ) ,  GetCampo( oRow,'filtro' )     } )
    NEXT
 
-   fFiltrosCad .LblQtFiltro. Value := AllTrim( Str( oQuery:LastRec()    ) )
+   //fFiltrosCad .LblQtFiltro. Value := AllTrim( Str( oQuery:LastRec()    ) )
 
-   If ( oQuery:LastRec() > 0 )     
-      Domethod( 'fFiltroscad', 'GridFiltro', 'SetFocus' )
-   End If
-
-
+   //If ( oQuery:LastRec() > 0 )     
+     // Domethod( 'fFiltroscad', 'GridFiltro', 'SetFocus' )
+   //End If
 
 
+
+/*
    If (lUltimo)
 
       fFiltroscad.GridFiltro.Value := {oQuery:LastRec() ,1 }     
@@ -293,6 +388,8 @@ FUNCTION xLoadFiltros( cTabela1  , lUltimo )
       SysWait(.1)
 
    End If 
+   */
+
 
    oServer:Destroy()
    oSErver := Nil 
@@ -304,7 +401,7 @@ FUNCTION xLoadFiltros( cTabela1  , lUltimo )
    // SysWait(.8)
    // Refreshall('fFiltrosCad')
 
-RETURN
+RETURN aMtr1 
 
 
 STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )

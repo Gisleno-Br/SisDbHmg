@@ -131,6 +131,13 @@ FUNCTION SvTamCampo( cCampo1, cTab1, nTam1  )
 
 RETURN .T.
 
+Function xSaveErro(cMsg1)
+
+	Local cError1 := "ErroLog" + StrZero(Random(7644) ,5 ) + "_" + StrZero(Random(9874) ,5 ) + ".Log"
+	SaveLog('Logs\' + cError1 , cUserName + '  '  + Left(Time(),5) + '  '  + Dtoc(dDataBase) +'  ' + Alltrim(cMsg1)  )
+
+
+Return cError1        
 
 FUNCTION SaveCampo( cCampo1, cTab1  )
 
