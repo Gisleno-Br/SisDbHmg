@@ -27,6 +27,9 @@ FUNCTION LoadFitros( cTabela1 )
    LOCAL cCab1 :=  ''
 
 
+   
+
+
    HB_SETCODEPAGE("PT850")
 
 
@@ -43,6 +46,9 @@ FUNCTION LoadFitros( cTabela1 )
 
    Private lNextOp := .f. 
 
+
+     
+
    
    SET LANGUAGE TO PORTUGUESE
    SET CODEPAGE TO PORTUGUESE
@@ -58,6 +64,12 @@ FUNCTION LoadFitros( cTabela1 )
 
 
    
+   aMtrFiltr := xLoadFiltros( cTabela1  )
+
+   If !CheckRet(aMtrFiltr)
+      Return 
+   End If   
+   
 
    //Load Window fFiltrosCad
 
@@ -67,6 +79,8 @@ FUNCTION LoadFitros( cTabela1 )
 
    Center Window fFiltrosCad
 
+
+   
    /*
 
 
@@ -158,27 +172,40 @@ FUNCTION LoadFitros( cTabela1 )
 
    xInitFiltr()
 
-   aMtrFiltr := xLoadFiltros( cTabela  )
 
    
 	WinSombra3.Show()
-   //Domethod( 'WinSombra21' , 'Show' )
+   
 	Bt_ClientAreaInvalidateAll('WinSombra3')	
 	_ShowWindow('fFiltrosCad')
 
-   //747
 
-   xBrowserMtr( 15 ,  aMtrFiltr , 'fFiltrosCad'   , 250  , 'LstBoxFiltro' , 10  , { 'Codigo' , 'Descrição' , 'Filtro'} , ;
-      {15,35,55}  , {'C' , 'C' , 'C' } , .f. , .t. , 200 )
+   cSalvaJan  :=  cActiveJan
+   cActiveJan := 'fFiltrosCad'
+   
+
+   xBrowserMtr( 51 ,  aMtrFiltr , 'fFiltrosCad'   , 710  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Filtro'} , ;
+      {10,45,65}  , {'C' , 'C' , 'C' } , .f. , .t. , 150 )
+
+
+   
+   _ShowWindow('LstBoxFiltro')
+
 
 
    BringTop('xProcFiltro')
 
+   Do Events 
+   _ShowWindow('fFiltrosCad')
+   Do Events 
+
+   
    _ShowWindow('LstBoxFiltro')
 
-   sysWait(0.03)
 
-   //_ShowWindow('LstBoxFiltro')
+   //747
+
+
 
 
 
@@ -192,6 +219,10 @@ Function xInitFiltr()
 	Local nTop  := GetProperTy('fFiltrosCad' , 'Row') 
 	Local nLeft := GetProperTy('fFiltrosCad' , 'Col')
    Local zBitMap := BT_BitmapCaptureDesktop ( nTop + 12 , nLeft + 12 , GetProperty('fFiltrosCad' , 'Width') - 7 , GetProperTy('fFiltrosCad' , 'Height') - 7  )
+
+   
+   //Local aMtrFiltr := xLoadFiltros( cTabela  )
+
 
    //BT_BitmapC
    
@@ -354,7 +385,7 @@ FUNCTION xLoadFiltros( cTabela1  , lUltimo )
 
    If !_isWindowDefined('fFiltrosCad')
       xDialog( Hb_AnsiToOem(  "Erro Inesperado , Refaça a Operação.")  , .f.)     
-      Return 
+      Return .f. 
    End If 
 
 

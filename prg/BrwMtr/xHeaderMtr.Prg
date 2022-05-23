@@ -107,14 +107,19 @@ Static nQDrag1 := 0
 Static lAtuDic  := .t. 
 Static lScrool5 := .t. 
 
-Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1 , aTps , cTabela , lAtivo , lDic1  )
+Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargTot1 , aTps , cTabela , lAtivo , lDic1  , nR1 , nC1  )
 
-    Local nRowIni := GetProperty( cBrwName1 , 'Row')
-    Local nCol    := GetProperty( cBrwName1 , 'Col')
+    Local nRowI   := nR1 
+    Local nColI   := nC1
     Local nLarg1  := GetProperty( cBrwName1 , 'Width')
+    Local aPos := {0,0,0,0}
 
-
+    Local nHWnd := GetSplitChildWindowHandle (cBrwName1, cParent1)
     Local nIndex22 
+
+    //GetWindowRect (nHWnd, aPos)  
+
+
 
     DEFAULT lAtivo := .t. 
 
@@ -128,6 +133,7 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 
     cHeaderSombra := 'fSombra' + Right(cHeaderJan , 3)
 
+
     aColsTam := aTams 
     aTipsy   := aTps
     aCabecs  := aCabecalho
@@ -135,10 +141,10 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
     c_BrowName := cBrwName1
 
     cTable := cTabela
-
+    
         
 	DEFINE WINDOW &cHName ;
-		AT nRowIni - 92 , nCol  ;
+		AT nRowI - 28 , nColi  ;
 		CHILD ;
 		PANEL ;
 		PARENT &cParent1 ;                                                                                                        //nLarg1+1
@@ -149,6 +155,7 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 	END WINDOW
 
 
+
     lScrool5 :=  (nLargTot1 > 0) .And. (nLargTot1 > (nLarg1+1)) 
 
     If (!lScrool5)
@@ -157,8 +164,10 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
     End If 
 
 
+
+
     DEFINE WINDOW &cHeaderSombra ;
-		AT nRowIni - 92 , nCol  ;
+		AT nRowI - 28 , nColi  ;
 		CHILD ;
 		PANEL ;
 		PARENT &cParent1 ;
@@ -197,11 +206,7 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 
     SET WINDOW &cHName TRANSPARENT TO Iif(!lEnabled2 , 167 , 0)      
 
-    xMapCols( aCabecs , aColsTam , aTipsy )     
-
-
-
-    
+    xMapCols( aCabecs , aColsTam , aTipsy )         
 
 
 Return .t. 

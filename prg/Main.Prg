@@ -139,7 +139,11 @@ FUNCTION Main
 
 	Private lExit := .f.
 
+	Private cSalvaJan := ''
+
 	Public CURSORHAND := "img\Hand_Cursor.cur"
+
+	
 
 	Private aCords := {}
 

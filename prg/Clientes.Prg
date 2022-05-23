@@ -1157,6 +1157,8 @@ Function InitTela(  lIni1  , nColz1)
 	
 	
 	SetWindowCursor( GetFormHandle( cFormPrin )  , IDC_ARROW  )
+
+	cSalvaJan  := ''
 	
 
 

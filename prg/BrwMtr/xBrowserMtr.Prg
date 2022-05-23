@@ -130,6 +130,10 @@ Static nPageNum := 0
 
 Static lAtivo1 := .t. 
 
+Static aCabec1 := {}
+Static aTams2  := {}
+Static aTips   := {}
+
 //DECLARE WINDOW Win_Browser
 
 
@@ -404,6 +408,50 @@ Static Function EncheMVis( nRec , lFrente , z2   )
 Return
 
 
+Function xRetItem( aMatriz )
+
+	Local c1 := ''
+	Local cV1 := ''
+	Local n1 := 0
+	Local nTam := 0
+	Local lNum := .f. 
+
+	For n1 := 1 To Len( aCabec1 )
+
+		If aTips[n1] == 'C'
+
+			nQAcento := QtAcento(aMatriz[n1])			
+			nTam := If( (nQAcento =  0)   , aTams2[n1] ,  aTams2[n1] + nQAcento )
+
+		 	cV1 := Padr( aMatriz[n1] , nTam )
+
+		End If 	 
+
+		If aTips[n1] == 'D'
+			cV1 := Padl( Alltrim(aMatriz[n1])  ,10)
+		End If
+
+		lNum := .f.
+
+		If aTips[n1] == 'B'
+			cV1 := alltrim(Transform(aMatriz[n1] , "999,999,999.99" ))
+			lNum := .t.
+		End If
+
+		If ( Alltrim(aTips[n1]) == 'I')
+			If (n1 > 1)
+				cV1 := alltrim( Str(   aMatriz[n1]   ))
+				lNum := .t.
+			Else
+				cV1 := Alltrim( Str( aMatriz[n1]  ) )
+			End If
+		End If
+
+		c1 += (cV1 + ' ')
+
+	Next 	
+
+Return (c1)	
 
 
 Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  , aCabecalho , aTamanhos , aTipos , lDicionario , lEnabled1 , nAltura1 )
@@ -423,11 +471,15 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 
 	nTamPag := Int(  nAltura1 / nItemBrwHeight   ) + 1 
 
+	aCabec1 := Aclone(aCabecalho)
+    aTams2  := Aclone(aTamanhos)
+	aTips   := AClone( aTipos)
+
+
 
 	lAtivo1 := lEnabled1
 
 	cJanObj := cParent 
-
 
 
 
@@ -454,12 +506,11 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 	cBarraVSombra := 'Win_Resp' +  Left(cBrowserName,4)
 
 
-	cHeaderName := 'Win_Header' + Left(cBrowserName,4)
-
+	cHeaderName := 'Win_HeadMtr' + Left(cBrowserName,4)
 	nQEtp := 0
-
 	
-
+	
+/*
 	If Len(aDatas1) > 0 
 		nLArg1 := (Len( aDatas1[1][1]) * nTam1)+18
 		If (nLarg1 > GetDeskTopWidth() - 40)		
@@ -467,11 +518,9 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 			nLargx := nLarg1 		
 		End If 
 	End If 
+	*/
 
-
-
-
-
+	
 
 	DEFINE WINDOW &cBrowserName ;
 		AT nRowIni,nCol  ;
@@ -486,6 +535,7 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 
 
 
+	
 	DEFINE WINDOW &cEspelhoBrw ;
 		AT nRowIni,nCol  ;
 		CHILD ;
@@ -501,18 +551,18 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 	lAtivo1 := ((nLargTotal+1) > nLarg1) 	
 
 
-	
+
+
 	If Len(aCabecalho) > 0		
-		lHasHeader := xHeaderMtr( cHeaderName , aCabecalho , aTamanhos , cParent ,  cBrowserName ,  nLargTotal , aTipos , cTabela , lAtivo1 , lDicionario )		
+		lHasHeader := xHeaderMtr( cHeaderName , aCabecalho , aTamanhos , cParent ,  cBrowserName ,  nLarg1 , aTipos , cTabela , lAtivo1 , lDicionario , nRowIni - 2 , nCol )		
 	End If 	
 
 
-	cBarrah := xBarHMtr( cParent ,  cBrowserName , nRowIni+(nTamPag * nItemBrwHeight)+2  , nLargTotal  ,  nLargX , cBrowserName , ;
-	(nQTotCol := xGetColQw1()) , nLarg1 - ((nLargTotal - nLargX) )   , cHeaderName , ((nLargTotal+1) > nLarg1) 	 ) 
+	cBarrah := xBarHMtr( cParent ,  cBrowserName , nRowIni+nAltura1 , nLarg1  ,  nLargX , cBrowserName , ;
+	(nQTotCol := xGetColQw1()) , nLarg1 - ((nLargTotal - nLargX) )   , cHeaderName , ((nLargTotal+1) > nLarg1)  , nCol	 ) 
 
 
 	//SET WINDOW Win_Browser TRANSPARENT TO 0
-
 	
 
 	SET WINDOW &cBrowserName TRANSPARENT TO Iif(  lAtivo1 , 0 , 190 )
@@ -551,27 +601,30 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 	END LABEL
 
 
+
 	nCol11 := nCol + nLarg1 
 
+
+	//msginfo(Str( nCol11 ))
+
 	DEFINE WINDOW &cBarraVfrm ;
-		AT nRowIni - 31 ,nCol11  ;
+		AT nRowIni - 29 ,nCol11  ;
 		CHILD ;
 		PANEL ;
 		PARENT &cParent ;
-		WIDTH 21 HEIGHT (nTamPag * nItemBrwHeight) + 31 ;
+		WIDTH 21 HEIGHT nAltura1 + 30 ;
 		TITLE 'xScroxRoleol1' + Left(cParent,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR WHITE   ;
-		ON PAINT xPaintScroll( ThisWindow.Name )
+		ON PAINT xPaintScroll( ThisWindow.Name ) 		
 	END WINDOW
 
 
-
 	DEFINE WINDOW &cBarraVSombra ;
-		AT nRowIni - 31 ,nCol11  ;
+		AT nRowIni - 29 ,nCol11  ;
 		CHILD ;
 		PANEL ;
 		PARENT &cParent ;
-		WIDTH 27 HEIGHT (nTamPag * nItemBrwHeight) + 31  ;
+		WIDTH 27 HEIGHT nAltura1+ 30 ;
 		TITLE 'xScroxSombra' + Left(cParent,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR {240,240,240}  ;
 		ON MOUSEMOVE (cObjSelected := 'BarraV')				  
@@ -591,15 +644,18 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 	ShowScrollbar (GetFormHandle(cEspelhoBrw) , 0, .f.)
 	ShowScrollbar (GetFormHandle(cEspelhoBrw) , 1, .f.)
 
-	ShowScrollbar (GetFormHandle(cBarraVfrm) , 0, .f.)
-	ShowScrollbar (GetFormHandle(cBarraVfrm) , 1, .f.)
+	If _isWindowDefined(cBarraVfrm)
+		ShowScrollbar (GetFormHandle(cBarraVfrm) , 0, .f.)
+		ShowScrollbar (GetFormHandle(cBarraVfrm) , 1, .f.)
 
-	ShowScrollbar (GetFormHandle(cBarraVSombra) , 0, .f.)
-	ShowScrollbar (GetFormHandle(cBarraVSombra) , 1, .f.)
+		ShowScrollbar (GetFormHandle(cBarraVSombra) , 0, .f.)
+		ShowScrollbar (GetFormHandle(cBarraVSombra) , 1, .f.)
 
 
-	BT_ClientAreaInvalidateAll(cBrowserName )
-	BT_ClientAreaInvalidateAll(cBarraVfrm)
+		BT_ClientAreaInvalidateAll(cBrowserName )
+		BT_ClientAreaInvalidateAll(cBarraVfrm)
+
+	End If 	
 
 	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventBrowMtr"  ) )  ) = 0
 		InstallEventHandler( "EventBrowMtr" )
@@ -607,10 +663,19 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 	End If
 
 
-	
-	_ShowWindow(cBarraVfrm)
+
+	If _isWindowDefined(cBarraVfrm)
+		_ShowWindow(cBarraVfrm)
+	End If 	
+
 	_ShowWindow(cEspelhoBrw)
-	_ShowWindow(cBarraVSombra)
+
+	If _isWindowDefined(cBarraVSombra)
+		_ShowWindow(cBarraVSombra)
+	End If 	
+
+	//lHasHeader := .f. 
+
 
 	If (lHasHeader)
 		
@@ -633,41 +698,58 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 	xDcToDEspe()
 
 
-	_ShowWindow( yGetBarNome(1) )
-	BT_ClientAreaInvalidateAll(yGetBarNome(1))
+	If _isWindowDefined(yGetBarNome(1) )
+		_ShowWindow( yGetBarNome(1) )
+		BT_ClientAreaInvalidateAll(yGetBarNome(1))
 
 
-	_ShowWindow( yGetBarNome(2 ) )
-	BT_ClientAreaInvalidateAll(yGetBarNome(2))
+		_ShowWindow( yGetBarNome(2 ) )
+		BT_ClientAreaInvalidateAll(yGetBarNome(2))
+	End If 
 
 	Do Events 
 
+	
 	yDcBarH1()
-
 
 	Do Events 
 
 	
 	SysWait(0.01)
 
-	//_ShowWindow(    )
-	//BT_ClientAreaInvalidateAll( cHeaderName)
+	
+	If _isWindowDefined(yGetHeadName(1))
+		_ShowWindow( yGetHeadName(1) )
+		BT_ClientAreaInvalidateAll(yGetHeadName(1))
+
+
+		_ShowWindow( yGetHeadName(2 ) )
+		BT_ClientAreaInvalidateAll(yGetHeadName(2))
+
+		yDcBarH1eMtr()
+
+	End If 	
+
+
+
+	BT_ClientAreaInvalidateAll(cBarraVfrm)
+
+	SysWait(0.02)
+
+	BT_ClientAreaInvalidateAll(cBarraVSombra)
+
+
+    //Do Events
+   // Do Events
+
+
+	SysWait(0.02)
 
 	
-	_ShowWindow( yGetHeadName(1) )
-	BT_ClientAreaInvalidateAll(yGetHeadName(1))
+	//yDcBarH1()
+	xDcToDEspe()
+	SysWait(0.02)
 
-
-	_ShowWindow( yGetHeadName(2 ) )
-	BT_ClientAreaInvalidateAll(yGetHeadName(2))
-
-
-
-	yDcBarH1eMtr()
-
-
-    Do Events
-    //Do Events
 
 	//msginfo('ko2')
 
@@ -1627,8 +1709,12 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 	
 
 	For n1 := 1 To Len(aMtrOp) 
+		  
 
-		cTexto := Hb_Utf8ToStr(aMtrOp[n1][1]) + Replicate(' ',200)
+		//cTexto := Hb_Utf8ToStr( aMtrOp[n1][1]) + Replicate(' ',200)
+
+		//xRetItem( aMatriz )
+		cTexto := Hb_Utf8ToStr( xRetItem(aMtrOp[n1])       ) + Replicate(' ',200)
 		nLinb++
 		
 
@@ -2527,6 +2613,8 @@ Static Function xPaintScroll( cJanela )
 
 
 	For n1 := 1 To Len(aMtrz1)
+
+
 
 		aImgs := yRetImgs(  aMtrz1[n1]   )
 	

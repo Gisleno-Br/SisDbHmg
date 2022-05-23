@@ -80,28 +80,6 @@ DrawTransp(cActiveJan , hBit2 )
         FONTCOLOR NIL
     END LABEL
 
-    DEFINE LABEL LblMsg1
-        ROW    760
-        COL    350
-        WIDTH  120
-        HEIGHT 24
-        VALUE "Label_1"
-        FONTNAME "Arial"
-        FONTSIZE 9
-        TOOLTIP ""
-        FONTBOLD .F.
-        FONTITALIC .F.
-        FONTUNDERLINE .F.
-        FONTSTRIKEOUT .F.
-        HELPID Nil
-        VISIBLE .F.
-        TRANSPARENT .T.
-        ACTION Nil
-        AUTOSIZE .F.
-        BACKCOLOR NIL
-        FONTCOLOR {255,255,255}
-    END LABEL
-
     DEFINE FRAME Frame_1
         ROW    58
         COL    182

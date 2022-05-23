@@ -974,6 +974,21 @@ Function xWaitDlg()
 Return .t. 
 
 
+Function CheckRet( cVar )
+
+	Local lOk := .t.
+
+	//msginfo( cVar )
+
+	If ValType( cVar  ) == 'L'
+		lOk := cVar 		
+		//msginfo('L')
+	 End If   
+
+Return (lOk)	 
+  
+
+
 Function xSombra(  cJanela , nRow1  , nCol1 , zBitmap1  )
 
 

@@ -1448,6 +1448,18 @@ Function xTeclasBrow()
 
 	End If 
 
+/*
+	If (nHWnd != GetFormHandle(cActiveJan))		
+		REturn
+	End If 	
+	*/
+
+
+	If !Empty(Alltrim(cSalvaJan))
+		Return 
+	End If 	
+
+
 
 	
 
@@ -1974,12 +1986,12 @@ Return
 
 
 
-
-
 function GetTextoTam( cMsg  )
 
-	Local  FontHandle := _SetFont ( GetControlHandle( 'LblMsg1' , cActiveJan ), FONTBROWSER,  FONTBROWSERSIZE  , .f. , .f. ,.f. ,.f. )
-	
+	Local  FontHandle := _SetFont ( GetControlHandle( 'LblMsg1' , 'Main' ), FONTBROWSER,  FONTBROWSERSIZE  , .f. , .f. ,.f. ,.f. )
+
+
+	//Local FontHandle := HMG_CreateFont (  hDC , FONTBROWSER, FONTBROWSERSIZE, .f., .f., .f., .f. )	
 
 	//Local  FontHandle  := HMG_CreateFont (  hDC , FONTBROWSER, FONTBROWSERSIZE, .f., .f., .f., .f. )
 

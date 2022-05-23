@@ -47,7 +47,7 @@ Static nQContador := 0
 
 
 
-Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela  , cBrowser , nTotCol , nTamBar , cHeaderN1  , lDispo1  )
+Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela  , cBrowser , nTotCol , nTamBar , cHeaderN1  , lDispo1  , nColuna )
 
    
    Private cJanName   := 'Win_BhMtr' + Left(cParent,4)
@@ -73,7 +73,7 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
 
         
     DEFINE WINDOW &cJanName ;
-        AT nLinha1 ,  GetProperty(  cBrowserName , 'Col'  )  ;
+        AT nLinha1 , nColuna ;
         CHILD ;
         PANEL ;
         PARENT &cParent ;
@@ -87,7 +87,7 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
 
 
     DEFINE WINDOW &cJanSombra ;
-        AT nLinha1 ,  GetProperty(  cBrowserName , 'Col'  )  ;
+        AT nLinha1 , nColuna ;
         CHILD ;
         PANEL ;
         PARENT &cParent ;
@@ -100,9 +100,6 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
 
     
     SET WINDOW &cJanName TRANSPARENT TO Iif(!lEnabledy , 167 , 0)
-
-
-
 
 
     If nQ1 > 0 
@@ -418,7 +415,8 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                         lFirst := .t. 
                     End If 
 
-                    If (GetAsyncKeyState(VK_LBUTTON)) == 0					
+                    If ((GetAsyncKeyState(VK_LBUTTON)) == 0) .And. ( _isWindowDefined(cBarraName)  )					
+
                         yOffBarra(cBarraName)
                         yDcBarH1()
                         lTracking26 := .t. 
@@ -694,8 +692,11 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
             If (ar1[1] >= 20)        
 
-                yOffBarra( cBarraName  )
-                Return Nil
+
+                If _isWindowDefined(cBarraName)  
+                    yOffBarra( cBarraName  )
+                    Return Nil
+                End If     
 
 
             End If 
@@ -790,9 +791,11 @@ Return
 Function yCheckObj()
 
 	If (!Empty(Alltrim(cObjSelected)) ) .And. (cObjSelected != "Browser")
-  		
-		yOffBarra(   cBarraName )
-		SysWait(0.02)		
+
+        If _isWindowDefined(cBarraName)  		
+            yOffBarra(   cBarraName )
+            SysWait(0.02)		
+        End If             
 
 	End If 	  
 
