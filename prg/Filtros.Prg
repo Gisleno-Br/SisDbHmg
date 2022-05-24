@@ -187,20 +187,22 @@ FUNCTION LoadFitros( cTabela1 )
    xBrowserMtr( 51 ,  aMtrFiltr , 'fFiltrosCad'   , 710  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Filtro'} , ;
       {10,45,65}  , {'C' , 'C' , 'C' } , .f. , .t. , 150 )
 
-
    
-   _ShowWindow('LstBoxFiltro')
-
-
+   //_ShowWindow('LstBoxFiltro')
 
    BringTop('xProcFiltro')
 
-   Do Events 
-   _ShowWindow('fFiltrosCad')
-   Do Events 
+   xInitBrw()
+   
+   
+
+
+   //Do Events 
+   //_ShowWindow('fFiltrosCad')
+   //Do Events 
 
    
-   _ShowWindow('LstBoxFiltro')
+   //_ShowWindow('LstBoxFiltro')
 
 
    //747

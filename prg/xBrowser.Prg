@@ -449,6 +449,9 @@ Function xBrowser( cTabx ,   aDatas1 , cParent   ,  cBrwName , nCol  , aCabecalh
 	
 	Private nLarg1  := GetDeskTopWidth() - 40
 
+	
+
+	
 
 	cSqlp  := GetSql( cTabx  , .f. )
 
@@ -458,6 +461,7 @@ Function xBrowser( cTabx ,   aDatas1 , cParent   ,  cBrwName , nCol  , aCabecalh
 	DEFAULT aCabecalho := {}
 	DEFAULT lDicionario := .t. 
 	DEFAULT lEnabled1   := .t.
+
 
 
 	aTam2     := aTamanhos 
@@ -1373,6 +1377,7 @@ Function xTeclasBrow()
 
 
 
+
 	LOCAL  nHWnd   := EventHWND()
 	LOCAL  nMsg    := EventMSG()
 	LOCAL  nWParam := EventWPARAM()		
@@ -1390,6 +1395,7 @@ Function xTeclasBrow()
 	Local w2
 	Local cControl := ''
 	Local cForm    := ''
+	
 
 	Local n1 
 	Local nIdBut 
