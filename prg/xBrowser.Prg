@@ -1831,6 +1831,10 @@ Function xTeclasBrow()
 		xDcToDc()				
 		xDcToDEspe()	
 
+		
+		PostMessage(  nHWnd , WM_KEYUP , 0,0 )
+		Do Events 
+
 	//	SysWait(0.01)
 
 	End If
@@ -1930,6 +1934,11 @@ Function xTeclasBrow()
 		BT_ClientAreaInvalidateAll (cBarraVfrm)		
 		xDcToDc()				
 		xDcToDEspe()
+
+
+		PostMessage(  nHWnd , WM_KEYDOWN , 0,0 )
+		Do Events 
+
 
 	End If
 
@@ -3214,6 +3223,7 @@ Function xSelItem( nItem1 , lRefresh)
 	Local nRec := Recno()
 	
 	Default lRefresh := .f.
+
 
 	
 

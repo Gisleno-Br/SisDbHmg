@@ -195,18 +195,18 @@ FUNCTION LoadFitros( cTabela1 )
    xInitBrw()
 
 
+   
    //xWaitY( 'fFiltrosCad' )
 
    
-   
-
-
-   //Do Events 
-   //_ShowWindow('fFiltrosCad')
-   //Do Events 
+   Do Events 
+   _ShowWindow('fFiltrosCad')
+   Do Events 
 
    
-   //_ShowWindow('LstBoxFiltro')
+   _ShowWindow('LstBoxFiltro')
+
+   Do Events 
 
 
    //747
