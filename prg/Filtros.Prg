@@ -193,6 +193,10 @@ FUNCTION LoadFitros( cTabela1 )
    BringTop('xProcFiltro')
 
    xInitBrw()
+
+
+   //xWaitY( 'fFiltrosCad' )
+
    
    
 

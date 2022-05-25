@@ -116,6 +116,8 @@ Static lTracking75 := .f.
 Static lTracking45 := .f.
 Static nHasFocus := 0
 
+Static lExit := .f. 
+
 Static lKeyPressed := .f.
 
 Static nQtCol := 0
@@ -675,11 +677,12 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventBrowMtr"  ) )  ) = 0
 
 		InstallEventHandler( "EventBrowMtr" )
-		//nIndexEventZ := EventCreate (  { ||   xTecBrowMtr()   }   )		
+	
+		nIndexEventX := 20050
 
-		nIndexEventZ := EventCreate (  "xTecBrowMtr"   )		
+		CREATE EVENT PROCNAME xTecBrowMtr() STOREINDEX nIndexEventX
 
-		//EventProcessAllHookMessage( EventCreate (  { ||   xTecBrowMtr()   }   , GetFormHandle('fFiltrosCad') ) , .t. )
+	
 
 	End If
 
@@ -779,6 +782,20 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 
 	xDcToDc()
 
+    /*
+	While !xWaitDlg()
+
+	Enddo 
+	*/
+
+	//SysWait(0.05)
+
+	//xWaitDlg()
+
+	
+	
+	//msginfo('Fim')
+
 
 
 
@@ -786,6 +803,50 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 
 
 Return
+
+
+Function xWaitY( cForm )
+
+	Local i
+	Local ar1
+	Local nRow1,nCol1
+	//Local nHWnd := GetFormHandle('Win_Dialog')
+	Local nHWnd1
+
+
+	For i := 1 To 255
+		GetAsyncKeyState(i)
+	Next i
+
+	//xIndiDlg()
+   
+    Do Events
+	Do Events
+
+	//aMx := yEfect(  cActiveJan , .t.  )
+
+
+	Do While .Not. lExit
+
+		Do Events
+		
+		For i := 1 To 255				
+			If (GetAsyncKeyState(VK_RETURN) != 0) 
+				lExit := .T.				
+				Exit			
+			EndIf
+		Next i		
+
+		BringTop(cForm)		
+		SysWait(0.01)
+		//_ShowWindow('Win_Dialog')
+
+	Enddo
+
+	//msginfo('Exit')
+
+Return .t. 
+
 
 Function SetArray( aMz1 )
 
@@ -1289,7 +1350,12 @@ Function xTecBrowMtr()
 	End If 	
 
 
-	
+	If nMsg == WM_KEYUP
+		//msginfo('Up')
+		DO EVENTS
+		nWParam:=0
+
+	End If 
 
 
 	If nMsg == WM_KEYDOWN
@@ -1598,6 +1664,8 @@ Function xTecBrowMtr()
 
 	If (nWParam == VK_DOWN) .or. (lDownMouse)
 
+		//SysWait(0.9)
+
 		lHitt := .f.
 
 		lDownMouse := .f. 
@@ -1605,7 +1673,11 @@ Function xTecBrowMtr()
 
 		If (lHitt)
 			nItemx5 := 1
-		End If		
+		End If	
+		
+		
+
+		Do Events
 
 		nItemx5++
 
@@ -1620,6 +1692,7 @@ Function xTecBrowMtr()
 		If (nItemx5 <= nMaxItem1 )
 
 			If (lHitB)
+				/*
 				nLinhaBarra := nTamPag
 				nSav2 := nItemx5
 				ySelItem( nItemx5  , .t.  )
@@ -1629,19 +1702,47 @@ Function xTecBrowMtr()
 				nItemx5 := nSav2
 				nSelLine := nItemx5
 				SysWait(0.03)		
+				*/
+
+				//SysWait(0.01)	
+
+
+
+
+
+
+				nInd1 := Ascan(aMDisplay , { |a|  a[1] == nItemx5 })
+
+				If nInd1 == 0 
+					Aadd(aMDisplay , { nItemx5 ,   xRetItem(   aMt1[nItemx5]    )  }  )
+				End If 	
+
+				//SysWait(0.07)
+
+
+				nLinhaBarra := nTamPag	
+
+				//SysWait(0.01)				
+				EncheMVis(  nItemx5 - nTamPag + 1  , .t. )	
+				ScrolUp1(.f.)					
+				ySelItem( nItemx5  )
+				SysWait(0.03)
 					
 
 			Else
+			//	DO EVENTS
 				ySelItem( nItemx5  , .f.  )
-				SysWait(0.07)
+				msginfo('no selitem')
+				SysWait(0.02)
 			End If
 
-			xSaveVars()
+
+			//xSaveVars()
 
 		Else
 
 			nLinhaBarra--
-			xDialog('Maximo Atingido! ' + Str(nLinhaBarra) , .F.  )
+			xDialog('Linha Maxima Atingido! '  , .F.  )
 			//nLinhaBarra := nTamPag 
 			lHtb := .t.
 			nItemx5 := nMaxItem1
@@ -1650,9 +1751,19 @@ Function xTecBrowMtr()
 				
 		End If
 
+		
+		//SendMessage( GetProperty(   cBarraVfrm , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
+
 		BT_ClientAreaInvalidateAll (cBarraVfrm)		
 		xDcToDc()				
-		xDcToDEspe()	
+		xDcToDEspe()
+
+
+		
+		PostMessage(  nHWnd , WM_KEYUP , 0,0 )
+		Do Events 
+		
+		//SysWait(0.9)
 
 	End If
 
@@ -1782,7 +1893,7 @@ Static Function xRecords( n1 , lFrente  )
 		For z := n1 To ((n1+nTamPag) - 1)
 
 			If (z <= LEn(aMt1) )
-				Aadd(aMDisplay ,  xRetItem(   aMt1[Z]    )   )
+				Aadd(aMDisplay ,  {  Z ,  xRetItem(   aMt1[Z]    )   }  )
 			End If 	
 
 		Next 	
@@ -1793,7 +1904,7 @@ Static Function xRecords( n1 , lFrente  )
 		For z := ((n1+nTamPag) - 1) To n1 
 
 			If (z <= LEn(aMt1) )
-				Aadd(aMDisplay ,  xRetItem(   aMt1[Z]    )   )
+				Aadd(aMDisplay , { Z ,  xRetItem(   aMt1[Z]    )  }  )
 			End If 	
 
 		Next 	
@@ -1886,7 +1997,7 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 		//xRetItem( aMatriz )
 		//cTexto := Hb_Utf8ToStr( xRetItem(aMtrOp[n1])       ) + Replicate(' ',200)
 
-		cTexto := Hb_Utf8ToStr( aMtrOp[n1]  ) + Replicate(' ',200)
+		cTexto := Hb_Utf8ToStr( aMtrOp[n1][2] ) + Replicate(' ',200)
 		nLinb++
 		
 
@@ -2646,9 +2757,35 @@ Static Function ySelItem( nItem1 , lScr1 , lFrente  )
 	Default lFrente := .t.
 
 
-	If nClearIt2 > 0
-		xLimpSub(cBrowserName,  @nClearIt2 ,  @nItemx5 , 0 ,   nItemBrwHeight , GetProperty(  cBrowserName,'Width') , -(nLinScrool) )
+	//If nClearIt2 > 0
+	//	xLimpSub(cBrowserName,  @nClearIt2 ,  0 , 0 ,   nItemBrwHeight , GetProperty(  cBrowserName,'Width') , -(nLinScrool) )
+	//End If
+
+
+
+	If (nClearIt2 > 0) 	
+
+		
+
+		nIndice1 := Ascan(aMVisible , { |a| a[2] == nClearIt2 })
+
+		If nindice1 > 0			
+			nLBar := aMVisible[nindice1][1]	
+			msginfo(Str(nClearIt2) + '  ' + Str(nLBar))		
+		else
+			 Msginfo('Not F')
+		End If 
+
+
+
+		//DbGoto(nRec)
+		BT_ClientAreaInvalidateRect( cBrowserName , ( (nLBar - 1) * nItemBrwHeight )        , 0 , GetProperty( cBrowserName,'Width') ,  nItemBrwHeight   , .t. )						
+
+	Else 
+		//msginfo('it2 Zerado')	
 	End If
+
+
 
 	nItemx5 := nItem
 
@@ -3102,44 +3239,57 @@ Static Function xGoBottom()
 	nItemX5     := Len(aMt1)
 	nClearIt2   := nItemX5
 	nClear1     := nItemX5
-	nLinhaBarra := nTamPag
-
 	
+	
+	nLinScrool := 0	
 
 	aMDisplay := {}
-	xRecords( nItemX5  , .f. )
+	xRecords( nItemX5 - nTamPag + 1 , .t. )
+
+
+
+	
+	EncheMVis(nItemX5 - nTamPag + 1 , .t. )	
+
 
 	lHitB := .t.
-
 	lHitt := .f.
 
 	//_HMG_PRINTER_SETVSCROLLVALUE(   GetFormHandle(cBrowserName)  , nPos1 )
-
-
 	
-	nLinScrool := (nTamPAg * nItemBrwHeight) 
+	
 
 	//nLinScrool := nPos1
 	
-	EncheMVis( Len(aMt1) , .f.  )
-
-
+	//EncheMVis( Len(aMt1) , .f.  )
 
 
 	nPageNumber := nPageTotal
 
-	ySelItem(nItemX5)
+
+
+	nItemX5     := nTamPag
+	nClearIt2   := nTamPag 
+	nClear1     := nTamPag 
+
+
+	nLinhaBarra := nTamPag
+
+	//ySelItem(nItemX5)
 
 	BT_ClientAreaInvalidateAll(cBrowserName)
 	BT_ClientAreaInvalidateAll(cBarraVfrm)
 
 	
-
-
-	
 	SysWait(0.01)
 
+	
+	xDcToDc()	
 	xDcToDEspe()
+
+	
+	
+	SysWait(0.02)
 	
 
 
