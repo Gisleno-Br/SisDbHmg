@@ -1165,11 +1165,12 @@ Function InitTela(  lIni1  , nColz1)
 
 	xBrowser( 'Clientes' , aMtrDados , cFormPrin ,  'Brw' + Left(cTabela,4)  ,, aCabec , aTams , aTipos1 , .t. ,   .t. , 115   )
 
+	
 	DoMethod( 'Brw' + Left(cTabela,4) , 'Activate')
-
 	DoMethod( cFormPrin , 'SetFocus')
 
 	Do Events 
+	
 
 
 

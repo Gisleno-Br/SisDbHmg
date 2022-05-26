@@ -1805,7 +1805,7 @@ Function xTeclasBrow()
 			Else							
 
 				xSelItem( Recno()    )							
-				SysWait(0.01)			
+				//SysWait(0.01)			
 				
 
 			End If		

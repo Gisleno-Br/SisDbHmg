@@ -192,8 +192,6 @@ FUNCTION LoadFitros( cTabela1 )
 
    BringTop('xProcFiltro')
 
-   xInitBrw()
-
 
    
    //xWaitY( 'fFiltrosCad' )
@@ -206,7 +204,20 @@ FUNCTION LoadFitros( cTabela1 )
    
    _ShowWindow('LstBoxFiltro')
 
+   
+   xInitBrw()
+
+   /*
    Do Events 
+
+   DoMethod( 'fFiltrosCad' , 'Activate')
+   DoMethod( 'fFiltrosCad' , 'SetFocus')
+
+   Do Events 
+   */
+
+   
+
 
 
    //747
