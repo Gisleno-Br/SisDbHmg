@@ -145,11 +145,10 @@ Static aCabec1 := {}
 Static aTams2  := {}
 Static aTips   := {}
 
-Static l_Hitt := .f. 
+Static l_Hitt := .t. 
+
 
 //DECLARE WINDOW Win_Browser
-
-
 
 
 
@@ -1391,8 +1390,11 @@ Function xTecBrowMtr()
 				For i := 1 To 255
 					GetAsyncKeyState(i)
 				Next i
+
+				SysWait(0.06)
 				
 		Enddo 
+
 
 		While (GetAsyncKeyState(33)) != 0							   
 
@@ -1403,6 +1405,8 @@ Function xTecBrowMtr()
 			For i := 1 To 255
 				GetAsyncKeyState(i)
 			Next i
+
+			SysWait(0.06)
 			
 		Enddo 
 
@@ -1688,36 +1692,6 @@ Function xTecBrowMtr()
 
 	END IF
 	*/
-
-
-	If (nWPAram == 34) 
-
-		  /*
-
-		If (nHWnd == GetProperty( 'fFiltrosCad' , "HANDLE" ))
-		//	msginfo('lp2')
-
-		End If 
-		
-		HMG_CleanLastVirtualKeyDown()
-		xGoPgDn()
-		//DO EVENTS
-		
-		
-		//SysWait(0.03)
-		//nWPAram := 0
-		msginfo('g1')
-		SysWait(0.07)
-		*/
-	End If 
-
-
-	
-
-	If (nWPAram == 33)			
-		//xGoPgUp()
-	End If 
-
 
 
 	If (nWParam == VK_DOWN) .or. (lDownMouse)
@@ -2348,6 +2322,9 @@ Function EventBrowMtr( nHWnd, nMsg, nWParam, nLParam )
 		If nMsg == WM_MOUSEMOVE
 
 			yLimpBarV()			
+
+			//MSGINFO('ok2')
+
 
 
 			GetCursorPos (@nCol1, @nRow1)
@@ -3187,42 +3164,29 @@ Static Function xGoPgUp()
 
 	nRec1 := (aMVisible[ 1 ][2]) - 1
 
-/*
-	If (nRec1 <= nTamPag)
-		xDialog(  Hb_AnsiToOem("Inicio das Informações Atingido.") , .f. )
-		Return 	
-	End If 	
 
-	*/
-
-
-	//msginfo(Str( nRec1 ))
-
+	If (nRec1 <= (nTamPag * 2))
+		//msginfo('ok2')
+		xGotop()
+		Return .t. 
+	End If 
 	
 	nItemX5  := ( nRec1   - (nTamPag - 1) )
 
-
-	
-
-	//msginfo(Str( nItemX5 ))
+		
 	
 	xRecords(nItemx5 , .t. )	
 	EncheMVis(nItemX5  , .t. )
 
-
 	nLinhaBarra := 1
-
-	
 
 
 	nIndex1     := nItemx5
 	nClearIt2   := nItemX5
 	nClear1     := nItemX5
 	
-	//msginfo(Str(  nItemx5   ))
+	
 	nSelLine := nItemx5		
-
-
 	
 
 
@@ -3245,36 +3209,6 @@ Static Function xGoPgUp()
 	End If 	
 
 
-	/*
-
-	
-	For ni := 1 To nTamPag
-		ScrolUp1(.t.)		
-	Next 	
-
-	nLast1 := nPageNum * nTamPag
-	nItemX5-=(nTamPag)
-	nClearIt2   := nItemX5
-	nClear1     := nItemX5	
-	nSelLine := nItemx5	
-	EncheMVis( nLast1 , .f.   )
-
-
-	BT_ClientAreaInvalidateAll(cBrowserName)
-	
-
-	SysWait(0.03)	
-
-	
-
-	BT_ClientAreaInvalidateAll (cBarraVfrm)		
-
-	
-	Do Events 
-
-	xDcToDc()				
-	xDcToDEspe()
-	*/
 		
 
 Return 
@@ -3543,6 +3477,7 @@ Static Function xGoTop()
 	l_HitB := .f. 
 
 	l_Hitt := .t. 
+
 
 	nLinScrool := 0
 	nIndex1 := 1

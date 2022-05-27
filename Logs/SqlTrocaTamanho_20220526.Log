@@ -1,0 +1,2 @@
+Admin 26/05/2022 21:10:13   update dicionario set tamdisp = 57 where tabela = 'Clientes' and camposistema = 'Descrição'
+

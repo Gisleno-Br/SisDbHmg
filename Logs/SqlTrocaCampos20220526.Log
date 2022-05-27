@@ -1,0 +1,6 @@
+Admin 26/05/2022 21:08:06   Admin 26/05/2022 21:08:06   Admin 26/05/2022 21:07:40   Admin 26/05/2022 21:07:40   Admin 26/05/2022 21:07:33   Admin 26/05/2022 21:07:33   update dicionario set ordem = ordem - 1  where tabela = 'Clientes' and ordem > 2 and Ordem <= 3;
+ update dicionario set ordem = 3 where tabela = 'Clientes' and ordem = 2 and camposistema = 'Descrição';
+ update dicionario set ordem = ordem - 1  where tabela = 'Clientes' and ordem > 2 and Ordem <= 3;
+ update dicionario set ordem = 3 where tabela = 'Clientes' and ordem = 2 and camposistema = 'Descrição';
+ update dicionario set ordem = ordem - 1  where tabela = 'Clientes' and ordem > 2 and Ordem <= 3;
+ update dicionario set ordem = 3 where tabela = 'Clientes' and ordem = 2 and camposistema = 'Descrição';

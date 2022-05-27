@@ -304,6 +304,7 @@ Static Function xOrdene( nCol1 , lAsc1 )
     Local nTamPg := xRetTamPg()
     Local nPagNum := 1
     Local nCont5 := 0
+    
 
     Local aZZ2 := {}
     Local aZZ3 := {}
@@ -583,86 +584,566 @@ Function ySelCol( nCol1 )
 Return 
 
 Function EventHeaMtr()
-  //( nHWnd, nMsg, nWParam, nLParam  )
-
-    Local nRow 
-    //Local nCol 
-    Local lOk  := .f. 
-    Local nColx 
-    Local ar1     
-    Local aCords := {}
-    Local n1 
-    Local n2 
-    Local Height := GetProperty( cHeaderJan  , 'Height')
-    Local nColx2 := 0
-    Local i 
-
-    LOCAL  nHWnd   := EventHWND()
-	LOCAL  nMsg    := EventMSG()
-	LOCAL  nWParam := EventWPARAM()
-	LOCAL  nLParam := EventLPARAM()
-
-    Local nZ1 := 0
-    Local lFrente1 := .f. 
-    Local nLastro1 := 0
-
-  //  Local nUnit := xRetUnit()
-   // Local nColx 
-
-    Local nCol := 0
-    Local nSaveCol1 := 0
-    Local nQTotEt := yCalcEtap1()
-    //-(nColHeader)
-
-    //msginfo(Str(  nQTotEt     ))
-
-    If !_IsWindowDefined(cHeaderJan)       
-        Return 
-    End If 
-
-    /*
-    IF GetNotifyCode ( nLParam ) == -3
-        msginfo('lp33')
-        
-
-    ENDIF
-    */  
-
-    If nHWnd == GetProperty(  cHeaderSombra   , "HANDLE" )
-    //   msginfo('12')
-    End If 
-
     
-	If nHWnd == GetControlHandle(  'Label2' ,  cHeaderSombra )
-	
+        //( nHWnd, nMsg, nWParam, nLParam  )
+      
+          Local nRow 
+          //Local nCol 
+          Local lOk  := .f. 
+          Local nColx 
+          Local ar1     
+          Local aCords := {}
+          Local n1 
+          Local n2 
+          Local Height := GetProperty( cHeaderJan  , 'Height')
+          Local nColx2 := 0
+          Local i 
+      
+          LOCAL  nHWnd   := EventHWND()
+          LOCAL  nMsg    := EventMSG()
+          LOCAL  nWParam := EventWPARAM()
+          LOCAL  nLParam := EventLPARAM()
+      
+          Local nZ1 := 0
+          Local lFrente1 := .f. 
+          Local nLastro1 := 0
+      
+        //  Local nUnit := xRetUnit()
+         // Local nColx 
+      
+          Local nCol := 0
+          Local nSaveCol1 := 0
+          Local nQTotEt := CalcEtapas()
+          //-(nColHeader)
+      
+          //msginfo(Str(  nQTotEt     ))
+      
+          If !_IsWindowDefined(cHeaderJan)       
+              Return 
+          End If 
+      
+          /*
+          IF GetNotifyCode ( nLParam ) == -3
+              msginfo('lp33')
+              
+      
+          ENDIF
+          */  
+      
+          If nHWnd == GetProperty(  cHeaderSombra   , "HANDLE" )
+          //   msginfo('12')
+          End If 
+      
+          
+          If nHWnd == GetControlHandle(  'Label2' ,  cHeaderSombra )
+          
+      
+              If (nMsg == WM_LBUTTONDBLCLK)	
+      
+                  nColSele := nColSel1            
+      
+                  lAscending    := !lAscending
+                  nOrdemSel     := nColSele             
+      
+                   
+                  BT_ClientAreaInvalidateAll(cHeaderJan)
+                  SysWait(0.01)          
+                  xDcBarHeader()       
+      
+                  If (nOrdemSel >= 0) .And. (nOrdemSel <= Len(aCabecs))       
+                      If nOrdemSel <= Len(aMapsCol)    
+                          xOrdene( nOrdemSel , lAscending )
+                      End If    
+                  End If    
+      
+      
+              End If 
+      
+           
+              If (nMsg == WM_LBUTTONDOWN)	
+      
+                  DO EVENTS       
+      
+                  nColSele := nColSel1    
+      
+                  If (nColSele <= 0) .Or. (nColSele > Len(aMapsCol) )
+                      Return      
+                  End If   
+      
+      
+      
+                  nColSav1 := aMapsCol[nColSele][2]       
+                  nColTam1 := aMapsCol[nColSele][5]       
+                  cTituloCol := aMapsCol[nColSele][1]       
+      
+      
+                  BT_ClientAreaInvalidateAll(cHeaderJan)
+                  SysWait(0.02)          
+                  xDcBarHeader()     
+                  
+                  GetCursorPos (@nCol, @nRow)
+                  ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
+                  nColx := ar1[2]    
+      
+                  nColx5 := nColX
+      
+                  If (lSizeMode) .And. (lSizeMode)                
+          
+                      For i := 1 To 255
+                          GetAsyncKeyState(i)
+                      Next i
+      
+                      lAndamento := .t.
+      
+                      nSaveCol1 := nColSel1 
+                      nUnit := xRetUnit()
+                      lOk  := .f. 
+      
+      
+                      While (.t. )
+      
+                              If (GetAsyncKeyState(VK_LBUTTON)) == 0					
+                                  Exit     
+                              End If 		
+      
+                              lAndamento := .t.
+      
+                              GetCursorPos (@nCol, @nRow)
+                              ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
+                              nColx2 := ar1[2]          
+      
+                              nColDrag := nSaveCol1
+      
+      
+                              If (Abs(nColx2 - nColx) >= nUnit )
+                                                              
+                                  If (nColx2 > nColx)                            
+                                     aMapsCol[nSaveCol1][5] += Abs(nColx2 - nColx)
+                                     aColsTam[nSaveCol1] += Int(Abs(nColx2 - nColx) / nUnit)                            
+                                  Else                               
+                                     aMapsCol[nSaveCol1][5] -= Abs(nColx2 - nColx)
+                                     aColsTam[nSaveCol1]    -= Int(Abs(nColx2 - nColx) / nUnit)                                                          
+                                  End If                           
+      
+                                  xMapCols( aCabecs , aColsTam , aTipsy )                                      
+      
+                                  BT_ClientAreaInvalidateAll(cHeaderJan)                            
+                                  xDcBarHeader()                     
+      
+                                 // SysWait(0.01)                            
+      
+                                  lOk  := .t. 
+                                  nColx := nColx2 
+      
+                              End If 
+      
+                              SysWait(0.01)                        
+      
+                      Enddo                 
+      
+                      If lOk 
+      
+      
+                          SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'CURSOR1'  )   
+      
+                          DO EVENTS 
+      
+                          xMapCols( aCabecs , aColsTam , aTipsy )
+      
+                          If !SetCampoTam(	cTabela  , Alltrim(   aCabecs[nSaveCol1]      ) , aColsTam[nSaveCol1] )
+                              xDialog( Hb_AnsitoOem("Não Foi Possivel Atualizar o Dicionario.") , .f. )
+                          End If 
+      
+                                              
+                          BT_ClientAreaInvalidateAll(cHeaderJan)
+                          
+                          xDcBarHeader()
+                          DO EVENTS 
+      
+                          xAtuDados( 3 , .t. ,  aColsTam  )
+      
+                          SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'IDC_ARROW'  )   
+      
+                          DO EVENTS 
+      
+                          nColx5 := 0
+      
+      
+                      End If     
+      
+                      lSizeMode := .f. 
+                      lAndamento := .f. 
+                  
+                  Else                 
+                                
+      
+                  End If
+      
+              End If     
+      
+      
+      
+      
+              If (nMsg == WM_LBUTTONUP)	
+      
+                  lSizeMode := .f.
+                  lDragMode := .f.
+                  lAndamento := .f. 
+      
+                  nColSav1 := 0            
+                  nColx5 := 0
+                  //msginfo('3332')
+      
+      
+      
+              End If     
+                      
+              If (nMsg == WM_MOUSEMOVE) 
+                  
+            
+                  xLimpBarV()
+                  SysWait(0.01)				
 
-        If (nMsg == WM_LBUTTONDBLCLK)	
+                  //msginfo('ok2')
+      
+                  For i := 1 To 255
+                      GetAsyncKeyState(i)
+                  Next i
+      
+                  s1 := ''
+                  s2 := ''
+      
+      
+                  GetCursorPos (@nCol, @nRow)
+                  ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
+                  nColx := ar1[2]            
 
-            nColSele := nColSel1            
+                  //msginfo( cHeaderJan )
+      
+                  If (nColx5 > 0) 
+                    //.And. (lAtuDic)
 
-            lAscending    := !lAscending
-            nOrdemSel     := nColSele             
+                      
 
-             
-            BT_ClientAreaInvalidateAll(cHeaderJan)
-            SysWait(0.01)          
-            yDcBarH1eMtr()       
+      
+      
+                      nLim1 := xGetInfC(nColSele , 2)
+                      nTamx := Int(xGetColWidth(  nColSele    )	/ 2)
+      
+                     
+                      If ( Abs(nColx - nColx5) > 2) .And. (  (nColx <=  ( (nLim1 + nTamx + 20)) )     )
+                          lDragMode := .t. 
+      
+                          nColx5 := nColx                   
+      
+      
+                          xDoHint(  Nil ,   'Click e Arraste a Coluna para Mudar de Posição.' )    
+                          DO EVENTS            
+                          
+                          nQDrag1 := xRetPgNum()
+                          
+      
+                          While lDragMode 
+      
+                                  For i := 1 To 255
+                                      GetAsyncKeyState(i)
+                                  Next i
+      
+                                  If (GetAsyncKeyState(VK_LBUTTON)) == 0	  
+                                      
+      
+                                      If (nColSele != nColTarget) .And. TroqOrdens(cTabela , nColSele , nColTarget , aCabecs[nColSele] )
+      
+                                          DO EVENTS                                    
+                                          SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'CURSOR1'  )                                  
+                                          aColsTam := GetCamposInf( cTabela, 'TAM' )                                                                    
+      
+                                          SysWait(0.01)                                    
+      
+                                          xAtuTams()
+      
+                                          SysWait(0.02)                                    
+      
+                                          xAtuDados( nOrdemSel, lAscending ,  aColsTam  , .t.  )
+                                       
+                                          SysWait(0.02)
+                                          
+                                          SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'IDC_ARROW'  )    
+                                          
+      
+                                      End If 
+      
+                                      lDragMode := .f. 
+                                      nColx5 := 0
+                                      nColMove := 0
+                                      nColY1   := 0
+                                      nIncr1   := 0
+                                      nColSav1 := 0
+                                      nColTam1 := 0
+                                      nColTarget := 0
+                                      If  _isWindowDefined("Win_Msg")
+                                          xHidehint()
+                                      End If
+      
+                                      
+      
+                                      Exit
+      
+      
+                                  End If 		
+      
+                                  GetCursorPos (@nCol, @nRow)
+                                  ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
+                                  nZ1 := ar1[2]    
+      
+                                  If (nZ1 != nColx5) .or. (nZ1 <= 1)
+      
+                                      DO EVENTS
+      
+      
+                                      If nLastro1 == 0
+                                          nLastro1 := Abs(   (-(nColHeader) + nColX5)  - nColSav1)                                      
+      
+                                          If (nColTam1 <= nLastro1)
+                                              nLastro1 := int(nColTam1/2)                                       
+                                          End If 
+      
+                                      End If 
+      
+      
+                                      If nZ1 > nColx5
+                                          lFrente1 := .t.
+                                          nColSav1 += (  nZ1 - nColx5  ) 
+                                          lScrool1 := (  nZ1  >= (GetProperty( c_BrowName , 'Width') - 13) ) 					            
+                                          nTarget := xBusqTar( nColSav1 + nColTam1 , lFrente1 )
+                                      Else 
+                                          lFrente1 := .f.
+                                          nColSav1 -= (  nColx5 - nZ1  ) 
+                                          nTarget := xBusqTar( nColSav1  , lFrente1 )                                    
+                                          lScrool1 := ( nZ1 <= 1)
+                                      End If  
+      
+      
+                                      xMoveWin( nColSele , nColSav1 , lFrente1 )
+                                      xDoHint(    ,   Alltrim(Str(nColSav1))+ ' SS ' + Alltrim(Str(  (GetProperty( c_BrowName , 'Width') - 13)  )) )
+      
+                                      If (nTarget > 0) .or. (lScrool1)                                   
+      
+                                          If  (lScrool1)    
+                                              xDoHint(    ,   Alltrim(Str(nTarget)) + ' SS ' + Alltrim(Str(  (GetProperty( c_BrowName , 'Width') - 13)  )) )
+                                          End If     
+      
+                                          DO EVENTS 
+                                          
+      
+                                          If (nTarget > 0)                                            
+                                              nColTarget := nTarget                                        
+                                              BT_ClientAreaInvalidateAll(   cHeaderJan )
+                                              xDcBarHeader()                                   
+      
+                                              Do Events 
+                                           //   xDoHint(    ,   'Trocar a Posição , Coluna ' + Alltrim(aMapsCol[nTarget][1]  )  )
+                                          End If                                         
+                                          
+                                          
+                                          Do Events 
+      
+                                          While ((lScrool1) .And. (nQDrag1 <= nQTotEt) .And. (lFrente1)) .Or. ;
+                                              ((lScrool1) .And. (nQDrag1 > 0) .And. (!lFrente1))
+                                          
+      
+                                              If !lFrente1
+                                                  DecrLeft()                                               
+                                                  UpdateBarH( -nConst1  )	  
+                                              End If                                             
+                                                  
+      
+                                              If lFrente1 
+                                                  nZp1 := ScrollCol( .t. , .f. )                                        
+                                              Else 
+                                                  nZp1 := ScrollCol( .f. , .f. )    
+                                                  //msginfo('voltando')                                    
+                                              End If 
+      
+                                              If (nZp1 != -1) 
+      
+                                                  SysWait(0.03)                                                                                                                    
+                                                  
+                                                  If lFrente1
+                                                      nQDrag1++
+                                                      UpdateBarH( nConst1  )	                                             
+                                                  Else 
+                                                      nQDrag1--
+                                                  End If 
+      
+                                                  xDcBarH()                                
+                                                  SysWait(0.03)
+                                                  
+      
+                                                  xDcBarHeader()                                            
+                                                  nColSav1+=nZp1                                           
+      
+                                                //  SysWait(0.07)                                          
+      
+                                                  
+                                              Else                                            
+                                                 
+      
+                                              End If 
+      
+                                              SysWait(0.02)
+                                              xMoveWin( nColSele , nColSav1 , lFrente1 )
+                                            //  SysWait(0.08)       
+                                              
+                                              //msginfo('Exit ' + Str(nQDrag1) + '  ' + Str(nQTotEt))
+      
+                                              
+      
+                                              If (lFrente1)
+                                                  If (nQDrag1 >= nQTotEt)
+                                                      lFrente1 := .f. 
+                                                      nColx5 := nZ1  
+                                                      Exit 
+                                                  End If     
+                                              Else 
+                                                  
+                                                  If nQDrag1 == 0
+                                                     //msginfo( Str(nColSele))
+      
+                                                     nColHeader := 0
+      
+                                                      nColTarget := 1
+                                                     // BT_ClientAreaInvalidateAll(   cHeaderJan )
+      
+                                                      lFrente1 := .t. 
+                                                      nColx5 := nZ1  
+                                                      nColSav1 := -(nLastro1)                                                
+      
+                                                      //msginfo( Str(nColSav1))
+      
+                                                      SysWait(0.02)                                                
+      
+                                                      xMoveWin( nColSele , nColSav1 , .f. )
+                                                      SysWait(0.01)
+      
+                                                      xZeraContador()
+                                                      
+      
+                                                      Exit 
+                                                  End If 
+      
+                                              End If     
+      
+                                   
+                                          Enddo 
+      
+      
+                                      Else                                   
+                              
+                                      End If     
+                                     
+      
+                                  End If 
+      
+                                  nColx5 := nZ1                              
+      
+                          Enddo
+                          
+      
+                      End If 
+                      
+                  End If     
+      
+                      
+      
+                  DO EVENTS           
+      
+                  If !(GetAsyncKeyState(VK_LBUTTON)) == 0					
+                       REturn 
+                  End If 		
+      
+                  SetWindowCursor( nHWnd , IDC_ARROW)
+                  aCords := xSearchPos(  nColx )
+      
+                  If Len(aCords) = 0
+                      lSizeMode := .F.
+                      lDragMode := .F.  
+                      lAndamento := .f. 
+                      xApagueH( cHeaderJan )
+                      xDcBarHeader()
+                      DO EVENTS 
+                      Return 
+                  End If                          
+                     
+      
+                  If ((nColx2 := xSearchLim(  nColx )) > 0) 
+                       //.And. (lAtuDic)
+                      xDoHint(    , 'Redimensiona a Coluna ' + Alltrim(aMapsCol[nColx2][1]) + '  '  + Str(nColSel1))                
+                      SetWindowCursor( nHWnd  , 'CURSORSIZE' )
+                      DO EVENTS                              
+                      lSizeMode := .t.               
+                      Return 
+                  Else 
+      
+                      If  _isWindowDefined("Win_Msg")
+                          xHidehint()
+                      End If
+      
+                      lSizeMode := .f.
+                      SetWindowCursor( nHWnd , IDC_ARROW)
+              
+                  End If   
+                  
+                  If (nColAntx != aCords[1][2]) .And. (nColAntx > 0 ) .And. (nColAntx <= Len(aMapsCol) )
+                 //    DO EVENTS
+                     nColSel1 := 0 
+                     n1 := aMapsCol[  nColAntx  ][2]
+                     n3 := aMapsCol[  nColAntx  ][5]
+                    // BT_ClientAreaInvalidateRect(   cHeaderJan , 1 , n1 ,  n3 , Height , .t.   )              
+      
+                     BT_ClientAreaInvalidateAll(   cHeaderJan )
+                     nColAntx := aCords[1][2] 
+                     lTrack39 := .f.       
+                     DO EVENTS         
+                     xDcBarHeader()
+                     DO EVENTS 
+                     //SysWait(0.01)
+                  End If     
+      
+      
+                  
+                  If Len(aCords) > 0
+      
+                      If !lTrack39
+                          nColSel1 := aCords[1][2]    
+                          
+                          //msginfo(Str( nColSel1 ))
+                          nColAntx := aCords[1][2] 
+                          n1 := aMapsCol[  nColSel1  ][2]
+                          n3 := aMapsCol[  nColSel1  ][5]
+                          BT_ClientAreaInvalidateAll(   cHeaderJan )
+                          DO EVENTS 
+                          yDcBarH1eMtr()
+                          //xDcBarHeader()
+                         // SetWindowCursor( nHWnd , CURSORHAND)                   
+                          DO EVENTS 
+                          //SysWait(0.08)
+                          lTrack39 := .t. 
+                          //msginfo('lp2')
+                      End If     
+      
+                  End If     
+      
+      
+              End If 
+      
+          End If     
+      
+      
+      Return 
+      
 
-            If (nOrdemSel >= 0) .And. (nOrdemSel <= Len(aCabecs))       
-                If nOrdemSel <= Len(aMapsCol)    
-                    xOrdene( nOrdemSel , lAscending )
-                End If    
-            End If    
-
-
-        End If 
-
-     
   
-    End If     
-
-
-Return 
 
 Static Function xBusqTar( nPoint , lFrente5 )
 
@@ -982,6 +1463,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
         Else 
 
+
             If (nColTarget == n1) 
                 If nColTarget ==  Len(aCabecs)
                     BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 300 ,    Height    , {163,168,173}, WHITE )            
@@ -992,6 +1474,8 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
             End If     
             
         End If     
+
+
 
         BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
         BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
@@ -1055,7 +1539,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
        
        
         hBit201 := BT_BitmapCaptureWindow ( cJanela , 1 , nColx , nTam - 5  , Height )
-        BT_BitmapSaveFile (hBit201  , "hBit201.bmp")
+        //BT_BitmapSaveFile (hBit201  , "hBit201.bmp")
             
 
         
