@@ -207,10 +207,10 @@ Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds)
 //   HB_SETCODEPAGE("PT850")
 
 
-	REQUEST HB_CODEPAGE_PT850
-	hb_setcodepage("PT850")
+	//REQUEST HB_CODEPAGE_PT850
+	//hb_setcodepage("PT850")
 
-//   msginfo(   Hb_AnsiToOem(cMsg) )
+   //msginfo(   Hb_AnsiToOem(cMsg) )
 
 
 
@@ -222,7 +222,7 @@ Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds)
 			COL         1
 			WIDTH       450
 			HEIGHT      15
-			VALUE       cMsg
+			VALUE       Hb_UTF8ToStr(cMsg)
 			FONTNAME    XFONT1
 			FONTSIZE    8
 			FONTBOLD    .F.
@@ -290,17 +290,6 @@ function SetTamJan( cMsg  )
 	SetProperty(   'Win_msg' , 'Width' , GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 1   )
 
 Return
-
-
-function GetTextoLen( cMsg  )
-
-	Local  FontHandle := _SetFont (GetControlHandle( 'Label_1' , 'Win_Msg' ), 'Arial', 8 , .f. , .f. ,.f. ,.f. )
-
-Return (GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 1 )
-
-
-
-
 
 
 

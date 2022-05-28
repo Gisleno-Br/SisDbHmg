@@ -1147,7 +1147,7 @@ Function EventHeader()
                
 
             If ((nColx2 := xSearchLim(  nColx )) > 0) .And. (lAtuDic)
-                xDoHint(    , 'Redimensiona a Coluna ' + Alltrim(aMapsCol[nColx2][1]) + '  '  + Str(nColSel1))                
+                xDoHint(    , 'Redimensiona a Coluna ' + Alltrim( aMapsCol[nColx2][1]) + '  '  + Str(nColSel1))                
                 SetWindowCursor( nHWnd  , 'CURSORSIZE' )
                 DO EVENTS                              
                 lSizeMode := .t.               
@@ -1344,6 +1344,10 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
         nTam12 += nTam 
 
     Next 
+
+    
+    BT_DeleteDC (BTstruct )
+    
 
 
 Return nTam12 

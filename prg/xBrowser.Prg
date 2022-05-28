@@ -3132,7 +3132,7 @@ Function xDoHint(   nIdBut , cMsg , lNoHint   )
 		lTracking75  := .t.
 
 	Else 
-	 	 cTp1 := cMsg
+	 	 cTp1 := (cMsg)
 	End If 
 
 
