@@ -183,9 +183,10 @@ FUNCTION LoadFitros( cTabela1 )
    cSalvaJan  :=  cActiveJan
    cActiveJan := 'fFiltrosCad'
    
+   
 
-   xBrowserMtr( 51 ,  aMtrFiltr , 'fFiltrosCad'   , 710  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Filtro'} , ;
-      {10,45,65}  , {'C' , 'C' , 'C' } , .f. , .t. , 150 )
+   xBrowserMtr( 51 ,  aMtrFiltr , 'fFiltrosCad'   , 710  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro '} , ;
+      {10,50,60}  , {'C' , 'C' , 'C' } , .f. , .t. , 150 )
 
    
    //_ShowWindow('LstBoxFiltro')

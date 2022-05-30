@@ -594,6 +594,7 @@ Function EventHeaMtr()
       
            
         If (nMsg == WM_LBUTTONDOWN)	
+
       
             DO EVENTS       
       
@@ -622,7 +623,8 @@ Function EventHeaMtr()
       
             nColx5 := nColX
       
-            If (lSizeMode) .And. (lSizeMode)                
+            If (lSizeMode) 
+
           
                 For i := 1 To 255
                     GetAsyncKeyState(i)
@@ -750,24 +752,28 @@ Function EventHeaMtr()
       
             GetCursorPos (@nCol, @nRow)
             ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
-            nColx := ar1[2]            
+            nColx := ar1[2]           
             
       
             If (nColx5 > 0) 
               
       
                 nLim1 := xGetInfC(nColSele , 2)
-                nTamx := Int(xGetColWidth(  nColSele    )	/ 2)
+                nTamx := Int(xGetColWidth(  nColSele    )	/ 2)                
       
                      
-                If ( Abs(nColx - nColx5) > 2) .And. (  (nColx <=  ( (nLim1 + nTamx + 20)) )     )
+                If ( Abs(nColx - nColx5) > 2) 
+                    //.And. (  (nColx <=  ( (nLim1 + nTamx + 20)) )     )
                     lDragMode := .t. 
       
                     nColx5 := nColx                   
+
+                    SysWait(0.02)
       
       
                     xDoHint(  Nil ,   'Click e Arraste a Coluna para Mudar de Posição.' )    
-                    DO EVENTS            
+                    DO EVENTS                      
+                    
                           
                     nQDrag1 := xRetPgNum()
                           
@@ -781,8 +787,7 @@ Function EventHeaMtr()
                         If (GetAsyncKeyState(VK_LBUTTON)) == 0	  
                                       
       
-                            If (nColSele != nColTarget) 
-                                //.And. TroqOrdens(cTabela , nColSele , nColTarget , aCabecs[nColSele] )
+                            If (nColSele != nColTarget) .And. xTroquePos(nColSele , nColTarget , aCabecs[nColSele] )
       
                                 DO EVENTS                                    
                                 SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'CURSOR1'  )                                  
@@ -790,15 +795,31 @@ Function EventHeaMtr()
       
                                 SysWait(0.01)                                    
       
-                                xAtuTams()
+                                //xAtuTams()
       
                                 SysWait(0.02)                                    
+
+                                nColSele1 := 0
+                                nColSele  := 0
       
-                                xAtuDados( nOrdemSel, lAscending ,  aColsTam  , .t.  )
+                                //xAtuDados( nOrdemSel, lAscending ,  aColsTam  , .t.  )
                                        
-                                SysWait(0.02)
+                                DO EVENTS
+
+                                
+                                BT_ClientAreaInvalidateAll(cHeaderJan)                            
+                                SysWait(0.02)        
+
+        
+        
+                                xDcBarHeader()           
+                                yDcBarH1eMtr()
+
+                                SysWait(0.01)
+  
+                                //Do Events 
                                           
-                                SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'IDC_ARROW'  )    
+                                //SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'IDC_ARROW'  )    
                                           
       
                             End If 
@@ -1083,9 +1104,49 @@ Function EventHeaMtr()
     End If     
       
       
-Return 
-      
+Return      
 
+
+
+Static Function xTroquePos(nColSele , nColTarget , cCabec1 )
+
+    //Local cC1 := aCa[nColSele]
+    Local cC1 := aCabecs[nColTarget]
+
+    Local nN1  := aColsTam[nColTarget]
+
+    Local cTp  := aTipsy[nColTarget]
+
+    
+
+    aCabecs[nColTarget] := aCabecs[nColSele]
+    aCabecs[nColSele]   := cC1
+
+
+
+    aColsTam[nColTarget] := aColsTam[nColSele]
+    aColsTam[nColSele]   := nN1
+
+
+
+    aTipsy[nColTarget] := aTipsy[nColSele]
+    aTipsy[nColSele]   := cTp
+
+
+    ySetTam( aColsTam )
+
+    Do Events
+
+
+    xChangeOrd( nColSele ,  nColTarget  )
+
+       
+    xMapCols( aCabecs , aColsTam , aTipsy )         
+
+    //aColsTam
+
+
+REturn .t. 
   
 
 Static Function xBusqTar( nPoint , lFrente5 )
@@ -1220,7 +1281,7 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
     hFont := HMG_CreateFont (  hDC , FONTBROWSER, FONTBROWSERSIZE, .f., .f., .f., .f. )
 
     aMapsCol := {}
-
+    
     For n1 := 1 To Len(aCabs)
         
         nTam1  := aTamx1[n1]
@@ -1443,8 +1504,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
                 
             End If     
             
-        End If     
-
+        End If  
 
 
         BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
@@ -1546,3 +1606,4 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
 
 REturn 
+

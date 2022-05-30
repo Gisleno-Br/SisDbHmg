@@ -82,6 +82,7 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
         NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR BLACK   ;
         ON PAINT xPaintBarraH( ThisWindow.Name , nAcende , nColDrag )
     END WINDOW  
+    
 
     //msginfo(  Str(GetProperty(  cBrowserName , 'Width'  )+22) )
 
