@@ -46,6 +46,11 @@
 
 
     CHAVE      PNG     img\chave2.png
+    EXCLA1     PNG     img\ExclamaF.Png 
+
+
+    
+
     BACK1       ARRAY   {229,237,242}
     FONTCOR     ARRAY   {0,106,133}
     SCRDOWN1    BITMAP img\Down1.Bmp 

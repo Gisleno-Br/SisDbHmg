@@ -66,6 +66,7 @@ Static nClearIt2 := 1
 Static cOpMainSel  := ''
 Static nPageNumber := 1
 Static hBitOk
+Static hBitExcl
 Static cBrowserName := ''
 Static cEspelhoBrw := ''
 Static cBarraVfrm := ''
@@ -538,8 +539,11 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 	lNoHorzScr := .f.
 	hBitOk 	   := BT_BitmapLoadFile ('OKMARK')
 
+	hBitExcl   := BT_BitmapLoadFile ('EXCLA1')
+
 
 	EncheMVis( nTamPag  , .f.  )
+
 
 
 	cBrowserName  := cBrwName
@@ -2702,8 +2706,12 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 		BT_DrawGradientFillHorizontal ( hDC2 ,  0   , 0  , Width  ,    Height     ,  {193,255,224}  , WHITE   )	
 
-		BT_DrawText ( hDC2 , 10  , 10 ,   "Nenhum Registro Localizado."  , 'Arial Black'  , 8 , FONTCOR ,  {193,255,224}    , ;
+		BT_DrawText ( hDC2 , 20  , 80 ,   "Nenhum Registro Localizado."  , 'Arial Black'  , 9 , FONTCOR ,  {193,255,224}    , ;
 			nTypeText ,	nAlingText, nOrientation )
+
+		//BT_DrawBitmap (hDC2  , 10   , 5   , 48  , 48 , BT_STRETCH, hBitExcl)
+
+		BT_DrawBitmapAlphaBlend (hDC2, 10 , 5 , 48  , 48  , 55  , BT_COPY, hBitExcl )
 
 		
 		BT_DeleteDC (BTstruct )

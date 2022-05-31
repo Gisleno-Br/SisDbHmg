@@ -350,6 +350,7 @@ FUNCTION Main
 	PUBLIC cBairroEmp    := ''
 	PUBLIC cCidadeEmp    := ''
 
+	
 
 	PUBLIC qTotReg       := 150
 
