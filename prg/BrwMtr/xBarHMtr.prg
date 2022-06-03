@@ -200,6 +200,8 @@ REturn
 
 
 
+
+
 Function xRetBarH()
 
 REturn nScroxy    
@@ -256,8 +258,14 @@ Static Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
     End If 
 
     If (!lEnabledy)
+
+        
+        BT_BitmapRelease (yEsquerda)
+        BT_BitmapRelease (yDireita)
+
         yEsquerda := BT_BitMapLoadFile('ESQUERDAD')
         yDireita  := BT_BitMapLoadFile('DIREITAD')
+
     End If 
 
 
@@ -300,6 +308,7 @@ Static Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
 
     BT_BitmapRelease (yEsquerda)
     BT_BitmapRelease (yDireita)
+
     BT_DeleteDC (BTstruct )
 
 

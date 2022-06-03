@@ -570,7 +570,7 @@ Function xDispHint( cMsg1 , nRow1 , nCol1 )
 		SetProperty( 'Win_Msg' , 'Col' , nCol1  )
 	End If 
 
-	SetProperty( 'Win_Msg' , 'Label_1' , 'Value' , Alltrim(  Hb_utf8ToStr(cMsg1) ) )
+	SetProperty( 'Win_Msg' , 'Label_1' , 'Value' , Alltrim(  (cMsg1) ) )
 
 
 Return

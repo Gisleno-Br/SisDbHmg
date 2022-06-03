@@ -63,6 +63,7 @@ FUNCTION LoadFitros( cTabela1 )
 	END WINDOW	
 
 
+
    
    aMtrFiltr := xLoadFiltros( cTabela1  )
 
@@ -170,6 +171,10 @@ FUNCTION LoadFitros( cTabela1 )
 
    //RemoveHandler( 'EventConsu' )  
 
+   RemoveHandler( "EventBrowser" )
+
+
+
    xInitFiltr()
 
 
@@ -181,9 +186,11 @@ FUNCTION LoadFitros( cTabela1 )
 
 
    cSalvaJan  :=  cActiveJan
-   cActiveJan := 'fFiltrosCad'
+   cActiveJan := 'fFiltrosCad'   
+
+
    
-   aMtrFiltr := {}
+   //aMtrFiltr := {}
 
    xBrowserMtr( 51 ,  aMtrFiltr , 'fFiltrosCad'   , 710  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro '} , ;
       {10,50,60}  , {'C' , 'C' , 'C' } , .f. , .t. , 150 )
@@ -191,7 +198,7 @@ FUNCTION LoadFitros( cTabela1 )
    
    //_ShowWindow('LstBoxFiltro')
 
-   BringTop('xProcFiltro')
+   BringTop('xProcFiltro')  
 
 
    

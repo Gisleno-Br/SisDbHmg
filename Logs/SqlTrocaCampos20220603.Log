@@ -1,0 +1,4 @@
+Admin 03/06/2022 12:53:49   Admin 03/06/2022 12:53:49   Admin 03/06/2022 12:47:46   Admin 03/06/2022 12:47:46   update dicionario set ordem = ordem + 1  where tabela = 'Clientes' and ordem >= 0 and Ordem < 3;
+ update dicionario set ordem = 0 where tabela = 'Clientes' and ordem = 3 and camposistema = 'Cpf/Cnpj';
+ update dicionario set ordem = ordem - 1  where tabela = 'Clientes' and ordem > 2 and Ordem <= 4;
+ update dicionario set ordem = 4 where tabela = 'Clientes' and ordem = 2 and camposistema = 'Código';

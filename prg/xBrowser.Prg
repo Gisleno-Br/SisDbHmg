@@ -485,6 +485,7 @@ Function xBrowser( cTabx ,   aDatas1 , cParent   ,  cBrwName , nCol  , aCabecalh
 	hBitOk 	   := BT_BitmapLoadFile ('OKMARK')
 
 
+
 	//EncheMVis( nTamPag  , .f.  )
 
 
@@ -2107,14 +2108,6 @@ Function xPaintBrowser( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 
 		cTexto := Hb_Utf8ToStr(aMtrOp[n1][1][1]) + Replicate(' ',200)
-		
-		//Alltrim(Str(nLine + nRow )) + '   '  + Alltrim(Str(nRow )) + '  '   + Alltrim(Str(nLine ))  + ' ' + ;
-		//Alltrim(StrZero(n1,3)) + '  '  + Hb_Utf8ToStr(aMtrOp[n1][1][1]) + Replicate(' ',200)
-		//nLinb++
-
-		//msginfo(Str(Len(aMtrOp)))
-
-		
 
 
 		IF (nLinb > nTamPag)
@@ -2649,6 +2642,8 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	
 	//Local nRow1 := GetProperty('Win_Role1','Height') - 20
 
+	//DO EVENTS 
+
 	
 	
 	If HMG_GetLastMouseMessage() == WM_LBUTTONDBLCLK
@@ -2660,9 +2655,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	IF nHWnd == GetProperty(  cActiveJan   , "HANDLE" )				
 		If nMsg == WM_MOUSEMOVE
 
-			xLimpBarV()
-
-			
+			xLimpBarV()			
 
 
 			GetCursorPos (@nCol1, @nRow1)
@@ -2802,6 +2795,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 				If (GetAsyncKeyState(VK_LBUTTON)) == 0					
 					lTracking45 := .t. 
 				End If 		
+
 			End 
 
 
@@ -2849,7 +2843,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 			nRow1 := ar1[1]
 			nId := 0 
-
+			
 
 			If (nRow1 >= nLimteLin)			
 

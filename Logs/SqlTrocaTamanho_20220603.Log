@@ -1,0 +1,4 @@
+Admin 03/06/2022 12:53:55   Admin 03/06/2022 12:47:38   update dicionario set tamdisp = 103 where tabela = 'Clientes' and camposistema = 'Nome'
+
+ update dicionario set tamdisp = 60 where tabela = 'Clientes' and camposistema = 'Código'
+

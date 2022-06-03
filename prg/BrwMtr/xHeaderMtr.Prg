@@ -753,6 +753,18 @@ Function EventHeaMtr()
             GetCursorPos (@nCol, @nRow)
             ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
             nColx := ar1[2]           
+
+
+            If _IsWindowDefined('Win_Msg')                
+                If !IsWindowVisible('Win_Msg')
+
+                    xDoHint(   ,   Hb_AnsiToOem('Click e Arraste a Coluna para Mudar de Posição.')  )    
+                    //lTracking546 := .t. 
+                  //  msginfo('ok2')
+                    SysWait(0.03)
+                End If     
+            End If 
+
             
       
             If (nColx5 > 0) 
@@ -768,11 +780,11 @@ Function EventHeaMtr()
       
                     nColx5 := nColx                   
 
-                    SysWait(0.02)
+                  //  SysWait(0.02)
       
       
-                    xDoHint(  Nil ,   'Click e Arraste a Coluna para Mudar de Posição.' )    
-                    DO EVENTS                      
+                    SysWait(0.05)
+                   // DO EVENTS                      
                     
                           
                     nQDrag1 := xRetPgNum()
@@ -789,9 +801,9 @@ Function EventHeaMtr()
       
                             If (nColSele != nColTarget) .And. xTroquePos(nColSele , nColTarget , aCabecs[nColSele] )
       
-                                DO EVENTS                                    
-                                SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'CURSOR1'  )                                  
-                                aColsTam := GetCamposInf( cTabela, 'TAM' )                                                                    
+                               // DO EVENTS                                    
+                              //  SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'CURSOR1'  )                                  
+                               // aColsTam := GetCamposInf( cTabela, 'TAM' )                                                                    
       
                                 SysWait(0.01)                                    
       
@@ -806,6 +818,8 @@ Function EventHeaMtr()
                                        
                                 DO EVENTS
 
+                                /*
+
                                 
                                 BT_ClientAreaInvalidateAll(cHeaderJan)                            
                                 SysWait(0.02)        
@@ -816,10 +830,13 @@ Function EventHeaMtr()
                                 yDcBarH1eMtr()
 
                                 SysWait(0.01)
+
+                                */
+
+
+                                SysWait(0.01)
+
   
-                                //Do Events 
-                                          
-                                //SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'IDC_ARROW'  )    
                                           
       
                             End If 
@@ -833,7 +850,7 @@ Function EventHeaMtr()
                             nColTam1 := 0
                             nColTarget := 0
                             If  _isWindowDefined("Win_Msg")
-                                xHidehint()
+                               // xHidehint()
                             End If
       
                                       
@@ -876,12 +893,12 @@ Function EventHeaMtr()
       
       
                             xMoveWin( nColSele , nColSav1 , lFrente1 )
-                            xDoHint(    ,   Alltrim(Str(nColSav1))+ ' SS ' + Alltrim(Str(  (GetProperty( c_BrowName , 'Width') - 13)  )) )
+                           // xDoHint(    ,   Alltrim(Str(nColSav1))+ ' SS ' + Alltrim(Str(  (GetProperty( c_BrowName , 'Width') - 13)  )) )
       
                             If (nTarget > 0) .or. (lScrool1)                                   
       
                                 If  (lScrool1)    
-                                    xDoHint(    ,   Alltrim(Str(nTarget)) + ' SS ' + Alltrim(Str(  (GetProperty( c_BrowName , 'Width') - 13)  )) )
+                                    //xDoHint(    ,   Alltrim(Str(nTarget)) + ' SS ' + Alltrim(Str(  (GetProperty( c_BrowName , 'Width') - 13)  )) )
                                 End If     
       
                                 DO EVENTS 
@@ -1038,7 +1055,7 @@ Function EventHeaMtr()
             Else 
       
                 If  _isWindowDefined("Win_Msg")
-                    xHidehint()
+                    //xHidehint()
                 End If
       
                 lSizeMode := .f.
@@ -1117,15 +1134,21 @@ Static Function xTroquePos(nColSele , nColTarget , cCabec1 )
 
     Local cTp  := aTipsy[nColTarget]
 
-    
+
+     //Altd()
+
+    //RemoveHandler('EventBrowMtr')
+    //RemoveHandler('EventHeaMtr')
+
+
 
     aCabecs[nColTarget] := aCabecs[nColSele]
     aCabecs[nColSele]   := cC1
 
 
-
     aColsTam[nColTarget] := aColsTam[nColSele]
     aColsTam[nColSele]   := nN1
+
 
 
 
@@ -1141,7 +1164,13 @@ Static Function xTroquePos(nColSele , nColTarget , cCabec1 )
     xChangeOrd( nColSele ,  nColTarget  )
 
        
-    xMapCols( aCabecs , aColsTam , aTipsy )         
+    xMapCols( aCabecs , aColsTam , aTipsy )    
+
+    BT_ClientAreaInvalidateAll(   cHeaderJan )
+    DO EVENTS 
+    yDcBarH1eMtr()                                  
+
+    SysWait(0.02)     
 
     //aColsTam
 
@@ -1275,6 +1304,7 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
     Local nTam12 := 0
     Local nAcum := 1
     Local hDC 
+
 
 
     hDC = BT_CreateDC ( cHeaderJan  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct )

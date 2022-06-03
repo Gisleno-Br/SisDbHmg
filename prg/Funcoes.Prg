@@ -78,6 +78,24 @@ Function SetCampoOrdem(cTabela , cCampo , nOrdem1 )
 Return lOk
 
 
+Function EventSTOPAll (lStop)
+LOCAL n1 := 0
+
+   For n1 := 1 To Len(_HMG_EventData)
+		_HMG_EventData [n1] [4]  := lStop 
+   Next 
+
+   /*
+
+   IF ValType (lStop) == "L"
+      _HMG_EventData [nIndex] [4] := lStop
+   ENDIF
+   */
+
+Return .t. 
+
+
+
 Function TroqOrdens(cTabela1 , nOrd1 , nOrd2  , cCampoName )
 
 	LOCAL oServ   := GetConexao()

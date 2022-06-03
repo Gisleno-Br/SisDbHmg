@@ -188,6 +188,8 @@ FUNCTION Main
 	Public nBkColorF1 :=  0xFFFFFF
 	Public nBkColorF2 :=  Rgb( 192, 192, 192 )
 
+	Public lDebug := .f. 
+
 
 
 	Private cObjSelected := ''
