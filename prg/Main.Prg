@@ -18,12 +18,6 @@
 
 
 
-
-
-
-
-
-
 #define QUEBRA Chr(13)+Chr(10)
 
 #define SB_LINEUP           0    // ok
@@ -88,6 +82,7 @@ DECLARE WINDOW Win_MenuPrincipal
 
 
 
+
 REQUEST HB_LANG_PT
 REQUEST HB_CODEPAGE_PT850
 
@@ -99,6 +94,8 @@ Prg\BrwMtr\xBarHMtr.Prg
 Prg\BrwMtr\xBrowserMtr.Prg
 Prg\BrwMtr\xHeaderMtr.Prg
 */
+
+
 
 
 

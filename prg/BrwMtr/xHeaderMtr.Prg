@@ -734,17 +734,19 @@ Function EventHeaMtr()
       
         End If     
                       
-        If (nMsg == WM_MOUSEMOVE) .And. (!lTracking546)
+        If (nMsg == WM_MOUSEMOVE) 
+            //.And. (!lTracking546)
                   
             
             xLimpBarV()
-            SysWait(0.01)				
+            //SysWait(0.01)				
 
             //msginfo('ok2')
+
       
-            For i := 1 To 255
-                GetAsyncKeyState(i)
-            Next i
+           // For i := 1 To 255
+           //     GetAsyncKeyState(i)
+          //  Next i
       
             s1 := ''
             s2 := ''
@@ -1133,6 +1135,7 @@ Static Function xTroquePos(nColSele , nColTarget , cCabec1 )
     Local nN1  := aColsTam[nColTarget]
 
     Local cTp  := aTipsy[nColTarget]
+
 
 
      //Altd()
