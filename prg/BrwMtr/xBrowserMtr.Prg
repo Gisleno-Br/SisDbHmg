@@ -799,6 +799,54 @@ Function ySetTam( aTamanhos )
 
 REturn
 
+
+
+Function xCalcTam()
+
+	Local nTam12 := 0
+	Local nTam   := 0
+	Local nTam1  := 0
+	Local cTexto := ''
+	Local hDc 
+	Local hFont 
+	Local nQAcento
+	Local BTstruct
+
+	/*
+	aCabec1 := Aclone(aCabecalho)
+	aTams2  := Aclone(aTamanhos)
+	aTips   := AClone( aTipos)
+	*/
+
+	
+
+    hDC = BT_CreateDC ( 'Main'  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct )
+    hFont := HMG_CreateFont (  hDC , FONTBROWSER, FONTBROWSERSIZE, .f., .f., .f., .f. )
+
+
+    For n1 := 1 To Len(aCabec1)
+        
+        nTam1  := aTams2[n1]
+
+        nQAcento := QtAcento(Alltrim(aCabec1[n1]) )
+        nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
+
+
+        cTexto := Replicate('A' ,  nTam1 + 1  )              
+        n12 := GetTextWidth( hDC , cTexto , hfont )
+        nTam := n12              
+        nTam12 += nTam 
+
+    Next 
+
+	msginfo(Str(   nTam12  ))
+
+	
+    BT_DeleteDC (BTstruct )
+
+
+Return nTam12
+
 Function xWaitY( cForm )
 
 	Local i
@@ -1023,7 +1071,7 @@ Function xChangeOrd( nOrigem ,  nDest )
 REturn
 
 
-Function yCalcEtap1()
+Function yCalcEtap1() 
 
 	Local nCol2  := 1
 	Local nWidth := 0
@@ -1032,8 +1080,10 @@ Function yCalcEtap1()
 	Local nRet := 0
 	Local nc1 := 0
 	Local nColEsq := 1
-	Local nTamWidth := yRetLargura(  aTams2  )
+	Local nTamWidth := xCalcTam()
+	//yRetLargura(  aTams2  )
 	Local lnoF := .t.
+
 
 
 	/*
@@ -1126,7 +1176,7 @@ Function yScrollCaM( lFrente , lUpdBar )
 	Local nColTam
 	Local lFim := .f.
 
-	Local nWidth := Iif( nColEsquerda > 0 , xGetColW1(  nColEsquerda   )	- 3 , 0 )
+	Local nWidth := Iif( nColEsquerda > 0 , xGetColW1(  nColEsquerda   ) , 0 )
 
 
 	DEFAULT lUpdBar := .t.
@@ -1653,7 +1703,8 @@ Function xTecBrowMtr()
 
 			nClearIt2 := nIndex1
 
-			msginfo( Str(nClearIt2) )
+			//msginfo( Str(nClearIt2) )
+
 
 			SysWait(0.01)
 
@@ -1733,6 +1784,9 @@ Function xTecBrowMtr()
 				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))
 				Return
 			End If
+
+
+			//msginfo('ok2')
 
 
 			nColz1 := xGetColSw1()

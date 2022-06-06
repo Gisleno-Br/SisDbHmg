@@ -615,7 +615,6 @@ BT_DeleteDC ( BTstruct )
 Return
 
 
-
 Function Proc_ON_PAINT(wJanela)
 
 //LOCAL Width  := BT_ClientAreaWidth  ( ThisWindow.name )

@@ -574,25 +574,16 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
             nZacum := 0
 
-            //msginfo(Str(nAcumZ1)+ '  ' + Str(nConst1) )
-
-
-
-            //msginfo('out')
-
             If lFirst
                 lDragMode := .f.                            
                 lTracking26 := .f.            
                 lTracking37 := .f.            
                 lFirst := .f.         
             End If 
-
             
             For i := 1 To 255
                 GetAsyncKeyState(i)
             Next i
-
-
 
             If (nModeBut = 1) .And. (!lTracking26)  
 
@@ -602,12 +593,18 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                         SysWait(0.03)                                   
                         Exit 
                     End If    
+
+
+                    
+                    //msginfo('ok233 ' + Str(nQContador) + '   ' + Str(nQ1))
                         
                     If (nQContador > 0)
 
                         yDecrLefa()    
                         yScrollCaM( .f. , .f. )
-                            
+
+
+                        msginfo('ok2 ' + Str(nQContador) + '   ' + Str(nQ1) + '   ' + Str(nConst1) )                            
 
                         nQContador--
                             
@@ -651,12 +648,18 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                         SysWait(0.03)                                   
                         Exit 
                     End If    
+                    
+                    //msginfo('ok2 ' + Str(nQContador) + '   ' + Str(nQ1))
 
                     If !(nQContador  == nQ1)
 
                         yScrollCaM( .t. , .f. )
+
+
+                        msginfo('ok2 ' + Str(nQContador) + '   ' + Str(nQ1) + '   ' + Str(nConst1))
                             
                         yUpdatBha1( nConst1     )	
+
                         yDcBarH1()                                
                         SysWait(0.03)
                         nQContador++

@@ -411,10 +411,10 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams  , lTrocaCol )
     If _IsWindowDefined(c_BrowName)      
 
         nTot2 := xMapCols( aCabecs , aTams , aTipsy  )     
-        nQ1 := yCalcEtap1()
+        nQ1 := yCalcEtap1(  nTot2  )
 
 
-        If nTot2 < GetProperty( c_BrowName , 'Width') 
+        If (nTot2 <= GetProperty( c_BrowName , 'Width') )
             ySetBarTam(  0 , 0  ) 
             yEnable1Bh(  .f. )
         Else 
@@ -1131,11 +1131,8 @@ Static Function xTroquePos(nColSele , nColTarget , cCabec1 )
 
     //Local cC1 := aCa[nColSele]
     Local cC1 := aCabecs[nColTarget]
-
     Local nN1  := aColsTam[nColTarget]
-
     Local cTp  := aTipsy[nColTarget]
-
 
 
      //Altd()
@@ -1153,8 +1150,6 @@ Static Function xTroquePos(nColSele , nColTarget , cCabec1 )
     aColsTam[nColSele]   := nN1
 
 
-
-
     aTipsy[nColTarget] := aTipsy[nColSele]
     aTipsy[nColSele]   := cTp
 
@@ -1164,9 +1159,7 @@ Static Function xTroquePos(nColSele , nColTarget , cCabec1 )
     Do Events
 
 
-    xChangeOrd( nColSele ,  nColTarget  )
-
-       
+    xChangeOrd( nColSele ,  nColTarget  )       
     xMapCols( aCabecs , aColsTam , aTipsy )    
 
     BT_ClientAreaInvalidateAll(   cHeaderJan )
@@ -1193,14 +1186,9 @@ Static Function xBusqTar( nPoint , lFrente5 )
         N1 := Ascan( aMapsCol , { |a| Abs(a[3] - nPoint) <= 25     })
 
         If n1 == 0
-
-
             If ((nLimite - nPoint) <= 10)
-                n1 := nQtt 
-                //  msginfo( Str(n1 ))
+                n1 := nQtt                 
             End If     
-
-
         End If    
 
     Else 
@@ -1307,6 +1295,7 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
     Local nTam12 := 0
     Local nAcum := 1
     Local hDC 
+    Local nAcum2 := 0
 
 
 
@@ -1327,7 +1316,9 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
         n12 := GetTextWidth( hDC , cTexto , hfont )
         nTam := n12
 
-        Aadd( aMapsCol , {   aCabs[n1] , nColx , nColx +  nTam + 1 , aTipos1[n1] ,   nTam ,  aTamx1[n1] , nAcum   }  )
+        nAcum2 += ( (nColx +  nTam + 1 ) - nColx )
+
+        Aadd( aMapsCol , {   aCabs[n1] , nColx , nColx +  nTam + 1 , aTipos1[n1] ,   nTam ,  aTamx1[n1] , nAcum  , nAcum2 }  )
         nColx += nTam 
 
         nAcum += aTamx1[n1]+1
@@ -1336,6 +1327,18 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
 
     Next 
 
+
+    msginfo(Str(     nAcum2 ))
+
+    
+     //Altd()
+/*
+    RemoveHandler('EventBrowMtr')
+    RemoveHandler('EventHeaMtr')
+    RemoveHandler('EVENTHNDCLI')    
+    */
+
+
     
     BT_DeleteDC (BTstruct )
     
@@ -1343,7 +1346,7 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
     //msginfo(Str( nTam12 ))
 
 
-Return nTam12 
+Return nAcum2  
 
 Static Function xRetUnit()
 
@@ -1511,6 +1514,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
         nTam1  := aMapsCol[n1][5] 
         nQAcento := QtAcento(Alltrim( aMapsCol[n1][1]  ) )
         nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
+
         nTam2 := If( (nQAcento =  0)   , aTamanho[n1] , aTamanho[n1] + nQAcento ) //* nTamX1
 
          
