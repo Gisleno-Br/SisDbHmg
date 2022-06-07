@@ -558,6 +558,7 @@ Function xLimpSub(cJan , nOpsely , nClr , nHeight1 , nitemH1 , nColTam1 , nRow1 
 Return
 
 
+
 Function xDispHint( cMsg1 , nRow1 , nCol1 )
 
 	SetTamJan( Alltrim(cMsg1)  )

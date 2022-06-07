@@ -1328,7 +1328,7 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
     Next 
 
 
-    msginfo(Str(     nAcum2 ))
+    //msginfo(Str(     nAcum2 ))
 
     
      //Altd()

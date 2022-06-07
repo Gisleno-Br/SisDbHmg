@@ -835,11 +835,11 @@ Function xCalcTam()
         cTexto := Replicate('A' ,  nTam1 + 1  )              
         n12 := GetTextWidth( hDC , cTexto , hfont )
         nTam := n12              
-        nTam12 += nTam 
+        nTam12 += (nTam + 1)
 
     Next 
 
-	msginfo(Str(   nTam12  ))
+	//msginfo( ' l1 : ' + Str(   nTam12  ))
 
 	
     BT_DeleteDC (BTstruct )
@@ -1071,7 +1071,7 @@ Function xChangeOrd( nOrigem ,  nDest )
 REturn
 
 
-Function yCalcEtap1() 
+Function yCalcEtap1(   nWid1  ) 
 
 	Local nCol2  := 1
 	Local nWidth := 0
@@ -1080,61 +1080,34 @@ Function yCalcEtap1()
 	Local nRet := 0
 	Local nc1 := 0
 	Local nColEsq := 1
-	Local nTamWidth := xCalcTam()
-	//yRetLargura(  aTams2  )
-	Local lnoF := .t.
+	Local nTamWidth := xCalcTam() 	
+	Local lnoF  := .t.
+	Local nLim1 := xGetInfCw1( nQTotCol , 3) - 17
+
+	Default nWid1 := 0
+
+	If (nWid1 > 0)
+	   nLim1 := nWid1
+	End If 
 
 
+    While .t. 
 
-	/*
+			nPos2 := xGetInfCw1(   nCol2 , 2  )
 
-	While .t. 
-			
-			nPos2 := xGetInfCw1(   nCol2 , 3  )	
-			
-			If (nPos2 >= nLargz1) 
+	       If ((nPos2 + nLargz1  ) >= nLim1)
+		   		Exit 
+		   Else 
+		   		nc1++
+		   End If 
 
-				nWidth := xGetColW1(  nColEsq   ) - 3
-				nc1 += nWidth
-		   		nRet++
-
-				nColEsq++   
-
-				lnoF := .f. 
-
-				//LArgTotal	
-				If (nC1 >= (nTamWidth - nLargX - 15))			
-				    Exit
-				End If 
-
-			End If 
-
-			nCol2++
-
-			If (nCol2 > nQtCol) 
-				Exit 
-			End 	
-
+		   nCol2++
 
 	Enddo 
-	*/
-
-	nRet := Int((nTamWidth - nLargX - 15) / nConst1 )
 
 
 
-	If (nRet > nQTotCol)
-		nRet := nQTotCol - 1
-	End If
-
-
-	//msginfo(Str(nRet) + '  ' + Str( nC1 ) + '   ' + Str(  (nTamWidth - nLargX - 15) )   )
-
-	//largtotoal
-	//nConst2 := int((nTamWidth - nLargX) / nRet)
-	//nRet := 3
-
-Return nRet
+Return nC1
 
 
 Static Function xSrolUni( nW1  )
@@ -1161,6 +1134,18 @@ Function xBarInicio()
 REturn (nColEsquerda == 1)
 
 
+Function xRetPasso(  nQt11 , lFim )
+
+	Local nLargx1 := (nLargTotal - nLargX)
+	Local nPasso  := Int(  nLargx1 / nQt11 )
+	Local nZ1 := ( nQt11  * nPasso)
+
+	If lFim 
+		nPasso += ( nLargx1 - nZ1 )
+	End If 
+
+
+REturn (nPasso)
 
 Function xBarFim()
 REturn (nColScrool >= (nLargTotal - nLargX))
@@ -1170,13 +1155,19 @@ Function yDecrLefa()
 Return
 
 
-Function yScrollCaM( lFrente , lUpdBar )
+Function yScrollCaM( lFrente , lUpdBar , nW1  )
 
 
 	Local nColTam
 	Local lFim := .f.
 
 	Local nWidth := Iif( nColEsquerda > 0 , xGetColW1(  nColEsquerda   ) , 0 )
+
+	DEFAULT nW1 := 0
+
+	If nW1 > 0
+	   nWidth := nW1
+	End If 
 
 
 	DEFAULT lUpdBar := .t.
@@ -1195,10 +1186,11 @@ Function yScrollCaM( lFrente , lUpdBar )
 		End If
 
 
-
+/*
 		If nColEsquerda == 1
 			nWidth += 15
 		End If
+		*/
 
 		nColScrool += nWidth
 		SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  -(nWidth)    , 2 )
@@ -1214,16 +1206,18 @@ Function yScrollCaM( lFrente , lUpdBar )
 		SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  nWidth    , 2 )
 
 
-
+  /*
 		If nColEsquerda == 1
 			nColScrool -= 15
 			SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  15    , 2 )
 			//nWidth := -1
 		End If
+		*/
+
 
 		nPageNum--
 
-		//nColEsquerda--
+		nColEsquerda--
 
 	End If
 
@@ -1261,11 +1255,13 @@ Function yScrollCaM( lFrente , lUpdBar )
 	yUpHead1(  cHeaderName ,   Iif( lFrente , nWidth , -(nWidth)  ) )
 	DoEvents()
 
-
+      /*
 	If (nColEsquerda == 1) .And. (!lFrente)
 		yUpHead1(  cHeaderName ,   -15  )
 		DoEvents()
 	End If
+	*/
+
 
 	xDcToDc()
 
