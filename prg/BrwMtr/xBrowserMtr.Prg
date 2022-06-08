@@ -794,9 +794,7 @@ Return
 
 
 Function ySetTam( aTamanhos )
-
 	aTams2 := Aclone(  aTamanhos )
-
 REturn
 
 
@@ -811,14 +809,6 @@ Function xCalcTam()
 	Local hFont 
 	Local nQAcento
 	Local BTstruct
-
-	/*
-	aCabec1 := Aclone(aCabecalho)
-	aTams2  := Aclone(aTamanhos)
-	aTips   := AClone( aTipos)
-	*/
-
-	
 
     hDC = BT_CreateDC ( 'Main'  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct )
     hFont := HMG_CreateFont (  hDC , FONTBROWSER, FONTBROWSERSIZE, .f., .f., .f., .f. )
@@ -838,9 +828,6 @@ Function xCalcTam()
         nTam12 += (nTam + 1)
 
     Next 
-
-	//msginfo( ' l1 : ' + Str(   nTam12  ))
-
 	
     BT_DeleteDC (BTstruct )
 
@@ -1054,21 +1041,66 @@ Function xChangeOrd( nOrigem ,  nDest )
 	Local nSalva
 
 
-
-
-
 	For n1 := 1 To Len(aMt1)
 		nSalva := aMt1[n1][nDest]
 		aMt1[n1][nDest]   := aMt1[n1][nOrigem]
 		aMt1[n1][nOrigem] := nSalva
 	Next
 
-
-
 	xGoTop()
 
 
 REturn
+
+Function yCalcCol1(   nWid1  ) 
+
+	Local nCol2  := 1
+	Local nWidth := 0	
+	Local nLargz1 := nLargx
+	Local nRet := 0
+	Local nc1 := 0
+	Local nColEsq := 1
+	Local nTamWidth := xCalcTam() 	
+	Local lnoF  := .t.
+	Local nLim1 := xGetInfCw1( nQTotCol , 3) - 17
+	Local nPos1 
+	Local nPos2 := 1
+
+	Default nWid1 := 0
+
+	If (nWid1 > 0)
+	   nLim1 := nWid1
+	End If 
+
+	//EventRemoveAll()
+	
+
+    While .t. 
+
+			nPos1 := xGetInfCw1(   nCol2 , 2  )
+			nPos2 := xGetInfCw1(   nCol2 , 3  )
+
+	       If (nPos1 <= nLargz1) .And. (nPos2 >= nLargz1)
+		   		nC1 := nCol2		   		
+				Exit
+		   Else 
+		   		
+		   End If 
+
+		   nCol2++
+
+		   If nCol2 > Len(aTams2)
+		   	  Exit	
+		   End If 
+
+	Enddo 
+
+
+
+Return nC1
+
+
+
 
 
 Function yCalcEtap1(   nWid1  ) 
@@ -1110,25 +1142,6 @@ Function yCalcEtap1(   nWid1  )
 Return nC1
 
 
-Static Function xSrolUni( nW1  )
-
-	nColScrool += nW1
-	SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  nW1    , 2 )
-
-	DoEvents()
-
-	yUpHead1(  cHeaderName ,   nW1  )
-
-	xDcToDc()
-
-
-	DoEvents()
-
-
-
-
-REturn
-
 
 Function xBarInicio()
 REturn (nColEsquerda == 1)
@@ -1138,14 +1151,17 @@ Function xRetPasso(  nQt11 , lFim )
 
 	Local nLargx1 := (nLargTotal - nLargX)
 	Local nPasso  := Int(  nLargx1 / nQt11 )
-	Local nZ1 := ( nQt11  * nPasso)
+	Local nZ1 := (nQt11  * nPasso)
 
 	If lFim 
 		nPasso += ( nLargx1 - nZ1 )
 	End If 
 
-
 REturn (nPasso)
+
+
+
+
 
 Function xBarFim()
 REturn (nColScrool >= (nLargTotal - nLargX))
@@ -1782,7 +1798,11 @@ Function xTecBrowMtr()
 			End If
 
 
-			//msginfo('ok2')
+			nQColy := yCalcCol1()
+
+
+
+			msginfo('ok2 ' + Str(nQColy))
 
 
 			nColz1 := xGetColSw1()

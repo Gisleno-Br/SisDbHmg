@@ -44,7 +44,7 @@ Static nEtapas := 0
 
 Static nQ1 := 0
 Static nQContador := 0
-
+Static nQContador2 := 1
 
 
 
@@ -381,21 +381,15 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
     
     Local nLinx := 0
     Local nLinAnt := 0
-	
-
-    //If (_IsWindowDefined(cBarraName)) .And.  (nHWnd == GetProperty(  cBarraName , "HANDLE" ))		
+    
+    
 
     If (_IsWindowDefined(cBarraSombra)) .And.  (nHWnd == GetProperty(  cBarraSombra , "HANDLE" ))		
 
 
         If (nMsg == WM_LBUTTONUP)
-
             SysWait(0.02)
             lDragMode := .f. 
-            //  lTracking26 := .t. 
-            //msginfo('ok2')
-           
-
         End If 
 
 
@@ -449,54 +443,34 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                                 Exit                                  
                             End If  
                         End If     
-                            
-                         
-                        nW1 := xGetColW1( nColz2 ) - 3                                
                                                        
-                        If ((nColx - nColAnt) >= 1  )      
+                        If ((nColx - nColAnt) >= 1  )                               
 
-                            If (nQContador  == nQ1)
-                                xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar. " + Str(nQContador) + '  ' + Str(nQ1)))
+                            If (nQContador > nQ1)
+                                xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar. " + Str(nQContador) + '  ' + Str(nQ1)))                                
                                 Exit
-                            End If 
+                            End If                          
 
-
-                            If ( (nColDrag+nWidBarra) > (Width - 7))                                                                    
-                                SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,15  )                                           
-                                nAcumZ1 := 0
-                                SysWait(0.02)
-                                nQContador++
-                                nColAnt  := nColx                                                                       
-                                EXIT                                 
-                            End If 
                                   
                             nAcumZ1  += (nColx - nColAnt)
                             nColAnt  := nColx      
-                            nLinAnt  := nLinx
-                            n12 := nw1     
-                             
-                            If (nAcumZ1 >= nConst1 )                                                                      
-
-                                nColDrag += nConst1
-                                nScroxY  += nConst1
-                                    
-                                SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_RIGHT ,15  )                                   
+                            nLinAnt  := nLinx                           
+                            nW1 := xRetPasso(  nQ1  , ( (nQContador + 1) >= nQ1)  )                                                         
 
 
-                                nAcumZ1 := 0
-                                nQContador++                                                                  
-                                    
-
+                            If (nAcumZ1 >= nW1 )                                                                      
+                                nColDrag += nW1
+                                nScroxY  += nW1                                
+                                xRoleTela( .t. , nW1 , .f.  )
+                                nAcumZ1 := 0                                
                             End If                                                                                       
+                            
 
                             SysWait(0.01)
                             BT_ClientAreaInvalidateAll(cBarraName)                                      
-                            yDcBarH1()                                    
-
-                            //Do Events     
+                            yDcBarH1()                                                                
 
                             yDcBarH1eMtr()
-
                             DO EVENTS                               
 
                         End If           
@@ -518,34 +492,20 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                                     Do Events          
                                     Exit                                  
                                 End If  
-                            End If     
+                            End If                             
 
+                            nAcumZ1  += Abs(nColAnt - nColx)   
+                            nColAnt  := nColx      
+                            nLinAnt  := nLinx                           
+                            nW1 := xRetPasso(  nQ1  , ( (nQContador + 1) >= nQ1)  )                                                         
 
-                            If (nColDrag <= 21)                                    
-                                nAcumZ1 := 0
-                                nColAnt := nColx 
-                                nQContador--                                    
-                                SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,353  )  
-                                DO EVENTS                                
-                                Exit 
-                            End If                                 
+                            If (nAcumZ1 >= nW1 )                                                                                                      
+                                nColDrag -= nW1
+                                nScroxY  -= nW1                                
+                                xRoleTela( .f. , nW1 , .f.  )
+                                nAcumZ1 := 0                                
+                            End If 
 
-
-                            nAcumZ1  += Abs(nColAnt - nColx)                                    
-                            nColAnt  := nColx 
-                            nLinAnt  := nLinx
-                               
-
-                            If (nAcumZ1 >= nConst1)                               
-
-                                nColDrag -= nConst1
-                                nScroxY  -= nConst1
-
-                                SendMessage( GetFormHandle(cBrwName)  , WM_KEYDOWN , VK_LEFT ,353  )                                     
-                                nAcumZ1 := 0
-                                nQContador--                                                                                                                
-                                    
-                            End If                                                
 
                             BT_ClientAreaInvalidateAll(cBarraName)                                      
                             yDcBarH1()                                         
@@ -601,24 +561,7 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     nP1 := xRetPasso(  nQ1 , ( (nQContador + 1) >= nQ1)  )                                         
                         
                     If (nQContador > 0)
-
-                        xRoleTela( .f. , -nP1 )
-
-                        /*    
-                        
-                        nZ1 := xGetColW1(  nQContador   )
-                        nQContador--                        
-                        yScrollCaM( .f. , .f. , nZ1 )
-                        yUpdatBha1( -nP1     )	
-                        yDcBarH1()                                
-                        SysWait(0.03)
-                        yDcBarH1eMtr()
-                        DO EVENTS 
-                        If (nQContador == 0) 
-                            nScroxy := 21
-                        End If 
-                        */
-                                
+                        xRoleTela( .f. , -nP1 )                                
                     Else 
                         xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
                     End If     
@@ -662,25 +605,8 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     
                     nP1 := xRetPasso(  nQ1 , ( (nQContador + 1) >= nQ1)  )                    
 
-
                     If (nQContador < nQ1)
-
-                        xRoleTela( .t. , nP1 )
-
-                        /*
-
-                        nQContador++
-                        nZ1 := xGetColW1(  nQContador   )
-                        yScrollCaM( .t. , .f. , nZ1 )                            
-                        yUpdatBha1( nP1     )	
-                        yDcBarH1()                                
-                        SysWait(0.03)                                             
-                        yDcBarH1eMtr()
-                        SysWait(0.05)
-                        */
-
-                         
-
+                        xRoleTela( .t. , nP1 )                         
                     Else 
                         xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar.zz"))
                         SysWait(0.05)
@@ -727,7 +653,6 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
             If (nCol > 18) .And. (nCol < (Width - 18)) 
                 nModeBut := 0
-
             Else                         
             
                 If (!lTracking37)					
@@ -744,8 +669,7 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     End If 
 
 
-                    If (nCol < 18)  
-                      
+                    If (nCol < 18)                        
                         nAcende := 1
                         BT_ClientAreaInvalidateRect( cBarraName  , 0,0,25,20 , .t.    )
                         nModeBut := 1
@@ -755,20 +679,14 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                         yDcBarH1()
                     End If 
 
-                    If (nCol >= (Width - 25)) 
-
-                        //SysWait(0.01)
-                 
-                        nAcende := 2
-                        //BT_ClientAreaInvalidateRect( cBarraName  , 0,  (Width - 25)    ,25,20 , .t.    )
+                    If (nCol >= (Width - 25))                                   
+                        nAcende := 2                        
                         BT_ClientAreaInvalidateAll(cBarraName)
                         nModeBut := 2            
                         lTracking26 := .f. 
                         lTracking37 := .t.  
                         Do Events                        
-                        yDcBarH1()
-                        //msginfo('ok2')
-                      
+                        yDcBarH1()                                              
                     End If 
 
                 End If 
@@ -808,7 +726,10 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 Return 
 
 
-Static Function xRoleTela( lFrente , nQp1 )
+Static Function xRoleTela( lFrente , nQp1  , lUpdBar1 )
+
+
+    DEFAULT lUpdBar1 := .t. 
 
      
     If !lFrente 
@@ -816,7 +737,9 @@ Static Function xRoleTela( lFrente , nQp1 )
         nZ1 := xGetColW1(  nQContador   )
         nQContador--                        
         yScrollCaM( .f. , .f. , nZ1 )
-        yUpdatBha1( nQp1     )	
+        If lUpdBar1
+            yUpdatBha1( nQp1     )	
+        End If    
         yDcBarH1()                                
         SysWait(0.02)
         yDcBarH1eMtr()
@@ -829,7 +752,9 @@ Static Function xRoleTela( lFrente , nQp1 )
         nQContador++
         nZ1 := xGetColW1(  nQContador   )
         yScrollCaM( .t. , .f. , nZ1 )                            
-        yUpdatBha1( nQp1    )	
+        If lUpdBar1
+            yUpdatBha1( nQp1    )	
+        End If     
         yDcBarH1()                                
         SysWait(0.02)                                             
         yDcBarH1eMtr()
