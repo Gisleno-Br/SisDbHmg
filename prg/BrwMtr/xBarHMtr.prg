@@ -726,7 +726,7 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 Return 
 
 
-Static Function xRoleTela( lFrente , nQp1  , lUpdBar1 )
+Function xRoleTela( lFrente , nQp1  , lUpdBar1 )
 
 
     DEFAULT lUpdBar1 := .t. 

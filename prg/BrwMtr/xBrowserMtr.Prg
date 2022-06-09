@@ -46,14 +46,11 @@
 
 
 
-
 Static nLArgura := 0
 Static aMt1 := {}
 Static aOpx1 := 0
 Static lHitB := .f.
-
 Static l_HitB := .f.
-
 Static lHitT := .f.
 Static nPercent := 0
 Static aThread2 := Nil
@@ -70,32 +67,18 @@ Static hBitExcl
 Static cBrowserName := ''
 Static cEspelhoBrw := ''
 Static cBarraVfrm := ''
-
 Static cBarraVSombra := ''
 Static nColLeft := 0
-
 Static lTracking96 := .f.
-
 Static nQTotCol := 0
-
 Static aMDisplay := {}
-
 Static lScrool1 := .f.
-
 Static nAcumTot2 := 0
-
 Static cJanObj := ''
-
-
-
-
 Static cHeaderName  := ''
 Static cHSombraName := ''
 
 Static nQEtp := 0
-
-
-
 
 Static nSelLine := 1
 Static nIndexEventZ := 0
@@ -149,6 +132,9 @@ Static aTams2  := {}
 Static aTips   := {}
 
 Static l_Hitt := .t.
+
+Static nColz2 := 1
+Static nLimiteCol := 0
 
 
 //DECLARE WINDOW Win_Browser
@@ -510,10 +496,10 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 	nTamPag := Int(  nAltura1 / nItemBrwHeight   )
 
 	nPageTotal := Int(   Len(aDatas1)  / nTamPag  ) + 1
+	nLimiteCol := nLarg1
 
 
-	//msginfo(  Str( nTamPag  )  )
-
+	//msginfo(  Str( nLimiteCol  )  )
 
 
 	aCabec1 := Aclone(aCabecalho)
@@ -1052,6 +1038,8 @@ Function xChangeOrd( nOrigem ,  nDest )
 
 REturn
 
+ 
+
 Function yCalcCol1(   nWid1  ) 
 
 	Local nCol2  := 1
@@ -1353,6 +1341,7 @@ Function xTecBrowMtr()
 
 	Local nLargz1 := nLargx
 	//GetDeskTopWidth() - 45
+
 
 	Local nDiff := nLargTotal - nLarg1 + 30
 
@@ -1796,75 +1785,40 @@ Function xTecBrowMtr()
 				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))
 				Return
 			End If
-
-
-			nQColy := yCalcCol1()
-
-
-
-			msginfo('ok2 ' + Str(nQColy))
-
-
-			nColz1 := xGetColSw1()
-
-
+			
 			nQTotEt := yCalcEtap1()
 
-			If (nColz1 = nQtotcol)  //nQtotcol
-				xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida. ") )
-				REturn
-			End If
-			nColz1++
+			If (nColz2 = nQtotcol)  
+			  
+				nTam5 := xCalcTam()  
 
-			If nLParam = 15
-				yScrollCaM( .t. , .f.  )
-				REturn
-			End If
+				If (nTam5 - nLimiteCol) >= 10				
+					xRoleTela( .t. , (nTam5 - nLimiteCol) , .t.  )
+					lNoHorzScr := .t. 
+				Else 
+					
+				End If 	
 
-			ySelCol( nColz1 )
-			DOEVENTS()
+				Return
 
-			SysWait(0.07)
+			End If					
 
+			nColZ2++
 
-			//msginfo(Str(nQTotEt) + '   ' + Str(nQTotCol) + '  ' + Str(nColz1))
+			nPos1 := xGetInfCw1(   nColz2 , 2  )
+			nPos2 := xGetInfCw1(   nColz2 , 3  )
 
-			nWidth := xGetColW1(  nColz1   )
-			nPos1 := xGetInfCw1(   nColz1 , 2  )
-			nPos2 := xGetInfCw1(   nColz1 , 3  )
-			lScrool1 := (nPos2 >= nLargz1)
+			If (nPos2 > nLimiteCol)
+				 nW1 := xRetPasso(  nQTotEt  , ( (nColZ2 + 1) >= nQtotcol)  )     
+				xRoleTela( .t. , nW1 , .t.  )
+				nLimiteCol += nW1
+			End If 
 
-			If (lScrool1)
-
-				yScrollCaM( .t. , .f. )
-
-				nColz1 := xGetColSw1()
-
-
-
-				If ( nQEtp < nQTotEt)
-
-					yIncConter(.t.)
-
-					yUpdatBha1( nConst1     )
-					yDcBarH1()
-					SysWait(0.03)
-					nQEtp++
-					yDcBarH1eMtr()
-
-					DOEVENTS()
-
-				End If
-
-			Else
-
-			End If
-
-
+			ySelCol( nColz2 )
+			DoEvents()
+			SysWait(0.02)	
 
 		End If
-
-
 
 
 		If (nWParam == VK_LEFT)
@@ -1874,6 +1828,8 @@ Function xTecBrowMtr()
 				Return
 			End If
 			//	HMG_CleanLastVirtualKeyDown()
+
+			/*
 
 			nColz1 := xGetColSw1()
 
@@ -1934,6 +1890,8 @@ Function xTecBrowMtr()
 				nColEsquerda := 1
 				xDialog("Coluna Numero um Atingida." , .f.)
 			End If
+
+			*/
 
 
 		End If
