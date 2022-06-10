@@ -1773,17 +1773,13 @@ Function xTecBrowMtr()
 				nTam5 := xCalcTam()  
 				
 				If (nTam5 - nLimiteCol) >= 10				
-					xRoleTela( .t. , (nTam5 - nLimiteCol) , .t.  )
-
-					//msginfo(  Str(nTam5 - nLimiteCol)  ) 
+					xRoleTela( .t. , (nTam5 - nLimiteCol) , .t.  )					
 					nAcumz5 += (nTam5 - nLimiteCol)
 					msginfo(Str(nAcumz5))
 
 					nLast1 := (nTam5 - nLimiteCol)
 
 					nLimiteCol += (nTam5 - nLimiteCol)
-					//msginfo(Str(nLimiteCol))
-
 					lNoHorzScr := .t. 
 				Else 
 					
