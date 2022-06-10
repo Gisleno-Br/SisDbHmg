@@ -46,6 +46,7 @@
 
 
 
+
 Static nLArgura := 0
 Static aMt1 := {}
 Static aOpx1 := 0
@@ -71,6 +72,7 @@ Static cBarraVSombra := ''
 Static nColLeft := 0
 Static lTracking96 := .f.
 Static nQTotCol := 0
+Static nLast1 := 0
 Static aMDisplay := {}
 Static lScrool1 := .f.
 Static nAcumTot2 := 0
@@ -135,6 +137,8 @@ Static l_Hitt := .t.
 
 Static nColz2 := 1
 Static nLimiteCol := 0
+
+Static nAcumz5 := 0
 
 
 //DECLARE WINDOW Win_Browser
@@ -809,8 +813,12 @@ Function xCalcTam()
 
 
         cTexto := Replicate('A' ,  nTam1 + 1  )              
+
+
         n12 := GetTextWidth( hDC , cTexto , hfont )
+		//msginfo( ' -> ' + Str(n12)  )
         nTam := n12              
+
         nTam12 += (nTam + 1)
 
     Next 
@@ -1328,46 +1336,24 @@ Function xTecBrowMtr()
 	Local w2
 	Local cControl := ''
 	Local cForm    := ''
-
 	Local n1
 	Local nIdBut
-
 	Local lCtrl := .f.
-
 	Local nPos1
 	Local nWidth
-
 	Local nLarg1 := nLargX
-
 	Local nLargz1 := nLargx
-	//GetDeskTopWidth() - 45
-
-
 	Local nDiff := nLargTotal - nLarg1 + 30
-
 	Local aMVisible1 := Iif( nColScrool >= nLarg1  , yColsVisible(nColScrool) , {} )
-
-
 	Local nPos2
-
 	Local nTotal := 0
-
 	Local lDownMouse := .f.
-
 	Local lUpMouse := .f.
-
 	Local nInd1
 	Local nRow1
 	Local nCol1
-
-	//Local nRow
-	Local nCol
-
-
-	//xFechaMen
+	Local nCol	
 	Local nMaxItem := Int(nTamSubMenuConsulta / nItemSubHeight)
-
-
 
 	If HMG_GetLastMouseMessage (@nHWnd) == 513
 		//	msginfo(Str(    HMG_GetLastMouseMessage (@nHWnd)   ))
@@ -1376,20 +1362,14 @@ Function xTecBrowMtr()
 
 
 	If HMG_GetLastMouseMessage (@nHWnd) == WM_MOUSEWHEEL
-
 		HMG_CleanLastMouseMessage()
 		DoEvents()
 		DoEvents()
-
-
 		If HIWORD( nWParam ) == 120
 			lUpMouse := .t.
 		Else
 			lDownMouse := .t.
 		End If
-
-
-
 	End If
 
 
@@ -1791,9 +1771,19 @@ Function xTecBrowMtr()
 			If (nColz2 = nQtotcol)  
 			  
 				nTam5 := xCalcTam()  
-
+				
 				If (nTam5 - nLimiteCol) >= 10				
 					xRoleTela( .t. , (nTam5 - nLimiteCol) , .t.  )
+
+					//msginfo(  Str(nTam5 - nLimiteCol)  ) 
+					nAcumz5 += (nTam5 - nLimiteCol)
+					msginfo(Str(nAcumz5))
+
+					nLast1 := (nTam5 - nLimiteCol)
+
+					nLimiteCol += (nTam5 - nLimiteCol)
+					//msginfo(Str(nLimiteCol))
+
 					lNoHorzScr := .t. 
 				Else 
 					
@@ -1808,10 +1798,17 @@ Function xTecBrowMtr()
 			nPos1 := xGetInfCw1(   nColz2 , 2  )
 			nPos2 := xGetInfCw1(   nColz2 , 3  )
 
+			
+			//msginfo(Str(nLargz1) + '   ' + Str(nPos1) + ' '  + Str(nPos2) )
+
 			If (nPos2 > nLimiteCol)
-				 nW1 := xRetPasso(  nQTotEt  , ( (nColZ2 + 1) >= nQtotcol)  )     
+				nW1 := xRetPasso(  nQTotEt  , ( (nColZ2 + 1) >= nQtotcol)  )     				
 				xRoleTela( .t. , nW1 , .t.  )
 				nLimiteCol += nW1
+				nAcumz5 += nW1
+				nLast1 := nW1
+				msginfo(Str(nAcumz5))
+				//msginfo(Str(nLimiteCol))
 			End If 
 
 			ySelCol( nColz2 )
@@ -1823,10 +1820,53 @@ Function xTecBrowMtr()
 
 		If (nWParam == VK_LEFT)
 
+			/*
 			If  lNoHorzScr
 				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))
 				Return
 			End If
+			*/
+			
+			
+			nQTotEt := yCalcEtap1()
+
+			lNoHorzScr := .f. 
+			nColZ2--
+
+			nPos1 := xGetInfCw1(   nColz2 , 2  )
+			nPos2 := xGetInfCw1(   nColz2 , 3  )
+
+						
+
+			//msginfo(Str(nLargz1) + '   ' + Str(nPos1) + ' '  + Str(nPos2) + '   ' + Str((nLimiteCol -  nAcumz5)) + '  qt ' + Str(nQTotEt) )
+
+			If (nPos1 < (nLimiteCol -  nAcumz5) ) //.And. (   nPos2 >= (nLimiteCol -  nAcumz5) )
+				nW1 := xRetPasso(  nQTotEt  , ( (nColZ2 + 1) >= nQtotcol)  )     				
+				xRoleTela( .f. , nW1 , .t.  )
+				nLimiteCol -= nW1
+
+				If (nLast1 > 0)
+					nAcumz5 -= nLast1
+					nLast1  := 0
+				Else 
+					nAcumz5 -= nW1
+				End If 	
+
+				If nAcumz5 <= 5
+					nAcumz5 := 0
+				End If 
+				
+				msginfo(Str(  nAcumz5 ))
+
+			End If 
+
+			ySelCol( nColz2 )
+			DoEvents()
+			SysWait(0.02)	
+
+
+
+
 			//	HMG_CleanLastVirtualKeyDown()
 
 			/*

@@ -1311,12 +1311,14 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
         nQAcento := QtAcento(Alltrim(aCabs[n1]) )
         nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
 
-
         cTexto := Replicate('A' ,  nTam1 + 1  )              
         n12 := GetTextWidth( hDC , cTexto , hfont )
+        
         nTam := n12
 
         nAcum2 += ( (nColx +  nTam + 1 ) - nColx )
+
+        //msginfo(Str( nTam ))
 
         Aadd( aMapsCol , {   aCabs[n1] , nColx , nColx +  nTam + 1 , aTipos1[n1] ,   nTam ,  aTamx1[n1] , nAcum  , nAcum2 }  )
         nColx += nTam 
@@ -1329,6 +1331,7 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
 
 
     //msginfo(Str(     nAcum2 ))
+
 
     
      //Altd()

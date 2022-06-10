@@ -215,6 +215,8 @@ FUNCTION LoadFitros( cTabela1 )
    
    xInitBrw()
 
+   DoEvents()
+
    /*
    Do Events 
 

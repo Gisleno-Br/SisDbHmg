@@ -725,6 +725,9 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
 Return 
 
+Function xInitSxy()
+    nScroxy := 21
+Return 
 
 Function xRoleTela( lFrente , nQp1  , lUpdBar1 )
 
