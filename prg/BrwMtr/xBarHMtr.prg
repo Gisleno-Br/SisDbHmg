@@ -34,7 +34,7 @@ Static nTamBarra := 0
 Static nLargCalc := 0
 
 Static nColtotal := 0
-Static nColz2 := 1
+
 Static lDesligado := .f. 
 Static cHead1 := ''
 
@@ -331,8 +331,7 @@ REturn
 Function yIncConter( lFrente )
 
     If lFrente     
-        nQContador++
-        //msginfo('g22')
+        nQContador++        
     Else 
         nQContador--
     End If 
@@ -594,16 +593,10 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     If (GetAsyncKeyState(VK_LBUTTON)) == 0					
                         SysWait(0.03)                                   
                         Exit 
-                    End If    
+                    End If           
                     
-                                        
-                    //Altd()
-                    //RemoveHandler('EventBrowMtr')
-                    //RemoveHandler('EventHeaMtr')
-                    //RemoveHandler('EventBarMtr')
-
+                    nP1 := xRetPasso(  nQ1 , ( (nQContador + 1) >= nQ1) )                    
                     
-                    nP1 := xRetPasso(  nQ1 , ( (nQContador + 1) >= nQ1)  )                    
 
                     If (nQContador < nQ1)
                         xRoleTela( .t. , nP1 )                         
@@ -729,16 +722,21 @@ Function xInitSxy()
     nScroxy := 21
 Return 
 
-Function xRoleTela( lFrente , nQp1  , lUpdBar1 )
 
+
+Function xRoleTela( lFrente , nQp1  , lUpdBar1  , lAlterNativo , nConter )
 
     DEFAULT lUpdBar1 := .t. 
-
+    DEFAULT lAlterNativo := .f. 
      
-    If !lFrente 
+    If !lFrente         
+        If !lAlterNativo    
+            nZ1 := xGetColW1(  nQContador   )
+            nQContador--                        
+        Else 
+            nZ1 := xGetColW1(  nConter   ) 
+        End If     
 
-        nZ1 := xGetColW1(  nQContador   )
-        nQContador--                        
         yScrollCaM( .f. , .f. , nZ1 )
         If lUpdBar1
             yUpdatBha1( nQp1     )	
@@ -750,18 +748,24 @@ Function xRoleTela( lFrente , nQp1  , lUpdBar1 )
         If (nQContador == 0) 
             nScroxy := 21
         End If 
+        
     Else 
 
-        nQContador++
-        nZ1 := xGetColW1(  nQContador   )
+        If !lAlterNativo       
+            nQContador++
+            nZ1 := xGetColW1(  nQContador   )
+        Else 
+            nZ1 := xGetColW1(  nConter   )    
+        End If     
+
+        
         yScrollCaM( .t. , .f. , nZ1 )                            
         If lUpdBar1
             yUpdatBha1( nQp1    )	
         End If     
         yDcBarH1()                                
         SysWait(0.02)                                             
-        yDcBarH1eMtr()
-        //SysWait(0.05)
+        yDcBarH1eMtr()        
     End If 
 
 Return 

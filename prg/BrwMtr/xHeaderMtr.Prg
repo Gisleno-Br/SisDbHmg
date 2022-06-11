@@ -445,7 +445,23 @@ Return Len(aMapsCol)
 
 
 Function xGetColW1(   nColuna )
+
+    
+     //Altd()
+     /*
+    RemoveHandler('EventBrowMtr')
+    RemoveHandler('EventHeaMtr')
+    RemoveHandler('EVENTHNDCLI')    
+    */
+
+    If nColuna > Len(aMapsCol)
+        msginfo('eror1')
+    End If 
+
+
+
 Return aMapsCol[ nColuna  ][5] 
+
 
 
 Function xGetInfCw1(   nColuna , nIndice  )

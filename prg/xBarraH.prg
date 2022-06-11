@@ -672,7 +672,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                             SysWait(0.05)
 
                         Else 
-                            xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar.zz"))
+                            xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar.zz2"))
                             SysWait(0.05)
                         End If     
 
