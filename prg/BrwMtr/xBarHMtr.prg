@@ -42,11 +42,14 @@ Static nAcumZ1 := 0
 
 Static nEtapas := 0 
 
+Static nMaxBarh := 0
+
 Static nQ1 := 0
 Static nQContador := 0
 Static nQContador2 := 1
 
 Static lDraHighM := .f. 
+Static lChaveY := .f. 
 
 
 
@@ -79,6 +82,10 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
 
     cHead1 := cHeaderN1   
 
+    //altd   
+    //RemoveHandler('EventBrowMtr')
+    //RemoveHandler('EventHeaMtr')
+    //RemoveHandler('EVENTHNDCLI')    
 
 
         
@@ -92,6 +99,9 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
         NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR BLACK   ;
         ON PAINT xPaintBarraH( ThisWindow.Name , nAcende , nColDrag ) 
     END WINDOW  
+
+    nMaxBarh := GetProperty(  cBrowserName , 'Width'  ) 
+    //+ 12
     
 
     //msginfo(  Str(GetProperty(  cBrowserName , 'Width'  )+22) )
@@ -223,12 +233,20 @@ Function yUpdatBha1( nPos1 )
     nColDrag += nPos1 
 
 
+    DoEvents()    
     BT_ClientAreaInvalidateAll(cBarraName)  
+
+
+    DoEvents()  
+
     yDcBarH1()
 
+    //msginfo('33333')
 
+/*
     Do Events
-    Do Events
+    Do Events    
+    */
 
 
 Return 
@@ -301,7 +319,7 @@ Static Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
         If lEnabledy
 
             If (lDragMode) .or. (lDraHighM) 
-                BT_DrawFillRoundRect (hDC2 , 4 , nCol1   , nWidBarra    , 10 , 5 ,5 ,  {12,134,166}   , {166 , 166 , 166}  , 0)
+                BT_DrawFillRoundRect (hDC2 , 4 , nScroxy   , nWidBarra    , 10 , 5 ,5 ,  {12,134,166}   , {166 , 166 , 166}  , 0)
             Else 
                 BT_DrawFillRoundRect (hDC2 , 4 , nScroxy , nWidBarra  , 10 , 5 ,5 ,  {12,134,166}   , {166 , 166 , 166}  , 0)
             End If     
@@ -375,6 +393,17 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
     
     Local nLinx := 0
     Local nLinAnt := 0
+
+
+    If (nHWnd == GetProperty(  cBrwName , "HANDLE" ))
+
+        If (nMsg == WM_MOUSEMOVE) 
+            //msginfo('llp3')
+
+
+        End If     
+
+    End If         
     
     
 
@@ -382,8 +411,34 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
 
         If (nMsg == WM_LBUTTONUP)
-            SysWait(0.02)
+            //SysWait(0.02)
+
+            nSaveCol := 0    
+            yOffBarra(cBarraName)
+            yDcBarH1()
+            lTracking26 := .t. 
+
+
+            SysWait(0.05)
+           // Do Events          
+          
             lDragMode := .f. 
+          
+            lDraHighM := .f. 
+            SetBrwDrgM( .f. , nSaveCol )               
+
+           // msginfo('ok2 2 ' + Str(nScroxy))
+
+           //yUpdatBha1( -20  )	              
+
+            //BT_ClientAreaInvalidateAll(cBarraName)  
+           
+           // yDcBarH1()
+           
+         //   DoEvents()
+
+          //  msginfo('ok2 2 ' + Str(nScroxy)  )
+            
             //msginfo('up222')
         End If 
 
@@ -408,10 +463,10 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                 If (nCol >= nScroxy) .And. ( nCol <= (nScroxy+nWidBarra) )                    
                     nModeBut := 999
                     lDragMode := .t.
-                    nSaveCol := nCol     
-                    msginfo('Drag mode')
+                    nSaveCol := nCol   
+                    SetBrwDrgM( .t. , nSaveCol )               
+                    //msginfo('drg mode')       
                 End If     
-
             End If                 
 
 
@@ -649,32 +704,63 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
         End If 
 
-        If (nMsg == WM_MOUSEMOVE)     
-
+        If (nMsg == WM_MOUSEMOVE) 
+            //.And. (!lTracking26)    
+            
             
             GetCursorPos (@nCol, @nRow)
             ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
             nCol := ar1[2]
 
+            
+            If 1 = 2
+                //lDragMode
 
-            If lDragMode
-
-                If Abs(nCol - nSaveCol) >= 20
-                    msginfo('ok2 2323')
-
-                    nSaveCol := nCol 
-
-
+                If (nCol = nSaveCol)                    
+                    REturn
                 End If     
 
-                DoEvents()
+            
+               DoEvents()            
+                
+                If (nCol > nSaveCol) .And. (Abs(nCol - nSaveCol) >= 20) //.And. (nSaveCol > 0)
+                    If  ( (nScroxy+nTamBarra) < nMaxBarh) 
+                        DoEvents()
+                        nSaveCol := nCol 
+                        yUpdatBha1( 20     )	        
 
-                //nColAnt
+                        /*
+                        cEspelhoBrw   := 'Win_Ert1' + Left(cBrwName,4)                                         
 
+                        DoMethod(cEspelhoBrw , 'SetFocus')
+                        DoEvents()
 
+                        SendMessage( GetFormHandle(cEspelhoBrw) , WM_MOUSEMOVE , 0,0)
+                        DoEvents()
 
-                REturn 
-            End If    
+                        SysWait(0.04)
+                        */
+                    End If   
+                Else
+
+                    If (nCol < nSaveCol) .And. (Abs(nSaveCol - nCol) >= 20) //And. (nSaveCol > 0)
+                        If (nScroxy > 21)
+                        //    DoEvents()
+                            //msginfo('Volteou')
+                            nSaveCol := nCol 
+                            yUpdatBha1( -20  )	                                                         
+                        End If     
+                    End If     
+
+                End If 
+
+                
+               // DoEvents()        
+                Return  
+
+            End If 
+            
+        
 
             //msginfo('mm')
 
@@ -683,7 +769,9 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
 
                 If _isWindowDefined(cBarraName)  
-                    yOffBarra( cBarraName  )
+                    If !lDragMode
+                        yOffBarra( cBarraName  )
+                    End If     
                     Return Nil
                 End If     
 
@@ -732,20 +820,16 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
             End If     
 
+            
+
             If (nModeBut = 0)
 
-
-                If (nCol >= nScroxy) .And. ( nCol <= (nScroxy+nWidBarra) )                    
-                    //nModeBut := 999
+                If (nCol >= nScroxy) .And. ( nCol <= (nScroxy+nWidBarra) )                                        
                     lDraHighM := .t.
-                    nSaveCol := nCol      
-                  //  msginfo('ok22')
-
                 Else 
                     lDragMode := .f.
                     lFirst    := .f. 
-                End If 
-                
+                End If                 
 
                 BT_ClientAreaInvalidateAll( cBarraName )
                 Do Events 
@@ -756,11 +840,12 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                 nAcende := 0
                 BT_ClientAreaInvalidateAll(cBarraName)
 
-
                 lTracking26 := .f.
                 lTracking37 := .f. 
 
-            End If 
+            End If             
+
+
         End If 			
     End If 
 
@@ -829,8 +914,11 @@ Function yCheckObj()
 
     If (!Empty(Alltrim(cObjSelected)) ) .And. (cObjSelected != "Browser")
 
-        If _isWindowDefined(cBarraName)  		
-            yOffBarra(   cBarraName )
+
+        If _isWindowDefined(cBarraName)  
+            If !lDragMode		
+                yOffBarra(   cBarraName )
+            End If     
             SysWait(0.02)		
 
             yApagueH( cHead1 )
@@ -845,15 +933,17 @@ Function yCheckObj()
 REturn 
 
 
+
 Function yOffBarra( cBarName  )
       
-    lDragMode := .f.  
+    lDragMode := .f. 
     SetWindowCursor( GetFormHandle( cBarName )  , IDC_ARROW  )
                
     BT_ClientAreaInvalidateAll( cBarName )
     Do Events 
     yDcBarH1()
     // msginfo('ok')
+    lDraHighM := .f.
     nAcende := 0
     BT_ClientAreaInvalidateAll(cBarName)
 
@@ -888,6 +978,9 @@ Function yEnable1Bh(  lEnabled1 )
     DO EVENTS 
 
 REturn 
+
+Function yGetScrXy( lFlag )
+Return Iif( !lFlag , nScroxy , nScroxy+nTamBarra)    
 
 Function yDcBarH1()
 

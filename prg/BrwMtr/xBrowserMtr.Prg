@@ -77,9 +77,13 @@ Static aMDisplay := {}
 Static lScrool1 := .f.
 Static lDuplo := .f. 
 Static nAcumTot2 := 0
+Static nMaxBar := 0
 Static cJanObj := ''
 Static cHeaderName  := ''
 Static cHSombraName := ''
+
+Static nMaxBarh := 0
+	
 
 Static nQEtp := 0
 
@@ -113,6 +117,8 @@ Static lDrag_Mode := .f.
 Static nIndex1 := 1
 
 Static lExit := .f.
+
+Static nColDrag := 0
 
 Static lKeyPressed := .f.
 
@@ -186,221 +192,7 @@ Return nTamPag
 
 
 
-/*
-Function TestBrow( cParent1 , cTabx  )
 
-
-	Local cSqlx1 := ''
-	Local n1 := 1
-	Local aCampos
-	//Local aCabec  := GetCamposDic( cTabela, 'S' , .f. , .t. )
-
-	LOCAL aCabec
-	Local nTam := 0
-	Local aTams
-	Local aTips
-	LOCAL nQReg
-	Local qReg1   := 200
-	Local calias  := "TMP"
-	local cTab1
-	local aCabex:={}
-	Local cTabela := cTabx
-	Local nIndx1 := 0
-	Local oQuery
-	LOCAL lBold      := .F.
-	LOCAL lItalic    := .F.
-	LOCAL lUnderline := .F.
-	LOCAL lStrikeOut := .F.
-	Local aDynfont   := {}
-	Local nColy
-	Local lAtivo := .f.
-	Local am1 := {}
-	Local cGridname := 'Br_grid'
-	Local bGrid1 := {}
-	Local bGrid2 := {}
-	Local nW1
-	Local aItens := {}
-	Local oServer
-	Local nTamLargura := 0
-	Local nTam1 := GetTextoTam( ' '  , cParent1 )
-	Local cLabelx := 'Lblx01'
-	Local nPagNum := 1
-	Local i
-	Local nX1
-	Local nCont5 := 0
-
-	Local aResults := { }
-	Local aRes2    := {}
-
-
-
-
-
-
-	aMtrHeader := {}
-	aCampos  := GetCamposDic( cTabela, 'S' , .t. , .t. )
-	//Local aCabec  := GetCamposDic( cTabela, 'S' , .f. , .t. )
-
-	aCabec  := GetCamposDic( cTabela, 'S', .F. , .f. )
-	aTams   := GetCamposInf( cTabela, 'TAM' )
-	aTips   := GetCamposInf( cTabela, 'TIPO' )
-	nQReg   := GetReg( cTabela )
-
-	csq2:=''
-
-	cFiltro1 := ''
-
-
-	If !Empty(cFiltro1)
-		cSq2 := GetSql( cTabela  , .f. )  + ' Where ' + cFiltro1
-
-	Else
-		cSq2 := GetSql( cTabela  , .f. )
-	End If
-
-	cSq2 += " order by codigo limit 125"
-
-	
-
-	If (Select(calias) > 0)
-		dbSelectArea( cAlias )
-		Use
-	End If
-
-
-	cSqlx2 := cSqlx1
-	SaveLog("st121.txt" , cSq2  )
-
-	//msginfo( cSq2 )
-
-	aItens := {}
-
-
-
-	nF1 := {|| ARRAY FONT "Arial"   SIZE 9 }
-	nF1 := {|| ARRAY FONT "Arial"   SIZE 9 BOLD}
-	aDynFont := {}
-	oServer := GetConexao()
-	oQuery := oServer:Query(  cSq2 )
-
-	If oServer:NetErr()
-		yAviso( "Error executing Query " + QUEBRA + cSq2 + " : " + QUEBRA + oServer:Error()  , .f. )
-		Return .f.
-	End If
-
-
-	oQuery:LastRec()
-
-
-	If (oQuery:Lastrec()  == 0 )
-		yAviso( 'Este Cadastro Não Possui Registros' , .f. )
-	End If
-
-	//While !Eof()
-
-	FOR i := 1 TO oQuery:LastRec()
-
-		aM1 	 := {}
-		aDynFont := {}
-		oRow := oQuery:GetRow( i )
-		lAtivo := .t.
-
-		aResults := {}
-		aRes2	 := {}
-
-		For nx1 := 1 To Len(oRow[1])
-
-			//cValor := Hb_AnsiToOem( oRow:FieldGet(nx1)  )
-			cValor := ''
-
-			If (Alltrim(aTips[nx1]) == 'C')
-				cValor := oRow:FieldGet(nx1)
-			End If
-
-
-			If  Alltrim(aTips[nx1]) == 'D'
-				cValor := Padl(oRow:FieldGet(nx1) ,10)
-			End If
-
-			lNum := .f.
-
-			If Alltrim(aTips[nx1]) == 'B'
-				cValor := alltrim(Transform( oRow:FieldGet(nx1) , "999,999,999.99" ))
-				lNum := .t.
-			End If
-
-			If ( Alltrim(aTips[nx1]) == 'I')
-				If (nX1 > 1)
-					cValor := alltrim( Str( oRow:FieldGet(nx1) ))
-					lNum := .t.
-				Else
-					cValor := Alltrim( Str( oRow:FieldGet(nx1) ) )
-				End If
-			End If
-			If (Alltrim(cValor) = 'Inativo')
-				lAtivo := .f.
-			End If
-
-
-
-			nQAcento := QtAcento(cValor)			
-			nTam := If( (nQAcento =  0)   , aTams[nx1] ,  aTams[nx1] + nQAcento )
-
-			If ( Alltrim(aTips[nx1]) = 'C') //.or. ( Alltrim(aTips[nx1]) = 'D')
-
-				Aadd(aM1 , { Padr( (cValor) ,nTam , " " )  ,  nTam          }  )
-				Aadd(aResults , {   Padr( (cValor) ,nTam , " " )  ,    oRow:FieldName(nx1)  , nx1  , nTam  }   )
-				Aadd(aRes2 ,  oRow:FieldGet(nx1)  )
-
-			Else
-
-				Aadd(aM1 , { Padl( (cValor) ,nTam , " ")  ,  nTam          }  )
-				Aadd(aResults , {   Padl( (cValor) ,nTam , " " )  ,    oRow:FieldName(nx1)  , nx1  , nTam }   )
-				Aadd(aRes2 , oRow:FieldGet(nx1) )
-
-			End If		
-
-			DoEvents()
-			
-
-		Next
-
-
-		c1 := ''
-		Aeval(aM1 , { |a|  c1 += ( a[1] + ' '  )     })
-		c1 += " "
-
-		If (nTamLargura == 0)
-			Aeval(aM1 , { |a|    nTamLargura += (a[2]+1)   })
-			nLargura := (nTamLargura * nTam1)
-		End If
-		cAndamento := 'Andamento : '  + Alltrim(Str(I)) + "/" + Alltrim(Str(   oQuery:LastRec() ))
-		nCont5++
-
-		If nCont5 > nTamPag
-			nPagNum++
-			nCont5 := 1
-		End If 
-
-
-		Aadd(aItens , { c1 , lAtivo , nPagNum  , aResults , '' , aRes2}  )
-		
-	Next
-
-
-	oServer:Destroy()
-	oServer := Nil
-
-	oQuery:Destroy()
-	oQuery := Nil
-
-	aMResult := Aclone(aItens)
-	lTermino := .t.
-
-
-Return aItens
-
-*/
 
 Static Function EncheMVis( nRec , lFrente , z2   )
 
@@ -575,8 +367,12 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 		WIDTH nLarg1 HEIGHT nAltura1 VIRTUAL HEIGHT Iif(  Len(aMt1) > nTamPag ,(Len(aMt1) * nItemBrwHeight) , Nil) VIRTUAL WIDTH Iif( nLargTotal+1 > nLarg1 ,  nLargTotal+1 , Nil)  ;
 		TITLE 'xEspelho' + Left(cParent,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR BLACK ;
-		ON MOUSEMOVE ( yCheckObj() ,   cObjSelected := 'aMtrBrowser')
+		ON MOUSEMOVE ( yCheckObj() ,   cObjSelected := 'aMtrBrowser'   )
 	END WINDOW
+
+
+	
+    nMaxBarh := GetProperty(  cBrowserName , 'Width'  ) 
 
 
 	lAtivo1 := ((nLargTotal+1) > nLarg1)
@@ -1123,6 +919,9 @@ Function yCalcEtap1(   nWid1  )
 	   nLim1 := nWid1
 	End If 
 
+	
+
+
 
     While .t. 
 
@@ -1378,12 +1177,22 @@ Function xTecBrowMtr()
 		End If
 	End If
 
+	
+
 
 
 	If (nMsg == WM_LBUTTONUP)
 
-		If (nHWnd == GetProperty(  cBarraVSombra , "HANDLE" ))
+		lDrag_Mode := .f. 
+		nColDrag   := 0
 
+		DoEvents()
+
+
+		//msginfo('ok2')
+
+		If (nHWnd == GetProperty(  cBarraVSombra , "HANDLE" ))
+			
 			If (nHasFocus > 0 )
 				PostMessage(OBTN_Handle( cBarraVfrm , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )
 				DoEvents()
@@ -1393,7 +1202,7 @@ Function xTecBrowMtr()
 				lTracking45 := .t.
 				SysWait(0.01)
 			End If
-
+			
 		End If
 
 	End If
@@ -1402,19 +1211,54 @@ Function xTecBrowMtr()
 
 	If (nMsg == WM_MOUSEMOVE)
 
-		If (nHWnd == GetProperty(  cBrowserName , "HANDLE" ))
-			msginfo('z222')
-
-		End If 	
-
-		//yUpdatBha1( nQp1     )	
-		//yDcBarH1()              
 		
+		GetCursorPos (@nCol, @nRow)
+		ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
+		nCol := ar1[2]
+		
+		If (lDrag_Mode)			
+
+			
+			If nColDrag == 0
+				nColDrag := nCol
+		 	End If 	
+
+			DoEvents()            
+                
+            If (nCol > nColDrag) .And. (Abs(nCol - nColDrag) >= 20) //.And. (nSaveCol > 0)
+                If  ( yGetScrXy(.t.) < nMaxBarh) 
+                    DoEvents()
+                    nColDrag := nCol 
+                    yUpdatBha1( 20     )	        
+                    
+                End If   
+            Else
+
+                If (nCol < nColDrag) .And. (Abs(nColDrag - nCol) >= 20) //And. (nSaveCol > 0)
+                    If (yGetScrXy( .f. ) > 21)
+                        DoEvents()                        
+                        nColDrag := nCol 
+                        yUpdatBha1( -20  )	                                                         
+                    End If     
+                End If     
+            End If 
+
+			Return 
+
+
+
+
+
+			
+		End If 
+
+	
 
 
 		If (nHWnd == GetProperty(  cBarraVSombra , "HANDLE" ))
 
 			DoEvents()
+
 			If (lHasHeader)
 
 				SysWait(0.03)
@@ -1488,10 +1332,8 @@ Function xTecBrowMtr()
 
 			If (nId = 0)
 				SysWait(0.01)
-				yLimpBarV()
-				//SysWait(0.01)
+				yLimpBarV()				
 				Return
-
 			End If
 
 
@@ -1517,9 +1359,6 @@ Function xTecBrowMtr()
 
 				nModeBrw := yDoHint(   nId  ,  , .t.  )
 				CursorHand1( nHWnd  )
-
-				//msginfo('222222 ' + Str(nId))
-
 				nHasFocus := nId
 				BT_ClientAreaInvalidateAll( cBarraVfrm )
 				DoEvents()
@@ -2737,6 +2576,42 @@ Function EventBrowMtr( nHWnd, nMsg, nWParam, nLParam )
 
 	End If
 
+	If (nHWnd == GetProperty(  cBarraVSombra , "HANDLE" ))
+
+		//msginfo('z222')
+         /*
+		If (nMsg == WM_MOUSEMOVE)
+
+			msginfo('z222')
+
+			If lDrag_Mode			
+
+				DoEvents()
+
+				GetCursorPos (@nCol, @nRow)
+				aR1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
+
+				
+				nCol := ar1[2]
+
+				If nColDrag == 0
+					nColDrag := nCol 				
+				End If 
+
+				msginfo('Drg Mode')
+				Return 
+
+
+
+
+			End If 
+		End If 
+		*/
+
+
+
+	End If 	
+
 
 
 	If (nHWnd == GetProperty( cEspelhoBrw , "HANDLE" ))
@@ -2755,20 +2630,8 @@ Function EventBrowMtr( nHWnd, nMsg, nWParam, nLParam )
 
 		If nMsg == WM_MOUSEMOVE
 
-			If lDrag_Mode			
+			
 
-				GetCursorPos (@nCol, @nRow)
-				aR1 := GetPos_ScreenToClient(   GetFormHandle(  cBrowserName  )  , nRow, nCol )
-
-
-
-
-				Return 
-
-
-
-
-			End If 
 
 
 
@@ -2813,6 +2676,7 @@ Function EventBrowMtr( nHWnd, nMsg, nWParam, nLParam )
 	End If
 
 Return
+
 
 
 Function SetBrwDrgM(lOn1 , nColIni )
@@ -3618,6 +3482,37 @@ Function xSaveBmp()
 	Local hDc := GetDc(cBrowserName)
 
 Return
+
+Static Function xDoDrag(  cJan1 )
+
+	Local nRow , nCol 
+
+	DoEvents()
+
+	If lDrag_Mode			
+
+		DoEvents()
+
+		GetCursorPos (@nCol, @nRow)
+		aR1 := GetPos_ScreenToClient(   GetFormHandle(cJan1) , nRow, nCol )
+
+		
+		nCol := ar1[2]
+
+		If nColDrag == 0
+			nColDrag := nCol 				
+		End If 
+
+		msginfo('Drg Mode')
+		Return 
+
+
+
+
+	End If 
+
+
+REturn 	
 
 /*
 Static Function xCursorWait( lOn )
