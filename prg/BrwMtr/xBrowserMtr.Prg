@@ -1148,7 +1148,7 @@ REturn (nColEsquerda == 1)
 Function xRetPasso(  nQt11 , lFim )
 
 		//nLargTotal
-	Local nLargx1 := ( xCalcTam() - nLargX)
+	Local nLargx1 :=  (xCalcTam() - nLargX)
 	Local nPasso  := Int(  nLargx1 / nQt11 )
 	Local nZ1 := (nQt11  * nPasso)
 
@@ -1775,14 +1775,31 @@ Function xTecBrowMtr()
 
 			nPos1 := xGetInfCw1(   nColz2 , 2  )
 			nPos2 := xGetInfCw1(   nColz2 , 3  )			
+
+
+			//msginfo(Str(nLargz1) + '   ' + Str(nPos1) + ' '  + Str(nPos2) + '   ' + Str((nLimiteCol -  nAcumz5)) + '  qt ' + Str(nQTotEt) )
 			
-			If (nPos2 > nLimiteCol)
-				nW1 := xRetPasso(  nQTotEt  , ( (nColZ2 + 1) >= nQtotcol)  )     				
+			If (nPos2 > nLimiteCol)				
+				nW1 := nPos1				
 				nLast1 := nW1
-				xRoleTela( .t. , nW1 , .t. ,  .t. ,  nColZ2  )
-				nLimiteCol += nW1
+				yScrollCaM( .t. , .f. , nW1 ) 				
+				nLimiteCol := nW1 + nLarg1 				
 				nAcumz5 += nW1
 				nLast1 := nW1				
+
+				If nLimiteCol >= xCalcTam()
+					//yUpdatBha1( nWidth    )
+					yGoBarR()
+					DoEvents()
+					//msginfo('pl2')				
+					yDcBarH1()
+				Else 
+					nW1 := xRetPasso(  nQTotEt  , ( (nColZ2 + 1) >= nQtotcol)  )    
+					
+					yUpdatBha1( nW1     )
+
+				End If 	
+
 			Else 
 				
 			End If 
@@ -1794,14 +1811,23 @@ Function xTecBrowMtr()
 			DoEvents()
 			SysWait(0.02)	
 
+
+			If (nColz2 = nQtotcol )  					
+				lNoHorzScr := .t. 
+			End If 	
+
+
+			/*
+
 			If (nColz2 = nQtotcol )  				
+
 			  
 				nTam5 := xCalcTam()  
 				
 				If (nTam5 - nLimiteCol) >= 10				
-					xRoleTela( .t. , (nTam5 - nLimiteCol) , .t. ,  .t. ,  nColZ2  )					
-					msginfo(Str(  (nTam5 - nLimiteCol) ))
-					nAcumz5 += (nTam5 - nLimiteCol)										
+					xRoleTela( .t. , (nTam5 - nLimiteCol)   , .t. ,  .t. ,  nColZ2  )					
+					//msginfo(Str(  (nTam5 - nLimiteCol) ))
+					nAcumz5 += (nTam5 - nLimiteCol)	
 					nLast1 += (nTam5 - nLimiteCol)
 					nLimiteCol += (nTam5 - nLimiteCol)
 					lNoHorzScr := (nColz2 = nQtotcol) 
@@ -1809,10 +1835,15 @@ Function xTecBrowMtr()
 				Else 
 					
 				End If 	
+				
+
+				lNoHorzScr := .t. 
+
 
 				Return
 
 			End If		
+			*/
 			
 			DoEvents()
 			SysWait(0.02)	
@@ -1870,12 +1901,13 @@ Function xTecBrowMtr()
 					nLimiteCol -= nW1
 
                     If (nColz2 == 1 )
-						nLimiteCol := 0
+						//nLimiteCol := nLarg1
+						nLast1 := 0
 						nAcumz5    := 0
 					End If 	
 
 					nColz2 := nSav1 
-					msginfo('Duplo ' + Str(nColz2) )	
+					//msginfo('Duplo ' + Str(nColz2) )	
 					lDuplo := .f.				
 
 				End If 	
@@ -1908,9 +1940,11 @@ Function xTecBrowMtr()
 			If nColZ2 == 1
 				xInitSxy()
 				lNoHorzScy := .t. 
-				nLimiteCol := 0
+				nLast1 := 0				
+				nLimiteCol := nLarg1				
 				nAcumz5    := 0
-				msginfo('Zerou')
+				//ySelCol( nColz2 )
+				//msginfo('Zerou')
 			End If 
 
 
@@ -2300,6 +2334,7 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 	Local BTstruct2
 	Local hDc
 	Local hDc2
+	Local nTamx1 := xCalcTam()
 	Local lSeta1
 	Local nTYpe
 	Local nLine := 00
@@ -2387,7 +2422,8 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 	For n1 := 1 To Len(aMtrOp)
 
-		cTexto := Hb_Utf8ToStr( aMtrOp[n1][2] ) + Replicate(' ',200)
+		cTexto := Hb_Utf8ToStr( aMtrOp[n1][2])  + '.'
+		//+ Replicate(' ',200)
 		nLinb++
 
 
@@ -2442,7 +2478,13 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 			nTypeText    := BT_TEXT_TRANSPARENT
 			n12 := (Len(cTexto) * nTam1 )
+			n12 := nTamx1 + nCol + 17			
+			//n12 := GetProperty( cBrowserName,'Width') + nCol
 
+
+			//n12 := 650
+
+			
 
 			If (Mod( n1 , 2 ) = 0)
 				nCorBk := WHITE
@@ -3162,44 +3204,21 @@ Static Function ySelItem( nItem1 , lScr1 , lFrente  )
 
 	Default lFrente := .t.
 
-
-
-	//If nClearIt2 > 0
-	//	xLimpSub(cBrowserName,  @nClearIt2 ,  0 , 0 ,   nItemBrwHeight , GetProperty(  cBrowserName,'Width') , -(nLinScrool) )
-	//End If
-
-
 	If (nClearIt2 > 0)
-
 		nIndice1 := Ascan(aMVisible , { |a| a[2] == nClearIt2 })
 
 		If nindice1 > 0
 			nLBar := aMVisible[nindice1][1]
-
 		Else
-			//msginfo('notd ' +  Str(nClearIt2) + '    ' + Str(nIndex1)  )
-
 			If nLinScrool == 0
-				nLBar := nClearIt2
-				//msginfo('notd ' +  Str(nClearIt2) + '    ' + Str(nIndex1) + '   ' + Str(nItemx5) )
+				nLBar := nClearIt2			
 			End If
-
-
 		End If
-
-
 		BT_ClientAreaInvalidateRect( cBrowserName , ( (nLBar - 1) * nItemBrwHeight )        , 0 , GetProperty( cBrowserName,'Width') ,  nItemBrwHeight   , .t. )
 
 	Else
 
 	End If
-
-
-
-
-	//nItemx5 := nItem
-
-
 
 	If nItem1 > 0
 		nClearIt2 := nItem1
@@ -3209,18 +3228,8 @@ Static Function ySelItem( nItem1 , lScr1 , lFrente  )
 
 	If nLinScrool > 0
 		nRow1 := -(nLinScrool)
-	End If
-
-	//nSelLine := nItemx5
-
-	//nLinhaBarra
-
-
-
-
+	End If	
 	nSelLine := nItem1
-
-	//msginfo(Str(nSelLine))
 
 	If (nItem1 > 0)
 
@@ -3228,34 +3237,6 @@ Static Function ySelItem( nItem1 , lScr1 , lFrente  )
 		BT_ClientAreaInvalidateRect( cBrowserName,  ( (nLinhaBarra - 1 ) * nItemBrwHeight) - nRow1    , 0 , GetProperty( cBrowserName,'Width')  ,  nItemBrwHeight   , .t. )
 
 	End If
-
-
-
-	/*	
-
-	If (nItem1 > 0)
-
-
-		//nInd1 := Ascan(aMDisplay , { |a|  a[1] == nItem1 })
-
-		If nItem1 > Len(aMDisplay)
-			//Aadd(aMDisplay , { nItemx5 ,   xRetItem(   aMt1[nIndex1]    )  }  )
-			//msginfo(' not F ' + Str(nLinhaBarra) + ' ' + Str(nRow1)     )
-
-
-			BT_ClientAreaInvalidateRect( cBrowserName,  nRow1  +  ( ( nLinhaBarra - 1 ) * nItemBrwHeight)  , 0 , GetProperty( cBrowserName,'Width')  ,  nItemBrwHeight   , .t. )
-
-		Else 	
-			BT_ClientAreaInvalidateRect( cBrowserName,  nRow1  +  ( ( nItem1 - 1 ) * nItemBrwHeight)  , 0 , GetProperty( cBrowserName,'Width')  ,  nItemBrwHeight   , .t. )
-		End If 	
-		
-		//BT_ClientAreaInvalidateRect( cBrowserName,  nRow1  +  ( ( nLinhaBarra - 1 ) * nItemBrwHeight)  , 0 , GetProperty( cBrowserName,'Width')  ,  nItemBrwHeight   , .t. )
-
-
-	End If
-
-	*/
-
 
 	nPerCent := ( nItem1 / nMaxItem1) * 100
 

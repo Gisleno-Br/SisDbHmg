@@ -724,6 +724,8 @@ Return
 
 
 
+
+
 Function xRoleTela( lFrente , nQp1  , lUpdBar1  , lAlterNativo , nConter )
 
     DEFAULT lUpdBar1 := .t. 
