@@ -282,6 +282,7 @@ Function yLimpMode()
 
     lSizeMode := .f. 
     lDragMode := .f. 
+    lDraHighM := .f. 
     nColSel1 := 0
     nColAntx := 0
 
@@ -741,6 +742,8 @@ Function EventHeaMtr()
             lSizeMode := .f.
             lDragMode := .f.
             lAndamento := .f. 
+
+            lDraHighM := .f. 
       
             nColSav1 := 0            
             nColx5 := 0
@@ -860,6 +863,7 @@ Function EventHeaMtr()
                             End If 
       
                             lDragMode := .f. 
+                            lDraHighM := .f. 
                             nColx5 := 0
                             nColMove := 0
                             nColY1   := 0

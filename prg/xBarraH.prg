@@ -794,6 +794,53 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
 Return 
 
 
+Function yRoleTela( lFrente , nQp1  , lUpdBar1  , lAlterNativo , nConter )
+
+    DEFAULT lUpdBar1 := .t. 
+    DEFAULT lAlterNativo := .f. 
+     
+    If !lFrente         
+        If !lAlterNativo    
+            nZ1 := xGetColW1(  nQContador   )
+            nQContador--                        
+        Else 
+            nZ1 := xGetColW1(  nConter   ) 
+        End If     
+
+        yScrollCaM( .f. , .f. , nZ1 )
+        If lUpdBar1
+            yUpdatBha1( nQp1     )	
+        End If    
+        yDcBarH1()                                
+        SysWait(0.02)
+        yDcBarH1eMtr()
+        DO EVENTS 
+        If (nQContador == 0) 
+            nScroxy := 21
+        End If 
+        
+    Else 
+
+        If !lAlterNativo       
+            nQContador++
+            nZ1 := xGetColW1(  nQContador   )
+        Else 
+            nZ1 := xGetColW1(  nConter   )    
+        End If     
+
+        
+        yScrollCaM( .t. , .f. , nZ1 )                            
+        If lUpdBar1
+            yUpdatBha1( nQp1    )	
+        End If     
+        yDcBarH1()                                
+        SysWait(0.02)                                             
+        yDcBarH1eMtr()        
+    End If 
+
+Return 
+
+
 
 
 

@@ -45,7 +45,7 @@
 
 
 
-
+Static nDragColi := 0
 
 Static nLArgura := 0
 Static aMt1 := {}
@@ -107,6 +107,8 @@ Static lTracking135 := .f.
 Static lTracking75 := .f.
 Static lTracking45 := .f.
 Static nHasFocus := 0
+
+Static lDrag_Mode := .f. 
 
 Static nIndex1 := 1
 
@@ -583,6 +585,7 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 		lHasHeader := xHeaderMtr( cHeaderName , aCabecalho , aTamanhos , cParent ,  cBrowserName ,  nLarg1 , aTipos , cTabela , lAtivo1 , lDicionario , nRowIni - 2 , nCol )
 		//msginfo('ok2')
 	End If
+
 
 
 	cBarrah := xBarHMtr( cParent ,  cBrowserName , nRowIni+nAltura1 , nLarg1  ,  nLargX , cBrowserName , ;
@@ -1399,6 +1402,15 @@ Function xTecBrowMtr()
 
 	If (nMsg == WM_MOUSEMOVE)
 
+		If (nHWnd == GetProperty(  cBrowserName , "HANDLE" ))
+			msginfo('z222')
+
+		End If 	
+
+		//yUpdatBha1( nQp1     )	
+		//yDcBarH1()              
+		
+
 
 		If (nHWnd == GetProperty(  cBarraVSombra , "HANDLE" ))
 
@@ -1878,20 +1890,39 @@ Function xTecBrowMtr()
 			nPos2 := xGetInfCw1(   nColz2 , 3  )	
 
 
-			//msginfo(Str(nLargz1) + '   ' + Str(nPos1) + ' '  + Str(nPos2) + '   ' + Str((nLimiteCol -  nAcumz5)) + '  qt ' + Str(nQTotEt) )
+			msginfo(Str(nLargz1) + '   ' + Str(nPos1) + ' '  + Str(nPos2) + '   ' + Str((nLimiteCol -  nAcumz5)) + '  qt ' + Str(nAcumz5) )
+
 
 			If (nPos1 < (nLimiteCol -  nAcumz5) ) //.And. (   nPos2 >= (nLimiteCol -  nAcumz5) )
+				//msginfo('ok2')
+
+				nW1 := nPos1				
+				//nLast1 := nW1
+				yScrollCaM( .f. , .f. , nW1 ) 		
+
+
+				If (nPos2 < nLargz1)
+					yGoBarL()
+					DoEvents()
+					
+					yDcBarH1()
+					msginfo('ok2 222')
+
+				Else 
+
+
+				End If
 			
-				nW1 := xRetPasso(  nQTotEt  , ( (nColZ2 + 1) >= nQtotcol)  )     	
+				//nW1 := xRetPasso(  nQTotEt  , ( (nColZ2 + 1) >= nQtotcol)  )     	
 
-				If nLast1 > 0
-					nW1 := nLast1					
-				End If 
+				//If nLast1 > 0
+					//nW1 := nLast1					
+				//End If 
 											
-				xRoleTela( .f. , -nW1 , .t. , .t. ,  nColZ2 )
-				nLimiteCol -= nW1
-
-
+				//xRoleTela( .f. , -nW1 , .t. , .t. ,  nColZ2 )
+				//nLimiteCol -= nW1
+				
+				/*
 				If (lDuplo)
 
 					nSav1 := nColZ2 
@@ -1911,8 +1942,10 @@ Function xTecBrowMtr()
 					lDuplo := .f.				
 
 				End If 	
+				*/
 
 				lNoHorzScr := .f. 
+
 
 				If (nLast1 > 0)
 					nAcumz5 -= nLast1
@@ -2676,291 +2709,13 @@ Function EventBrowMtr( nHWnd, nMsg, nWParam, nLParam )
 
 
 
-	//IF (_isWindowDefined(cJanObj)) .And. (nHWnd == GetProperty(  cJanObj   , "HANDLE" ))
-	/*
-	
-		If nMsg == WM_MOUSEMOVE
-
-			yLimpBarV()			
-
-			GetCursorPos (@nCol1, @nRow1)
-			ar1 := GetPos_ScreenToClient(   nHWnd , nRow1, nCol1 )
-			hWnd := WindowFromPoint ( ar1[1] , ar1[2])
-
-			If (lHasHeader)				
-				yLimpMode()
-				DoEvents() 
-				yDcBarH1eMtr()
-				DoEvents() 
-				yDragOff()				
-				DoEvents()
-				if yApagueH( cHeaderName )
-					msginfo('yyyy')	
-				End If 	
-
-				//msginfo('ok2')
-			End If 
-
-			If  _isWindowDefined("Win_Msg")
-			   	xHidehint()
-			End If			
-
-			Return 
-
-		End If 
-
-	End If 	
-
-	*/
-
 
 
 
 
 	If (nHWnd == GetProperty(  cBarraVSombra , "HANDLE" ))
 
-		//msginfo('ok2     ')
-
-		/*
 		
-		If (nMsg == WM_LBUTTONUP)			
-
-			If (nHasFocus > 0 )
-				PostMessage(OBTN_Handle( cBarraVfrm , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )												
-				DoEvents()
-				xDcToDEspe()				
-				nHasFocus := 0
-				lTracking75 := .f.					
-				lTracking45 := .t. 			
-				SysWait(0.01)
-			End If 	
-
-
-		End If 	
-
-		If nmsg == WM_LBUTTONDBLCLK
-			//msginfo('lp3333')	
-		End If	
-
-
-		If (nMsg == WM_LBUTTONDOWN) 	
-
-			If nModeBrw = 1
-				lControlOk := .t. 
-				SendMessage( GetFormHandle(cBrowserName)  , WM_KEYDOWN , VK_HOME , 0 )
-				lControlOk := .f. 
-			End If 
-
-			If nModeBrw = 4
-				lControlOk := .t. 
-				SendMessage( GetFormHandle(cBrowserName)  , WM_KEYDOWN , VK_END , 0 )
-				lControlOk := .f. 
-			End If 	
-
-			While( nModeBrw = 3) .And. (!lTracking45)	
-				
-				For i := 1 To 255
-					GetAsyncKeyState(i)
-				Next i				
-			
-				SendMessage( GetFormHandle(cBrowserName)  , WM_KEYDOWN , VK_UP , 0 )				
-				
-				If (GetAsyncKeyState(VK_LBUTTON)) == 0					
-					lTracking45 := .t. 
-				End If 				
-				SysWait(0.03)
-			End 			
-			
-			While (nModeBrw = 6) .And. (!lTracking45)
-				
-				For i := 1 To 255
-					GetAsyncKeyState(i)
-				Next i
-			
-				//SendMessage( GetFormHandle(cBrowserName)  , WM_KEYDOWN , VK_DOWN , 0 )	
-
-				xGoDown()
-
-				
-				If (GetAsyncKeyState(VK_LBUTTON)) == 0					
-					lTracking45 := .t. 
-				End If 										
-
-				SysWait(0.03)
-
-			End  
-
-
-			While (nModeBrw = 5) .And. (!lTracking45)			
-
-				For i := 1 To 255
-					GetAsyncKeyState(i)
-				Next i
-
-				SysWait(0.02)
-				xGoPgDn()				
-				SysWait(0.02)				
-				If (GetAsyncKeyState(VK_LBUTTON)) == 0					
-					lTracking45 := .t. 
-				End If 	
-			End If 
-
-			While (nModeBrw = 2) .And. (!lTracking45)	
-
-				For i := 1 To 255
-					GetAsyncKeyState(i)
-				Next i
-
-				SysWait(0.02)
-				xGoPgUp()
-				SysWait(0.02)					
-				If (GetAsyncKeyState(VK_LBUTTON)) == 0					
-					lTracking45 := .t. 
-				End If 		
-			End 
-
-
-
-			SysWait(0.02)
-			
-			lTracking45 := .f. 
-			//SysWait(0.09)
-			
-		
-		End If 	
-
-
-
-
-		If (nMsg == WM_MOUSEMOVE) 			
-
-			
-			DoEvents()	
-			If (lHasHeader)				
-			
-				SysWait(0.03)
-				yDcBarH1eMtr()
-				SysWait(0.03)
-			
-				yDragOff()				
-				DoEvents()
-			End If 
-
-
-         	GetCursorPos (@nCol, @nRow)
-			ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
-
-			If (ar1[2] > 21) .or. (ar1[2] < 0)				
-				CursorArrow1(nHWnd)
-				DoEvents()	
-				xOffBarVert( nHWnd )				
-				Return 
-			End If 
-
-			nRow1 := ar1[1]
-			nId := 0 
-
-
-			If (nRow1 >= nLimteLin)			
-
-				nL := GetProperty(cBarraVfrm,'Height') - 20
-
-			    If (nRow1 > (nL + 1))
-					If (Len(aMt1) > nTamPag)
-				    	nId := 858						
-					Else
-						nModeBrw := 0	
-					End If 	
-				Else 
-
-					If (nRow1 <= (nLimteLin + 20   ))
-					    nId := 860
-					Else 
-
-						If (Len(aMt1) > nTamPag)							
-					   		nId := 859	
-						Else 
-							nModeBrw := 0		   
-						End If 
-
-					End If 
-
-				End If 	
-			Else 
-				If nRow1 <= 20
-					nId := 855					
-				Else 
-					
-					If (Len(aMt1) > nTamPag)
-						If (nRow1 >= 41) .And. (nRow1 <= 61)
-							nId := 857					
-						Else 
-							If (nRow1 >= 21) .And. (nRow1 <= 40)
-								nId := 856
-							End If 
-						End If 
-					Else 
-						nModeBrw := 0		
-					End	If 
-
-				End If 
-			End If 					
-
-
-			If (nId = 0)			
-			    SysWait(0.01)
-				yLimpBarV()
-				//SysWait(0.01)
-				Return 
-
-			End If 	
-
-
-			If (nRow1 >= 61) .And. (nRow1 <= (GetProperty(cBarraVfrm,'Height') - 61) ) .And. (nId = 0) 							
-				xOffBarVert( nHWnd )
-				Return 
-			End If 
-
-
-			If (nHasFocus > 0) 				
-				If (nId != nHasFocus)									
-					xDcToDEspe()
-					DoEvents() 			
-					lTracking75 := .f. 		
-					lTracking135 := .f.
-					nHasFocus := 0							
-				End If 					
-			End If 
-
-
-			
-			If (nId > 0) .And. (!lTracking75)			
-			
-				nModeBrw := yDoHint(   nId  ,  , .t.  )			
-				CursorHand1( nHWnd  )	
-				
-				//msginfo('222222 ' + Str(nId))
-			
-				nHasFocus := nId		
-				BT_ClientAreaInvalidateAll( cBarraVfrm )
-				DoEvents() 
-				xDcToDEspe()				
-				DoEvents()
-		
-				lTracking135 := .t.
-				lTracking75  := .t.
-
-				SysWait(0.03)
-		
-			End If 	
-
-			
-
-				
-
-			
-		End If 
-		*/
 
 	End If
 
@@ -3000,7 +2755,22 @@ Function EventBrowMtr( nHWnd, nMsg, nWParam, nLParam )
 
 		If nMsg == WM_MOUSEMOVE
 
-			//msginfo('d2')
+			If lDrag_Mode			
+
+				GetCursorPos (@nCol, @nRow)
+				aR1 := GetPos_ScreenToClient(   GetFormHandle(  cBrowserName  )  , nRow, nCol )
+
+
+
+
+				Return 
+
+
+
+
+			End If 
+
+
 
 			If (lHasHeader)
 
@@ -3040,59 +2810,15 @@ Function EventBrowMtr( nHWnd, nMsg, nWParam, nLParam )
 
 		End If
 
-
-
-		/*
-		If nMsg == WM_LBUTTONDOWN
-
-			nItem := xGetPos(cEspelhoBrw)
-
-			
-			
-			If (nItem > Len(aMt1))
-				Return 	
-			End If 		
-
-			
-			nRow1 := -(nLinScrool)
-			If nClearIt2 > 0
-				xLimpSub(cBrowserName ,  @nClearIt2 ,  nItemx5 , 0 ,   nItemBrwHeight , GetProperty(  cBrowserName,'Width')  , -(nLinScrool) )
-			End If
-			nItemx5 := 	nItem
-
-			
-			nIndex1 := nItemX5 
-
-			nClearIt2 := nItemx5
-			If (nItemx5 > 0)
-				BT_ClientAreaInvalidateRect(cBrowserName ,  nRow1  +  ( ( nItemx5 - 1 ) * nItemBrwHeight)  , 0 , GetProperty( cBrowserName,'Width')  ,  nItemBrwHeight   , .t. )
-			End If
-			nSelLine := nItem
-			
-
-			nInd1 := Ascan(  aMVisible , { |a|  a[2] == nItemX5   }   )
-
-			If nind1 > 0
-				nLinhaBarra := aMVisible[   nInd1  ][1]								
-				//MSGINFO(Str(nLinhaBarra))
-			End If
-			
-
-
-			lHitb := (nLinhaBarra = nTamPag)
-			lHitt := (nLinhaBarra = 1)			
-			DoEvents()
-			xDcToDc()			
-			DoEvents()
-
-
-		End If
-
-		*/
-
 	End If
 
 Return
+
+
+Function SetBrwDrgM(lOn1 , nColIni )
+	lDrag_Mode := lOn1 
+	nDragColi  := nColIni
+Return 	
 
 
 
