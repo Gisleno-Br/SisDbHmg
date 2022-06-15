@@ -51,6 +51,10 @@ Static nQContador2 := 1
 Static lDraHighM := .f. 
 Static lChaveY := .f. 
 
+Static nPAssoy := 0
+
+Static aMtrVolta := {}
+
 
 
 
@@ -70,9 +74,10 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
 
     lEnabledy := lDispo1
 
-    nQ1 := yCalcEtap1()
+    nQ1 := xH_LQtot()
 
 
+    
 
     nColTotal := nTotCol   
     //nTamBarra := nLargJanela - (    Abs(nLargCalc - nLargJanela)     )
@@ -80,13 +85,13 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
 
     nTamBarra := Int((nLargJanela * (   nLargJanela/xCalcTam()     )    )) - 20
 
+    nPassoy := Int( (GetProperty(  cBrowserName , 'Width'  ) - nTamBarra ) / nQ1 )
+
+
+
+    msginfo(Str(nPAssoy) + '  ' + Str(nQ1))
+
     cHead1 := cHeaderN1   
-
-    //altd   
-    //RemoveHandler('EventBrowMtr')
-    //RemoveHandler('EventHeaMtr')
-    //RemoveHandler('EVENTHNDCLI')    
-
 
         
     DEFINE WINDOW &cJanName ;
@@ -160,6 +165,10 @@ Function ySetBarTam(nTamanho , nQz)
     Do Events 
 
 REturn 
+
+
+Function Xh_RetPasy()
+Return nPassoy
 
 
 Static Function xShowHint( nRow1 , nCol1 , cMsg )
@@ -632,10 +641,32 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
                 While (nModeBut = 1) .And. (!lTracking26)           
 
+
                     If (GetAsyncKeyState(VK_LBUTTON)) == 0					
                         SysWait(0.03)                                   
                         Exit 
                     End If                        
+
+
+                     nInd1 := Ascan(aMtrVolta , { |a| a[1] == nQContador }) 
+                     
+                    SysWait(0.01)
+
+                     If (nInd1 > 0)
+
+                         If (nQContador > 0) 
+                             xRoleTela( .f. , -(Xh_RetPasy()) , .t.   ,   aMtrVolta[ nInd1][3]  ,  aMtrVolta[ nInd1][2] )    
+                         Else 
+                             xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
+                         End If 
+
+
+                     Else 
+
+                         msginfo('lp2')
+                     End If 
+
+                    /*
                     
                     nP1 := xRetPasso(  nQ1 , ( (nQContador + 1) >= nQ1)  )                                         
                         
@@ -645,7 +676,9 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                         xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
                     End If     
 
-                    SysWait(0.05)
+                    */
+
+                    //SysWait(0.05)
 
                     For i := 1 To 255
                         GetAsyncKeyState(i)
@@ -669,20 +702,33 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                 DO EVENTS              
                    
                 While (nModeBut = 2) .And. (!lTracking26)                                 
+                    
+                    //msginfo('ok22222')
 
                     If (GetAsyncKeyState(VK_LBUTTON)) == 0					
                         SysWait(0.03)                                   
                         Exit 
                     End If           
-                    
-                    nP1 := xRetPasso(  nQ1 , ( (nQContador + 1) >= nQ1) )                    
-                    
+
+                    nSaldo1 := xH_ColResto( xH_RtLimite() )
+                    aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)
+               
+                    SysWait(0.04)
 
                     If (nQContador < nQ1)
-                        xRoleTela( .t. , nP1 )                         
+                        xRoleTela( .t. , Xh_RetPasy() , .t.   ,  aMInfo[1] , aMInfo[2] )                                                                                       
+
+                        nInd1 := Ascan(aMtrVolta , { |a| a[1] == nQContador }) 
+
+                        If nInd1 == 0                           
+                            Aadd(aMtrVolta , { nQContador , aMInfo[2] ,  aMInfo[1] }  )
+                        Else 
+                            aMtrVolta[ nInd1][2] := aMInfo[2] 
+                            aMtrVolta[ nInd1][3] := aMInfo[1] 
+                        End If 
+                       
                     Else 
-                        xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar.zz"))
-                        SysWait(0.05)
+                        xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar.zz"))                     
                     End If     
 
                     For i := 1 To 255
@@ -690,6 +736,7 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     Next i
 
                     HMG_CleanLastMouseMessage()                        
+                    
 
                 Enddo 
 
@@ -859,49 +906,40 @@ Return
 
 
 
-
-Function xRoleTela( lFrente , nQp1  , lUpdBar1  , lAlterNativo , nConter )
+Function xRoleTela( lFrente , nQp1  , lUpdBar1  , nConter , nQSkip )
 
     DEFAULT lUpdBar1 := .t. 
-    DEFAULT lAlterNativo := .f. 
+    //DEFAULT lAlterNativo := .f. 
      
     If !lFrente         
-        If !lAlterNativo    
-            nZ1 := xGetColW1(  nQContador   )
-            nQContador--                        
-        Else 
-            nZ1 := xGetColW1(  nConter   ) 
-        End If     
 
-        yScrollCaM( .f. , .f. , nZ1 )
+        nQContador -= nQSkip
+        yScrollCaM( .f. , .f. , nConter )
+
         If lUpdBar1
             yUpdatBha1( nQp1     )	
         End If    
+
         yDcBarH1()                                
         SysWait(0.02)
         yDcBarH1eMtr()
-        DO EVENTS 
+        DoEvents()
         If (nQContador == 0) 
             nScroxy := 21
         End If 
         
     Else 
-
-        If !lAlterNativo       
-            nQContador++
-            nZ1 := xGetColW1(  nQContador   )
-        Else 
-            nZ1 := xGetColW1(  nConter   )    
-        End If     
-
-        
-        yScrollCaM( .t. , .f. , nZ1 )                            
+    
+        nQContador += nQSkip
+                
+        yScrollCaM( .t. , .f. , nConter )                            
         If lUpdBar1
             yUpdatBha1( nQp1    )	
         End If     
         yDcBarH1()                                
         SysWait(0.02)                                             
         yDcBarH1eMtr()        
+
     End If 
 
 Return 

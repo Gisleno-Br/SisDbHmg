@@ -25,6 +25,7 @@ FUNCTION LoadFitros( cTabela1 )
    LOCAL oQuery
    LOCAL oRo
    LOCAL cCab1 :=  ''
+   Local l_Ok := .t. 
 
 
    
@@ -172,9 +173,6 @@ FUNCTION LoadFitros( cTabela1 )
    //RemoveHandler( 'EventConsu' )  
 
    RemoveHandler( "EventBrowser" )
-
-
-
    xInitFiltr()
 
 
@@ -199,30 +197,25 @@ FUNCTION LoadFitros( cTabela1 )
    Next   
 
    
-   xBrowserMtr( 51 ,  aMtrFiltr , 'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' , 'Campo 4'} , ;
-      {10,50,60 , 75 , 120,35,78  }  , {'C' , 'C' , 'C' , 'C' , 'C' ,'C' ,'C'} , .f. , .t. , 150 )
+   l_Ok := xBrowserMtr( 51 ,  aMtrFiltr , 'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' , 'Campo 4'} , ;
+      {10,50,60 , 75 , 60 ,35,75  }  , {'C' , 'C' , 'C' , 'C' , 'C' ,'C' ,'C'} , .f. , .t. , 150 )
 
    
    //_ShowWindow('LstBoxFiltro')
 
    BringTop('xProcFiltro')  
 
-
    
    //xWaitY( 'fFiltrosCad' )
 
-   
-   Do Events 
-   _ShowWindow('fFiltrosCad')
-   Do Events 
-
-   
-   _ShowWindow('LstBoxFiltro')
-
-   
-   xInitBrw()
-
-   DoEvents()
+   If (l_Ok)    
+      Do Events 
+      _ShowWindow('fFiltrosCad')
+      Do Events       
+      _ShowWindow('LstBoxFiltro')      
+      xInitBrw()
+      DoEvents()
+   End If    
 
    /*
    Do Events 

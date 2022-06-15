@@ -380,6 +380,11 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 	If Len(aCabecalho) > 0
 		lHasHeader := xHeaderMtr( cHeaderName , aCabecalho , aTamanhos , cParent ,  cBrowserName ,  nLarg1 , aTipos , cTabela , lAtivo1 , lDicionario , nRowIni - 2 , nCol )
 		//msginfo('ok2')
+
+		If !lHasHeader
+			Return .f. 
+		End If 
+
 	End If
 
 
@@ -582,7 +587,7 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 
     
 
-Return
+Return .t. 
 
 
 Function ySetTam( aTamanhos )
@@ -945,6 +950,7 @@ Return nC1
 
 Function xBarInicio()
 REturn (nColEsquerda == 1)
+
 
 
 Function xRetPasso(  nQt11 , lFim )
@@ -1941,13 +1947,7 @@ Static Function xGoUp( lMsg  )
 	Local nItem7
 
 	Default lMsg := .f.
-    
-     //Altd()
-
-    //RemoveHandler('EventBrowMtr')
-    //RemoveHandler('EventHeaMtr')
-
-
+  
 
 	If (l_Hitt) .And. (!lMsg)
 		xDialog( Hb_AnsiToOem("Primeiro Registro Posicionado.") , .f. )
@@ -3474,6 +3474,12 @@ Static Function xDcToDc()
 	BT_DeleteDC (BTstruct1)
 	BT_DeleteDC (BTstruct2)
 	BT_ClientAreaInvalidateAll (cEspelhoBrw)
+
+	
+    //hBit201 := BT_BitmapCaptureWindow ( cBrowserName , 0 , 0, 3052 , Height1)
+    //BT_BitmapSaveFile (hBit201  , "TEla12.bmp")
+            
+
 
 Return
 

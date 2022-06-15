@@ -978,11 +978,9 @@ Function CheckRet( cVar )
 
 	Local lOk := .t.
 
-	//msginfo( cVar )
 
 	If ValType( cVar  ) == 'L'
-		lOk := cVar 		
-		//msginfo('L')
+		lOk := cVar 				
 	 End If   
 
 Return (lOk)	 

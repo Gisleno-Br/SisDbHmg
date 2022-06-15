@@ -106,6 +106,10 @@ Static hBit201 := Nil
 
 Static nQDrag1 := 0
 
+Static nPageScrolH := 1
+
+Static nLimiteAtu := 0
+
 Static lAtuDic  := .t. 
 Static lScrool5 := .t. 
 
@@ -113,6 +117,7 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 
     Local nRowI   := nR1 
     Local nColI   := nC1
+    Local lOk     := .t.
     Local nLarg1  := GetProperty( cBrwName1 , 'Width')
     Local aPos := {0,0,0,0}
 
@@ -121,10 +126,7 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 
     //GetWindowRect (nHWnd, aPos)  
 
-
-
     DEFAULT lAtivo := .t. 
-
     lAtuDic := lDic1 
 
     lEnabled2 := lAtivo
@@ -143,6 +145,8 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
     c_BrowName := cBrwName1
 
     cTable := cTabela
+
+    nLimiteAtu := nLarg1 + 1
     
         
     DEFINE WINDOW &cHName ;
@@ -178,27 +182,27 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
         NOSIZE NOSYSMENU NOCAPTION BACKCOLOR RGB(242,242,242)                 
 
         
-    DEFINE LABEL Label2
-    ROW    0
-    COL    0
-    WIDTH  nLarg1+1 
-    HEIGHT 30
-    VALUE " "
-    FONTNAME "Arial"
-    FONTSIZE 9
-    TOOLTIP ""
-    FONTBOLD .F.
-    FONTITALIC .F.
-    FONTUNDERLINE .F.
-    FONTSTRIKEOUT .F.
-    HELPID Nil
-    VISIBLE .T.
-    TRANSPARENT .T.
-    ACTION Nil
-    AUTOSIZE .F.
-    BACKCOLOR Nil 
-    FONTCOLOR NIL
-    END LABEL
+        DEFINE LABEL Label2
+            ROW    0
+            COL    0
+            WIDTH  nLarg1+1 
+            HEIGHT 30
+            VALUE " "
+            FONTNAME "Arial"
+            FONTSIZE 9
+            TOOLTIP ""
+            FONTBOLD .F.
+            FONTITALIC .F.
+            FONTUNDERLINE .F.
+            FONTSTRIKEOUT .F.
+            HELPID Nil
+            VISIBLE .T.
+            TRANSPARENT .T.
+            ACTION Nil
+            AUTOSIZE .F.
+            BACKCOLOR Nil 
+            FONTCOLOR NIL
+        END LABEL
 
 
     END WINDOW
@@ -208,10 +212,15 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 
     SET WINDOW &cHName TRANSPARENT TO Iif(!lEnabled2 , 167 , 0)      
 
-    xMapCols( aCabecs , aColsTam , aTipsy )         
+    nTotz2 := xMapCols( aCabecs , aColsTam , aTipsy )
+
+    If !CheckRet( nTotz2)         
+       MsgInfo('Algo Deu Errado nas Colunas , Favor Reconfigurar ou Reduzir Tamanhos.')
+       lOk := .f. 
+    End If 
 
 
-Return .t. 
+Return lOk 
 
 
 Static Function SetOrdGrid( nColuna1 , lAsc1 )
@@ -445,15 +454,13 @@ Return Len(aMapsCol)
 
 
 
+
+
 Function xGetColW1(   nColuna )
 
     
-     //Altd()
-     /*
-    RemoveHandler('EventBrowMtr')
-    RemoveHandler('EventHeaMtr')
-    RemoveHandler('EVENTHNDCLI')    
-    */
+
+    
 
     If nColuna > Len(aMapsCol)
         msginfo('eror1')
@@ -1154,14 +1161,6 @@ Static Function xTroquePos(nColSele , nColTarget , cCabec1 )
     Local nN1  := aColsTam[nColTarget]
     Local cTp  := aTipsy[nColTarget]
 
-
-     //Altd()
-
-    //RemoveHandler('EventBrowMtr')
-    //RemoveHandler('EventHeaMtr')
-
-
-
     aCabecs[nColTarget] := aCabecs[nColSele]
     aCabecs[nColSele]   := cC1
 
@@ -1343,33 +1342,150 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
         Aadd( aMapsCol , {   aCabs[n1] , nColx , nColx +  nTam + 1 , aTipos1[n1] ,   nTam ,  aTamx1[n1] , nAcum  , nAcum2 }  )
         nColx += nTam 
 
+
+        If (nTam >=  nLimiteAtu)           
+            Return .f.
+        End If 
+
         nAcum += aTamx1[n1]+1
 
         nTam12 += nTam 
 
     Next 
 
-
     //msginfo(Str(     nAcum2 ))
 
-
     
+
      //Altd()
-/*
+
     RemoveHandler('EventBrowMtr')
+    RemoveHandler('EventBarMtr')
     RemoveHandler('EventHeaMtr')
     RemoveHandler('EVENTHNDCLI')    
-    */
+    RemoveHandler('EventHndMain')
+
+    SysWait(0.06)
+
+
+    DoEvents()
 
 
     
+
     BT_DeleteDC (BTstruct )
+
+
+    /*
+
+    nres := xLimColResto( nLimiteAtu )
+
+    nColl1 := xLimCol( nLimiteAtu )
+    nPl1 := xLimPulo(1 , nres)   
+    */
     
+
 
     //msginfo(Str( nTam12 ))
 
 
+
 Return nAcum2  
+
+Function xH_RtLimite()
+Return nLimiteAtu
+
+Function xH_LQtot()
+
+   Local nRet := 0
+   Local n1 := 0
+   Local n2 := 0
+
+
+
+   If (xCalcTam() > nLimiteAtu)
+      nRet := Int(xCalcTam() / nLimiteAtu)
+
+      If (Mod(  xCalcTam() ,nLimiteAtu  ) != 0)
+         nRet++
+      End If 
+
+      n1 := aMapsCol[  Len(aMapsCol) ][3]
+
+
+      n2 := (nRet - 1) * nLimiteAtu
+
+      If (n1 > n2) 
+          nRet++       
+      End If 
+      
+   Else 
+
+   End If 
+
+REturn nRet 
+
+Function xH_CalcPulo(nColIni , nSalto)
+
+    Local n1 := 0
+    Local nz1 := nColIni
+    Local nPulo := 0
+    Local nSoma := 0
+    Local lOk := .f. 
+    Local nQColy := 0
+
+    While (!lOk) .And. ( nZ1 < Len(aMapsCol) )             
+
+           nSoma += aMapsCol[nz1][5]   
+           nQColy++
+
+          If (nSoma >= nSalto)
+             lOk   := .t.              
+          Else 
+
+          End If 
+
+          nZ1++
+
+    Enddo 
+
+    nPulo := nSoma 
+
+
+Return ({nPulo,nqColy}) 
+
+
+
+Function xH_ColResto( nLimite )
+
+  Local nCol1 := 0
+  Local nResto := 0
+  Local nIndice := Ascan(aMapsCol , { |a|  a[3] > nLimite  }  )
+
+  If (nIndice > 0)    
+      nResto := aMapsCol[nIndice][3] - nLimite
+  End if 
+  
+Return nResto
+
+Function Xh_LimCol( nLimite )
+
+  Local nCol1 := 0
+  Local nResto := 0
+  Local nIndice := Ascan(aMapsCol , { |a|  a[3] > nLimite  }  )
+  
+Return nIndice
+
+Function Xh_IncLim()
+    nLimiteAtu += GetProperty( cHeaderSombra , 'Width')
+Return 
+
+
+Function Xh_DecLim()
+    nLimiteAtu += GetProperty( cHeaderSombra , 'Width')
+Return 
+
+
 
 Static Function xRetUnit()
 
