@@ -56,7 +56,7 @@ FUNCTION LoadFitros( cTabela1 )
    
 	DEFINE WINDOW fFiltrosCad ;
 		AT 0,0  ;				
-		WIDTH 747 HEIGHT 350 ;
+		WIDTH 850 HEIGHT 350 ;
 		CHILD TITLE 'xProcFiltro'  ;		
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE  ; 
 		ON PAINT xProcDlg( ThisWindow.Name ,  'Filtros - ' + Alltrim(cTabela) )  				
@@ -190,10 +190,17 @@ FUNCTION LoadFitros( cTabela1 )
 
 
    
-   //aMtrFiltr := {}
+   aMtrFiltr := {}
 
-   xBrowserMtr( 51 ,  aMtrFiltr , 'fFiltrosCad'   , 710  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro '} , ;
-      {10,50,60}  , {'C' , 'C' , 'C' } , .f. , .t. , 150 )
+   For n1 := 1 to 500
+         Aadd( aMtrFiltr , { StrZero(n1,3) , ' Filtro  ' + Strzero(n1,5) , 'adasdsadas'  , '|||||||||||||| AAAAAAAAAAA' , Repl("=",145) , ;
+             'LLPPPPPPPPPPPPPPPPP' , 'GISLENO GUIMARAES JUNIOR '} )
+
+   Next   
+
+   
+   xBrowserMtr( 51 ,  aMtrFiltr , 'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' , 'Campo 4'} , ;
+      {10,50,60 , 75 , 120,35,78  }  , {'C' , 'C' , 'C' , 'C' , 'C' ,'C' ,'C'} , .f. , .t. , 150 )
 
    
    //_ShowWindow('LstBoxFiltro')

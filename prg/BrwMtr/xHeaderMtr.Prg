@@ -282,6 +282,7 @@ Function yLimpMode()
 
     lSizeMode := .f. 
     lDragMode := .f. 
+    lDraHighM := .f. 
     nColSel1 := 0
     nColAntx := 0
 
@@ -445,7 +446,23 @@ Return Len(aMapsCol)
 
 
 Function xGetColW1(   nColuna )
+
+    
+     //Altd()
+     /*
+    RemoveHandler('EventBrowMtr')
+    RemoveHandler('EventHeaMtr')
+    RemoveHandler('EVENTHNDCLI')    
+    */
+
+    If nColuna > Len(aMapsCol)
+        msginfo('eror1')
+    End If 
+
+
+
 Return aMapsCol[ nColuna  ][5] 
+
 
 
 Function xGetInfCw1(   nColuna , nIndice  )
@@ -725,6 +742,8 @@ Function EventHeaMtr()
             lSizeMode := .f.
             lDragMode := .f.
             lAndamento := .f. 
+
+            lDraHighM := .f. 
       
             nColSav1 := 0            
             nColx5 := 0
@@ -844,6 +863,7 @@ Function EventHeaMtr()
                             End If 
       
                             lDragMode := .f. 
+                            lDraHighM := .f. 
                             nColx5 := 0
                             nColMove := 0
                             nColY1   := 0
