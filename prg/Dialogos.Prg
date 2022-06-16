@@ -987,6 +987,7 @@ Return (lOk)
   
 
 
+
 Function xSombra(  cJanela , nRow1  , nCol1 , zBitmap1  )
 
 

@@ -924,8 +924,6 @@ Function yCalcEtap1(   nWid1  )
 	   nLim1 := nWid1
 	End If 
 
-	
-
 
 
     While .t. 
@@ -1217,6 +1215,7 @@ Function xTecBrowMtr()
 
 	If (nMsg == WM_MOUSEMOVE)
 
+
 		
 		GetCursorPos (@nCol, @nRow)
 		ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
@@ -1263,7 +1262,9 @@ Function xTecBrowMtr()
 
 		If (nHWnd == GetProperty(  cBarraVSombra , "HANDLE" ))
 
-			DoEvents()
+			//DoEvents()
+
+			//msginfo('kk2')
 
 			If (lHasHeader)
 
@@ -1272,7 +1273,7 @@ Function xTecBrowMtr()
 				SysWait(0.03)
 
 				yDragOff()
-				DoEvents()
+				//DoEvents()
 			End If
 
 
@@ -1281,7 +1282,7 @@ Function xTecBrowMtr()
 
 			If (ar1[2] > 21) .or. (ar1[2] < 0)
 				CursorArrow1(nHWnd)
-				DOEVENTS()
+			//	DOEVENTS()
 				xOffBarVert( nHWnd )
 				Return
 			End If
@@ -2632,9 +2633,6 @@ Function EventBrowMtr( nHWnd, nMsg, nWParam, nLParam )
 
 			
 
-
-
-
 			If (lHasHeader)
 
 				DoEvents()
@@ -2662,7 +2660,7 @@ Function EventBrowMtr( nHWnd, nMsg, nWParam, nLParam )
 				If  _isWindowDefined("Win_Msg")
 					xHidehint()
 				End If
-				DoEvents()
+				DoEvents()				
 				yOffBarra( cBarrah  )
 
 			Else
@@ -2853,16 +2851,18 @@ Static Function xOffBarVert( nWh1 )
 	BT_ClientAreaInvalidateAll( cBarraVfrm )
 
 	yOffBarra( cBarrah  )
+	
 
 	//xLuzOff( cBarrah )
 	xDcToDEspe()
-	DoEvents()
+	//DoEvents()
+
 
 	If  _isWindowDefined("Win_Msg")
 		xHidehint()
 	End If
 
-	DoEvents()
+	//DoEvents()
 
 
 Return

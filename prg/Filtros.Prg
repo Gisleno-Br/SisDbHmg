@@ -55,6 +55,7 @@ FUNCTION LoadFitros( cTabela1 )
    SET CODEPAGE TO PORTUGUESE
 
    
+   
 	DEFINE WINDOW fFiltrosCad ;
 		AT 0,0  ;				
 		WIDTH 850 HEIGHT 350 ;

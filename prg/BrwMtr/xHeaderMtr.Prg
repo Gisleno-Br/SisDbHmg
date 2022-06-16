@@ -160,6 +160,7 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
         ON PAINT xPaintHeader( ThisWindow.Name , aCabecs  , aColsTam , aTipsy ) 
     END WINDOW
 
+    
 
 
     lScrool5 :=  (nLargTot1 > 0) .And. (nLargTot1 > (nLarg1+1)) 

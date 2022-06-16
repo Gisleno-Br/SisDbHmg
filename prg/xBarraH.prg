@@ -731,7 +731,7 @@ Function EventBarra( nHWnd, nMsg, nWParam, nLParam )
                     End If 
 
 
-                    If (nCol < 18)  
+                    If (nCol < 20)  
                       
                         nAcende := 1
                         BT_ClientAreaInvalidateRect( cBarraName  , 0,0,25,20 , .t.    )
