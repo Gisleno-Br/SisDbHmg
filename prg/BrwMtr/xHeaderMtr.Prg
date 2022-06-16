@@ -1359,6 +1359,7 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
     
 
      //Altd()
+     /*
 
     RemoveHandler('EventBrowMtr')
     RemoveHandler('EventBarMtr')
@@ -1370,6 +1371,7 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
 
 
     DoEvents()
+    */
 
 
     

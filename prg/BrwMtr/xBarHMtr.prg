@@ -84,10 +84,7 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
 
     nPassoy := Int( (GetProperty(  cBrowserName , 'Width'  ) - nTamBarra ) / nQ1 )
 
-
-
-    msginfo(Str(nPAssoy) + '  ' + Str(nQ1))
-
+    
     cHead1 := cHeaderN1   
 
         
@@ -272,7 +269,7 @@ Static Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
     lDesligado := .f. 
 
 
-    If (nAcende1 > 0)
+    If (nAcende1 > 0) .And. ( Alltrim(cObjSelected) = 'BarraH')
 
         If nAcende1 = 2
             yDireita  := BT_BitMapLoadFile('DIREITA1')
@@ -622,39 +619,19 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                         SysWait(0.03)                                   
                         Exit 
                     End If                        
-
-
-                     nInd1 := Ascan(aMtrVolta , { |a| a[1] == nQContador }) 
-                     
+                    nInd1 := Ascan(aMtrVolta , { |a| a[1] == nQContador })                      
                     SysWait(0.01)
 
-                     If (nInd1 > 0)
-
-                         If (nQContador > 0) 
-                             xRoleTela( .f. , -(Xh_RetPasy()) , .t.   ,   aMtrVolta[ nInd1][3]  ,  aMtrVolta[ nInd1][2] )    
-                         Else 
-                             xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
-                         End If 
-
-
-                     Else 
-
-                         msginfo('lp2')
-                     End If 
-
-                    /*
-                    
-                    nP1 := xRetPasso(  nQ1 , ( (nQContador + 1) >= nQ1)  )                                         
-                        
-                    If (nQContador > 0)
-                        xRoleTela( .f. , -nP1 )                                
+                    If (nInd1 > 0)
+                        If (nQContador > 0) 
+                            xRoleTela( .f. , -(Xh_RetPasy()) , .t.   ,   aMtrVolta[ nInd1][3]  ,  aMtrVolta[ nInd1][2] )    
+                        Else 
+                            xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
+                        End If 
                     Else 
-                        xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
-                    End If     
 
-                    */
-
-                    //SysWait(0.05)
+                         
+                    End If                 
 
                     For i := 1 To 255
                         GetAsyncKeyState(i)
@@ -729,34 +706,33 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
             GetCursorPos (@nCol, @nRow)
             ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
             nCol := ar1[2]
-
-            lTracking26 := .f.           
-           
-
+            lTracking26 := .f.       
+            
+            cObjSelected := 'BarraH'
 
             If (nCol > 18) .And. (nCol < (Width - 20)) 
-                yOffBarra( cBarraName  )               
+                yOffBarra( cBarraName  )                              
                 lTracking37 := .f. 
             Else                         
             
                 If (!lTracking37)					
 
-                    nModeBut := 0
-                
+                    nModeBut := 0                
                     SetWindowCursor( nHWnd , IDC_ARROW )
-
                       
+                    
                     If nAcende > 0
                         nAcende := 0
                         BT_ClientAreaInvalidateAll(cBarraName)
                         DoEvents() 
                         yDcBarH1()
                     End If 
+                    
+
 
 
                     If (nCol < 21)                        
-                        nAcende := 1
-                        //BT_ClientAreaInvalidateRect( cBarraName  , 0,0,25,20 , .t.    )
+                        nAcende := 1                        
                         BT_ClientAreaInvalidateAll(cBarraName)
                         nModeBut := 1
                         lTracking26 := .f. 
@@ -766,19 +742,28 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     End If 
 
                     If (nCol >= (Width - 18))                                   
-                        nAcende := 2                                             
 
-                        DoEvents()
                         
+                        yLimpBarV()	                        
+                        DoEvents() 
+
+
+
+                        nAcende := 2                                             
                         BT_ClientAreaInvalidateAll(cBarraName)
                         
                         nModeBut := 2            
                         lTracking26 := .f. 
                         lTracking37 := .t.  
                         DoEvents()                        
-                        yDcBarH1()                                              
+                        yDcBarH1()                          
 
-                        SysWait(0.04)
+
+                        //SysWait(0.04)
+
+
+                        //msginfo('3232 ' + cObjSelected)
+                       
 
                     End If 
 
@@ -801,7 +786,7 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                 Do Events 
                 yDcBarH1()
 
-                // msginfo('ok')
+                //msginfo('ok')
 
                 nAcende := 0
                 BT_ClientAreaInvalidateAll(cBarraName)
@@ -890,23 +875,19 @@ Function yCheckObj()
 REturn 
 
 
+Function yRetAcende()
+Return nAcende
+
 
 Function yOffBarra( cBarName  )
       
     lDragMode := .f. 
-    SetWindowCursor( GetFormHandle( cBarName )  , IDC_ARROW  )
-               
-    //BT_ClientAreaInvalidateAll( cBarName )
-   // DoEvents() 
-    //yDcBarH1()
-     
-
+    //SetWindowCursor( GetFormHandle( cBarName )  , IDC_ARROW  )          
     lDraHighM := .f.
   
     nAcende := 0
     nModeBut := 0
     BT_ClientAreaInvalidateAll(cBarName)
-
 
     yDcBarH1()
 
@@ -916,16 +897,6 @@ Function yOffBarra( cBarName  )
     DoEvents()
 
 REturn 
-
-Static Function xLuzOff( cJanela )
-
-    nAcende   :=  0
-    lDragmode := .f. 
-    BT_ClientAreaInvalidateAll(cJanela)
-
-
-Return 
-
 
 
 Function yEnable1Bh(  lEnabled1 )

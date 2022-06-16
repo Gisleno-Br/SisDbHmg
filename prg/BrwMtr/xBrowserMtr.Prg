@@ -819,6 +819,10 @@ Function xRtColEsq()
 REturn nColEsquerda
 
 
+Function yRetNFocus()
+Return nHasFocus
+
+
 Static Function SetLargx(n1 )
 
 	nLargx := n1
@@ -1201,7 +1205,7 @@ Function xTecBrowMtr()
 				PostMessage(OBTN_Handle( cBarraVfrm , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )
 				DoEvents()
 				xDcToDEspe()
-				nHasFocus := 0
+			//	nHasFocus := 0
 				lTracking75 := .f.
 				lTracking45 := .t.
 				SysWait(0.01)
@@ -1212,17 +1216,36 @@ Function xTecBrowMtr()
 	End If
 
 
-
+	// Arrasto da BarraH
 	If (nMsg == WM_MOUSEMOVE)
 
+		//lTracking75 := .f.
+
+		//msginfo(Str(yRetAcende()))	
+
+
+		If (nHasFocus > 0)	
+			DoEvents()			
+			yLimpBarV()	
+		End If 	
+
+		If (yRetAcende() > 0) .And. (cObjSelected != 'BarraH')
+			//msginfo(cObjSelected)
+			yOffBarra( cBarrah  )
+
+			//msginfo(Str(yRetAcende()))
+
+			
+		End If 	
+
+		DoEvents()
 
 		
 		GetCursorPos (@nCol, @nRow)
 		ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
 		nCol := ar1[2]
 		
-		If (lDrag_Mode)			
-
+		If (lDrag_Mode)	
 			
 			If nColDrag == 0
 				nColDrag := nCol
@@ -1250,10 +1273,6 @@ Function xTecBrowMtr()
 
 			Return 
 
-
-
-
-
 			
 		End If 
 
@@ -1262,9 +1281,9 @@ Function xTecBrowMtr()
 
 		If (nHWnd == GetProperty(  cBarraVSombra , "HANDLE" ))
 
-			//DoEvents()
+		
 
-			//msginfo('kk2')
+			lTracking75 := .f.
 
 			If (lHasHeader)
 
@@ -1277,12 +1296,12 @@ Function xTecBrowMtr()
 			End If
 
 
+
 			GetCursorPos (@nCol, @nRow)
 			ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
 
 			If (ar1[2] > 21) .or. (ar1[2] < 0)
-				CursorArrow1(nHWnd)
-			//	DOEVENTS()
+				CursorArrow1(nHWnd)			
 				xOffBarVert( nHWnd )
 				Return
 			End If
@@ -1338,14 +1357,16 @@ Function xTecBrowMtr()
 
 
 			If (nId = 0)
-				SysWait(0.01)
+				//SysWait(0.01)
+				//msginfo('ok2')
 				yLimpBarV()				
 				Return
 			End If
 
 
-			If (nRow1 >= 61) .And. (nRow1 <= (GetProperty(cBarraVfrm,'Height') - 61) ) .And. (nId = 0)
+			If (nRow1 >= 61) .And. (nRow1 <= (GetProperty(cBarraVfrm,'Height') - 61) ) .And. (nId = 0)				
 				xOffBarVert( nHWnd )
+				//DoEvents()					
 				Return
 			End If
 
@@ -1353,10 +1374,10 @@ Function xTecBrowMtr()
 			If (nHasFocus > 0)
 				If (nId != nHasFocus)
 					xDcToDEspe()
-					DoEvents()
+				//	DoEvents()
 					lTracking75 := .f.
-					lTracking135 := .f.
-					nHasFocus := 0
+					lTracking135 := .f.					
+				//	nHasFocus := 0
 				End If
 			End If
 
@@ -1364,18 +1385,22 @@ Function xTecBrowMtr()
 
 			If (nId > 0) .And. (!lTracking75)
 
+				yOffBarra( cBarrah  )
+
 				nModeBrw := yDoHint(   nId  ,  , .t.  )
 				CursorHand1( nHWnd  )
 				nHasFocus := nId
 				BT_ClientAreaInvalidateAll( cBarraVfrm )
 				DoEvents()
 				xDcToDEspe()
-				DoEvents()
+			//	DoEvents()
+				//msginfo('Here2')
+			
 
 				lTracking135 := .t.
 				lTracking75  := .t.
 
-				SysWait(0.03)
+			//	SysWait(0.03)
 
 			End If
 
@@ -2488,12 +2513,11 @@ Function yLimpBarV()
 	lTracking135 := .f.
 	nHasFocus := 0
 
-	//xRefreshBut()
-
 	DoEvents()
 	BT_ClientAreaInvalidateAll( cBarraVfrm )
 
 	xDcToDEspe()
+	
 	DoEvents()
 
 
@@ -2577,47 +2601,11 @@ Function EventBrowMtr( nHWnd, nMsg, nWParam, nLParam )
 
 	End If
 
-	If (nHWnd == GetProperty(  cBarraVSombra , "HANDLE" ))
-
-		//msginfo('z222')
-         /*
-		If (nMsg == WM_MOUSEMOVE)
-
-			msginfo('z222')
-
-			If lDrag_Mode			
-
-				DoEvents()
-
-				GetCursorPos (@nCol, @nRow)
-				aR1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
-
-				
-				nCol := ar1[2]
-
-				If nColDrag == 0
-					nColDrag := nCol 				
-				End If 
-
-				msginfo('Drg Mode')
-				Return 
-
-
-
-
-			End If 
-		End If 
-		*/
-
-
-
-	End If 	
-
-
+	
 
 	If (nHWnd == GetProperty( cEspelhoBrw , "HANDLE" ))
 
-		//	msginfo('lp2 ' + cEspelhoBrw)
+		
 
 		If nMsg == WM_MOUSELEAVE
 			nClearIt2 := 0
@@ -2630,27 +2618,26 @@ Function EventBrowMtr( nHWnd, nMsg, nWParam, nLParam )
 
 
 		If nMsg == WM_MOUSEMOVE
-
-			
+		
 
 			If (lHasHeader)
-
 				DoEvents()
 				yDcBarH1eMtr()
 				DoEvents()
 				yDragOff()
 				DoEvents()
-
 				DoEvents()
-
 			End If
+
 
 
 			If (nHasFocus > 0)
 
+			
+
 				lTracking75 := .f.
 				lTracking135 := .f.
-				nHasFocus := 0
+			//	nHasFocus := 0
 				SetWindowCursor( nHWnd , IDC_ARROW )
 				xRefreshBut()
 				DoEvents()
@@ -2661,7 +2648,11 @@ Function EventBrowMtr( nHWnd, nMsg, nWParam, nLParam )
 					xHidehint()
 				End If
 				DoEvents()				
+
+				DoEvents()	
 				yOffBarra( cBarrah  )
+
+				
 
 			Else
 			End If
@@ -2674,6 +2665,10 @@ Function EventBrowMtr( nHWnd, nMsg, nWParam, nLParam )
 	End If
 
 Return
+
+Function xSetl75Trk()
+	lTracking75 := .t.
+REturn	
 
 
 
@@ -2842,7 +2837,7 @@ Static Function xOffBarVert( nWh1 )
 
 	lTracking75 := .f.
 	lTracking135 := .f.
-	nHasFocus := 0
+//	nHasFocus := 0
 	nModeBrw := 0
 
 	//xRefreshBut()
@@ -2850,7 +2845,7 @@ Static Function xOffBarVert( nWh1 )
 	DoEvents()
 	BT_ClientAreaInvalidateAll( cBarraVfrm )
 
-	yOffBarra( cBarrah  )
+	//yOffBarra( cBarrah  )
 	
 
 	//xLuzOff( cBarrah )
@@ -2926,8 +2921,6 @@ Static Function xPaintScroll( cJanela )
 
 		If (nItemX5 == nMaxItem1 )
 			BT_DrawFillRoundRect ( hDC , nLimteLin - nAltura ,  2   , Width - 5 , nAltura , 5 ,5 ,   {152 , 152 ,152}   , {152 , 152 ,152}  , 0 )
-
-
 		Else
 
 
@@ -2937,7 +2930,6 @@ Static Function xPaintScroll( cJanela )
 			If (Len(aMt1) <= nTamPag)
 				nFator := 0
 			End If
-
 
 			BT_DrawFillRoundRect ( hDC ,   (nrIni  + nFator )  ,  2   , Width - 5 , nAltura , 5 ,5 ,  {152 , 152 ,152}   , {152 , 152 ,152}  , 0 )
 
@@ -2968,14 +2960,11 @@ Static Function xPaintScroll( cJanela )
 			lFlag := .t.
 		Else
 
-
-
 		End If
 
 		cImg := aImgs[1]
 
-
-		If (nHasFocus == aMtrz1[n1] )
+		If (nHasFocus == aMtrz1[n1] ) .And. (cObjSelected = 'BarraV')
 			cImg := aImgs[2]
 		End If
 
@@ -2987,15 +2976,14 @@ Static Function xPaintScroll( cJanela )
 
 		End If
 
-
 		hBt2 := BT_BitMapLoadFile( cImg   )
 
 		BT_DrawBitmap (hDC  , nLinha  , 0  	, 18  , 18  ,      BT_COPY,   hBt2    )
 		nLinha += 21
 
 		BT_BitmapRelease( hBt2 )
+		//DoEvents()
 
-		DoEvents()
 
 
 	Next

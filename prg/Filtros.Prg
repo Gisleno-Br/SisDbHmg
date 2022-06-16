@@ -210,9 +210,10 @@ FUNCTION LoadFitros( cTabela1 )
    //xWaitY( 'fFiltrosCad' )
 
    If (l_Ok)    
-      Do Events 
+      DoEvents() 
+      //SysWait(0.04)
       _ShowWindow('fFiltrosCad')
-      Do Events       
+      DoEvents()       
       _ShowWindow('LstBoxFiltro')      
       xInitBrw()
       DoEvents()
@@ -227,11 +228,10 @@ FUNCTION LoadFitros( cTabela1 )
    Do Events 
    */
 
-   
-
-
 
    //747
+
+   
 
 
 
