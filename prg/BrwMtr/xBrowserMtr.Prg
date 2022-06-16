@@ -1278,7 +1278,7 @@ Function xTecBrowMtr()
 
 	
 
-
+		//MOUSEMOVE DA BARRAV
 		If (nHWnd == GetProperty(  cBarraVSombra , "HANDLE" ))
 
 		
@@ -1373,8 +1373,7 @@ Function xTecBrowMtr()
 
 			If (nHasFocus > 0)
 				If (nId != nHasFocus)
-					xDcToDEspe()
-				//	DoEvents()
+					xDcToDEspe()				
 					lTracking75 := .f.
 					lTracking135 := .f.					
 				//	nHasFocus := 0
@@ -1392,15 +1391,11 @@ Function xTecBrowMtr()
 				nHasFocus := nId
 				BT_ClientAreaInvalidateAll( cBarraVfrm )
 				DoEvents()
-				xDcToDEspe()
-			//	DoEvents()
-				//msginfo('Here2')
-			
-
+				xDcToDEspe()	
 				lTracking135 := .t.
 				lTracking75  := .t.
 
-			//	SysWait(0.03)
+			
 
 			End If
 

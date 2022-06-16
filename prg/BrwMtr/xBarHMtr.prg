@@ -881,8 +881,7 @@ Return nAcende
 
 Function yOffBarra( cBarName  )
       
-    lDragMode := .f. 
-    //SetWindowCursor( GetFormHandle( cBarName )  , IDC_ARROW  )          
+    lDragMode := .f.     
     lDraHighM := .f.
   
     nAcende := 0
@@ -891,10 +890,8 @@ Function yOffBarra( cBarName  )
 
     yDcBarH1()
 
-    lTracking26 := .f.
+    lTracking26 := .f.    
     lTracking37 := .f.    
-
-    DoEvents()
 
 REturn 
 
