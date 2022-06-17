@@ -187,13 +187,12 @@ FUNCTION LoadFitros( cTabela1 )
    cSalvaJan  :=  cActiveJan
    cActiveJan := 'fFiltrosCad'   
 
-
    
    aMtrFiltr := {}
 
    For n1 := 1 to 500
-         Aadd( aMtrFiltr , { StrZero(n1,3) , ' Filtro  ' + Strzero(n1,5) , 'adasdsadas'  , '|||||||||||||| AAAAAAAAAAA' , Repl("=",145) , ;
-             'LLPPPPPPPPPPPPPPPPP' , 'GISLENO GUIMARAES JUNIOR '} )
+         Aadd( aMtrFiltr , { StrZero(n1,3) , ' Filtro  ' + Strzero(n1,5) , '1adasdsadas'  , '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
+             '1LLPPPPPPPPPPPPPPPPP' , 'GISLENO GUIMARAES JUNIOR '} )
 
    Next   
 

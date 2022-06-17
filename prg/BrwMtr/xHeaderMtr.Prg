@@ -1307,7 +1307,7 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
 
     Local i := 0
     Local nPos1 := 1 
-    Local nColx := 17
+    Local nColx := nColIniBrw
     Local nTam1 
     Local nTam 
     Local BTstruct
@@ -1327,29 +1327,18 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
     For n1 := 1 To Len(aCabs)
         
         nTam1  := aTamx1[n1]
-
         nQAcento := QtAcento(Alltrim(aCabs[n1]) )
         nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
-
         cTexto := Replicate('A' ,  nTam1 + 1  )              
-        n12 := GetTextWidth( hDC , cTexto , hfont )
-        
+        n12 := GetTextWidth( hDC , cTexto , hfont )        
         nTam := n12
-
         nAcum2 += ( (nColx +  nTam + 1 ) - nColx )
-
-        //msginfo(Str( nTam ))
-
         Aadd( aMapsCol , {   aCabs[n1] , nColx , nColx +  nTam + 1 , aTipos1[n1] ,   nTam ,  aTamx1[n1] , nAcum  , nAcum2 }  )
         nColx += nTam 
-
-
         If (nTam >=  nLimiteAtu)           
             Return .f.
         End If 
-
         nAcum += aTamx1[n1]+1
-
         nTam12 += nTam 
 
     Next 
@@ -1373,6 +1362,17 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
     DoEvents()
     */
 
+
+    /*
+
+    RemoveHandler('EventBrowMtr')
+    RemoveHandler('EventBarMtr')
+    RemoveHandler('EventHeaMtr')
+    RemoveHandler('EVENTHNDCLI')    
+    RemoveHandler('EventHndMain')
+
+    SysWait(0.06)
+    */
 
     
 
@@ -1437,7 +1437,12 @@ Function xH_CalcPulo(nColIni , nSalto)
     Local lOk := .f. 
     Local nQColy := 0
 
-    While (!lOk) .And. ( nZ1 < Len(aMapsCol) )             
+
+    If (nColIni == 1)        
+        nSoma := nColIniBrw
+    End If 
+
+    While (!lOk) .And. ( nZ1 < Len(aMapsCol) )      
 
            nSoma += aMapsCol[nz1][5]   
            nQColy++
@@ -1471,6 +1476,21 @@ Function xH_ColResto( nLimite )
   
 Return nResto
 
+
+Function xH_ColVolta( nLimite1  )
+
+  Local nCol1 := 0
+  Local nResto := 0
+  Local nIndice := Ascan(aMapsCol , { |a|  (a[2] <= nLimite1) .And. (a[3] >= nLimite1)  }  )
+
+  If (nIndice > 1) 
+      nResto := nLimite1 - aMapsCol[nIndice][2]
+  Else      
+       nResto := aMapsCol[1][5]+nColIniBrw        
+  End if 
+  
+Return nResto
+
 Function Xh_LimCol( nLimite )
 
   Local nCol1 := 0
@@ -1479,14 +1499,6 @@ Function Xh_LimCol( nLimite )
   
 Return nIndice
 
-Function Xh_IncLim()
-    nLimiteAtu += GetProperty( cHeaderSombra , 'Width')
-Return 
-
-
-Function Xh_DecLim()
-    nLimiteAtu += GetProperty( cHeaderSombra , 'Width')
-Return 
 
 
 
@@ -1619,7 +1631,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
     Local nTam 
     Local nTam2
     Local nCol := -(nColHeader)
-    Local nColx := 17
+    Local nColx := nColIniBrw
     Local hBitOk := BT_BitmapLoadFile ('OKMARK22')
 
 
@@ -1699,7 +1711,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
     Next 
 
-    BT_DrawText ( hDC , 10  , 17+nCol ,   Hb_AnsiToOem(cTexto1) , FONTBROWSER  , FONTBROWSERSIZE , WHITE,  {230,230,230}   , ;
+    BT_DrawText ( hDC , 10  , nColIniBrw+nCol ,   Hb_AnsiToOem(cTexto1) , FONTBROWSER  , FONTBROWSERSIZE , WHITE,  {230,230,230}   , ;
         nTypeText ,	nAlingText, nOrientation )
 
 
@@ -1711,7 +1723,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
     If (nColSele > 0)                 
 
-        nColx := 17        
+        nColx := nColIniBrw        
 
         If (nColHeader > 0)
             nColx += nCol         

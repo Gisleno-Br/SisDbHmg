@@ -18,6 +18,9 @@
 
 
 
+
+
+
 #define QUEBRA Chr(13)+Chr(10)
 
 #define SB_LINEUP           0    // ok
@@ -313,15 +316,17 @@ FUNCTION Main
 	REQUEST HB_LANG_PT
 	REQUEST HB_CODEPAGE_PT850
 
-
 	Private cFormJan := ''
 
+
 	Public nItemSubHeight := 20
+	Public nColIniBrw := 17
 
 	Private nTamSubMenuConsulta := 300
 
 
 	Private nMaxItem1 := 0
+
 
 
 

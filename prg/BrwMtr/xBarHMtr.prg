@@ -28,31 +28,22 @@ Static nLargJan := 0
 Static nScroxy := 21
 Static lEnabledy := .t. 
 Static cBrwName := ''
+Static nTotScr1 := 0
 
 Static nTamBarra := 0
-
 Static nLargCalc := 0
-
 Static nColtotal := 0
-
 Static lDesligado := .f. 
 Static cHead1 := ''
-
 Static nAcumZ1 := 0
-
 Static nEtapas := 0 
-
 Static nMaxBarh := 0
-
 Static nQ1 := 0
 Static nQContador := 0
 Static nQContador2 := 1
-
 Static lDraHighM := .f. 
 Static lChaveY := .f. 
-
 Static nPAssoy := 0
-
 Static aMtrVolta := {}
 
 
@@ -407,24 +398,26 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
     If (_IsWindowDefined(cBarraSombra)) .And.  (nHWnd == GetProperty(  cBarraSombra , "HANDLE" ))		
 
 
+        //MOUSEDOWN BARRAH
         If (nMsg == WM_LBUTTONUP)
             //SysWait(0.02)
 
-            nSaveCol := 0    
-            //yOffBarra(cBarraName)
-            yDcBarH1()
-            lTracking26 := .t. 
-           // SysWait(0.05)
-           
-          
-            lDragMode := .f. 
-          
-            lDraHighM := .f. 
-            SetBrwDrgM( .f. , nSaveCol )               
+            If nModeBut == 0
+                nSaveCol := 0    
+                
+                yDcBarH1()
+                lTracking26 := .t. 
+                lDragMode := .f.           
+                lDraHighM := .f. 
+                SetBrwDrgM( .f. , nSaveCol )       
+            End If 
+
+           // msginfo('ok2')        
           
         End If 
 
 
+        //MOUSEDOWN BARRAH
         If (nMsg == WM_LBUTTONDOWN) 
 
             nColx := nSaveCol
@@ -433,29 +426,24 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
             nZacum := 0
             SysWait(0.02)
 
-            //msginfo('lp2')
-
-
             GetCursorPos (@nCol, @nRow)
             ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
-            nCol := ar1[2]
-
+            nCol := ar1[2]            
 
             If (nModeBut = 0)
                 If (nCol >= nScroxy) .And. ( nCol <= (nScroxy+nWidBarra) )                    
+
+                    If !lFirst
+                        xShowHint( nRow , nCol , 'Click e Arraste Devagar para Navegar entre as Colunas.' )
+                        lFirst := .t. 
+                    End If 
+                    DoEvents()
                     nModeBut := 999
                     lDragMode := .t.
                     nSaveCol := nCol   
-                    SetBrwDrgM( .t. , nSaveCol )               
-                    //msginfo('drg mode')       
+                    SetBrwDrgM( .t. , nSaveCol )                                       
                 End If     
-            End If                 
-
-
-
-
-
-            //nEtapas := 65
+            End If                             
 
             For i := 1 To 255
                 GetAsyncKeyState(i)
@@ -614,24 +602,28 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
                 While (nModeBut = 1) .And. (!lTracking26)           
 
-
                     If (GetAsyncKeyState(VK_LBUTTON)) == 0					
                         SysWait(0.03)                                   
                         Exit 
-                    End If                        
-                    nInd1 := Ascan(aMtrVolta , { |a| a[1] == nQContador })                      
-                    SysWait(0.01)
+                    End If  
 
-                    If (nInd1 > 0)
-                        If (nQContador > 0) 
-                            xRoleTela( .f. , -(Xh_RetPasy()) , .t.   ,   aMtrVolta[ nInd1][3]  ,  aMtrVolta[ nInd1][2] )    
-                        Else 
-                            xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
-                        End If 
-                    Else 
+                    
+                    If (nQContador == 0)
+                        xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
+                        Return 
+                    End If                     
+                    
+                    nSoma1 := xH_ColVolta(  nTotScr1 )
+                    nTotScr1 -= nSoma1                          
 
-                         
-                    End If                 
+                    DoEvents()                    
+                    SysWait(0.04)                               
+                    xRoleTela( .f. , -(Xh_RetPasy()) , .t.   ,  nSoma1 , 1 )    
+
+
+                    If (nQContador == 0)
+                        nTotScr1 := 0
+                    End If                                                                                    
 
                     For i := 1 To 255
                         GetAsyncKeyState(i)
@@ -665,11 +657,16 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     nSaldo1 := xH_ColResto( xH_RtLimite() )
                     aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)
                
-                    SysWait(0.02)
+                    SysWait(0.05)
+
 
                     If (nQContador < nQ1)
-                        xRoleTela( .t. , Xh_RetPasy() , .t.   ,  aMInfo[1] , aMInfo[2] )                                                                                       
 
+                        xRoleTela( .t. , Xh_RetPasy() , .t.   ,  aMInfo[1] , aMInfo[2] )                                                                                       
+                        nTotScr1 += aMInfo[1]
+                        DoEvents()
+
+                      
                         nInd1 := Ascan(aMtrVolta , { |a| a[1] == nQContador }) 
 
                         If nInd1 == 0                           
@@ -699,7 +696,7 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
         End If 
 
       
-
+        //MOUSEMOVE BARRAH
         If (nMsg == WM_MOUSEMOVE) 
                         
             
@@ -718,8 +715,7 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                 If (!lTracking37)					
 
                     nModeBut := 0                
-                    SetWindowCursor( nHWnd , IDC_ARROW )
-                      
+                    SetWindowCursor( nHWnd , IDC_ARROW )                      
                     
                     If nAcende > 0
                         nAcende := 0
@@ -727,9 +723,6 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                         DoEvents() 
                         yDcBarH1()
                     End If 
-                    
-
-
 
                     If (nCol < 21)                        
                         nAcende := 1                        
@@ -741,30 +734,16 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                         yDcBarH1()
                     End If 
 
-                    If (nCol >= (Width - 18))                                   
-
-                        
+                    If (nCol >= (Width - 18))                           
                         yLimpBarV()	                        
                         DoEvents() 
-
-
-
                         nAcende := 2                                             
-                        BT_ClientAreaInvalidateAll(cBarraName)
-                        
+                        BT_ClientAreaInvalidateAll(cBarraName)                        
                         nModeBut := 2            
                         lTracking26 := .f. 
                         lTracking37 := .t.  
                         DoEvents()                        
                         yDcBarH1()                          
-
-
-                        //SysWait(0.04)
-
-
-                        //msginfo('3232 ' + cObjSelected)
-                       
-
                     End If 
 
                 End If 
@@ -813,10 +792,9 @@ Return
 Function xRoleTela( lFrente , nQp1  , lUpdBar1  , nConter , nQSkip )
 
     DEFAULT lUpdBar1 := .t. 
-    //DEFAULT lAlterNativo := .f. 
+    
      
     If !lFrente         
-
         nQContador -= nQSkip
         yScrollCaM( .f. , .f. , nConter )
 
@@ -830,8 +808,7 @@ Function xRoleTela( lFrente , nQp1  , lUpdBar1  , nConter , nQSkip )
         DoEvents()
         If (nQContador == 0) 
             nScroxy := 21
-        End If 
-        
+        End If         
     Else 
     
         nQContador += nQSkip
@@ -843,7 +820,6 @@ Function xRoleTela( lFrente , nQp1  , lUpdBar1  , nConter , nQSkip )
         yDcBarH1()                                
         SysWait(0.02)                                             
         yDcBarH1eMtr()        
-
     End If 
 
 Return 
