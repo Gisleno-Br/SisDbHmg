@@ -1126,7 +1126,7 @@ Function xTecBrowMtr()
 		lDrag_Mode := .f. 
 		nColDrag   := 0
 
-		DoEvents()
+		//DoEvents()
 
 
 		//msginfo('ok2')
@@ -1333,6 +1333,7 @@ Function xTecBrowMtr()
 
 	If (nMsg == WM_LBUTTONDOWN)
 
+		DoEvents()
 
 		If (nHWnd == GetProperty(  cBarraVSombra , "HANDLE" ))	.And. (nModeBrw > 0)
 
@@ -1428,14 +1429,15 @@ Function xTecBrowMtr()
 
 		If (nHWnd == GetProperty( cEspelhoBrw , "HANDLE" ))
 
-			
+			//MSGINFO('LP2')	
 
-			DOEVENTS()
+			DoEvents()
 			nSaveX5 := nItemX5
 			nItem :=  xGetPos(cEspelhoBrw)
 
 
 			If (nItem > Len(aMt1))
+				msginfo('Here2')
 				Return
 			End If
 
@@ -1453,8 +1455,6 @@ Function xTecBrowMtr()
 
 
 			nItemx5 := 	nItem
-
-
 			nClearIt2 := nItemx5
 			
 			nInd1 := Ascan(  aMVisible , { |a|  a[2] == nItemX5   }   )
@@ -1489,10 +1489,7 @@ Function xTecBrowMtr()
 
 			nClearIt2 := nIndex1
 
-			//msginfo( Str(nClearIt2) )
-
-
-			SysWait(0.01)
+			//ysWait(0.01)
 
 
 			lHitb := (nLinhaBarra = nTamPag)
@@ -2139,6 +2136,23 @@ Static Function xRecords( n1 , lFrente  )
 REturn
 
 
+Function xBmpToTrans(cImage)
+
+	Local aRGBcolor   := SELCOR
+	Local hBitmapx    := BT_BitmapCreateNew (nColIniBrw , nItemBrwHeight, aRGBcolor)
+	Local BTstruct3
+	Local hBolaAzul   := BT_BitmapLoadFile(cImage)
+	Local hDC3 		  := BT_CreateDC (hBitmapX , BT_HDC_BITMAP, @BTstruct3 ) 
+
+	BT_DrawBitmapTransparent (hDC3 , 0, 0, nColIniBrw, nItemBrwHeight, BT_SCALE, hBolaAzul , NIL)
+
+
+	BT_DeleteDC (BTstruct3 )
+
+
+
+Return hBitmapx 	
+
 
 
 Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
@@ -2149,6 +2163,7 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 	Local nHandle2
 	Local BTstruct
 	Local BTstruct2
+	Local BTstruct3
 	Local hDc
 	Local hDc2
 	Local nTamx1 := xCalcTam()
@@ -2172,6 +2187,7 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 	Local nLineSeta := nTamSubMenuConsulta
 	Local nLinDrop := 0
 	Local lEnabled := .t.
+	Local bBmpZ := xBmpToTrans( 'BOLAZAZUL1')
 	Local cCor
 	Local nCor
 	Local nLinB := 0
@@ -2185,6 +2201,10 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 	Local hBitOk     := BT_BitmapLoadFile ('NGITRANS')
 	Local hBitExcl   := BT_BitmapLoadFile ('EXCLA1')
+
+	//Local hBolaAzul   := BT_BitmapLoadFile('tra1.Bmp')
+	
+	//BT_BitmapLoadFile ('BOLAZAZUL1')
 
 
 	DEFAULT lBrwEnable := .t.
@@ -2212,7 +2232,7 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 		Else
 			nCor := CORBROWSE
 		End If
-		BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemBrwHeight)    , 0  , Width  ,    nHeightBmp     ,  nCor  , nCor   )
+		//BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemBrwHeight)    , 0  , Width  ,    nHeightBmp     ,  nCor  , nCor   )
 
 	End If
 
@@ -2220,17 +2240,10 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 
 	If (Len(aMtrOp) == 0)
-
 		BT_DrawGradientFillHorizontal ( hDC2 ,  0   , 0  , Width  ,    Height     ,  {193,255,224}  , WHITE   )
-
 		BT_DrawText ( hDC2 , 20  , 80 ,   "Nenhum Registro Localizado."  , 'Arial Black'  , 9 , FONTCOR ,  {193,255,224}    , ;
 			nTypeText ,	nAlingText, nOrientation )
-
-		//BT_DrawBitmap (hDC2  , 10   , 5   , 48  , 48 , BT_STRETCH, hBitExcl)
-
 		BT_DrawBitmapAlphaBlend (hDC2, 10 , 5 , 48  , 48  , 55  , BT_COPY, hBitExcl )
-
-
 		BT_DeleteDC (BTstruct )
 		REturn
 
@@ -2277,17 +2290,39 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 				nFontCor 	 := BLACK
 			End If
 
+
 			If lAtivo1
+				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 0  ,    Width    ,    nItemBrwHeight+5     , SELCOR  , SELCOR  )
+
 				BT_DrawText ( hDC2 , nLine + nRow  , nColIniBrw+nCol ,   cTexto , xFont2  , 9 , nFontCor ,  SELCOR   , ;
 					nTypeText ,	nAlingText, nOrientation )
 			End If
 			
 			If (aMtrOp[n1][1] == nSelLine) .And. (nColScrool == 0)
-				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 00  ,  nColIniBrw ,    nItemBrwHeight - 2     , SELCOR  , SELCOR  )
 
-				BT_DrawBitmapTransparent (hDC2  , nLine  + nRow    , 0   , 16  , nItemBrwHeight , BT_SCALE , hBitOk , Nil )
+				//aRGBcolor := SELCOR
+				//hBitmapx := BT_BitmapCreateNew (nColIniBrw , nItemBrwHeight, aRGBcolor)
 
-				//BT_DrawBitmapTransparent (hDC, Row, Col, Width, Height, Mode_Stretch, hBitmap, aRGBcolor_transp)
+				//hDC3 := BT_CreateDC (hBitmapX , BT_HDC_BITMAP, @BTstruct3 ) 
+
+				//BT_DrawBitmapTransparent (hDC3 , 0, 0, nColIniBrw, nItemBrwHeight, BT_SCALE, hBolaAzul , NIL)
+
+				//BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 00  ,  nColIniBrw ,    nItemBrwHeight     , SELCOR  , SELCOR  )
+
+				BT_DrawBitmap (hDC2  , nLine  + nRow    , 0   , nColIniBrw  , nItemBrwHeight , BT_STRETCH , bBmpZ  )
+
+				//BT_DrawBitmap(hDC3, nLine  + nRow , 0   , nColIniBrw - 3 , nItemBrwHeight, BT_SCALE, hBitmapx  )
+
+				Bt_BitmapSaveFile(  bBmpZ , 'tra2221.Bmp'  )
+
+
+			//	BT_BitmapRelease (hBitmapx)
+  
+  				// Release hDC bitmap  
+  				//BT_DeleteDC (BTstruct3)   
+
+
+
 			End If
 
 		Else
@@ -2332,6 +2367,10 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 	BT_BitmapRelease ( hBitOk )
 	BT_BitmapRelease ( hBitExcl )
+
+	BT_BitmapRelease (bBmpZ)
+
+	//BT_BitmapRelease(hBolaAzul)
 
 
 	//BT_BitmapRelease ( hBitMap2 )
@@ -2728,7 +2767,7 @@ Static Function ySelItem( nItem1 , lScr1 , lFrente  )
 	If (nItem1 > 0)
 
 		nRow1 := 0
-		BT_ClientAreaInvalidateRect( cBrowserName,  ( (nLinhaBarra - 1 ) * nItemBrwHeight) - nRow1    , 0 , GetProperty( cBrowserName,'Width')  ,  nItemBrwHeight   , .t. )
+		BT_ClientAreaInvalidateRect( cBrowserName,  ( (nLinhaBarra - 1 ) * nItemBrwHeight) - nRow1    , 0 , GetProperty( cBrowserName,'Width')  ,  nItemBrwHeight  , .t. )
 
 	End If
 

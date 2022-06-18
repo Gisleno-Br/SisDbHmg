@@ -225,8 +225,7 @@ FUNCTION Main
 	Public aBtnSel := ;
 		{ { nTxColorF, nFrColorF, nBkColorF1, nBkColorF2, nGradDirF }, { nTxColorD, nFrColorD, nBkColorD1, nBkColorD2, nGradDirD }, { nTxColorF, nFrColorF, nBkColorF1, nBkColorF2, 						nGradDirF } }
 	
-	
-	
+		
 
 	Public lVScrool := .f.
 

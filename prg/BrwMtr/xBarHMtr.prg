@@ -847,6 +847,7 @@ Function yCheckObj()
         //msginfo('ok2')
 
     End If 	  
+    
 
 REturn 
 
