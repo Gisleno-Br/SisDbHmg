@@ -2144,7 +2144,7 @@ Function xBmpToTrans(cImage)
 	Local hBolaAzul   := BT_BitmapLoadFile(cImage)
 	Local hDC3 		  := BT_CreateDC (hBitmapX , BT_HDC_BITMAP, @BTstruct3 ) 
 
-	BT_DrawBitmapTransparent (hDC3 , 0, 0, nColIniBrw, nItemBrwHeight, BT_SCALE, hBolaAzul , NIL)
+	BT_DrawBitmapTransparent (hDC3 , 0, 0, nColIniBrw, nItemBrwHeight, BT_SCALE, hBolaAzul , SELCOR)
 
 
 	BT_DeleteDC (BTstruct3 )
