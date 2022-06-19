@@ -2203,7 +2203,6 @@ Function D1Black(cJan,zBitMap)
 		BT_DrawGradientFillVertical (hDC,  nRow  ,  nCol  ,  Width,  Height , BLACK , BLACK)
 
 		BT_DrawBitmapAlphaBlend (hDC, nRow ,  nCol  , nil, nil, 120 , BT_COPY  , zBitmap)
-
 		BT_DeleteDC ( BTstruct )
 
 

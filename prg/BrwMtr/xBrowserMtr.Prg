@@ -2136,18 +2136,19 @@ Static Function xRecords( n1 , lFrente  )
 REturn
 
 
-Function xBmpToTrans(cImage)
+Function xBmpToTrans(cImage , nColor )
 
 	Local aRGBcolor   := SELCOR
-	Local hBitmapx    := BT_BitmapCreateNew (nColIniBrw , nItemBrwHeight, aRGBcolor)
+	Local hBitmapx    := BT_BitmapCreateNew (nColIniBrw , nItemBrwHeight, nColor)
 	Local BTstruct3
 	Local hBolaAzul   := BT_BitmapLoadFile(cImage)
 	Local hDC3 		  := BT_CreateDC (hBitmapX , BT_HDC_BITMAP, @BTstruct3 ) 
 
-	BT_DrawBitmapTransparent (hDC3 , 0, 0, nColIniBrw, nItemBrwHeight, BT_SCALE, hBolaAzul , SELCOR)
+	BT_DrawBitmapTransparent (hDC3 , 0, 0, nColIniBrw, nItemBrwHeight, BT_COPY, hBolaAzul , Nil )
 
 
 	BT_DeleteDC (BTstruct3 )
+
 
 
 
@@ -2188,6 +2189,7 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 	Local nLinDrop := 0
 	Local lEnabled := .t.
 	Local bBmpZ := xBmpToTrans( 'BOLAZAZUL1')
+	Local bBmpa := xBmpToTrans( 'NGITRANS' , SELCOR)
 	Local cCor
 	Local nCor
 	Local nLinB := 0
@@ -2300,20 +2302,32 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 			
 			If (aMtrOp[n1][1] == nSelLine) .And. (nColScrool == 0)
 
-				//aRGBcolor := SELCOR
+
+
+				//aRGBcolor := SELCOR			
+
+				
 				//hBitmapx := BT_BitmapCreateNew (nColIniBrw , nItemBrwHeight, aRGBcolor)
 
 				//hDC3 := BT_CreateDC (hBitmapX , BT_HDC_BITMAP, @BTstruct3 ) 
 
 				//BT_DrawBitmapTransparent (hDC3 , 0, 0, nColIniBrw, nItemBrwHeight, BT_SCALE, hBolaAzul , NIL)
 
-				//BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 00  ,  nColIniBrw ,    nItemBrwHeight     , SELCOR  , SELCOR  )
+				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 00  ,  nColIniBrw ,    nItemBrwHeight     , SELCOR  , SELCOR  )
 
-				BT_DrawBitmap (hDC2  , nLine  + nRow    , 0   , nColIniBrw  , nItemBrwHeight , BT_STRETCH , bBmpZ  )
+				//BT_DrawBitmapTransparent(hDC2  , nLine  + nRow    , 0   , nColIniBrw  , nItemBrwHeight , BT_STRETCH , bBmpZ  , WHITE )
+
+
+
+				BT_DrawBitmap (hDC2  , nLine  + nRow    , 0   , 17  , nItemBrwHeight , BT_SCALE , bBmpa  )
+
+				//BT_DrawBitmapAlphaBlend (hDC2  , nLine  + nRow    , 0   , nColIniBrw  , nItemBrwHeight , 95 , BT_SCALE , bBmpZ  )
+
+				//BT_DrawBitmapAlphaBlend (hDC, nRow ,  nCol  , nil, nil, 120 , BT_COPY  , zBitmap)
 
 				//BT_DrawBitmap(hDC3, nLine  + nRow , 0   , nColIniBrw - 3 , nItemBrwHeight, BT_SCALE, hBitmapx  )
 
-				Bt_BitmapSaveFile(  bBmpZ , 'tra2221.Bmp'  )
+				//Bt_BitmapSaveFile(  bBmpZ , 'tra2221_23.Bmp'  )
 
 
 			//	BT_BitmapRelease (hBitmapx)
@@ -2369,6 +2383,7 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 	BT_BitmapRelease ( hBitExcl )
 
 	BT_BitmapRelease (bBmpZ)
+	BT_BitmapRelease (bBmpa)
 
 	//BT_BitmapRelease(hBolaAzul)
 
