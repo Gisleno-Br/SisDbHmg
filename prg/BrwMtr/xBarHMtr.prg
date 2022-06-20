@@ -45,6 +45,8 @@ Static lDraHighM := .f.
 Static lChaveY := .f. 
 Static nPAssoy := 0
 Static aMtrVolta := {}
+Static lTracking44 := .f. 
+
 
 
 
@@ -74,6 +76,8 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
     nTamBarra := Int((nLargJanela * (   nLargJanela/xCalcTam()     )    )) - 20
 
     nPassoy := Int( (GetProperty(  cBrowserName , 'Width'  ) - nTamBarra ) / nQ1 )
+
+    //msginfo(Str(  nQ1 ))
 
     
     cHead1 := cHeaderN1   
@@ -305,13 +309,11 @@ Static Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
     Else 
 
         If lEnabledy
-
             If (lDragMode) .or. (lDraHighM) 
                 BT_DrawFillRoundRect (hDC2 , 4 , nScroxy   , nWidBarra    , 10 , 5 ,5 ,  {12,134,166}   , {166 , 166 , 166}  , 0)
             Else 
                 BT_DrawFillRoundRect (hDC2 , 4 , nScroxy , nWidBarra  , 10 , 5 ,5 ,  {12,134,166}   , {166 , 166 , 166}  , 0)
-            End If     
-
+            End If    
         End If     
 
     End If     
@@ -343,6 +345,9 @@ Function yIncConter( lFrente )
     End If 
 
 REturn     
+
+Function yRetContador()
+REturn nQContador
 
 Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
@@ -399,8 +404,7 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
 
         //MOUSEDOWN BARRAH
-        If (nMsg == WM_LBUTTONUP)
-            //SysWait(0.02)
+        If (nMsg == WM_LBUTTONUP)           
 
             If nModeBut == 0
                 nSaveCol := 0    
@@ -410,9 +414,8 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                 lDragMode := .f.           
                 lDraHighM := .f. 
                 SetBrwDrgM( .f. , nSaveCol )       
-            End If 
-
-           // msginfo('ok2')        
+            
+            End If            
           
         End If 
 
@@ -445,154 +448,11 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                 End If     
             End If                             
 
-            For i := 1 To 255
-                GetAsyncKeyState(i)
-            Next i
+//            For i := 1 To 255
+  //              GetAsyncKeyState(i)
+    //        Next i
 
-            /*
-           
-            While (lDragMode) .And. (!lTracking26)
-
-                // Do Events
-
-                GetCursorPos (@nCol, @nRow)
-                ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
-                nColx := ar1[2]
-                nLinx := ar1[1]
-
-                lOk := .f.                    
-
-                If !lFirst
-                    xShowHint( nRow , nCol , 'Click e Arraste Devagar para Navegar entre as Colunas.' )
-                    lFirst := .t. 
-                End If 
-
-                If ((GetAsyncKeyState(VK_LBUTTON)) == 0) .And. ( _isWindowDefined(cBarraName)  )					
-
-                    yOffBarra(cBarraName)
-                    yDcBarH1()
-                    lTracking26 := .t. 
-                    Do Events          
-                    //msginfo('22')        
-                End If 	
-                    
-
-                If (nColx != nColAnt)
-                    If (nColx > nColAnt)        
-                            
-                        If nLinAnt != 0
-                            If (Abs(nLinAnt - nLinx) >= 10)
-                                lTracking26 := .t. 
-                                Do Events          
-                                Exit                                  
-                            End If  
-                        End If     
-
-                                                       
-                        If ((nColx - nColAnt) >= 1  )                               
-
-                            If (nQContador > nQ1)
-                                xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar. " + Str(nQContador) + '  ' + Str(nQ1)))                                
-                                Exit
-                            End If         
-
-                                  
-                            nAcumZ1  += (nColx - nColAnt)
-                            nColAnt  := nColx      
-                            nLinAnt  := nLinx                           
-                            nW1 := xRetPasso(  nQ1  , ( (nQContador + 1) >= nQ1)  )                                                         
-
-
-                            If (nAcumZ1 >= nW1 )                                                                      
-                                nColDrag += nW1
-                                nScroxY  += nW1                                
-                                xRoleTela( .t. , nW1 , .f.  )
-                                
-                               // msginfo('ok2')
-                                nAcumZ1 := 0                                
-                            End If                                                                                       
-                            
-
-                            SysWait(0.01)
-                            BT_ClientAreaInvalidateAll(cBarraName)                                      
-                            yDcBarH1()                                                                
-
-                            yDcBarH1eMtr()
-                            DO EVENTS                               
-
-                        End If           
-
-                    Else 
-                            
-
-                        If ( Abs(nColAnt - nColx) ) >= 1
-
-                            If (nQContador == 0)
-                                xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder..."))
-                                Exit
-                            End If 
-
-                                    
-                            If nLinAnt != 0
-                                If (Abs(nLinAnt - nLinx) >= 10)
-                                    lTracking26 := .t. 
-                                    Do Events          
-                                    Exit                                  
-                                End If  
-                            End If                             
-
-                            nAcumZ1  += Abs(nColAnt - nColx)   
-                            nColAnt  := nColx      
-                            nLinAnt  := nLinx                           
-                            nW1 := xRetPasso(  nQ1  , ( (nQContador + 1) >= nQ1)  )                                                         
-
-                            If (nAcumZ1 >= nW1 )                                                                                                      
-                                nColDrag -= nW1
-                                nScroxY  -= nW1                                
-                                xRoleTela( .f. , nW1 , .f.  )
-                                nAcumZ1 := 0                                
-                            End If 
-
-
-                            BT_ClientAreaInvalidateAll(cBarraName)                                      
-                            yDcBarH1()                                         
-
-                            Do Events
-                            yDcBarH1eMtr()
-                            DO EVENTS 
-                      
-                        Else 
-
-                        End If     
-                       
-                    End If 
-
-
-                    If (lOk) .And. (!lTracking26)                             
-                        SysWait(0.01)
-                    End If     
-
-                      
-                End If   
-
-                For i := 1 To 255
-                    GetAsyncKeyState(i)
-                Next i
-                    
-                                                                   
-
-            Enddo  
-
-            nZacum := 0
-
-            If lFirst
-                lDragMode := .f.                            
-                lTracking26 := .f.            
-                lTracking37 := .f.            
-                lFirst := .f.         
-            End If 
-
-            */
+            
             
             For i := 1 To 255
                 GetAsyncKeyState(i)
@@ -608,6 +468,12 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     End If  
 
                     
+                    //xDoScrolV( .f. , nQContador , @nTotScr1  , nQ1 )
+
+                    
+                    xDoScrolV( .f. )
+
+                    /*
                     If (nQContador == 0)
                         xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
                         Return 
@@ -630,6 +496,8 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     Next i
 
                     HMG_CleanLastMouseMessage()                      
+                    */
+
                 
                 Enddo 
 
@@ -654,28 +522,20 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                         Exit 
                     End If           
 
+
+                    xDoScrolV( .t. )
+
+                    /*
+
                     nSaldo1 := xH_ColResto( xH_RtLimite() )
                     aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)
                
                     SysWait(0.05)
 
-
                     If (nQContador < nQ1)
-
                         xRoleTela( .t. , Xh_RetPasy() , .t.   ,  aMInfo[1] , aMInfo[2] )                                                                                       
                         nTotScr1 += aMInfo[1]
-                        DoEvents()
-
-                      
-                        nInd1 := Ascan(aMtrVolta , { |a| a[1] == nQContador }) 
-
-                        If nInd1 == 0                           
-                            Aadd(aMtrVolta , { nQContador , aMInfo[2] ,  aMInfo[1] }  )
-                        Else 
-                            aMtrVolta[ nInd1][2] := aMInfo[2] 
-                            aMtrVolta[ nInd1][3] := aMInfo[1] 
-                        End If 
-                       
+                        DoEvents()       
                     Else 
                         xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar.zz"))                     
                     End If     
@@ -685,6 +545,7 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     Next i
 
                     HMG_CleanLastMouseMessage()                        
+                    */
                     
 
                 Enddo 
@@ -698,8 +559,6 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
       
         //MOUSEMOVE BARRAH
         If (nMsg == WM_MOUSEMOVE) 
-                        
-            
             GetCursorPos (@nCol, @nRow)
             ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
             nCol := ar1[2]
@@ -707,12 +566,26 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
             
             cObjSelected := 'BarraH'
 
-            If (nCol > 18) .And. (nCol < (Width - 20)) 
-                yOffBarra( cBarraName  )                              
-                lTracking37 := .f. 
+            If (nCol > 18) .And. (nCol < (Width - 20))          
+                If (!lTracking44)
+
+                    If !lDragMode
+                        DoEvents()
+                        lDraHighM := .f.                     
+                        DoEvents()						                                  
+                    End If                 
+
+                    yOffBarra( cBarraName  )                              
+                    lTracking37 := .f. 
+                    lTracking44 := .t. 
+
+                End If 
+
             Else                         
             
                 If (!lTracking37)					
+
+                    lTracking44 := .f. 
 
                     nModeBut := 0                
                     SetWindowCursor( nHWnd , IDC_ARROW )                      
@@ -754,22 +627,21 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
             If (nModeBut = 0)
 
+                lDraHighM := .f.
+
                 If (nCol >= nScroxy) .And. ( nCol <= (nScroxy+nWidBarra) )                                        
-                    lDraHighM := .t.
+                    If ar1[1] <= 20
+                        lDraHighM := .t.                        
+                    End If     
                 Else 
                     lDragMode := .f.
                     lFirst    := .f. 
-                End If                 
-
-                BT_ClientAreaInvalidateAll( cBarraName )
-                Do Events 
-                yDcBarH1()
-
-                //msginfo('ok')
-
+                End If                       
                 nAcende := 0
                 BT_ClientAreaInvalidateAll(cBarraName)
 
+                DoEvents() 
+                yDcBarH1()
                 lTracking26 := .f.
                 lTracking37 := .f. 
 
@@ -786,6 +658,57 @@ Function xInitSxy()
     nScroxy := 21
 Return 
 
+
+
+Function xDoScrolV( lFrente , lAtuBar )
+
+    //, nQCont1 , @nTotY1  , nQTot1  )
+
+    Local nSaldo1 := xH_ColResto( xH_RtLimite() )
+    Local aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)
+    Local nSoma1 := 0
+
+    DEFAULT lAtuBar := .t. 
+               
+    SysWait(0.05)
+
+    If lFrente
+        If (nQContador < nQ1)
+            xRoleTela( .t. , Xh_RetPasy() ,  lAtuBar   ,  aMInfo[1] , aMInfo[2] )                                                                                       
+            nTotScr1 += aMInfo[1]
+            DoEvents()       
+        Else 
+            xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar.zz"))                     
+        End If     
+    Else 
+
+        If (nQContador == 0)
+            xDialog( Hb_AnsiToOem("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
+            Return 
+        End If                     
+                    
+        nSoma1 := xH_ColVolta(  nTotScr1 )
+        nTotScr1 -= nSoma1                          
+
+        DoEvents()                    
+        SysWait(0.04)                               
+        xRoleTela( .f. , -(Xh_RetPasy()) ,  lAtuBar    ,  nSoma1 , 1 )    
+
+
+        If (nQContador == 0)
+            nTotScr1 := 0
+        End If                                                                                    
+
+        For i := 1 To 255
+            GetAsyncKeyState(i)
+        Next i
+
+        HMG_CleanLastMouseMessage()                              
+
+    End If
+
+
+REturn 
 
 
 
@@ -837,11 +760,11 @@ Function yCheckObj()
             If !lDragMode		
                 yOffBarra(   cBarraName )
             End If     
-            SysWait(0.02)		
+            //SysWait(0.02)		
 
             yApagueH( cHead1 )
+            DoEvents()
 
-            DO EVENTS
         End If             
 
         //msginfo('ok2')
@@ -863,12 +786,16 @@ Function yOffBarra( cBarName  )
   
     nAcende := 0
     nModeBut := 0
+
+    
     BT_ClientAreaInvalidateAll(cBarName)
 
     yDcBarH1()
 
     lTracking26 := .f.    
     lTracking37 := .f.    
+
+    
 
 REturn 
 

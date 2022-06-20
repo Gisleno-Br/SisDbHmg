@@ -102,6 +102,7 @@ Static nSave1 := 0
 Static aMVisible := {}
 Static nLinhaBarra := 1
 Static nColScrool := 0
+Static nAcumP  := 0
 
 Static nLargTotal := 0
 Static lNoHorzScr := .f.
@@ -1125,11 +1126,10 @@ Function xTecBrowMtr()
 
 		lDrag_Mode := .f. 
 		nColDrag   := 0
+			
+		yOffBarra( cBarrah  )			
+		DoEvents()	
 
-		//DoEvents()
-
-
-		//msginfo('ok2')
 
 		If (nHWnd == GetProperty(  cBarraVSombra , "HANDLE" ))
 			
@@ -1150,14 +1150,15 @@ Function xTecBrowMtr()
 	// Arrasto da BarraH	
 	If (nMsg == WM_MOUSEMOVE)
 
+		//msginfo('ok2')
 	
-		If (nHasFocus > 0)	
+		If (nHasFocus > 0) .or. (!lDrag_Mode)	
 			DoEvents()			
 			yLimpBarV()	
 		End If 	
 
 		If (yRetAcende() > 0) .And. (cObjSelected != 'BarraH')			
-			yOffBarra( cBarrah  )			//msginfo(Str(yRetAcende()))			
+			yOffBarra( cBarrah  )			
 		End If 	
 
 		DoEvents()
@@ -1181,19 +1182,45 @@ Function xTecBrowMtr()
 			DoEvents()            
 
 			nConstH := Xh_RetPasy()
-                
-            If (nCol > nColDrag) .And. (Abs(nCol - nColDrag) >= nConstH) //.And. (nSaveCol > 0)
-                If  ( yGetScrXy(.t.) < nMaxBarh) 
-                    DoEvents()
-                    nColDrag := nCol 
-                    yUpdatBha1( nConstH     )	                            
+			nPulo1 := 1                
+
+            If (nCol > nColDrag) .And. (Abs(nCol - nColDrag) >= nPulo1) //.And. (nSaveCol > 0)                
+
+				If ( yRetContador() < xH_LQtot()  )
+                    DoEvents()                    
+                    yUpdatBha1( nCol - nColDrag )	                            					
+					nAcumP += (nCol - nColDrag) 
+					//(nCol - nColDrag) 
+
+					If (nAcumP >= nConstH)					
+					    nAcumP := 0					   
+                    	xDoScrolV( .t. , .f.  )						
+					End If 
+					nColDrag := nCol 					
+
+				Else 				   
+					lDrag_Mode := .f. 
+					nAcumP := 0					
+					yOffBarra( cBarrah  )			
+					DoEvents()	
                 End If   
             Else
-                If (nCol < nColDrag) .And. (Abs(nColDrag - nCol) >= nConstH) //And. (nSaveCol > 0)
-                    If (yGetScrXy( .f. ) > 21)
+                If (nCol < nColDrag) .And. (Abs(nColDrag - nCol) >= nPulo1) //And. (nSaveCol > 0)
+                    
+					If (yRetContador() > 0)
                         DoEvents()                        
-                        nColDrag := nCol 
-                        yUpdatBha1( -(nConstH)  )	                                                         
+						yUpdatBha1( -( nColDrag - nCol  )  )	                                                                                 
+						nAcumP += Abs(nColDrag - nCol) 						
+						nColDrag := nCol 
+						If (nAcumP >= nConstH)					
+					    	nAcumP := 0					   
+                    		xDoScrolV( .f. , .f.  )
+						End If                         
+					Else 					    
+						lDrag_Mode := .f. 	
+						nAcumP := 0
+						yOffBarra( cBarrah  )			
+						DoEvents()	
                     End If     
                 End If     
             End If 
@@ -1423,13 +1450,8 @@ Function xTecBrowMtr()
 			lTracking45 := .f.
 
 		End If
-
-
-		//msginfo('g1')
-
-		If (nHWnd == GetProperty( cEspelhoBrw , "HANDLE" ))
-
-			//MSGINFO('LP2')	
+		
+		If (nHWnd == GetProperty( cEspelhoBrw , "HANDLE" ))			
 
 			DoEvents()
 			nSaveX5 := nItemX5
@@ -1533,7 +1555,6 @@ Function xTecBrowMtr()
 		While (GetAsyncKeyState(34)) != 0
 
 			xGoPgDn()
-
 			DoEvents()
 
 			For i := 1 To 255
@@ -1548,7 +1569,6 @@ Function xTecBrowMtr()
 		While (GetAsyncKeyState(33)) != 0
 
 			xGoPgUp()
-
 			DoEvents()
 
 			For i := 1 To 255
@@ -1570,14 +1590,8 @@ Function xTecBrowMtr()
 			
 			nQTotEt := yCalcEtap1()	
 			nColZ2++
-			//msginfo(Str(nColZ2))
-
 			nPos1 := xGetInfCw1(   nColz2 , 2  )
 			nPos2 := xGetInfCw1(   nColz2 , 3  )			
-
-
-			//msginfo(Str(nLargz1) + '   ' + Str(nPos1) + ' '  + Str(nPos2) + '   ' + Str((nLimiteCol -  nAcumz5)) + '  qt ' + Str(nQTotEt) )
-			
 			If (nPos2 > nLimiteCol)				
 				nW1 := nPos1				
 				nLast1 := nW1
@@ -1586,17 +1600,13 @@ Function xTecBrowMtr()
 				nAcumz5 += nW1
 				nLast1 := nW1				
 
-				If nLimiteCol >= xCalcTam()
-					//yUpdatBha1( nWidth    )
+				If nLimiteCol >= xCalcTam()					
 					yGoBarR()
-					DoEvents()
-					//msginfo('pl2')				
+					DoEvents()					
 					yDcBarH1()
 				Else 
-					nW1 := xRetPasso(  nQTotEt  , ( (nColZ2 + 1) >= nQtotcol)  )    
-					
+					nW1 := xRetPasso(  nQTotEt  , ( (nColZ2 + 1) >= nQtotcol)  )    					
 					yUpdatBha1( nW1     )
-
 				End If 	
 
 			Else 
@@ -1604,45 +1614,12 @@ Function xTecBrowMtr()
 			End If 
 			
 			lNoHorzScy := .f.
-
-			ySelCol( nColz2 )
-			
+			ySelCol( nColz2 )			
 			DoEvents()
 			SysWait(0.02)	
-
-
 			If (nColz2 = nQtotcol )  					
 				lNoHorzScr := .t. 
 			End If 	
-
-
-			/*
-
-			If (nColz2 = nQtotcol )  				
-
-			  
-				nTam5 := xCalcTam()  
-				
-				If (nTam5 - nLimiteCol) >= 10				
-					xRoleTela( .t. , (nTam5 - nLimiteCol)   , .t. ,  .t. ,  nColZ2  )					
-					//msginfo(Str(  (nTam5 - nLimiteCol) ))
-					nAcumz5 += (nTam5 - nLimiteCol)	
-					nLast1 += (nTam5 - nLimiteCol)
-					nLimiteCol += (nTam5 - nLimiteCol)
-					lNoHorzScr := (nColz2 = nQtotcol) 
-					lDuplo := .t. 
-				Else 
-					
-				End If 	
-				
-
-				lNoHorzScr := .t. 
-
-
-				Return
-
-			End If		
-			*/
 			
 			DoEvents()
 			SysWait(0.02)	
@@ -2108,28 +2085,18 @@ Static Function xRecords( n1 , lFrente  )
 
 
 	If (lFrente)
-
 		For z := n1 To ((n1+nTamPag) - 1)
-
 			If (z <= LEn(aMt1) )
 				n2++
 				Aadd(aMDisplay ,  {  Z ,  xRetItem(   aMt1[Z]    )   , n2 }  )
 			End If
-
 		Next
-
 	Else
-
-
 		For z := ((n1+nTamPag) - 1) To n1
-
 			If (z <= LEn(aMt1) )
 				Aadd(aMDisplay , { Z ,  xRetItem(   aMt1[Z]    )  }  )
 			End If
-
 		Next
-
-
 	End If
 
 
@@ -2294,7 +2261,7 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 
 			If lAtivo1
-				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 0  ,    Width    ,    nItemBrwHeight+5     , SELCOR  , SELCOR  )
+				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 0  ,    Width    ,    nItemBrwHeight     , SELCOR  , SELCOR  )
 
 				BT_DrawText ( hDC2 , nLine + nRow  , nColIniBrw+nCol ,   cTexto , xFont2  , 9 , nFontCor ,  SELCOR   , ;
 					nTypeText ,	nAlingText, nOrientation )
@@ -2372,6 +2339,7 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 			BT_DrawText ( hDC2 , nLine + nRow  , nColIniBrw+nCol  ,  cTexto , xFont2, 9 ,  cCor , nCorBk , nTypeText, nAlingText, nOrientation )
 
 		End If
+
 
 		nLine += nItemBrwHeight
 
