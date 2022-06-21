@@ -147,6 +147,8 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
     cTable := cTabela
 
     nLimiteAtu := nLarg1 + 1
+
+    //msginfo(Str( nLimiteAtu  ))
     
         
     DEFINE WINDOW &cHName ;
@@ -1398,15 +1400,50 @@ Return nAcum2
 Function xH_RtLimite()
 Return nLimiteAtu
 
-Function xH_LQtot()
+Function xH_IncLim( nValor )
+    nLimiteAtu += nValor   
+Return 
+
+Function xH_DecLim( nValor )
+    nLimiteAtu -= nValor   
+Return 
+
+
+Function xH_LQtot( nTipo )
 
    Local nRet := 0
-   Local n1 := 0
+   Local n1 := 1
    Local n2 := 0
+   Local nQ1 := 0
+   Local nSom1 := 0
+
+   DEFAULT nTipo := 1
+
+   While (n1 <= Len(aMapsCol))
+
+        nQ1++  
+
+        If ((aMapsCol[n1][3] + nLimiteAtu)  >=  xCalcTam())
+            Exit 
+        Else 
+            nSom1 += aMapsCol[n1][5]    
+        End If                
+        
+             
+        n1++ 
+
+   Enddo
 
 
+   //MsgInfo( Str( nSom1 ) + '   ' + Str(nLimiteAtu)  + '   ' + Str(nQ1) + '   ' + Str(xCalcTam()))
+
+   
+
+    /*
+  
 
    If (xCalcTam() > nLimiteAtu)
+
       nRet := Int(xCalcTam() / nLimiteAtu)
 
       If (Mod(  xCalcTam() ,nLimiteAtu  ) != 0)
@@ -1414,7 +1451,6 @@ Function xH_LQtot()
       End If 
 
       n1 := aMapsCol[  Len(aMapsCol) ][3]
-
 
       n2 := (nRet - 1) * nLimiteAtu
 
@@ -1425,8 +1461,12 @@ Function xH_LQtot()
    Else 
 
    End If 
+   */
 
-REturn nRet 
+   //msginfo(Str(nRet))
+   nRet := nQ1 
+
+REturn Iif(nTipo == 1 , nRet , nSom1)
 
 Function xH_CalcPulo(nColIni , nSalto)
 
@@ -1459,7 +1499,6 @@ Function xH_CalcPulo(nColIni , nSalto)
 
     nPulo := nSoma 
 
-
 Return ({nPulo,nqColy}) 
 
 
@@ -1469,9 +1508,25 @@ Function xH_ColResto( nLimite )
   Local nCol1 := 0
   Local nResto := 0
   Local nIndice := Ascan(aMapsCol , { |a|  a[3] > nLimite  }  )
+  Local nSoma := 0
+  Local n1 := 1
 
   If (nIndice > 0)    
-      nResto := aMapsCol[nIndice][3] - nLimite
+      nResto := aMapsCol[nIndice][3] - nLimite   
+    //  msginfo(Str( nIndice ) + '  ' + Str(  nLimite   )  ) 
+
+      //Aeval( aMapsCol  , { ||  Iif(          )     }    )
+      /*
+      While n1 <= (nIndice - 1)
+            nSoma += aMapsCol[n1][5]
+            n1++
+      Enddo 
+      */
+
+     // msginfo(Str(nSoma))
+
+      //nResto := nSoma+17
+
   End if 
   
 Return nResto

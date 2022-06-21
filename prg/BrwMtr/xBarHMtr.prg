@@ -29,6 +29,7 @@ Static nScroxy := 21
 Static lEnabledy := .t. 
 Static cBrwName := ''
 Static nTotScr1 := 0
+Static nTotScr2 := 0
 
 Static nTamBarra := 0
 Static nLargCalc := 0
@@ -46,6 +47,7 @@ Static lChaveY := .f.
 Static nPAssoy := 0
 Static aMtrVolta := {}
 Static lTracking44 := .f. 
+Static nLastInfo1 := 0
 
 
 
@@ -66,18 +68,23 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
 
 
     lEnabledy := lDispo1
-
-    nQ1 := xH_LQtot()
-
-    
-
     nColTotal := nTotCol   
+    nQ1       := xH_LQtot(1) 
     
-    nTamBarra := Int((nLargJanela * (   nLargJanela/xCalcTam()     )    )) - 20
+    nTamBarra := Int(( (nLargJanela - 21) * (   (nLargJanela - 21)/xCalcTam()     )    )) 
 
-    nPassoy := Int( (GetProperty(  cBrowserName , 'Width'  ) - nTamBarra ) / nQ1 )
+    nTamBarra := Int( (nLargJanela) * ( nQ1/nColTotal  ) )
+    //- 20
+       
+    nPassoy := Int( (( (GetProperty(  cBrowserName , 'Width'  )  ) - nTamBarra)  / (nQ1 - 1) ))
 
-    //msginfo(Str(  nQ1 ))
+    //nPassoy := Int(xH_LQtot(2)/nQ1)
+
+
+    //msginfo('12 ' + Str(  GetProperty(  cBrowserName , 'Width'  ) - nTamBarra       ) + '    ' + Str(nPassoy) + '   ' + Str(nColTotal) + ' ' + Str(nLargJanela))
+
+    
+    nTotScr2 := xH_RtLimite()
 
     
     cHead1 := cHeaderN1   
@@ -446,13 +453,7 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     nSaveCol := nCol   
                     SetBrwDrgM( .t. , nSaveCol )                                       
                 End If     
-            End If                             
-
-//            For i := 1 To 255
-  //              GetAsyncKeyState(i)
-    //        Next i
-
-            
+            End If       
             
             For i := 1 To 255
                 GetAsyncKeyState(i)
@@ -662,21 +663,34 @@ Return
 
 Function xDoScrolV( lFrente , lAtuBar )
 
-    //, nQCont1 , @nTotY1  , nQTot1  )
-
-    Local nSaldo1 := xH_ColResto( xH_RtLimite() )
+    Local nSaldo1 := xH_ColResto( xH_RtLimite() )       
     Local aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)
+
+
     Local nSoma1 := 0
 
     DEFAULT lAtuBar := .t. 
                
     SysWait(0.05)
 
+    //msginfo(Str(   aMInfo[1]  ))
+
     If lFrente
-        If (nQContador < nQ1)
-            xRoleTela( .t. , Xh_RetPasy() ,  lAtuBar   ,  aMInfo[1] , aMInfo[2] )                                                                                       
+        If (nQContador < nQ1  )
+
+            nSaldo1 := xH_ColResto( xH_RtLimite() )              
+            aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)                
+
+            xRoleTela( .t. ,  Xh_RetPasy() ,  lAtuBar   ,  aMInfo[1] , aMInfo[2] )                                                                                                             
+            nLastInfo1 := aMInfo[1]
             nTotScr1 += aMInfo[1]
+            nTotScr2 += aMInfo[1]
+            
             DoEvents()       
+            xH_IncLim( aMInfo[1] )         
+
+            //msginfo(Str(yGetScrXy( .t. )))  
+
         Else 
             xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar.zz"))                     
         End If     

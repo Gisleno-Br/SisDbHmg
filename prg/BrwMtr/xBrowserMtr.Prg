@@ -87,6 +87,8 @@ Static nMaxBarh := 0
 
 Static nQEtp := 0
 
+Static nQxy := 1
+
 Static nSelLine := 1
 Static nIndexEventZ := 0
 Static lTermino := .f.
@@ -139,6 +141,8 @@ Static nPageNum := 0
 
 Static lAtivo1 := .t.
 
+Static nQy1 := 0
+
 Static aCabec1 := {}
 Static aTams2  := {}
 Static aTips   := {}
@@ -151,9 +155,6 @@ Static nLimiteCol := 0
 Static nAcumz5 := 0
 
 Static lNoHorzScy := .f. 
-
-
-//DECLARE WINDOW Win_Browser
 
 
 
@@ -176,23 +177,11 @@ Function yRetLargura( aMatriz1 )
 
 	BT_DeleteDC(BTstruct   )
 
-	//Aeval(   aMatriz1 , { |a| nLarg += (a * GetTextoTam( ' '  , cActiveJan ))  }  )
-
 REturn nLarg
 
 
 Function xRetTamPg()
 Return nTamPag
-
-
-//Function DoMatriz( cParentx , cTabela )
-
-//aThread2 := hb_threadStart( HB_THREAD_INHERIT_PUBLIC, @TestBrow(),  cParentx , cTabela  )
-
-//REturn (TestBrow(  cParentx , cTabela  ))
-
-
-
 
 
 Static Function EncheMVis( nRec , lFrente , z2   )
@@ -229,6 +218,7 @@ Static Function EncheMVis( nRec , lFrente , z2   )
 Return
 
 
+
 Function xRetItem( aMatriz )
 
 	Local c1 := ''
@@ -236,7 +226,6 @@ Function xRetItem( aMatriz )
 	Local n1 := 0
 	Local nTam := 0
 	Local lNum := .f.
-
 
 
 	For n1 := 1 To Len( aCabec1 )
@@ -832,6 +821,7 @@ Function SetNewLarg( nLarg )
 Return
 
 
+
 Function xChangeOrd( nOrigem ,  nDest )
 
 	//	Local a1 := aMt1[nDest]
@@ -1102,8 +1092,7 @@ Function xTecBrowMtr()
 	Local nMaxItem := Int(nTamSubMenuConsulta / nItemSubHeight)
 
 	If HMG_GetLastMouseMessage (@nHWnd) == 513
-		//	msginfo(Str(    HMG_GetLastMouseMessage (@nHWnd)   ))
-		//	msginfo( Str(nWParam)  )
+		
 	End If
 
 
@@ -1131,8 +1120,7 @@ Function xTecBrowMtr()
 		DoEvents()	
 
 
-		If (nHWnd == GetProperty(  cBarraVSombra , "HANDLE" ))
-			
+		If (nHWnd == GetProperty(  cBarraVSombra , "HANDLE" ))			
 			If (nHasFocus > 0 )
 				PostMessage(OBTN_Handle( cBarraVfrm , nHasFocus   )  , WM_MOUSELEAVE , 0, 0  )
 				DoEvents()
@@ -1140,17 +1128,14 @@ Function xTecBrowMtr()
 				lTracking75 := .f.
 				lTracking45 := .t.
 				SysWait(0.01)
-			End If
-			
+			End If			
 		End If
 
 	End If
 
 
 	// Arrasto da BarraH	
-	If (nMsg == WM_MOUSEMOVE)
-
-		//msginfo('ok2')
+	If (nMsg == WM_MOUSEMOVE)		
 	
 		If (nHasFocus > 0) .or. (!lDrag_Mode)	
 			DoEvents()			
@@ -1161,9 +1146,7 @@ Function xTecBrowMtr()
 			yOffBarra( cBarrah  )			
 		End If 	
 
-		DoEvents()
-
-		
+		DoEvents()		
 		If  _isWindowDefined("Win_Msg")
 			xHidehint()
 		End If
@@ -1188,39 +1171,40 @@ Function xTecBrowMtr()
 
 				If ( yRetContador() < xH_LQtot()  )
                     DoEvents()                    
-                    yUpdatBha1( nCol - nColDrag )	                            					
-					nAcumP += (nCol - nColDrag) 
-					//(nCol - nColDrag) 
-
-					If (nAcumP >= nConstH)					
-					    nAcumP := 0					   
-                    	xDoScrolV( .t. , .f.  )						
+                    yUpdatBha1(nCol - nColDrag )						               					
+					nAcumP += (nCol - nColDrag)					
+					nColDrag := nCol 									
+					
+					If (nAcumP >=  (nQxy * nConstH )  )					
+					 	nQxy++					  
+                    	xDoScrolV( .t. , .f.  )												
 					End If 
-					nColDrag := nCol 					
-
-				Else 				   
-					lDrag_Mode := .f. 
-					nAcumP := 0					
+					nColDrag := nCol 									
+				Else 				   				
+					nQxy--
 					yOffBarra( cBarrah  )			
 					DoEvents()	
                 End If   
             Else
-                If (nCol < nColDrag) .And. (Abs(nColDrag - nCol) >= nPulo1) //And. (nSaveCol > 0)
-                    
+                If (nCol < nColDrag) .And. (Abs(nColDrag - nCol) >= nPulo1) //And. (nSaveCol > 0)                    
 					If (yRetContador() > 0)
                         DoEvents()                        
 						yUpdatBha1( -( nColDrag - nCol  )  )	                                                                                 
-						nAcumP += Abs(nColDrag - nCol) 						
-						nColDrag := nCol 
-						If (nAcumP >= nConstH)					
-					    	nAcumP := 0					   
+						nAcumP -= Abs(nColDrag - nCol) 						
+
+						If (nAcumP  <= (nConstH * nQxy) )					
+					    	nQxy--				   
                     		xDoScrolV( .f. , .f.  )
 						End If                         
-					Else 					    
-						lDrag_Mode := .f. 	
+						
+						nColDrag := nCol 
+
+					Else 					    						
 						nAcumP := 0
 						yOffBarra( cBarrah  )			
 						DoEvents()	
+						nColDrag := 0
+					
                     End If     
                 End If     
             End If 
@@ -1307,17 +1291,14 @@ Function xTecBrowMtr()
 			End If
 
 
-			If (nId = 0)
-				//SysWait(0.01)
-				//msginfo('ok2')
+			If (nId = 0)				
 				yLimpBarV()				
 				Return
 			End If
 
 
 			If (nRow1 >= 61) .And. (nRow1 <= (GetProperty(cBarraVfrm,'Height') - 61) ) .And. (nId = 0)				
-				xOffBarVert( nHWnd )
-				//DoEvents()					
+				xOffBarVert( nHWnd )				
 				Return
 			End If
 
@@ -1326,8 +1307,7 @@ Function xTecBrowMtr()
 				If (nId != nHasFocus)
 					xDcToDEspe()				
 					lTracking75 := .f.
-					lTracking135 := .f.					
-				//	nHasFocus := 0
+					lTracking135 := .f.									
 				End If
 			End If
 
@@ -1336,7 +1316,6 @@ Function xTecBrowMtr()
 			If (nId > 0) .And. (!lTracking75)
 
 				yOffBarra( cBarrah  )
-
 				nModeBrw := yDoHint(   nId  ,  , .t.  )
 				CursorHand1( nHWnd  )
 				nHasFocus := nId
@@ -1344,9 +1323,7 @@ Function xTecBrowMtr()
 				DoEvents()
 				xDcToDEspe()	
 				lTracking135 := .t.
-				lTracking75  := .t.
-
-			
+				lTracking75  := .t.			
 
 			End If
 
@@ -1587,12 +1564,22 @@ Function xTecBrowMtr()
 				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))
 				Return
 			End If
+
 			
-			nQTotEt := yCalcEtap1()	
+			//msginfo('lp2')
+
+						
 			nColZ2++
 			nPos1 := xGetInfCw1(   nColz2 , 2  )
 			nPos2 := xGetInfCw1(   nColz2 , 3  )			
-			If (nPos2 > nLimiteCol)				
+			If (nPos2 >= nLimiteCol)				
+
+			   msginfo('ok2')
+
+			    nSaldo1 := xH_ColResto( xH_RtLimite() )
+                aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)
+
+			   /*
 				nW1 := nPos1				
 				nLast1 := nW1
 				yScrollCaM( .t. , .f. , nW1 ) 				
@@ -1608,6 +1595,8 @@ Function xTecBrowMtr()
 					nW1 := xRetPasso(  nQTotEt  , ( (nColZ2 + 1) >= nQtotcol)  )    					
 					yUpdatBha1( nW1     )
 				End If 	
+				*/
+
 
 			Else 
 				
@@ -1677,37 +1666,7 @@ Function xTecBrowMtr()
 
 				End If
 			
-				//nW1 := xRetPasso(  nQTotEt  , ( (nColZ2 + 1) >= nQtotcol)  )     	
-
-				//If nLast1 > 0
-					//nW1 := nLast1					
-				//End If 
-											
-				//xRoleTela( .f. , -nW1 , .t. , .t. ,  nColZ2 )
-				//nLimiteCol -= nW1
-				
-				/*
-				If (lDuplo)
-
-					nSav1 := nColZ2 
-					nColZ2--
-					nW1 := xRetPasso(  nQTotEt  , ( (nColZ2 + 1) >= nQtotcol)  )  
-					xRoleTela( .f. , -nW1 , .t. , .t. ,  nColZ2 )   
-					nLimiteCol -= nW1
-
-                    If (nColz2 == 1 )
-						//nLimiteCol := nLarg1
-						nLast1 := 0
-						nAcumz5    := 0
-					End If 	
-
-					nColz2 := nSav1 
-					//msginfo('Duplo ' + Str(nColz2) )	
-					lDuplo := .f.				
-
-				End If 	
-				*/
-
+			
 				lNoHorzScr := .f. 
 
 
