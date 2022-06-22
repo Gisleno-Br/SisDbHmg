@@ -198,7 +198,7 @@ FUNCTION LoadFitros( cTabela1 )
 
    
    l_Ok := xBrowserMtr( 51 ,  aMtrFiltr , 'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' , 'Campo 4'} , ;
-      {10,50,60 , 75 , 60 ,35,75  }  , {'C' , 'C' , 'C' , 'C' , 'C' ,'C' ,'C'} , .f. , .t. , 150 )
+      {10,50,60 , 75 , 60 ,45,75  }  , {'C' , 'C' , 'C' , 'C' , 'C' ,'C' ,'C'} , .f. , .t. , 150 )
 
    
    //_ShowWindow('LstBoxFiltro')

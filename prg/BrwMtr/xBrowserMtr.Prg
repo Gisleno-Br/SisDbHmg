@@ -609,6 +609,11 @@ Function xCalcTam()
 
     Next 
 
+	nTam1 := 10
+    cTexto := Replicate('A' ,  nTam1 + 1  )  
+    n12 := GetTextWidth( hDC , cTexto , hfont )        
+    nTam12 += n12
+
 	
 
 	//Altd()
@@ -2180,7 +2185,7 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 	For n1 := 1 To Len(aMtrOp)
 
-		cTexto := Hb_Utf8ToStr( aMtrOp[n1][2])  + '.'
+		cTexto := Hb_Utf8ToStr( aMtrOp[n1][2]) + '*'
 		//+ Replicate(' ',200)
 		nLinb++
 
@@ -2222,7 +2227,7 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 			If lAtivo1
 				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 0  ,    Width    ,    nItemBrwHeight     , SELCOR  , SELCOR  )
 
-				BT_DrawText ( hDC2 , nLine + nRow  , nColIniBrw+nCol ,   cTexto , xFont2  , 9 , nFontCor ,  SELCOR   , ;
+				BT_DrawText ( hDC2 , nLine + nRow  , nColIniBrw+nCol+1 ,   cTexto , xFont2  , 9 , nFontCor ,  SELCOR   , ;
 					nTypeText ,	nAlingText, nOrientation )
 			End If
 			
@@ -2268,9 +2273,11 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 		Else
 
 			nTypeText    := BT_TEXT_TRANSPARENT
-			n12 := (Len(cTexto) * nTam1 )
-			n12 := nTamx1 + nCol + nColIniBrw			
+			n12 := ( (Len(cTexto) + 0)  * nTam1 )
+			n12 := nTamx1 + nCol + nColIniBrw 
+			//+ (250 * nTam1)		
 				
+
 
 			If (Mod( n1 , 2 ) = 0)
 				nCorBk := WHITE
@@ -2295,7 +2302,7 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 			*/
 
 
-			BT_DrawText ( hDC2 , nLine + nRow  , nColIniBrw+nCol  ,  cTexto , xFont2, 9 ,  cCor , nCorBk , nTypeText, nAlingText, nOrientation )
+			BT_DrawText ( hDC2 , nLine + nRow  , nColIniBrw+nCol+1  ,  cTexto , xFont2, 9 ,  cCor , nCorBk , nTypeText, nAlingText, nOrientation )
 
 		End If
 

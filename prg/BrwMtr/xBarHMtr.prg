@@ -131,6 +131,9 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
     If lEnabledy     
         lEnabledy := (nTamBarra > 0)
     End If 
+
+
+    xh_InitLim()
  
 
 
@@ -672,7 +675,6 @@ Function xDoScrolV( lFrente , lAtuBar )
     DEFAULT lAtuBar := .t. 
                
     SysWait(0.05)
-
     //msginfo(Str(   aMInfo[1]  ))
 
     If lFrente
@@ -681,7 +683,11 @@ Function xDoScrolV( lFrente , lAtuBar )
             nSaldo1 := xH_ColResto( xH_RtLimite() )              
             aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)                
 
+            
             xRoleTela( .t. ,  Xh_RetPasy() ,  lAtuBar   ,  aMInfo[1] , aMInfo[2] )                                                                                                             
+
+            msginfo(Str(  nSaldo1 ) + '  ' + Str(nQContador)  + '  ' + Str(aMInfo[1])  ) 
+
             nLastInfo1 := aMInfo[1]
             nTotScr1 += aMInfo[1]
             nTotScr2 += aMInfo[1]
@@ -722,7 +728,7 @@ Function xDoScrolV( lFrente , lAtuBar )
     End If
 
 
-REturn 
+Return .t. 
 
 
 

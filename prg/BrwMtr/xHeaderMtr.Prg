@@ -67,6 +67,7 @@ Static lSizeMode := .f.
 Static cTable := ''
 
 Static lTracking546 := .f. 
+Static nTotz2 := 0
 
 Static lEnabled2 := .t. 
 
@@ -225,6 +226,9 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 
 Return lOk 
 
+Function xh_InitLim()
+    nLimiteAtu := GetProperty( c_BrowName , 'Width')
+Return     
 
 Static Function SetOrdGrid( nColuna1 , lAsc1 )
 
@@ -1326,22 +1330,39 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
 
     aMapsCol := {}
     
-    For n1 := 1 To Len(aCabs)
-        
-        nTam1  := aTamx1[n1]
-        nQAcento := QtAcento(Alltrim(aCabs[n1]) )
-        nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
-        cTexto := Replicate('A' ,  nTam1 + 1  )              
-        n12 := GetTextWidth( hDC , cTexto , hfont )        
-        nTam := n12
-        nAcum2 += ( (nColx +  nTam + 1 ) - nColx )
-        Aadd( aMapsCol , {   aCabs[n1] , nColx , nColx +  nTam + 1 , aTipos1[n1] ,   nTam ,  aTamx1[n1] , nAcum  , nAcum2 }  )
-        nColx += nTam 
-        If (nTam >=  nLimiteAtu)           
-            Return .f.
+    For n1 := 1 To Len(aCabs) + 1
+
+        If (n1 < (Len(aCabs) + 1))        
+            nTam1  := aTamx1[n1]
+            nQAcento := QtAcento(Alltrim(aCabs[n1]) )
+            nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
+            cTexto := Replicate('A' ,  nTam1 + 1  )              
+            n12 := GetTextWidth( hDC , cTexto , hfont )        
+            nTam := n12
+            nAcum2 += ( (nColx +  nTam + 1 ) - nColx )
+            Aadd( aMapsCol , {   aCabs[n1] , nColx , nColx +  nTam , aTipos1[n1] ,   nTam ,  aTamx1[n1] , nAcum  , nAcum2 }  )
+
+            SaveLog('Colunas.txt' , aMapsCol[n1][1] + '  ' + Str(aMapsCol[n1][2])  + '   ' + Str(aMapsCol[n1][3]) + '   ' + Str(aMapsCol[n1][5]) + XQUEBRA   )
+            nColx += (nTam + 1)
+            If (nTam >=  nLimiteAtu)           
+                Return .f.
+            End If 
+            nAcum += aTamx1[n1]+2
+            nTam12 += nTam 
+        Else 
+
+            nTam1 := 10
+            cTexto := Replicate('A' ,  nTam1 + 1  )  
+            n12 := GetTextWidth( hDC , cTexto , hfont )        
+            nTam := n12
+
+            nAcum += 11
+            nAcum2 += ( (nColx +  nTam + 1 ) - nColx )
+
+            Aadd( aMapsCol , {   '   ' , nColx , nColx +  nTam + 1 , 'C' ,   nTam ,  10  , nAcum  , nAcum2 }  )
+            SaveLog('Colunas.txt' , aMapsCol[n1][1] + '  ' + Str(aMapsCol[n1][2])  + '   ' + Str(aMapsCol[n1][3]) + '   ' + Str(aMapsCol[n1][5]) + XQUEBRA   )
+
         End If 
-        nAcum += aTamx1[n1]+1
-        nTam12 += nTam 
 
     Next 
 
@@ -1416,23 +1437,81 @@ Function xH_LQtot( nTipo )
    Local n2 := 0
    Local nQ1 := 0
    Local nSom1 := 0
+   Local nSAldo1 
+   Local aMInfo := {}
+   Local nQPasso := 0
+   Local lOk := .f.
+   Local nLim1 := nTotz2 - xH_RtLimite()
+   Local nLimz := aMapsCol[  Len(aMapsCol) ] 
+   Local nTotz1 := 0
+
+   Local nTotz4 := xH_RtLimite()
 
    DEFAULT nTipo := 1
 
+   //Altd()
+   /*
+
+    RemoveHandler('EventBrowMtr')
+    RemoveHandler('EventBarMtr')
+    RemoveHandler('EventHeaMtr')
+    RemoveHandler('EVENTHNDCLI')    
+    RemoveHandler('EventHndMain')
+
+    SysWait(0.06)
+    */
+
+
+   While !lOk
+
+          nSaldo1 := xH_ColResto( xH_RtLimite() )              
+          aMInfo  := xH_CalcPulo( nQ1 + 1 , nSaldo1)                
+/*
+          If (aMInfo[2] == 0 )
+             lOk := .t.             
+             Exit
+          Else 
+             
+          End If 
+          */
+
+          nQ1 += aMInfo[2]
+         // msginfo(Str(  aMInfo[2]  ))
+          nTotz1 += aMInfo[1]  
+          nTotz4 += aMInfo[1]  
+
+          msginfo(Str(  nTotZ4  ) + '   ' + Str(nQ1) + '   ' + Str(nQPasso))
+
+          xH_IncLim( aMInfo[1] )   
+          nQPasso++      
+
+          If (nTotZ1 >= nLim1)
+             lOk := .t. 
+          End If 
+
+          //lOk :=  xGetInfCw1()
+
+   Enddo 
+
+   /*
+    nQ1 := 0
+    nSom1 := 0
    While (n1 <= Len(aMapsCol))
 
-        nQ1++  
+        nQ1++          
 
         If ((aMapsCol[n1][3] + nLimiteAtu)  >=  xCalcTam())
             Exit 
         Else 
             nSom1 += aMapsCol[n1][5]    
         End If                
-        
+
              
         n1++ 
 
    Enddo
+   */
+   
 
 
    //MsgInfo( Str( nSom1 ) + '   ' + Str(nLimiteAtu)  + '   ' + Str(nQ1) + '   ' + Str(xCalcTam()))
@@ -1460,13 +1539,17 @@ Function xH_LQtot( nTipo )
       
    Else 
 
+
    End If 
    */
 
-   //msginfo(Str(nRet))
+
+   msginfo(Str(nQpasso) + '  ' + Str(nQ1))
+
+
    nRet := nQ1 
 
-REturn Iif(nTipo == 1 , nRet , nSom1)
+REturn Iif(nTipo == 1 , nQPasso , nQ1 )
 
 Function xH_CalcPulo(nColIni , nSalto)
 
@@ -1478,11 +1561,13 @@ Function xH_CalcPulo(nColIni , nSalto)
     Local nQColy := 0
 
 
+
     If (nColIni == 1)        
         nSoma := nColIniBrw
     End If 
 
-    While (!lOk) .And. ( nZ1 < Len(aMapsCol) )      
+
+    While (!lOk) .And. ( nZ1 <= Len(aMapsCol) )      
 
            nSoma += aMapsCol[nz1][5]   
            nQColy++
@@ -1505,28 +1590,15 @@ Return ({nPulo,nqColy})
 
 Function xH_ColResto( nLimite )
 
+
   Local nCol1 := 0
   Local nResto := 0
   Local nIndice := Ascan(aMapsCol , { |a|  a[3] > nLimite  }  )
   Local nSoma := 0
   Local n1 := 1
-
+  
   If (nIndice > 0)    
       nResto := aMapsCol[nIndice][3] - nLimite   
-    //  msginfo(Str( nIndice ) + '  ' + Str(  nLimite   )  ) 
-
-      //Aeval( aMapsCol  , { ||  Iif(          )     }    )
-      /*
-      While n1 <= (nIndice - 1)
-            nSoma += aMapsCol[n1][5]
-            n1++
-      Enddo 
-      */
-
-     // msginfo(Str(nSoma))
-
-      //nResto := nSoma+17
-
   End if 
   
 Return nResto
@@ -1718,13 +1790,20 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
     nCol21 := 0
 
 
+
     For n1 := 1 To Len(aMapsCol)
         
         nTam1  := aMapsCol[n1][5] 
         nQAcento := QtAcento(Alltrim( aMapsCol[n1][1]  ) )
         nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
 
-        nTam2 := If( (nQAcento =  0)   , aTamanho[n1] , aTamanho[n1] + nQAcento ) //* nTamX1
+        If n1 <= Len(aTamanho)
+            nTam2 := If( (nQAcento =  0)   , aTamanho[n1] , aTamanho[n1] + nQAcento ) //* nTamX1
+        Else 
+            nTam2 := 5
+            nTam1 := 5
+        End If     
+
 
          
         cTexto1 += Padc( Alltrim(  aMapsCol[n1][1] )   ,   nTam2 + 1  )
@@ -1753,15 +1832,16 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
         End If  
 
 
+
         BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
         BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
 
         
         If (nOrdemSel == n1)
             nCol21 := nColx+4            
-        End If 
-
-        nColx += nTam1 
+        End If        
+        
+        nColx += nTam1        
        
 
     Next 
