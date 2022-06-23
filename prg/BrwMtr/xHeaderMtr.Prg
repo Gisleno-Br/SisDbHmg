@@ -1444,52 +1444,34 @@ Function xH_LQtot( nTipo )
    Local nLim1 := nTotz2 - xH_RtLimite()
    Local nLimz := aMapsCol[  Len(aMapsCol) ] 
    Local nTotz1 := 0
+   Local nY1 := xH_RtLimite()
 
    Local nTotz4 := xH_RtLimite()
 
    DEFAULT nTipo := 1
 
-   //Altd()
-   /*
-
-    RemoveHandler('EventBrowMtr')
-    RemoveHandler('EventBarMtr')
-    RemoveHandler('EventHeaMtr')
-    RemoveHandler('EVENTHNDCLI')    
-    RemoveHandler('EventHndMain')
-
-    SysWait(0.06)
-    */
-
-
-   While !lOk
+   While !lOk      
 
           nSaldo1 := xH_ColResto( xH_RtLimite() )              
           aMInfo  := xH_CalcPulo( nQ1 + 1 , nSaldo1)                
-/*
-          If (aMInfo[2] == 0 )
-             lOk := .t.             
-             Exit
-          Else 
-             
-          End If 
-          */
 
-          nQ1 += aMInfo[2]
-         // msginfo(Str(  aMInfo[2]  ))
+          
           nTotz1 += aMInfo[1]  
           nTotz4 += aMInfo[1]  
 
-          msginfo(Str(  nTotZ4  ) + '   ' + Str(nQ1) + '   ' + Str(nQPasso))
-
+          
+          yIncConter( .t. , aMInfo[2] )
           xH_IncLim( aMInfo[1] )   
           nQPasso++      
 
-          If (nTotZ1 >= nLim1)
-             lOk := .t. 
-          End If 
+          
+          nQ1 += aMInfo[2]
+                
+          If ((xGetInfCw1(  yRetContador() , 2  ) + nY1) > xCalcTam())
+              lOk := .t. 
+              Exit 
+          End If           
 
-          //lOk :=  xGetInfCw1()
 
    Enddo 
 
@@ -1516,7 +1498,7 @@ Function xH_LQtot( nTipo )
 
    //MsgInfo( Str( nSom1 ) + '   ' + Str(nLimiteAtu)  + '   ' + Str(nQ1) + '   ' + Str(xCalcTam()))
 
-   
+  
 
     /*
   
@@ -1544,12 +1526,12 @@ Function xH_LQtot( nTipo )
    */
 
 
-   msginfo(Str(nQpasso) + '  ' + Str(nQ1))
+   //msginfo(Str(nQpasso) + '  ' + Str(nQ1))
 
-
+   yZeraConter()
    nRet := nQ1 
 
-REturn Iif(nTipo == 1 , nQPasso , nQ1 )
+REturn Iif(nTipo == 1 , nQPasso  , nQ1 )
 
 Function xH_CalcPulo(nColIni , nSalto)
 
@@ -1602,6 +1584,8 @@ Function xH_ColResto( nLimite )
   End if 
   
 Return nResto
+
+
 
 
 Function xH_ColVolta( nLimite1  )
@@ -1797,15 +1781,15 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
         nQAcento := QtAcento(Alltrim( aMapsCol[n1][1]  ) )
         nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
 
+
         If n1 <= Len(aTamanho)
             nTam2 := If( (nQAcento =  0)   , aTamanho[n1] , aTamanho[n1] + nQAcento ) //* nTamX1
         Else 
-            nTam2 := 5
-            nTam1 := 5
+            nTam2 := 15
+            nTam1 := 15
         End If     
-
-
-         
+               
+        
         cTexto1 += Padc( Alltrim(  aMapsCol[n1][1] )   ,   nTam2 + 1  )
 
        
@@ -1831,8 +1815,6 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
             
         End If  
 
-
-
         BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
         BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
 
@@ -1841,10 +1823,14 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
             nCol21 := nColx+4            
         End If        
         
-        nColx += nTam1        
-       
+        nColx += nTam1               
 
-    Next 
+    Next     
+
+    nColx += aMapsCol[Len(aMapsCol)][5] 
+
+    BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
+    BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
 
     BT_DrawText ( hDC , 10  , nColIniBrw+nCol ,   Hb_AnsiToOem(cTexto1) , FONTBROWSER  , FONTBROWSERSIZE , WHITE,  {230,230,230}   , ;
         nTypeText ,	nAlingText, nOrientation )
@@ -1868,8 +1854,6 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
         nColx +=  (aMapsCol[nColSele][2] - 13)
         cTexto1 := aMapsCol[nColSele][1]              
 
-        //msginfo('ok2')
-        
 
         nQAcento := QtAcento(Alltrim( aMapsCol[nColSele][1]  ) )
         nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1

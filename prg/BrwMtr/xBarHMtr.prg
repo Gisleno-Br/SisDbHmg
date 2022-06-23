@@ -25,7 +25,7 @@ Static nModeBut := 0
 Static nSaveCol := 0
 Static lDragMode := .f. 
 Static nLargJan := 0
-Static nScroxy := 21
+Static nScroxy := 19
 Static lEnabledy := .t. 
 Static cBrwName := ''
 Static nTotScr1 := 0
@@ -49,7 +49,7 @@ Static aMtrVolta := {}
 Static lTracking44 := .f. 
 Static nLastInfo1 := 0
 
-
+Static nLastMove := 0
 
 
 
@@ -74,9 +74,12 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
     nTamBarra := Int(( (nLargJanela - 21) * (   (nLargJanela - 21)/xCalcTam()     )    )) 
 
     nTamBarra := Int( (nLargJanela) * ( nQ1/nColTotal  ) )
+
+    nTamBarra := GetProperty(  cBrowserName , 'Width'  ) - ( (nQ1 - 1) * 100)
     //- 20
        
-    nPassoy := Int( (( (GetProperty(  cBrowserName , 'Width'  )  ) - nTamBarra)  / (nQ1 - 1) ))
+    nPassoy := 100
+    //Int( (( (GetProperty(  cBrowserName , 'Width'  )  ) - nTamBarra)  / (nQ1 - 1) ))
 
     //nPassoy := Int(xH_LQtot(2)/nQ1)
 
@@ -346,12 +349,14 @@ Function yZeraConter()
     nQContador := 0
 REturn 
 
-Function yIncConter( lFrente )
+Function yIncConter( lFrente , nNumber1 )
+
+    DEFAULT nNumber1 := 1
 
     If lFrente     
-        nQContador++        
+        nQContador += nNumber1     
     Else 
-        nQContador--
+        nQContador -= nNumber1
     End If 
 
 REturn     
@@ -475,7 +480,7 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     //xDoScrolV( .f. , nQContador , @nTotScr1  , nQ1 )
 
                     
-                    xDoScrolV( .f. )
+                    xDoScrolV( .f. ,  , .t. )
 
                     /*
                     If (nQContador == 0)
@@ -525,9 +530,9 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                         SysWait(0.03)                                   
                         Exit 
                     End If           
+                   // msginfo('ok2')
 
-
-                    xDoScrolV( .t. )
+                    xDoScrolV( .t. ,, .t. )
 
                     /*
 
@@ -659,18 +664,24 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 Return 
 
 Function xInitSxy()
-    nScroxy := 21
+    nScroxy := 19
 Return 
 
 
 
-Function xDoScrolV( lFrente , lAtuBar )
+Function xDoScrolV( lFrente , lAtuBar , lModo1 )
 
     Local nSaldo1 := xH_ColResto( xH_RtLimite() )       
     Local aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)
-
+    
+    Local nQ2       := xH_LQtot(2) - 1
 
     Local nSoma1 := 0
+
+    msginfo(Str(nQ2))
+
+    
+    DEFAULT lModo1 := .f. 
 
     DEFAULT lAtuBar := .t. 
                
@@ -678,28 +689,50 @@ Function xDoScrolV( lFrente , lAtuBar )
     //msginfo(Str(   aMInfo[1]  ))
 
     If lFrente
-        If (nQContador < nQ1  )
+        //If (nQContador < nQ1 )
 
-            nSaldo1 := xH_ColResto( xH_RtLimite() )              
-            aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)                
+            If !lModo1
+                nSaldo1 := xH_ColResto( xH_RtLimite() )              
+                aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)                            
+
+                xRoleTela( .t. ,  Xh_RetPasy() ,  lAtuBar   ,  aMInfo[1] , aMInfo[2] )    
+
+                nTotScr1 += aMInfo[1]            
+            
+                DoEvents()       
+                nLastMove := aMInfo[1]
+                xH_IncLim( aMInfo[1] )         
+
+            Else 
+
+                nQContador++
+                nSaldo1 := xGetInfCw1(   nQContador   , 5  )
+
+                If (nQContador == 1)
+                    nSaldo1 += 17
+                End If 
+
+                aMInfo := {}
+                Aadd(aMInfo , nSaldo1)
+                Aadd(aMInfo , 1)
+
+                DoEvents()
+                
+                yScrollCaM( .t. , .f. , nSaldo1  )               
+                yDcBarH1()                                
+                SysWait(0.02)
+                yDcBarH1eMtr()
+
+                DoEvents()
+                
+
+            End If                    
 
             
-            xRoleTela( .t. ,  Xh_RetPasy() ,  lAtuBar   ,  aMInfo[1] , aMInfo[2] )                                                                                                             
 
-            msginfo(Str(  nSaldo1 ) + '  ' + Str(nQContador)  + '  ' + Str(aMInfo[1])  ) 
-
-            nLastInfo1 := aMInfo[1]
-            nTotScr1 += aMInfo[1]
-            nTotScr2 += aMInfo[1]
-            
-            DoEvents()       
-            xH_IncLim( aMInfo[1] )         
-
-            //msginfo(Str(yGetScrXy( .t. )))  
-
-        Else 
-            xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar.zz"))                     
-        End If     
+     //   Else 
+      //      xDialog( Hb_AnsiToOem("Coluna mais a Direita Atingida.Não É possivel Avançar.zz"))                                 
+      //  End If     
     Else 
 
         If (nQContador == 0)
@@ -708,15 +741,25 @@ Function xDoScrolV( lFrente , lAtuBar )
         End If                     
                     
         nSoma1 := xH_ColVolta(  nTotScr1 )
+
+
+        If nLastMove > 0
+           nSoma1 := nLastMove
+           nLastMove := 0
+           msginfo('ll2')
+        End If 
         nTotScr1 -= nSoma1                          
 
         DoEvents()                    
         SysWait(0.04)                               
         xRoleTela( .f. , -(Xh_RetPasy()) ,  lAtuBar    ,  nSoma1 , 1 )    
 
+        xH_IncLim(nSoma1 )         
+
 
         If (nQContador == 0)
             nTotScr1 := 0
+            xInitSxy()            
         End If                                                                                    
 
         For i := 1 To 255

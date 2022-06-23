@@ -1648,7 +1648,7 @@ Function xTecBrowMtr()
 			nPos2 := xGetInfCw1(   nColz2 , 3  )	
 
 
-			msginfo(Str(nLargz1) + '   ' + Str(nPos1) + ' '  + Str(nPos2) + '   ' + Str((nLimiteCol -  nAcumz5)) + '  qt ' + Str(nAcumz5) )
+			//msginfo(Str(nLargz1) + '   ' + Str(nPos1) + ' '  + Str(nPos2) + '   ' + Str((nLimiteCol -  nAcumz5)) + '  qt ' + Str(nAcumz5) )
 
 
 			If (nPos1 < (nLimiteCol -  nAcumz5) ) //.And. (   nPos2 >= (nLimiteCol -  nAcumz5) )
@@ -2274,8 +2274,7 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 			nTypeText    := BT_TEXT_TRANSPARENT
 			n12 := ( (Len(cTexto) + 0)  * nTam1 )
-			n12 := nTamx1 + nCol + nColIniBrw 
-			//+ (250 * nTam1)		
+			n12 := nTamx1 + nCol + nColIniBrw + (250 * nTam1)		
 				
 
 
