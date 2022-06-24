@@ -40,6 +40,7 @@ Static nAcumZ1 := 0
 Static nEtapas := 0 
 Static nMaxBarh := 0
 Static nQ1 := 0
+Static nQ2 := 0
 Static nQContador := 0
 Static nQContador2 := 1
 Static lDraHighM := .f. 
@@ -65,20 +66,57 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
     nLargJan     := nLargJanela
 
     nLargCalc := xCalcTam()
+/*
+    
+    RemoveHandler('EventBrowMtr')
+    RemoveHandler('EventBarMtr')
+    RemoveHandler('EventHeaMtr')
+    RemoveHandler('EVENTHNDCLI')    
+    RemoveHandler('EventHndMain')
+    */
+    
 
 
     lEnabledy := lDispo1
     nColTotal := nTotCol   
     nQ1       := xH_LQtot(1) 
+    nQ2       := xH_LQtot(2) 
+
     
-    nTamBarra := Int(( (nLargJanela - 21) * (   (nLargJanela - 21)/xCalcTam()     )    )) 
+    xh_InitLim()
 
-    nTamBarra := Int( (nLargJanela) * ( nQ1/nColTotal  ) )
 
-    nTamBarra := GetProperty(  cBrowserName , 'Width'  ) - ( (nQ1 - 1) * 100)
+
+    nQBrowCol := xH_xClcDir(  nTotCol  )
+
+    If nQBrowCol > 0
+        nP1 :=  Int( (nLargJanela - 40)  * (nQBrowCol / nColTotal) )
+        nTamBarra := (nLargJanela - 40) - nP1 
+
+        nPassoy := Int((nLargJanela - 40) / nQBrowCol)
+        msginfo(Str(nPassoY) + '    ' + Str(nTamBarra) + '   ' + Str(nQBrowCol))
+    Else 
+
+
+    End If     
+
+
+    xh_InitLim()
+
+
+    //msginfo( Str(np3) + '  ' + Str( xH_xClcDir()  ) )
+
+    //nTamBarra := np3
+
+    
+    //nTamBarra := Int(( (nLargJanela - 21) * (   (nLargJanela - 21)/xCalcTam()     )    )) 
+
+    //nTamBarra := Int( (nLargJanela) * ( nQ1/nColTotal  ) )
+
+    //nTamBarra := GetProperty(  cBrowserName , 'Width'  ) - ( (nQ1 - 1) * 100)
     //- 20
        
-    nPassoy := 100
+    
     //Int( (( (GetProperty(  cBrowserName , 'Width'  )  ) - nTamBarra)  / (nQ1 - 1) ))
 
     //nPassoy := Int(xH_LQtot(2)/nQ1)
@@ -137,6 +175,7 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
 
 
     xh_InitLim()
+    yZeraConter()
  
 
 
@@ -674,11 +713,11 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 )
     Local nSaldo1 := xH_ColResto( xH_RtLimite() )       
     Local aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)
     
-    Local nQ2       := xH_LQtot(2) - 1
+    //Local nQ2       := xH_LQtot(2) - 1
 
     Local nSoma1 := 0
 
-    msginfo(Str(nQ2))
+    //msginfo(Str(nQ2))
 
     
     DEFAULT lModo1 := .f. 
@@ -697,6 +736,8 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 )
 
                 xRoleTela( .t. ,  Xh_RetPasy() ,  lAtuBar   ,  aMInfo[1] , aMInfo[2] )    
 
+                
+
                 nTotScr1 += aMInfo[1]            
             
                 DoEvents()       
@@ -708,6 +749,9 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 )
                 nQContador++
                 nSaldo1 := xGetInfCw1(   nQContador   , 5  )
 
+                //msginfo(Str(nSaldo1) + '  ' + Str(nQContador))
+
+
                 If (nQContador == 1)
                     nSaldo1 += 17
                 End If 
@@ -717,6 +761,8 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 )
                 Aadd(aMInfo , 1)
 
                 DoEvents()
+
+                SysWait(0.03)
                 
                 yScrollCaM( .t. , .f. , nSaldo1  )               
                 yDcBarH1()                                

@@ -1003,7 +1003,7 @@ Function yScrollCaM( lFrente , lUpdBar , nW1  )
 
 	//nAcumTot2 += nHSCrool
 
-	DoEvents()
+	//DoEvents()
 
 	yUpHead1(  cHeaderName ,   Iif( lFrente , nWidth , -(nWidth)  ) )
 	DoEvents()
@@ -1018,7 +1018,7 @@ Function yScrollCaM( lFrente , lUpdBar , nW1  )
 
 	xDcToDc()
 
-	DoEvents()
+	//DoEvents()
 
 
 REturn nWidth
