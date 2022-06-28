@@ -2631,6 +2631,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 	Local nCol1   
 
+
 	Local hWnd
 
 	Local cBrwName        := 'Brw' + Left(cTabela,4) 
@@ -2656,7 +2657,6 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 		If nMsg == WM_MOUSEMOVE
 
 			xLimpBarV()			
-
 
 			GetCursorPos (@nCol1, @nRow1)
 			ar1 := GetPos_ScreenToClient(   nHWnd , nRow1, nCol1 )

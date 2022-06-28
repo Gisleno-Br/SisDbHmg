@@ -61,9 +61,10 @@ FUNCTION LoadFitros( cTabela1 )
 		WIDTH 850 HEIGHT 350 ;
 		CHILD TITLE 'xProcFiltro'  ;		
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE  ; 
-		ON PAINT xProcDlg( ThisWindow.Name ,  'Filtros - ' + Alltrim(cTabela) )  				
+		ON PAINT xProcDlg( ThisWindow.Name ,  'Filtros - ' + Alltrim(cTabela) )  	 ;
+      ON INIT xInitBrw()    ;
+      ON GOTFOCUS yRefresh( 'LstBoxFiltro' )   
 	END WINDOW	
-
 
 
    
@@ -181,7 +182,7 @@ FUNCTION LoadFitros( cTabela1 )
 	WinSombra3.Show()
    
 	Bt_ClientAreaInvalidateAll('WinSombra3')	
-	_ShowWindow('fFiltrosCad')
+	//_ShowWindow('fFiltrosCad')
 
 
    cSalvaJan  :=  cActiveJan
@@ -200,32 +201,51 @@ FUNCTION LoadFitros( cTabela1 )
    l_Ok := xBrowserMtr( 51 ,  aMtrFiltr , 'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' , 'Campo 4'} , ;
       {10,50,60 , 75 , 60 ,45,75  }  , {'C' , 'C' , 'C' , 'C' , 'C' ,'C' ,'C'} , .f. , .t. , 150 )
 
-   
-   //_ShowWindow('LstBoxFiltro')
 
-   BringTop('xProcFiltro')  
-
+   BringTop('xProcFiltro')     
    
    //xWaitY( 'fFiltrosCad' )
 
    If (l_Ok)    
-      DoEvents() 
+       //DoEvents() 
       //SysWait(0.04)
-      _ShowWindow('fFiltrosCad')
-      DoEvents()       
-      _ShowWindow('LstBoxFiltro')      
-      xInitBrw()
-      DoEvents()
+     // _ShowWindow('fFiltrosCad')
+     // DoEvents()       
+     // _ShowWindow('LstBoxFiltro')     
+      
+      
+      //xInitBrw()
+
+      //SysWait(0.05)
+
+      //yGoTop()
+      //DoEvents()
    End If    
 
-   /*
-   Do Events 
+   
+   //DoEvents() 
+
+   ///BringTop('xProcFiltro')    
+
+   yGoTop()
 
    DoMethod( 'fFiltrosCad' , 'Activate')
-   DoMethod( 'fFiltrosCad' , 'SetFocus')
+   //DoMethod( 'LstBoxFiltro' , 'SetFocus')
 
-   Do Events 
+   //DoEvents() 
+
+   //xLibF1(.t.)
+/*
+  msginfo('Act')
+   yGoTop()
+   DoEvents()
+   _ShowWindow('LstBoxFiltro')
+
+   DoEvents()
+
    */
+   
+   
 
 
    //747
@@ -254,7 +274,7 @@ Function xInitFiltr()
    //BT_BitmapC
    
 
-   BT_BitmapSaveFile ( zBitMap  , "zBit20.bmp")
+   //BT_BitmapSaveFile ( zBitMap  , "zBit20.bmp")
 
 
    

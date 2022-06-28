@@ -558,6 +558,8 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 
 	Private cFiltroDlg := 'fFiltro' + Left(cActiveJan,5)
 
+	//msginfo(cFormPrin)
+
 	Load Window fClientes as &cFormPrin
 
 
@@ -1171,7 +1173,7 @@ Function InitTela(  lIni1  , nColz1)
 	DoMethod( 'Brw' + Left(cTabela,4) , 'Activate')
 	DoMethod( cFormPrin , 'SetFocus')
 
-	Do Events 
+	DoEvents() 
 	
 
 
@@ -1734,7 +1736,7 @@ Function OpenReg( cFiltro1  , cFiltro2  , nColz)
 	Next
 
 
-	Do Events
+	DoEvents()
 
 	aM6 := {}
 	aadd(aM6 , aCabec )
