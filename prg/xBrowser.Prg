@@ -797,14 +797,10 @@ Function xShowBrw(  cTable1 , lDisplay   )
 
 
 		If lDisplay 
-
-			//msginfo( Str(  Len(aMt1)  ))
-
 		   BT_ClientAreaInvalidateAll (cEspelhoBrw)	
 
 		   BT_ClientAreaInvalidateAll (cBrwName)	
 		   SysWait(0.02)
-
 		End If 
 
 		_ShowWindow(cBrwName )  

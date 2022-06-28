@@ -28,8 +28,6 @@ FUNCTION LoadFitros( cTabela1 )
    Local l_Ok := .t. 
 
 
-   
-
 
    HB_SETCODEPAGE("PT850")
 
@@ -48,8 +46,6 @@ FUNCTION LoadFitros( cTabela1 )
    Private lNextOp := .f. 
 
 
-     
-
    
    SET LANGUAGE TO PORTUGUESE
    SET CODEPAGE TO PORTUGUESE
@@ -61,13 +57,16 @@ FUNCTION LoadFitros( cTabela1 )
 		WIDTH 850 HEIGHT 350 ;
 		CHILD TITLE 'xProcFiltro'  ;		
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE  ; 
-		ON PAINT xProcDlg( ThisWindow.Name ,  'Filtros - ' + Alltrim(cTabela) )  	 ;
-      ON INIT xInitBrw()    ;
+		ON PAINT xProcDlg( ThisWindow.Name ,  'Filtros - ' + Alltrim(cTabela) )  	 ;      
       ON GOTFOCUS yRefresh( 'LstBoxFiltro' )   
 	END WINDOW	
 
+   //ON INIT xInitBrw(); 
 
-   
+
+   _ShowWindow(  'fFiltrosCad' )
+   DoEvents()
+
    aMtrFiltr := xLoadFiltros( cTabela1  )
 
    If !CheckRet(aMtrFiltr)
@@ -201,63 +200,38 @@ FUNCTION LoadFitros( cTabela1 )
    l_Ok := xBrowserMtr( 51 ,  aMtrFiltr , 'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' , 'Campo 4'} , ;
       {10,50,60 , 75 , 60 ,45,75  }  , {'C' , 'C' , 'C' , 'C' , 'C' ,'C' ,'C'} , .f. , .t. , 150 )
 
-
-   BringTop('xProcFiltro')     
-   
-   //xWaitY( 'fFiltrosCad' )
-
-   If (l_Ok)    
-       //DoEvents() 
-      //SysWait(0.04)
-     // _ShowWindow('fFiltrosCad')
-     // DoEvents()       
-     // _ShowWindow('LstBoxFiltro')     
       
-      
-      //xInitBrw()
-
-      //SysWait(0.05)
-
-      //yGoTop()
-      //DoEvents()
-   End If    
-
-   
-   //DoEvents() 
-
-   ///BringTop('xProcFiltro')    
-
-   yGoTop()
+   //CursorOff1( nHw1 , ''   )	
 
    DoMethod( 'fFiltrosCad' , 'Activate')
    //DoMethod( 'LstBoxFiltro' , 'SetFocus')
 
-   //DoEvents() 
+   msginfo('OVer')
 
-   //xLibF1(.t.)
-/*
-  msginfo('Act')
-   yGoTop()
-   DoEvents()
-   _ShowWindow('LstBoxFiltro')
-
-   DoEvents()
-
-   */
-   
-   
-
-
-   //747
 
    
-
-
-
-
-
-
 RETURN cFiltrox1
+
+
+Function DoCreate()
+
+   Local n1 := 1
+   aMtrFiltr := {}
+
+   For n1 := 1 to 500
+         Aadd( aMtrFiltr , { StrZero(n1,3) , ' Filtro  ' + Strzero(n1,5) , '1adasdsadas'  , '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
+             '1LLPPPPPPPPPPPPPPPPP' , 'GISLENO GUIMARAES JUNIOR '} )
+
+   Next   
+
+   
+   l_Ok := xBrowserMtr( 51 ,  aMtrFiltr , 'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' , 'Campo 4'} , ;
+      {10,50,60 , 75 , 60 ,45,75  }  , {'C' , 'C' , 'C' , 'C' , 'C' ,'C' ,'C'} , .f. , .t. , 150 )
+
+
+
+
+REturn 
 
 Function xInitFiltr()
 
@@ -266,15 +240,6 @@ Function xInitFiltr()
 	Local nTop  := GetProperTy('fFiltrosCad' , 'Row') 
 	Local nLeft := GetProperTy('fFiltrosCad' , 'Col')
    Local zBitMap := BT_BitmapCaptureDesktop ( nTop + 12 , nLeft + 12 , GetProperty('fFiltrosCad' , 'Width') - 7 , GetProperTy('fFiltrosCad' , 'Height') - 7  )
-
-   
-   //Local aMtrFiltr := xLoadFiltros( cTabela  )
-
-
-   //BT_BitmapC
-   
-
-   //BT_BitmapSaveFile ( zBitMap  , "zBit20.bmp")
 
 
    

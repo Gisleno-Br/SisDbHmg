@@ -609,7 +609,7 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 
 	
 
-	
+	cActiveMdi := cFormPrin 
 	Activate Window &cFormPrin
 
 
@@ -1166,8 +1166,8 @@ Function InitTela(  lIni1  , nColz1)
 	
 
 
-
-	xBrowser( 'Clientes' , aMtrDados , cFormPrin ,  'Brw' + Left(cTabela,4)  ,, aCabec , aTams , aTipos1 , .t. ,   .t. , 115   )
+	cBrowDbActive := 'Brw' + Left(cTabela,4) 
+	xBrowser( cTabela , aMtrDados , cFormPrin ,  'Brw' + Left(cTabela,4)  ,, aCabec , aTams , aTipos1 , .t. ,   .t. , 115   )
 
 	
 	DoMethod( 'Brw' + Left(cTabela,4) , 'Activate')

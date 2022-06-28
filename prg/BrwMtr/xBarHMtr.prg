@@ -76,11 +76,10 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
     //nQ2       := xH_LQtot(2) 
 
     nTamBarra := 0
-
     
-    xh_InitLim()
-
-
+  //  xh_InitLim()
+//
+/*
     nQBrowCol := xH_xClcDir(  nColTotal  )
 
     If nQBrowCol > 0
@@ -91,12 +90,12 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
         nPassoy := Int( np1 / (nQBrowCol - 1 )) 
         nQ1 := (nQBrowCol - 1 )
     Else 
+    */
+
+    xH_CalcBar()
 
 
-    End If   
-
-    xh_InitLim()    
-    nTotScr2 := xH_RtLimite()
+//    nTotScr2 := xH_RtLimite()
 
     
     cHead1 := cHeaderN1   
@@ -160,23 +159,6 @@ Function xQbrwCol()
 Return xH_xClcDir(  nColTotal  )
 
 
-Function ySetBarTam(nTamanho , nQz)
-    //nWidBarra := nTamanho    
-
-    nTamBarra := nTamanho  
-  
-
-    nQ1 := nQz 
-
-    // yCalcEtap1()
-    nEtapas :=  Int( (GetProperty(  cBrwName , 'Width'  ) - nTamBarra)  /   nQ1 )                
-
-    BT_ClientAreaInvalidateAll(cBarraName)  
-    yDcBarH1()
-
-    DoEvents() 
-
-REturn 
 
 
 Function Xh_RetPasy()
@@ -198,18 +180,44 @@ Static Function xShowHint( nRow1 , nCol1 , cMsg )
 
 REturn     
 
+Function xH_CalcBar()
+ 
+    Local nQB1 := xH_xClcDir(  nColTotal   )
+
+    //msginfo(Str( nColTotal ))
+
+    xh_InitLim()
+
+    If nQB1 > 0
+
+        nZ1 := Transform( (nQB1 / nColTotal) , '999,999.999999')         
+        nP1 :=  Int( (nLargJan - 20)  * rTrans(  nZ1   ) )
+        nTamBarra := (nLargJan - 20) - nP1       
+        nPassoy := Int((nLargJan - 20) / nQb1)        
+        nPassoy := Int( np1 / (nQB1 - 1 )) 
+        nQ1 := (nQB1 - 1 )
 
 
+        If _IsWindowDefined(cBarraName)         
+            BT_ClientAreaInvalidateAll(cBarraName)  
+            yDcBarH1()
 
-Static Function xCalcBarH( nWidth )
-
-    Local nCalc := 0
-    Local n2    := 0
-    Local nLargTotal := nWidth - (nColTotal * 20)
+            DoEvents() 
+        End If 
     
+    End If 
+
+    //msginfo(Str(   nPassoy ))
+
+    xh_InitLim()
 
 
-Return nLargTotal 
+
+Return nQB1
+
+
+
+
 
 Function yGoBarR()
 
@@ -641,15 +649,6 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 )
     Local nI1     
     Local nSoma1 := 0
 
-/*
-    
-    RemoveHandler('EventBrowMtr')
-    RemoveHandler('EventBarMtr')
-    RemoveHandler('EventHeaMtr')
-    RemoveHandler('EVENTHNDCLI')    
-    RemoveHandler('EventHndMain')
-    */        
-
     DEFAULT lModo1 := .f. 
     DEFAULT lAtuBar := .t. 
                
@@ -680,7 +679,8 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 )
 
             If (nQContador = nQ1 )
                 nZ1 := (xCalcTam() - xGetInfCw1(   nColtotal - 1   , 3  ))+xRetTam( 11 )                   
-                nSaldo1 := nZ1                 
+                nSaldo1 := nZ1   
+                //msginfo(Str(  nSaldo1))               
             Else                     
                 nSaldo1 := xGetInfCw1(   nQContador   , 5  )                
             End If           

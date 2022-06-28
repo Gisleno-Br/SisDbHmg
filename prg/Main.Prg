@@ -163,6 +163,9 @@ FUNCTION Main
 	Public nTxColorE  := Rgb( 79, 79, 79 )
 	Public nFrColorE  := Rgb( 207, 207, 207 )
 
+	Public cBrowDbActive := ''
+	Public cActiveMdi    := ''
+
 	Public nPosScr := 0
 
 	Public nBkColorE1 := Rgb( 251, 251, 251 )
@@ -754,13 +757,10 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 		If (nMsg == 71)
 			//WM_WINDOWPOSCHANGED
-
 			If (_IsWindowDefined( cActiveJan)) .And. (cActiveJan != "Main")
 				xShowBrw(  cTabela  )
+				//msginfo('lp22')
 			End If
-
-
-
 		End If
 
 
