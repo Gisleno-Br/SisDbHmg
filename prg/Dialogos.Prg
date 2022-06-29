@@ -3,6 +3,8 @@
 
 #define WM_SETFOCUS 7
 
+#DEFINE CORHEAD1 {110,125,129}
+
 //25-09
 
 Static nIndexDialog  := 0
@@ -518,7 +520,9 @@ Function xProcDlg(  cJanela , cText , lMsgRun    )
 
 	BT_DrawGradientFillVertical ( hDC2 ,  0,  0,  Width, 20 , aRGBcolor , BLACK )
 
-	BT_DrawGradientFillVertical ( hDC2 ,  220 ,  0 , Width ,  25 ,   { 238,238,238}, {  244,244,244 } )
+	//BT_DrawGradientFillVertical ( hDC2 ,  15 ,  0 , Width,  Height ,  CORHEAD1, CORHEAD1 )
+
+
 
 	If !lMsgRun
 		//BT_DrawText (hDC2 , 120 , 15 , alltrim(cText) , "arial", 9, BLACK ,  WHITE , , nAlingText, nOrientation)
@@ -534,6 +538,7 @@ Function xProcDlg(  cJanela , cText , lMsgRun    )
 
 
 	BT_DeleteDC ( BTstruct2 )
+	BT_BitmapRelease (hBitSeta)
 
 
 REturn 

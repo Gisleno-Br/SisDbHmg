@@ -16,6 +16,12 @@
 #define CORBROWSE {241,241,241}
 #define SELCOR    {28,157,189}
 
+#DEFINE CORHEAD1 {110,125,129}
+#DEFINE CORHEAD2  {92,104,107}
+
+#DEFINE CORHEAD3  {102,116,120}
+#DEFINE CORHEAD4  {80,91,94}
+
 //{217,255,255}
 
 
@@ -70,6 +76,7 @@ Static lTracking546 := .f.
 Static nTotz2 := 0
 
 Static lEnabled2 := .t.
+Static lDisphint := .f. 
 
 Static c_BrowName := ''
 
@@ -102,6 +109,7 @@ Static nColTam1 := 0
 Static nColTarget := 0
 
 Static cTituloCol := ''
+Static nQConter := 1
 
 Static hBit201 := Nil
 
@@ -157,7 +165,8 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 		CHILD ;
 		PANEL ;
 		PARENT &cParent1 ;                                                                                                        //nLarg1+1
-		WIDTH nLarg1+1 HEIGHT 30 VIRTUAL HEIGHT Nil VIRTUAL WIDTH Iif( (nLargTot1 > 0) .And. ( nLargTot1 > (nLarg1+1)) , nLargTot1 , Nil )  ;
+		VISIBLE .F. ;
+		WIDTH nLarg1+1 HEIGHT 31 VIRTUAL HEIGHT Nil VIRTUAL WIDTH Iif( (nLargTot1 > 0) .And. ( nLargTot1 > (nLarg1+1)) , nLargTot1 , Nil )  ;
 		TITLE 'xHeader1' + Left(cHName,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR Nil  ;
 		ON PAINT xPaintHeader( ThisWindow.Name , aCabecs  , aColsTam , aTipsy )
@@ -181,33 +190,34 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 		AT nRowI - 28 , nColi  ;
 		CHILD ;
 		PANEL ;
+		VISIBLE .F. ;
 		PARENT &cParent1 ;
-		WIDTH nLarg1+1 HEIGHT 30 VIRTUAL HEIGHT Nil   ;
+		WIDTH nLarg1+1 HEIGHT 31 VIRTUAL HEIGHT Nil   ;
 		TITLE 'xHeaderSombra1' + Left(cHName,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR RGB(242,242,242)
+	
 
-
-	DEFINE LABEL Label2
-	ROW    0
-	COL    0
-	WIDTH  nLarg1+1
-	HEIGHT 30
-	VALUE " "
-	FONTNAME "Arial"
-	FONTSIZE 9
-	TOOLTIP ""
-	FONTBOLD .F.
-	FONTITALIC .F.
-	FONTUNDERLINE .F.
-	FONTSTRIKEOUT .F.
-	HELPID Nil
-	VISIBLE .T.
-	TRANSPARENT .T.
-	ACTION Nil
-	AUTOSIZE .F.
-	BACKCOLOR Nil
-	FONTCOLOR NIL
-	END LABEL
+		DEFINE LABEL Label2
+			ROW    0
+			COL    0
+			WIDTH  nLarg1+1
+			HEIGHT 30
+			VALUE " "
+			FONTNAME "Arial"
+			FONTSIZE 9
+			TOOLTIP ""
+			FONTBOLD .F.
+			FONTITALIC .F.
+			FONTUNDERLINE .F.
+			FONTSTRIKEOUT .F.
+			HELPID Nil
+			VISIBLE .T.
+			TRANSPARENT .T.
+			ACTION Nil
+			AUTOSIZE .F.
+			BACKCOLOR Nil
+			FONTCOLOR NIL
+		END LABEL
 
 
 	END WINDOW
@@ -229,7 +239,7 @@ Return lOk
 
 Function xh_InitLim()
 	nLimiteAtu := GetProperty( c_BrowName , 'Width')
-Return
+Return nLimiteAtu
 
 Static Function SetOrdGrid( nColuna1 , lAsc1 )
 
@@ -569,6 +579,8 @@ Function EventHeaMtr()
 	Local nColx2 := 0
 	Local i
 
+	Local nLimite1 := xh_InitLim()
+
 	LOCAL  nHWnd   := EventHWND()
 	LOCAL  nMsg    := EventMSG()
 	LOCAL  nWParam := EventWPARAM()
@@ -583,7 +595,9 @@ Function EventHeaMtr()
 
 	Local nCol := 0
 	Local nSaveCol1 := 0
-	Local nQTotEt := CalcEtapas()
+	Local nQTotEt := 0
+	
+	//CalcEtapas()
 	//-(nColHeader)
 
 	//msginfo(Str(  nQTotEt     ))
@@ -770,21 +784,9 @@ Function EventHeaMtr()
 
 		End If
 
-		If (nMsg == WM_MOUSEMOVE) 
-		    //.And. ( GetFormHandle())
-			//.And. (!lTracking546)
-
-
+		If (nMsg == WM_MOUSEMOVE) 		
 			xLimpBarV()
-			//SysWait(0.01)
-
-			//msginfo('ok2')
-
-
-			// For i := 1 To 255
-			//     GetAsyncKeyState(i)
-			//  Next i
-
+		
 			s1 := ''
 			s2 := ''
 
@@ -794,21 +796,112 @@ Function EventHeaMtr()
 			nColx := ar1[2]
 
 
-			If _IsWindowDefined('Win_Msg')
-				If !IsWindowVisible('Win_Msg')
+			If (!lDisphint)
+			//	DoEvents()
+				
+				DoEvents()
+				SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , Hb_AnsiToOem('Click e Arraste a Coluna para Mudar de Posição.')   )				
+				SysWait(0.01)
 
-					DoEvents()
-
-					yDoHint(   ,   Hb_AnsiToOem('Click e Arraste a Coluna para Mudar de Posição.')  )
-					//lTracking546 := .t.
-					 //msginfo('ok2')
-
-					//SysWait(0.03)
-				End If
+				lDisphint := .t.            
 			End If
 
+			nColx5 := 0
+			i:=1
+
+			nQT1 := xH_xClcDir(  Len(aMapsCol[1])   ) - 1
+			
+
+			//msginfo(Str( nQt1 ))
+
+			For i := 1 To 255
+				GetAsyncKeyState(i)
+			Next i
+
+			lDragMode := .t.
+
+			While (GetAsyncKeyState(VK_LBUTTON) != 0) 
+					
+					GetCursorPos (@nCol, @nRow)
+					ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
+					nColx := ar1[2]
 
 
+					If (nColx5 == 0)
+						nColx5 := nColx
+					End If 
+
+					If ( Abs(nColx - nColx5) > 1)
+
+						
+						DoEvents()
+
+						nTarget := xBusqTar( nColSav1  , lFrente1 )
+
+						DoEvents()
+
+						If (nColx > (nLimite1 - 10) ) .And. (nColSele > 0) .And. (nQConter <= nQT1)						    
+							nZ1 := xDoScrolV( .t. , .t. , .t.  , .f. )
+							nQConter++														
+							nColSav1 += nZ1							
+							xMoveWin( nColSele , nColSav1 , lFrente1 )
+							SysWait(0.06)																	
+							DoEvents()
+							yUpHead1(  cHeaderJan , (nZ1) )
+							DoEvents()
+						Else 	
+							If (nColx  > nColx5)
+								lFrente1 := .t.							
+								nColSav1 += ( nColx - nColx5  )
+							Else 
+								lFrente1 := .f. 
+								nColSav1 -= ( nColx - nColx5  )
+							End If 
+
+
+						
+							If (nTarget > 0)
+								nColTarget := nTarget
+								BT_ClientAreaInvalidateAll(   cHeaderJan )
+								xDcBarHeader()
+
+								DoEvents()
+								SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , hb_AnsitoOem('Trocar a Posição , Coluna ' + QuotedStr(Alltrim(aMapsCol[nTarget][1]  )) ) )									
+								SysWait(0.01)
+
+							End If
+
+
+							//DoEvents()
+							//SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , Hb_AnsiToOem('Movendo a Coluna ' + Alltrim(cTituloCol) )    )				
+							//SysWait(0.01)			
+
+							xMoveWin( nColSele , nColSav1 , lFrente1 )
+							
+							nColx5 := nColx
+
+
+						End If 								
+						DoEvents()
+					Else 
+
+
+					End If 
+
+
+
+					For i := 1 To 255
+						GetAsyncKeyState(i)
+					Next i
+
+
+
+			Enddo 
+
+			//msginfo('ok2')
+
+
+             /*
 			If (nColx5 > 0)
 
 
@@ -816,10 +909,18 @@ Function EventHeaMtr()
 				nTamx := Int(xGetColWidth(  nColSele    )	/ 2)
 
 
-				If ( Abs(nColx - nColx5) > 2)
+				If ( Abs(nColx - nColx5) > 1)
+					DoEvents()
+				//	yDoHint(   ,   Hb_AnsiToOem('Click e Arraste a Coluna para Mudar de Posição.')  )
+
+					DoEvents()
+
+					//msginfo('l1')
+
 					//.And. (  (nColx <=  ( (nLim1 + nTamx + 20)) )     )
 					lDragMode := .t.
 
+					nQTotEt := xH_xClcDir(   Len(aMapsCol[1])     )				
 					nColx5 := nColx
 
 					//  SysWait(0.02)
@@ -851,6 +952,7 @@ Function EventHeaMtr()
 
 							lDragMode := .f.
 							lDraHighM := .f.
+							lDisphint := .f. 
 							nColx5 := 0
 							nColMove := 0
 							nColY1   := 0
@@ -858,9 +960,7 @@ Function EventHeaMtr()
 							nColSav1 := 0
 							nColTam1 := 0
 							nColTarget := 0
-							If  _isWindowDefined("Win_Msg")
-								 xHidehint()
-							End If
+						
 
 							Exit
 
@@ -901,6 +1001,7 @@ Function EventHeaMtr()
 
 							xMoveWin( nColSele , nColSav1 , lFrente1 )
 						    yDoHint(    ,   'Movendo a Coluna ... ')
+							DoEvents()
 
 							If (nTarget > 0) .or. (lScrool1)
 
@@ -932,24 +1033,37 @@ Function EventHeaMtr()
 										UpdateBarH( -nConst1  )
 									End If
 
-
+							
 									If lFrente1
 									//	nZp1 := ScrollCol( .t. , .f. )
+										lOk1 := xDoScrolV( .t. , .t. , .t. )
 									Else
 									//	nZp1 := ScrollCol( .f. , .f. )
 										//msginfo('voltando')
+										nZp1 := yScrollCaM( lFrente1 , .f. , nW1 , .f. )
+										
 									End If
+							
 
-									If (nZp1 != -1)
+									nZp1 := yScrollCaM( lFrente1 , .t. )
+									SysWait(0.02)
+									
+									If (nZp1 != 0)
 
-										SysWait(0.03)
+										SysWait(0.04)
 
 										If lFrente1
 											nQDrag1++
-											UpdateBarH( nConst1  )
+											//UpdateBarH( nConst1  )
 										Else
 											nQDrag1--
 										End If
+
+										DoEvents()
+
+										xDoHint(    ,   'Posicionando na Coluna ' + Alltrim(Str(nQDrag1))   )
+
+										DoEvents()
 
 										xDcBarH()
 										SysWait(0.03)
@@ -963,35 +1077,32 @@ Function EventHeaMtr()
 
 									SysWait(0.02)
 									xMoveWin( nColSele , nColSav1 , lFrente1 )								
+									SysWait(0.05)
 
 									If (lFrente1)
 										If (nQDrag1 >= nQTotEt)
+
 											lFrente1 := .f.
 											nColx5 := nZ1
+											msginfo('Exit ' + Str(nQDrag1) + '   ' + Str( nQTotEt ))
 											Exit
 										End If
+										
+										msginfo(Str(nQDrag1) + '   ' + Str(nColSele)  + '   ' + aMapsCol[nColTarget][1]   )
 									Else
 
-										If nQDrag1 == 0
-											
 
+										If (nQDrag1 == 0)
 											nColHeader := 0
 											nColTarget := 1
-											
-
 											lFrente1 := .t.
 											nColx5 := nZ1
 											nColSav1 := -(nLastro1)											
-
 											SysWait(0.02)
-
 											xMoveWin( nColSele , nColSav1 , .f. )
 											SysWait(0.01)
-
 											xZeraContador()
 											DoEvents()
-
-
 											Exit
 										End If
 
@@ -1016,6 +1127,7 @@ Function EventHeaMtr()
 				End If
 
 			End If
+			*/
 
 			DoEvents()
 
@@ -1159,10 +1271,9 @@ Static Function xBusqTar( nPoint , lFrente5 )
 	Local nQtt   := xGetColQw1()
 	Local nLimite := xGetInfCw1( nQtt , 2)
 
-	//Aadd( aMapsCol , {   aCabs[n1] , nColx , nColx +  nTam + 1 , aTipos1[n1] ,   nTam ,  aTamx1[n1] , nAcum   }  )
-
+	
 	If lFrente5
-		N1 := Ascan( aMapsCol , { |a| Abs(a[3] - nPoint) <= 25     })
+		N1 := Ascan( aMapsCol , { |a| Abs(a[2] - nPoint) <= 25     })
 
 		If n1 == 0
 			If ((nLimite - nPoint) <= 10)
@@ -1296,9 +1407,12 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
 	Local nAcum := 1
 	Local hDC
 	Local nAcum2 := 0
+	Local cFont1 := FONTBROWSER
+	//'Arial'
+	//FONTBROWSER
 
 	hDC = BT_CreateDC ( cHeaderJan  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct )
-	hFont := HMG_CreateFont (  hDC , FONTBROWSER, FONTBROWSERSIZE, .f., .f., .f., .f. )
+	hFont := HMG_CreateFont (  hDC ,  cFont1 , FONTBROWSERSIZE, .f., .f., .f., .f. )
 
 	aMapsCol := {}
 
@@ -1314,7 +1428,7 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
 			nAcum2 += ( (nColx +  nTam + 1 ) - nColx )
 			Aadd( aMapsCol , {   aCabs[n1] , nColx , nColx +  nTam , aTipos1[n1] ,   nTam ,  aTamx1[n1] , nAcum  , nAcum2 }  )
 
-			SaveLog('Colunas.txt' , aMapsCol[n1][1] + '  ' + Str(aMapsCol[n1][2])  + '   ' + Str(aMapsCol[n1][3]) + '   ' + Str(aMapsCol[n1][5]) + XQUEBRA   )
+	//		SaveLog('Colunas.txt' , aMapsCol[n1][1] + '  ' + Str(aMapsCol[n1][2])  + '   ' + Str(aMapsCol[n1][3]) + '   ' + Str(aMapsCol[n1][5]) + XQUEBRA   )
 			nColx += (nTam + 1)
 			If (nTam >=  nLimiteAtu)
 				Return .f.
@@ -1332,14 +1446,14 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
 			nAcum2 += ( (nColx +  nTam + 1 ) - nColx )
 
 			Aadd( aMapsCol , {   '   ' , nColx , nColx +  nTam + 1 , 'C' ,   nTam ,  10  , nAcum  , nAcum2 }  )
-			SaveLog('Colunas.txt' , aMapsCol[n1][1] + '  ' + Str(aMapsCol[n1][2])  + '   ' + Str(aMapsCol[n1][3]) + '   ' + Str(aMapsCol[n1][5]) + XQUEBRA   )
+			
 
 		End If
 
 	Next
 
 
-	SaveLog('Colunas.txt'  , ' Total : ' + Alltrim(Str(  nAcum2    ))  + '    xCalctam : '  + Str(xCalcTam()) )
+	
 
      
 	
@@ -1684,8 +1798,12 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 	Local cTexto  := ''
 	Local cTexto1 := ''
 	Local n1     := 1
+	Local nLinha := 5
 	Local nCol21
 	Local nTam1 := 0
+	Local cFontHead := 'Arial'
+	//FONTBROWSER
+	Local nfontSize := 9
 	Local nTamx1 := GetTextoTam( 'A'  , cActiveJan )
 	Local hFont
 	Local nTypeText    := BT_TEXT_TRANSPARENT  //+ BT_TEXT_BOLD
@@ -1705,7 +1823,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 	hDC = BT_CreateDC ( cJanela  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct )
 
 	If lEnabled2
-		BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    ,  {117,124,131}  , {137,143,150} )
+		BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    , CORHEAD1  , CORHEAD1 )
 	else
 		BT_DrawGradientFillHorizontal ( hDC ,   0 , 0  , Width ,    Height    ,  {110,110,110}  , GRAY )
 	End If
@@ -1718,11 +1836,11 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 		nColx += nCol
 	End If
 
-	BT_DRAWEDGE (hDC, 0 , 0 ,  Width     , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
+	//BT_DRAWEDGE (hDC, 0 , 0 ,  Width     , Height ,  BDR_RAISED  , BF_LEFT + BF_RIGHT)
 
 
 	BT_DrawBitmap (hDC  , 6 ,  (0+nColx) - 16  , 15  , 15 , BT_STRETCH, hBitOk)
-	hFont := HMG_CreateFont (  hDC , FONTBROWSER, FONTBROWSERSIZE, .f., .f., .f., .f. )
+	hFont := HMG_CreateFont (  hDC , cFontHead  ,  nfontSize , .f., .f., .f., .f. )
 
 	nCol21 := 0
 
@@ -1749,32 +1867,36 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
 		If (nColSel1 > 0) .And. (nColSel1 = n1)
 			If nColSel1 != Len(aCabecs)
-				BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 1 ,    Height    , {163,168,173} , {163,168,173} )
+				BT_DrawGradientFillHorizontal ( hDC ,   1 ,  nColx  , nTam + 1 ,    Height    ,CORHEAD3 , CORHEAD4 )
 			Else
-				BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 250 ,    Height    , {163,168,173} , {163,168,173} )
+				BT_DrawGradientFillHorizontal ( hDC ,   1 ,  nColx  , nTam + 250 ,    Height    , CORHEAD3 , CORHEAD4 )
 			End If
 
 		Else
 
-
+           
 			If (nColTarget == n1)
 				If nColTarget ==  Len(aCabecs)
-					BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 300 ,    Height    , {163,168,173}, WHITE )
+					BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 300 ,    Height    ,CORHEAD3, CORHEAD4 )
 				Else
-					BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 1 ,    Height    ,{163,168,173} , WHITE )
+					BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 1 ,    Height    ,CORHEAD3 , CORHEAD4 )
 				End If
 
 			End If
+			
 
 		End If
 
-		BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
-		BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
+		//BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
+	//	BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
 
 
 		If (nOrdemSel == n1)
 			nCol21 := nColx+4
 		End If
+
+		BT_DrawText ( hDC , nLinha  ,nColx + 5 ,     Padc( Alltrim(  Hb_AnsiToOem(aMapsCol[n1][1] ))   ,   nTam2 + 1  )   , cFontHead  , nfontSize , WHITE,  {230,230,230}   , ;
+		nTypeText ,	nAlingText, nOrientation )
 
 		nColx += nTam1
 
@@ -1782,11 +1904,13 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
 	nColx += aMapsCol[Len(aMapsCol)][5]
 
-	BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
-	BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
+//	BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
+	//BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
 
-	BT_DrawText ( hDC , 10  , nColIniBrw+nCol ,   Hb_AnsiToOem(cTexto1) , FONTBROWSER  , FONTBROWSERSIZE , WHITE,  {230,230,230}   , ;
-		nTypeText ,	nAlingText, nOrientation )
+	//BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
+
+//	BT_DrawText ( hDC , nLinha  , nColIniBrw+nCol ,   Hb_AnsiToOem(cTexto1) , cFontHead  , nfontSize , WHITE,  {230,230,230}   , ;
+	//	nTypeText ,	nAlingText, nOrientation )
 
 
 	If !lEnabled2
@@ -1816,25 +1940,30 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
 
 		If nColSele != Len(aCabecs)
-			BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam - 5   ,    Height    ,  {163,168,173} , {128,128,128} )
+			BT_DrawGradientFillHorizontal ( hDC ,   1 ,  nColx  , nTam - 5   ,    Height    ,  CORHEAD2, CORHEAD2 )
 		Else
-			BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 350   ,    Height    ,  {163,168,173} , {128,128,128} )
+			BT_DrawGradientFillHorizontal ( hDC ,   1 ,  nColx  , nTam + 350   ,    Height    ,  CORHEAD2 , CORHEAD2 )
 		End If
 
 		If nOrdemSel == nColSele
 			BT_DrawBitmapTransparent (hDC  , 6 ,  nColx+2 , 16  , 16 , BT_STRETCH, Iif(lAscending ,  hBitOrd1 ,  hBitOrd2 ) )
 		End If
 
+		BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx - 1 ,    nTam1 - 2       ,    Height    ,CORHEAD4, CORHEAD3 )
 
-		BT_DrawText ( hDC , 10  , nColx,   Hb_AnsiToOem(cTexto1) , FONTBROWSER  , FONTBROWSERSIZE , WHITE,  {230,230,230}   , ;
+
+		BT_DrawText ( hDC , nLinha  , nColx,   Hb_AnsiToOem(cTexto1) , cFontHead  , nfontSize, WHITE,  {230,230,230}   , ;
 			BT_TEXT_TRANSPARENT+BT_TEXT_BOLD ,	nAlingText, nOrientation )
 
+		
+
+		//BT_DrawText ( hDC , 3  , nColx,   Alltrim(Hb_AnsiToOem(cTexto1))  , 'MS LineDraw'  , FONTBROWSERSIZE , WHITE,  {230,230,230}   , ;
+		//	BT_TEXT_TRANSPARENT ,	nAlingText, nOrientation )
 
 
-		hBit201 := BT_BitmapCaptureWindow ( cJanela , 1 , nColx , nTam - 5  , Height )
-		//BT_BitmapSaveFile (hBit201  , "hBit201.bmp")
 
-
+		hBit201 := BT_BitmapCaptureWindow ( cJanela , 0 , nColx , nTam - 5  , Height )
+		
 
 
 	End If
@@ -1843,7 +1972,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 	If (lDragMode) .And. (nColMove > 0) .And. (nColMove <= Len(aMapsCol))
 
 
-		nColx1 := aMapsCol[nColMove][2]+nIncr1
+		nColx1 := aMapsCol[nColMove][2] // +nIncr1
 		nColx2 := aMapsCol[nColMove][5]
 
 
@@ -1854,7 +1983,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 		End If
 
 
-		BT_DrawBitmapAlphaBlend (hDC, 1 ,  nColx1  , nColx1+nColx2, Height, 100 , BT_COPY  , hBit201)
+		BT_DrawBitmapAlphaBlend (hDC, 0 ,  nColx1  , nColx1+nColx2, Height, 110 , BT_COPY  , hBit201)
 
 	End If
 
@@ -1865,6 +1994,8 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
 	BT_BitmapRelease (hBitOrd1)
 	BT_BitmapRelease (hBitOrd2)
+
+	BT_BitmapRelease(hBit201)
 
 
 

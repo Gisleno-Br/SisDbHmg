@@ -339,28 +339,28 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 	cHeaderName := 'Win_HeadMtr' + Left(cBrowserName,4)
 	nQEtp := 0
 
-
+	//PANEL ;
 	DEFINE WINDOW &cBrowserName ;
-		AT nRowIni,nCol  ;
-		CHILD ;
+		AT nRowIni - 1,nCol - 3  ;
+		CHILD ;		
 		PANEL ;
-		PARENT &cParent ;
-		VISIBLE .f. ;
+		PARENT &cParent ;		
 		WIDTH nLarg1 HEIGHT nAltura1 VIRTUAL HEIGHT Iif(  Len(aMt1) > nTamPag , (Len(aMt1) * nItemBrwHeight) , Nil) VIRTUAL WIDTH Iif( nLargTotal+1 > nLarg1 ,  nLargTotal+1 , Nil) ;
 		TITLE 'xBrowser' + Left( cParent ,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR Nil  ;
 		ON PAINT Iif( lLibera1 ,  xPaintBrwMtr( ThisWindow.Name , aMDisplay , 100 ,     nClearIt2  , .t.  )  , )
 	END WINDOW
 
+	//PANEL ;		
+
 	DEFINE WINDOW &cEspelhoBrw ;
-		AT nRowIni,nCol  ;
-		CHILD ;
+		AT nRowIni - 1,nCol - 3  ;
+		CHILD ;		
 		PANEL ;
-		VISIBLE .f. ;
 		PARENT &cParent ;
 		WIDTH nLarg1 HEIGHT nAltura1 VIRTUAL HEIGHT Iif(  Len(aMt1) > nTamPag ,(Len(aMt1) * nItemBrwHeight) , Nil) VIRTUAL WIDTH Iif( nLargTotal+1 > nLarg1 ,  nLargTotal+1 , Nil)  ;
 		TITLE 'xEspelho' + Left(cParent,4)  	;
-		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR RED ;
+		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR Nil ;
 		ON MOUSEMOVE ( yCheckObj() , cObjSelected := 'aMtrBrowser'   )
 	END WINDOW
 
@@ -369,6 +369,8 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 
 
 	lAtivo1 := ((nLargTotal+1) > nLarg1)
+
+	//aCabecalho := {}
 
 	If Len(aCabecalho) > 0
 		lHasHeader := xHeaderMtr( cHeaderName , aCabecalho , aTamanhos , cParent ,  cBrowserName ,  nLarg1 , aTipos , cTabela , lAtivo1 , lDicionario , nRowIni - 2 , nCol )
@@ -890,7 +892,10 @@ Function yScrollCaM( lFrente , lUpdBar , nW1 , lUpdHeader )
 
 	End If
 
-	yUpHead1(  cHeaderName ,   Iif( lFrente , nWidth , -(nWidth)  ) )
+	If lUpdHeader
+		yUpHead1(  cHeaderName ,   Iif( lFrente , nWidth , -(nWidth)  ) )		
+	End If 
+
 	yDcToDc()
 
 	DoEvents()
@@ -2463,6 +2468,7 @@ Function yDoHint(   nIdBut , cMsg , lNoHint   )
 		xDispUpTam(cTp1 )
 
 		BringTop('xHint')
+		DoEvents()
 
 	End If
 

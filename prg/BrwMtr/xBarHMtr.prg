@@ -102,7 +102,7 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
 
         
     DEFINE WINDOW &cJanName ;
-        AT nLinha1 , nColuna ;
+        AT nLinha1 - 3, nColuna - 3 ;
         CHILD ;
         PANEL ;
         PARENT &cParent ;
@@ -120,7 +120,7 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
 
 
     DEFINE WINDOW &cJanSombra ;
-        AT nLinha1 , nColuna ;
+        AT nLinha1 - 3 , nColuna - 3;
         CHILD ;
         PANEL ;
         PARENT &cParent ;
@@ -640,7 +640,7 @@ Return
 
 
 
-Function xDoScrolV( lFrente , lAtuBar , lModo1 )
+Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 )
 
     Local nSaldo1 := xH_ColResto( xH_RtLimite() )       
     Local aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)
@@ -651,8 +651,9 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 )
 
     DEFAULT lModo1 := .f. 
     DEFAULT lAtuBar := .t. 
+    DEFAULT lAtuHead1 := .t. 
                
-    SysWait(0.03)
+    //SysWait(0.03)
     
     
     If lFrente       
@@ -668,6 +669,8 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 )
             xH_IncLim( aMInfo[1] )         
 
         Else             
+
+            //Coluna a Coluna
 
             If nQContador >= nQ1
                 xDialog( hb_ANSIToOEM("Não ha mais tela para Rolar a Direita."))
@@ -698,7 +701,7 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 )
 
             SysWait(0.03)
                 
-            yScrollCaM( .t. , .f. , nSaldo1  )               
+            yScrollCaM( .t. , .f. , nSaldo1  , lAtuHead1 )               
 
             If lAtuBar
                 yUpdatBha1( Xh_RetPasy()     )
@@ -774,7 +777,7 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 )
 
             DoEvents()
             SysWait(0.03)                
-            yScrollCaM( .f. , .f. , nSaldo1  )               
+            yScrollCaM( .f. , .f. , nSaldo1 , lAtuHead1  )               
 
             If lAtuBar
                 yUpdatBha1( -(Xh_RetPasy())     )            
@@ -797,7 +800,7 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 )
     End If
 
 
-Return .t. 
+Return nSaldo1
 
 
 
