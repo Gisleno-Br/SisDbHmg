@@ -159,18 +159,31 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 
 	//msginfo(Str( nLimiteAtu  ))
 
+	//  CHILD ;	                                                                                                 //nLarg1+1			
+	//	PANEL ;
+		//PARENT &cParent1 ;       		
 
-	DEFINE WINDOW &cHName ;
-		AT nRowI - 28 , nColi  ;
-		CHILD ;
+	//	PANEL ;
+		//PARENT &cParent1 ;       
+
+	//AT nRowI - 28 , nColi - 2 ;
+	//HMG_ChangeWindowStyle(  GetFormHandle( cHName   ) , WS_POPUP , NIL, .T., .T. )
+
+
+
+	DEFINE WINDOW &cHName ;		
+		AT nRowI - 28 , nColi - 2 ;
+	    CHILD ;	                                                                                                 //nLarg1+1			
 		PANEL ;
-		PARENT &cParent1 ;                                                                                                        //nLarg1+1
+	    PARENT &cParent1 ;       	
 		VISIBLE .F. ;
-		WIDTH nLarg1+1 HEIGHT 31 VIRTUAL HEIGHT Nil VIRTUAL WIDTH Iif( (nLargTot1 > 0) .And. ( nLargTot1 > (nLarg1+1)) , nLargTot1 , Nil )  ;
+		WIDTH nLarg1 - 1 HEIGHT 31 VIRTUAL HEIGHT Nil VIRTUAL WIDTH Iif( (nLargTot1 > 0) .And. ( nLargTot1 > (nLarg1+1)) , nLargTot1 , Nil )  ;
 		TITLE 'xHeader1' + Left(cHName,4)  	;
-		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR Nil  ;
-		ON PAINT xPaintHeader( ThisWindow.Name , aCabecs  , aColsTam , aTipsy )
+		NOSIZE NOSYSMENU NOCAPTION NOAUTORELEASE NOMINIMIZE NOMAXIMIZE BACKCOLOR WHITE ;		
+		//ON PAINT xPaintHeader( ThisWindow.Name , aCabecs  , aColsTam , aTipsy )
 	END WINDOW
+
+
 
 
 
@@ -180,22 +193,24 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 	If (!lScrool5)
 		//msginfo('no Scr')
 
-	End If
+	End If	
 
 
-	
+		//PANEL ;	
+		//PARENT &cParent1 ;
 
-
-	DEFINE WINDOW &cHeaderSombra ;
-		AT nRowI - 28 , nColi  ;
-		CHILD ;
+	//	AT nRowI - 28 , nColi - 2 ;
+	DEFINE WINDOW &cHeaderSombra ;		
+		AT nRowI - 28 , nColi - 2 ;
+	    CHILD ;	                                                                                                 //nLarg1+1			
 		PANEL ;
-		VISIBLE .F. ;
-		PARENT &cParent1 ;
-		WIDTH nLarg1+1 HEIGHT 31 VIRTUAL HEIGHT Nil   ;
+	    PARENT &cParent1 ;       		
+		WIDTH nLarg1 - 1 HEIGHT 31 VIRTUAL HEIGHT Nil   ;
 		TITLE 'xHeaderSombra1' + Left(cHName,4)  	;
-		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR RGB(242,242,242)
-	
+		NOSIZE NOSYSMENU NOCAPTION NOAUTORELEASE NOMINIMIZE NOMAXIMIZE BACKCOLOR WHITE ;		
+		//ON INIT MsgInfo('ok22')
+		//RGB(242,242,242)
+		
 
 		DEFINE LABEL Label2
 			ROW    0
@@ -225,8 +240,31 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 	CREATE EVENT PROCNAME EventHeaMtr() HWND GetControlHandle(  'Label2' ,  cHeaderSombra ) STOREINDEX nIndex22
 	EventProcessAllHookMessage(nIndex22 , .t.)
 
+
+	//HMG_ChangeWindowStyle(  GetFormHandle(cHName) , WS_POPUP , NIL, .T., .T. )
+
+	
+
+    //HMG_ChangeWindowStyle(  GetProperty(  cHName , 'HANDLE' ) , WS_ , NIL, .T. , .t. )
+
+
+
 	SET WINDOW &cHName TRANSPARENT TO Iif(!lEnabled2 , 167 , 0)
 
+	//SET WINDOW &cHeaderSombra TRANSPARENT TO COLOR {230,230,230}
+
+	
+    
+	//HMG_ChangeWindowStyle( GetProperty(  cHName , 'HANDLE' ) , WS_BORDER, NIL, .F., .T. )
+	
+
+
+	DoEvents()
+
+
+	
+
+	
 	nTotz2 := xMapCols( aCabecs , aColsTam , aTipsy )
 
 	If !CheckRet( nTotz2)
@@ -1902,6 +1940,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
 	Next
 
+
 	nColx += aMapsCol[Len(aMapsCol)][5]
 
 //	BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
@@ -1956,12 +1995,6 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 			BT_TEXT_TRANSPARENT+BT_TEXT_BOLD ,	nAlingText, nOrientation )
 
 		
-
-		//BT_DrawText ( hDC , 3  , nColx,   Alltrim(Hb_AnsiToOem(cTexto1))  , 'MS LineDraw'  , FONTBROWSERSIZE , WHITE,  {230,230,230}   , ;
-		//	BT_TEXT_TRANSPARENT ,	nAlingText, nOrientation )
-
-
-
 		hBit201 := BT_BitmapCaptureWindow ( cJanela , 0 , nColx , nTam - 5  , Height )
 		
 

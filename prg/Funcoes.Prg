@@ -478,6 +478,9 @@ FUNCTION xInit()
 
 	Local nLop := 4
 
+	
+	//msginfo('ok22')
+
 
 	//msginfo(  GetCurrentFolder() )
 
@@ -561,9 +564,22 @@ FUNCTION xInit()
 	ShowScrollBar( GetFormHandle( 'fSplit2' ), 1, .F. )
 
 
-	SetWindowCursor( GetFormHandle( 'Main'  ) , IDC_ARROW)  
+	//SetWindowCursor( GetFormHandle( 'Main'  ) , IDC_ARROW)  
 
 	SysWait(.2)
+
+
+	
+
+	//xMenuMain( 'Main' ,  70 , 1  , aOpcoes , aItens )
+
+
+
+	//DoMethod('Win_MenuPrincipal'  , 'Activate')
+
+	//DoMethod('Win_MenuPrincipal'  , 'SetFocus')
+
+	//msginfo('ok22')
 
 	
 

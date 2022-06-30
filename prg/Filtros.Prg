@@ -54,14 +54,16 @@ FUNCTION LoadFitros( cTabela1 )
    
 	DEFINE WINDOW fFiltrosCad ;
 		AT 0,0  ;				
-		WIDTH 850 HEIGHT 350 ;
+		WIDTH 850 HEIGHT 350 ;      
 		CHILD TITLE 'xProcFiltro'  ;		
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE  ; 
 		ON PAINT xProcDlg( ThisWindow.Name ,  'Filtros - ' + Alltrim(cTabela) )  	 ;      
-      ON GOTFOCUS yRefresh( 'LstBoxFiltro' )   
+      ON GOTFOCUS yRefresh( 'LstBoxFiltro' )  
 	END WINDOW	
 
+
    //ON INIT xInitBrw(); 
+
 
 
    _ShowWindow(  'fFiltrosCad' )
@@ -200,6 +202,11 @@ FUNCTION LoadFitros( cTabela1 )
    l_Ok := xBrowserMtr( 51 ,  aMtrFiltr , 'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' , 'Campo 4'} , ;
       {10,50,60 , 75 , 60 ,45,75  }  , {'C' , 'C' , 'C' , 'C' , 'C' ,'C' ,'C'} , .f. , .t. , 150 )
 
+
+   cHeaderName := 'Win_HeadMtr' + Left('LstBoxFiltro',4)
+
+  // xDoInit()
+
       
    //CursorOff1( nHw1 , ''   )	
 
@@ -213,21 +220,30 @@ FUNCTION LoadFitros( cTabela1 )
 RETURN cFiltrox1
 
 
-Function DoCreate()
+Function xDoInit()
 
-   Local n1 := 1
-   aMtrFiltr := {}
+  Local cHeaderName := 'Win_HeadMtr' + Left('LstBoxFiltro',4)
+  lOCAL NhWnd := GetFormHandle(cHeaderName)
 
-   For n1 := 1 to 500
-         Aadd( aMtrFiltr , { StrZero(n1,3) , ' Filtro  ' + Strzero(n1,5) , '1adasdsadas'  , '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
-             '1LLPPPPPPPPPPPPPPPPP' , 'GISLENO GUIMARAES JUNIOR '} )
+  
+   IF _IsWindowDefined(cHeaderName)
+      //msginfo('lp2')
 
-   Next   
+     
+	   HMG_ChangeWindowStyle( NhWnd , NIL,  WS_EX_STATICEDGE , .t., .T. )
 
-   
-   l_Ok := xBrowserMtr( 51 ,  aMtrFiltr , 'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' , 'Campo 4'} , ;
-      {10,50,60 , 75 , 60 ,45,75  }  , {'C' , 'C' , 'C' , 'C' , 'C' ,'C' ,'C'} , .f. , .t. , 150 )
+      HMG_ChangeWindowStyle( NhWnd ,  WS_POPUP , Nil , .f., .T. )
 
+      //HMG_ChangeWindowStyle( GetProperty(  cHeaderName , 'HANDLE' ) , NIL, .F., .T. )
+
+      DoEvents()
+
+      RedrawWindow(  GetFormHandle('fFiltrosCad'))
+	
+
+   End If 
+
+  
 
 
 

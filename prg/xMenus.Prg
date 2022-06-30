@@ -65,7 +65,7 @@ Static nLinhaAtual := 0
 
 STATIC lTracking192 := .f.
 
-Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
+Function xMenuOp( cParent , aOp1 , nTop , nLeft  , lPopUp  )
 
 	Local lOk     := .f.
 	Local nHeight := (Len(aOp1) * nItemSubHeight)+5
@@ -97,14 +97,14 @@ Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
 	*//Janela Efeito Sombra.
 	If  (Len(aOpz11) > XMAXITEM)
 		DEFINE WINDOW WinSombra1 AT nTop + 12 , nLeft+15 WIDTH nColTamMenu - 7 HEIGHT 330 TITLE 'Sombra1' ;
-			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
+			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
 			ON PAINT xSombra( ThisWindow.Name , nTop + 15 , nLeft+17  )
 		END WINDOW
 	Else
 		//+3
 
 		DEFINE WINDOW WinSombra1 AT nTop + 12 , nLeft+15 WIDTH nColTamMenu - 7 HEIGHT (Len(aOp1) * nItemSubHeight) - 2 TITLE 'Sombra1' ;
-			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
+			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
 			ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+9  )
 		END WINDOW
 
@@ -123,7 +123,7 @@ Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
 
 
 	DEFINE WINDOW Win_Menu1 AT nTop, nLeft+3 WIDTH nColTamMenu HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight ,  300 + 4    ) TITLE 'Men1' ;
-		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR aCorSub1 VIRTUAL HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight+1 ,  (Len(aOp1) * nItemSubHeight)+10  ) ;
+		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR aCorSub1 VIRTUAL HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight+1 ,  (Len(aOp1) * nItemSubHeight)+10  ) ;
 		ON PAINT xPaintMenu( ThisWindow.Name , aOpz11 , nItemx2 , nItemZ1 , cOpy2 , 0 , 0 ,  .f. ,  .t. ,  ,  , .t. )
 	END WINDOW
 
@@ -133,7 +133,7 @@ Function xMenuOp(aOp1 , nTop , nLeft  , lPopUp  )
 
 	If  (Len(aOpz11) > XMAXITEM)
 		DEFINE WINDOW Win_Scroll1 AT nTop+GetProperty('Win_Menu1' , 'Height')   , nLeft+3 WIDTH nColTamMenu  HEIGHT 32 TITLE 'T1' ;
-			NOMAXIMIZE NOMINIMIZE NOSIZE CHILD NOSYSMENU NOCAPTION BACKCOLOR GRAY ;
+			NOMAXIMIZE NOMINIMIZE NOSIZE CHILD PANEL PARENT &cParent NOSYSMENU NOCAPTION BACKCOLOR GRAY ;
 			ON PAINT xPaintScrool( ThisWindow.Name )
 		END WINDOW
 	End If
@@ -192,28 +192,26 @@ Function xFechaMen()
 	If (nHandle1 > 0)
 
 
-
 		SendMessage( nHandle1, WM_SYSCOMMAND, SC_CLOSE , 0 )
 
-		Do Events
-		Do Events
+		DoEvents()
+		DoEvents()
 
 		SendMessage( nHandle1, WM_SYSCOMMAND, WM_DESTROY , 0 )
 
-		Do Events
+		DoEvents()
 
 
 		If (nHandle2 > 0)
 
 			SendMessage( nHandle2, WM_SYSCOMMAND, SC_CLOSE , 0 )
 
-		Do Events
-		Do Events
+			DoEvents()
+			DoEvents()
 
-		SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )
+			SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )
 
-		Do Events
-
+			DoEvents()
 
 		End If
 
@@ -221,18 +219,13 @@ Function xFechaMen()
 		If (nHandle3 > 0)
 
 			SendMessage( nHandle3, WM_SYSCOMMAND, SC_CLOSE , 0 )
-
-			Do Events
-			Do Events
+			DoEvents()
+			DoEvents()
 
 			SendMessage( nHandle3, WM_SYSCOMMAND, WM_DESTROY , 0 )
-
-			Do Events
+			DoEvents()
 
 		End If
-
-
-
 
 
 		If !RemoveHandler( "EventMenu1"  )

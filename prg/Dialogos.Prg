@@ -518,9 +518,9 @@ Function xProcDlg(  cJanela , cText , lMsgRun    )
 	End If 
 
 
-	BT_DrawGradientFillVertical ( hDC2 ,  0,  0,  Width, 20 , aRGBcolor , BLACK )
+	//BT_DrawGradientFillVertical ( hDC2 ,  0,  0,  Width, 20 , aRGBcolor , BLACK )
 
-	//BT_DrawGradientFillVertical ( hDC2 ,  15 ,  0 , Width,  Height ,  CORHEAD1, CORHEAD1 )
+	//BT_DrawGradientFillVertical ( hDC2 ,  0 ,  0 , Width+2,  102  ,  {110,125,129} ,  {110,125,129} )
 
 
 

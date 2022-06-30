@@ -62,7 +62,7 @@ Static lHttp := .t.
 
 
 
-Function xMenuMain( nRow1 , nCol1 , aOpPrin , aSubOps )
+Function xMenuMain( cParent , nRow1 , nCol1 , aOpPrin , aSubOps )
 
 
 	aOpcoes := Aclone( aOpPrin )
@@ -74,9 +74,10 @@ Function xMenuMain( nRow1 , nCol1 , aOpPrin , aSubOps )
 
 
 
+	//PANEL PARENT &cParent
 	DEFINE WINDOW Win_MenuPrincipal AT nRow1, nCol1 WIDTH nColTamMenu HEIGHT 520 TITLE 'MenPrincipal1' ;		
-		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION  CHILD  BACKCOLOR WHITE VIRTUAL HEIGHT 521 ;
-		ON PAINT xPaintMenu( ThisWindow.Name , aOpcoes , nMainSel , nClearSel , cOpMainSel , nItemDrop1 , nHeightDrop , lSetasDown , .f. , l_Httb , l_Http )
+		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR WHITE VIRTUAL HEIGHT 521 ;
+		ON PAINT xPaintMenu( ThisWindow.Name , aOpcoes , nMainSel , nClearSel , cOpMainSel , nItemDrop1 , nHeightDrop , lSetasDown , .f. , l_Httb , l_Http ) 		
 	END WINDOW
 
 
@@ -99,10 +100,10 @@ Function xMenuMain( nRow1 , nCol1 , aOpPrin , aSubOps )
 		nIndexEventY := EventCreate (  { ||   xTeclasMenu( )   }  )
 	End If
 
-	HMG_ChangeWindowStyle( Win_MenuPrincipal.Handle    , WS_EX_DLGMODALFRAME,, NIL, .T., .T.)
-	HMG_ChangeWindowStyle( Win_MenuPrincipal.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
+	//HMG_ChangeWindowStyle( Win_MenuPrincipal.Handle    , WS_EX_DLGMODALFRAME,, NIL, .T., .T.)
+	//HMG_ChangeWindowStyle( Win_MenuPrincipal.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
 
-	HMG_ChangeWindowStyle( Win_MenuPrincipal.Handle  ,WS_EX_TOOLWINDOW  , NIL, .t., .t.)
+	//HMG_ChangeWindowStyle( Win_MenuPrincipal.Handle  ,WS_EX_TOOLWINDOW  , NIL, .t., .t.)
 
 
 	//    nHandle1 := Win_Menu1.Handle
@@ -111,6 +112,7 @@ Function xMenuMain( nRow1 , nCol1 , aOpPrin , aSubOps )
 
 	HMG_ChangeWindowStyle( JanMenuSub.Handle    , WS_EX_DLGMODALFRAME,, NIL, .T., .T.)
 	//HMG_ChangeWindowStyle( JanMenuSub.Handle    , NIL, WS_EX_STATICEDGE, .T., .T.)
+
 
 
 	ShowScrollBar( GetFormHandle( 'Win_MenuPrincipal' ), 0, .F. )
@@ -122,8 +124,12 @@ Function xMenuMain( nRow1 , nCol1 , aOpPrin , aSubOps )
 
 	BT_ClientAreaInvalidateAll(   'Win_MenuPrincipal'  )
 
+	DoEvents()
+
 
 	//DoMethod('Win_MenuPrincipal'  , 'Activate')
+
+	DoEvents()
 
 
 Return

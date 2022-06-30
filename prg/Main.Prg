@@ -577,8 +577,6 @@ FUNCTION Main
 
 
 
-
-
 	Private nOpSel := 0
 
 	Private aItens := { {"1-Clientes","Cadastro de Clientes" , .t.  , {  ||xCliente()  }  , .f. } , ;
@@ -618,13 +616,13 @@ FUNCTION Main
 
 
 
-
-	HMG_ChangeWindowStyle( fSplit3.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
+	//WS_EX_DLGMODALFRAME
+	HMG_ChangeWindowStyle( fSplit3.Handle, WS_EX_DLGMODALFRAME , NIL, .T., .T. )
 
 	HMG_ChangeWindowStyle( fSplit4.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
 
-	HMG_ChangeWindowStyle(fSplit2.Handle    , 0x00010200 , NIL, .F., .F.)
-	HMG_ChangeWindowStyle( fSplit2.Handle  ,WS_EX_TOOLWINDOW  , NIL, .t., .t.)
+	//HMG_ChangeWindowStyle(fSplit2.Handle    , 0x00010200 , NIL, .F., .F.)
+	//HMG_ChangeWindowStyle( fSplit2.Handle  ,WS_EX_TOOLWINDOW  , NIL, .t., .t.)
 
 
 
@@ -697,16 +695,22 @@ END LABEL
 	Private aButTop := {}
 
 
+
+
+
 	//CREATE EVENT PROCNAME ProcWindowMsg()  STOREINDEX nIndex22   // ADD
 	//EventProcessHMGWindowsMessage (nIndex22, .F.)
 
 
 
 
-	xMenuMain( 70 , 1  , aOpcoes , aItens )
-
-
 //SysWait(.3)
+
+	xMenuMain( 'fSplit6' ,  70 , 1  , aOpcoes , aItens )
+
+	SysWait(.2)
+
+	
 
 	Main.Activate
 
@@ -2231,12 +2235,6 @@ Function xTesMenu( nRow , nCol )
 	Local aZop1 := {}
 
 
-
-
-
-
-
-
 	Aadd(aZop1 , { "1-Impressão" , "Imp.Doc" , .t. , { || TestBrow()  }    }    )
 	Aadd(aZop1 , { "2-Visualizar Imp." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .t.    }   )
 	Aadd(aZop1 , { "3-Novo Arquivo   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
@@ -2245,27 +2243,19 @@ Function xTesMenu( nRow , nCol )
 	Aadd(aZop1 , { "  Novo Arquivo4   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo5   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-
-
-
 	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-
-
 	Aadd(aZop1 , { "  Novo Arquivo12   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-
 	Aadd(aZop1 , { "  Novo Arquivo13   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-
 	Aadd(aZop1 , { "  Novo Arquivo14   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo15   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-
 	Aadd(aZop1 , { "  Novo Arquivo16   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo17   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo18   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 
 
-	xMenuOp(aZop1 , nRow , nCol , .t.  )
+	xMenuOp('Main' , aZop1 , nRow , nCol , .t.  )
 
 
 Return

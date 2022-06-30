@@ -108,7 +108,7 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
         PARENT &cParent ;
         WIDTH  GetProperty(  cBrowserName , 'Width'  )+22   HEIGHT 20 ;
         TITLE 'xScroxRoleol1' + Left(cBrowserName,4)  	;
-        NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR BLACK   ;
+        NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR WHITE  ; 
         ON PAINT xPaintBarraH( ThisWindow.Name , nAcende , nColDrag ) 
     END WINDOW  
 
@@ -149,7 +149,8 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
         InstallEventHandler( "EventBarMtr" )		
     End If
 
-    HMG_ChangeWindowStyle(  GetProperty(  cJanName , 'HANDLE' ) , WS_BORDER, NIL, .T. )
+    //HMG_ChangeWindowStyle(  GetProperty(  cJanName , 'HANDLE' ) , WS_BORDER , NIL, .T. )
+
 
      
 Return cJanName    

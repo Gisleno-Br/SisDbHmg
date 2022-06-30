@@ -345,10 +345,10 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 		CHILD ;		
 		PANEL ;
 		PARENT &cParent ;		
-		WIDTH nLarg1 HEIGHT nAltura1 VIRTUAL HEIGHT Iif(  Len(aMt1) > nTamPag , (Len(aMt1) * nItemBrwHeight) , Nil) VIRTUAL WIDTH Iif( nLargTotal+1 > nLarg1 ,  nLargTotal+1 , Nil) ;
+		WIDTH nLarg1+5 HEIGHT nAltura1 VIRTUAL HEIGHT Iif(  Len(aMt1) > nTamPag , (Len(aMt1) * nItemBrwHeight) , Nil) VIRTUAL WIDTH Iif( nLargTotal+1 > nLarg1 ,  nLargTotal+1 , Nil) ;
 		TITLE 'xBrowser' + Left( cParent ,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR Nil  ;
-		ON PAINT Iif( lLibera1 ,  xPaintBrwMtr( ThisWindow.Name , aMDisplay , 100 ,     nClearIt2  , .t.  )  , )
+		ON PAINT Iif( lLibera1 ,  xPaintBrwMtr( ThisWindow.Name , aMDisplay , 100 ,     nClearIt2  , .t.  )  , ) 		
 	END WINDOW
 
 	//PANEL ;		
@@ -358,7 +358,7 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 		CHILD ;		
 		PANEL ;
 		PARENT &cParent ;
-		WIDTH nLarg1 HEIGHT nAltura1 VIRTUAL HEIGHT Iif(  Len(aMt1) > nTamPag ,(Len(aMt1) * nItemBrwHeight) , Nil) VIRTUAL WIDTH Iif( nLargTotal+1 > nLarg1 ,  nLargTotal+1 , Nil)  ;
+		WIDTH nLarg1+5 HEIGHT nAltura1 VIRTUAL HEIGHT Iif(  Len(aMt1) > nTamPag ,(Len(aMt1) * nItemBrwHeight) , Nil) VIRTUAL WIDTH Iif( nLargTotal+1 > nLarg1 ,  nLargTotal+1 , Nil)  ;
 		TITLE 'xEspelho' + Left(cParent,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR Nil ;
 		ON MOUSEMOVE ( yCheckObj() , cObjSelected := 'aMtrBrowser'   )
@@ -435,11 +435,11 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 
 
 	DEFINE WINDOW &cBarraVfrm ;
-		AT nRowIni - 29 ,nCol11  ;
+		AT nRowIni - 30 ,nCol11  ;
 		CHILD ;
 		PANEL ;
 		PARENT &cParent ;
-		WIDTH 21 HEIGHT nAltura1 + 30 ;
+		WIDTH 27 HEIGHT nAltura1 + 32 ;
 		TITLE 'xScroxRoleol1' + Left(cParent,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR WHITE   ;
 		ON PAINT xPaintScroll( ThisWindow.Name )
@@ -447,15 +447,14 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 
 
 	DEFINE WINDOW &cBarraVSombra ;
-		AT nRowIni - 29 ,nCol11  ;
+		AT nRowIni - 30 ,nCol11  ;
 		CHILD ;
 		PANEL ;
 		PARENT &cParent ;
-		WIDTH 27 HEIGHT nAltura1+ 30 ;
+		WIDTH 27 HEIGHT nAltura1+ 32 ;
 		TITLE 'xScroxSombra' + Left(cParent,4)  	;
-		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR {240,240,240}  ;
+		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR WHITE ; //{240,240,240}  ;
 		ON MOUSEMOVE (cObjSelected := 'BarraV')
-
 	END WINDOW
 
 
@@ -2326,17 +2325,10 @@ Function EventBrowMtr( nHWnd, nMsg, nWParam, nLParam )
 
 	If (nHWnd == GetProperty( cEspelhoBrw , "HANDLE" ))
 
-
-
-
-
-
 		If nMsg == WM_MOUSELEAVE
 			nClearIt2 := 0
 			nitemx5   := 0
-
 			BT_ClientAreaInvalidateAll(cBrowserName)
-
 		End If
 
 
@@ -2634,17 +2626,15 @@ Static Function xPaintScroll( cJanela )
 	hDC = BT_CreateDC ( cJanela  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
 	BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    ,  {230,230,230}  , {230,230,230} )
 
-
-
 	nLAst := nRow1 - 63
 
 
 	If (nItemX5 == 1)
-		BT_DrawFillRoundRect ( hDC , nRIni ,  2   , Width - 5 , nAltura , 5 ,5 ,   {152 , 152 ,152}   , {152 , 152 ,152}  , 0 )
+		BT_DrawFillRoundRect ( hDC , nRIni ,  4   , Width - 10 , nAltura , 5 ,5 ,   {152 , 152 ,152}   , {152 , 152 ,152}  , 0 )
 	Else
 
 		If (nItemX5 == nMaxItem1 )
-			BT_DrawFillRoundRect ( hDC , nLimteLin - nAltura ,  2   , Width - 5 , nAltura , 5 ,5 ,   {152 , 152 ,152}   , {152 , 152 ,152}  , 0 )
+			BT_DrawFillRoundRect ( hDC , nLimteLin - nAltura ,  4   , Width - 10 , nAltura , 5 ,5 ,   {152 , 152 ,152}   , {152 , 152 ,152}  , 0 )
 		Else
 
 
@@ -2655,7 +2645,7 @@ Static Function xPaintScroll( cJanela )
 				nFator := 0
 			End If
 
-			BT_DrawFillRoundRect ( hDC ,   (nrIni  + nFator )  ,  2   , Width - 5 , nAltura , 5 ,5 ,  {152 , 152 ,152}   , {152 , 152 ,152}  , 0 )
+			BT_DrawFillRoundRect ( hDC ,   (nrIni  + nFator )  ,  4   , Width - 10 , nAltura , 5 ,5 ,  {152 , 152 ,152}   , {152 , 152 ,152}  , 0 )
 
 		End If
 	End If
@@ -2671,7 +2661,8 @@ Static Function xPaintScroll( cJanela )
 		BT_BitmapRelease( zBmp1 )
 
 		BT_DeleteDC (BTstruct2 )
-		REturn
+		Return
+
 	End If
 
 
@@ -2693,16 +2684,14 @@ Static Function xPaintScroll( cJanela )
 		End If
 
 		If (Len(aMt1) <= nTamPag)
-
 			If (aMtrz1[n1] != 855) .And. (aMtrz1[n1] != 860)
 				cImg := aImgs[4]
 			End If
-
 		End If
 
 		hBt2 := BT_BitMapLoadFile( cImg   )
 
-		BT_DrawBitmap (hDC  , nLinha  , 0  	, 18  , 18  ,      BT_COPY,   hBt2    )
+		BT_DrawBitmap (hDC  , nLinha  , 2  	, 18  , 18  ,      BT_COPY,   hBt2    )
 		nLinha += 21
 
 		BT_BitmapRelease( hBt2 )
