@@ -141,6 +141,11 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
 
     xh_InitLim()
     yZeraConter()
+
+
+    
+
+	HMG_ChangeWindowStyle(  GetFormHandle(cJanSombra) , Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
  
 
 
@@ -682,9 +687,8 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 )
             nQContador++     
 
             If (nQContador = nQ1 )
-                nZ1 := (xCalcTam() - xGetInfCw1(   nColtotal - 1   , 3  ))+xRetTam( 11 )                   
-                nSaldo1 := nZ1   
-                //msginfo(Str(  nSaldo1))               
+                nZ1 := (xCalcTam() - xGetInfCw1(   nColtotal - 1   , 3  )) +xRetTam( 10 )                   
+                nSaldo1 := nZ1                   
             Else                     
                 nSaldo1 := xGetInfCw1(   nQContador   , 5  )                
             End If           
@@ -753,7 +757,7 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 )
 
 
             If nQContador == 0
-                msginfo( hb_ANSIToOEM("Não ha mais ESpaço para Rolar a Esquerda."))
+                xDialog( hb_ANSIToOEM("Não ha mais ESpaço para Rolar a Esquerda."))
                 Return
             End If 
 
@@ -767,7 +771,7 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 )
             End If      
             
             If (nQContador == 1)
-                nSaldo1 += 17                 
+                nSaldo1 += nColIniBrw                 
             End If 
 
 

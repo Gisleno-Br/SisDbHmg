@@ -230,8 +230,13 @@ Function xRetItem( aMatriz )
 	Local nTam := 0
 	Local lNum := .f.
 
+ 
 
 	For n1 := 1 To Len( aCabec1 )
+
+		if n1 <= 3
+			//msginfo(Str(  aTams2[n1]    ))
+		End If 
 
 		If aTips[n1] == 'C'
 
@@ -341,7 +346,7 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 
 	//PANEL ;
 	DEFINE WINDOW &cBrowserName ;
-		AT nRowIni - 1,nCol - 3  ;
+		AT nRowIni - 1,nCol - 3 ;
 		CHILD ;		
 		PANEL ;
 		PARENT &cParent ;		
@@ -381,6 +386,8 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 		End If
 
 	End If
+
+	HMG_ChangeWindowStyle(  GetFormHandle(cEspelhoBrw) , Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
 
 
 
@@ -475,15 +482,14 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 		ShowScrollbar (GetFormHandle(cBarraVSombra) , 0, .f.)
 		ShowScrollbar (GetFormHandle(cBarraVSombra) , 1, .f.)
 
-	End If
+	End If	
 
-
+	HMG_ChangeWindowStyle(  GetFormHandle(cBarraVSombra) , Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
 
 	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventBrowMtr"  ) )  ) = 0
 		InstallEventHandler( "EventBrowMtr" )
 		nIndexEventX := 20050
 		CREATE EVENT PROCNAME xTecBrowMtr() STOREINDEX nIndexEventX
-
 	End If
 
 
@@ -491,23 +497,16 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 		_ShowWindow(cBarraVfrm)
 	End If
 
-
-
 	If _isWindowDefined(cBarraVSombra)
 		_ShowWindow(cBarraVSombra)
 	End If
 
 
 	If (lHasHeader)
-
 		ShowScrollbar (GetFormHandle(cHeaderName) , 0, .f.)
 		ShowScrollbar (GetFormHandle(cHeaderName) , 1, .f.)
-
 		_ShowWindow(cHeaderName)
-
-
 		BT_ClientAreaInvalidateAll(cHeaderName)
-
 	End If
 
 	nLimteLin := yCriaButs()	
@@ -533,6 +532,7 @@ Function xCalcTam()
 	Local hFont
 	Local nQAcento
 	Local BTstruct
+	Local n1
 
 	hDC = BT_CreateDC ( 'Main'  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct )
 	hFont := HMG_CreateFont (  hDC , FONTBROWSER, FONTBROWSERSIZE, .f., .f., .f., .f. )
@@ -554,10 +554,6 @@ Function xCalcTam()
 	cTexto := Replicate('A' ,  nTam1 + 1  )
 	n12 := GetTextWidth( hDC , cTexto , hfont )
 	nTam12 += n12
-
-
-
-	//Altd()
 
 
 
@@ -775,13 +771,36 @@ Function xChangeOrd( nOrigem ,  nDest )
 	Local a1 := {}
 	Local n1 := 1
 	Local nSalva
+	Local aM2 := {}
 
 
+	am1 := {}
+
+	y := Len(aMt1[1])
+
+
+	For i := 1 to Len(aMt1)
+		aM1 := {}
+		nOri := Nil 
+		For z := 1 To y 
+			If (z != nOrigem) 
+				Aadd(aM1 ,  aMt1[i][z]   )
+			Else 
+				nOri := aMt1[i][z]
+			End If 
+		Next 	
+		Aadd(aM2 , aM1)
+	Next	
+
+
+
+/*
 	For n1 := 1 To Len(aMt1)
 		nSalva := aMt1[n1][nDest]
 		aMt1[n1][nDest]   := aMt1[n1][nOrigem]
 		aMt1[n1][nOrigem] := nSalva
 	Next
+	*/
 
 	xGoTop()
 
@@ -3201,8 +3220,6 @@ Static Function xGoTop()
 	//xCursorWait( .t. )
 
 	nPageNumber := 1
-
-
 	nItemX5     := 1
 	nClearIt2   := 1
 	nClear1     := 1
@@ -3217,23 +3234,14 @@ Static Function xGoTop()
 
 	nLinScrool := 0
 	nIndex1 := 1
-	//	nColScrool := 0
+	
 
 	nSelLine := 1
 
 	aMDisplay := {}
 	xRecords( nItemX5 )
-
 	EncheMVis( nTamPag )
-
 	DoEvents()
-
-
-	//if lLibera1
-	//	msginfo('lp2')
-	//end if
-
-
 
 	BT_ClientAreaInvalidateAll(cBrowserName)
 	yDcToDc()
@@ -3241,7 +3249,6 @@ Static Function xGoTop()
 
 	BT_ClientAreaInvalidateAll(cBarraVfrm)
 	yDcToDEspe()
-
 
 	nClearIt2 := 1
 

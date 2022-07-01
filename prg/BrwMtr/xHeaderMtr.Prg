@@ -65,6 +65,8 @@ Static aCabecs   := {}
 Static nColSel1 := 0
 Static nColAntx := 0
 
+Static lMove1 := .f.
+
 Static lTrack39 := .f.
 
 Static lSizeMode := .f.
@@ -76,7 +78,7 @@ Static lTracking546 := .f.
 Static nTotz2 := 0
 
 Static lEnabled2 := .t.
-Static lDisphint := .f. 
+Static lDisphint := .f.
 
 Static c_BrowName := ''
 
@@ -154,63 +156,31 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 	c_BrowName := cBrwName1
 
 	cTable := cTabela
-
 	nLimiteAtu := nLarg1 + 1
 
-	//msginfo(Str( nLimiteAtu  ))
-
-	//  CHILD ;	                                                                                                 //nLarg1+1			
-	//	PANEL ;
-		//PARENT &cParent1 ;       		
-
-	//	PANEL ;
-		//PARENT &cParent1 ;       
-
-	//AT nRowI - 28 , nColi - 2 ;
-	//HMG_ChangeWindowStyle(  GetFormHandle( cHName   ) , WS_POPUP , NIL, .T., .T. )
 
 
-
-	DEFINE WINDOW &cHName ;		
+	DEFINE WINDOW &cHName ;
 		AT nRowI - 28 , nColi - 2 ;
-	    CHILD ;	                                                                                                 //nLarg1+1			
+		CHILD ;	                                                                                                 //nLarg1+1
 		PANEL ;
-	    PARENT &cParent1 ;       	
+		PARENT &cParent1 ;
 		VISIBLE .F. ;
 		WIDTH nLarg1 - 1 HEIGHT 31 VIRTUAL HEIGHT Nil VIRTUAL WIDTH Iif( (nLargTot1 > 0) .And. ( nLargTot1 > (nLarg1+1)) , nLargTot1 , Nil )  ;
 		TITLE 'xHeader1' + Left(cHName,4)  	;
-		NOSIZE NOSYSMENU NOCAPTION NOAUTORELEASE NOMINIMIZE NOMAXIMIZE BACKCOLOR WHITE ;		
-		//ON PAINT xPaintHeader( ThisWindow.Name , aCabecs  , aColsTam , aTipsy )
+		NOSIZE NOSYSMENU NOCAPTION NOAUTORELEASE NOMINIMIZE NOMAXIMIZE BACKCOLOR WHITE ;
+		ON PAINT xPaintHeader( ThisWindow.Name , aCabecs  , aColsTam , aTipsy )
 	END WINDOW
 
 
-
-
-
-
-	lScrool5 :=  (nLargTot1 > 0) .And. (nLargTot1 > (nLarg1+1))
-
-	If (!lScrool5)
-		//msginfo('no Scr')
-
-	End If	
-
-
-		//PANEL ;	
-		//PARENT &cParent1 ;
-
-	//	AT nRowI - 28 , nColi - 2 ;
-	DEFINE WINDOW &cHeaderSombra ;		
+	DEFINE WINDOW &cHeaderSombra ;
 		AT nRowI - 28 , nColi - 2 ;
-	    CHILD ;	                                                                                                 //nLarg1+1			
+		CHILD ;	                                                                                                 //nLarg1+1
 		PANEL ;
-	    PARENT &cParent1 ;       		
+		PARENT &cParent1 ;
 		WIDTH nLarg1 - 1 HEIGHT 31 VIRTUAL HEIGHT Nil   ;
 		TITLE 'xHeaderSombra1' + Left(cHName,4)  	;
-		NOSIZE NOSYSMENU NOCAPTION NOAUTORELEASE NOMINIMIZE NOMAXIMIZE BACKCOLOR WHITE ;		
-		//ON INIT MsgInfo('ok22')
-		//RGB(242,242,242)
-		
+		NOSIZE NOSYSMENU NOCAPTION NOAUTORELEASE NOMINIMIZE NOMAXIMIZE BACKCOLOR WHITE ;
 
 		DEFINE LABEL Label2
 			ROW    0
@@ -240,31 +210,25 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 	CREATE EVENT PROCNAME EventHeaMtr() HWND GetControlHandle(  'Label2' ,  cHeaderSombra ) STOREINDEX nIndex22
 	EventProcessAllHookMessage(nIndex22 , .t.)
 
+	//WS_EX_STATICEDGE
+	//HMG_ChangeWindowStyle(  GetFormHandle(cHeaderSombra) , Nil , WS_EX_CONTROLPARENT  ,  .t. , .T. )
+	HMG_ChangeWindowStyle(  GetFormHandle(cHeaderSombra) , Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
 
-	//HMG_ChangeWindowStyle(  GetFormHandle(cHName) , WS_POPUP , NIL, .T., .T. )
 
-	
-
-    //HMG_ChangeWindowStyle(  GetProperty(  cHName , 'HANDLE' ) , WS_ , NIL, .T. , .t. )
+	//HMG_ChangeWindowStyle(  GetFormHandle(cHeaderSombra) , Nil , WS_BORDER     ,  .f. , .T. )
 
 
 
 	SET WINDOW &cHName TRANSPARENT TO Iif(!lEnabled2 , 167 , 0)
 
-	//SET WINDOW &cHeaderSombra TRANSPARENT TO COLOR {230,230,230}
-
-	
-    
-	//HMG_ChangeWindowStyle( GetProperty(  cHName , 'HANDLE' ) , WS_BORDER, NIL, .F., .T. )
-	
 
 
-	DoEvents()
+//DoEvents()
 
 
-	
 
-	
+
+
 	nTotz2 := xMapCols( aCabecs , aColsTam , aTipsy )
 
 	If !CheckRet( nTotz2)
@@ -417,8 +381,8 @@ Static Function xFormDt(cData , n1 , n2 )
 Return Right(cD1,4) + Substr(Cd1,4,2) + Left(cD1,2)
 
 
-Function xRetAscan(nd1)	
-Local	nI1 := Ascan(aMapsCol , { |a| (a[2] <= nD1) .And. (a[3] >= nD1)  })
+Function xRetAscan(nd1)
+	Local	nI1 := Ascan(aMapsCol , { |a| (a[2] <= nD1) .And. (a[3] >= nD1)  })
 REturn nI1
 
 
@@ -489,7 +453,7 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams  , lTrocaCol )
 
 		If (nTot2 <= GetProperty( c_BrowName , 'Width') )
 			yEnable1Bh(  .f. )
-		Else			
+		Else
 			yEnable1Bh(  .t. )
 		End If
 
@@ -634,7 +598,7 @@ Function EventHeaMtr()
 	Local nCol := 0
 	Local nSaveCol1 := 0
 	Local nQTotEt := 0
-	
+
 	//CalcEtapas()
 	//-(nColHeader)
 
@@ -689,9 +653,14 @@ Function EventHeaMtr()
 
 			nColSele := nColSel1
 
+			DoEvents()
+					
+
 			If (nColSele <= 0) .Or. (nColSele > Len(aMapsCol) )
 				Return
 			End If
+
+			xCaptBmp(nColSele)
 
 			UxLib96()
 
@@ -769,8 +738,8 @@ Function EventHeaMtr()
 
 				If lOk
 
-					
-   					nHw1 := CursorOn1( cHeaderSombra  )  
+
+					nHw1 := CursorOn1( cHeaderSombra  )
 
 					SetWindowCursor(  GetControlHandle( 'Label2' , cHeaderSombra)  , 'CURSOR1'  )
 					DoEvents()
@@ -789,7 +758,7 @@ Function EventHeaMtr()
 					xH_CalcBar()
 					DoEvents()
 
-					CursorOff1( nHw1   , cHeaderSombra  )		
+					CursorOff1( nHw1   , cHeaderSombra  )
 
 				End If
 
@@ -822,33 +791,29 @@ Function EventHeaMtr()
 
 		End If
 
-		If (nMsg == WM_MOUSEMOVE) 		
+		If (nMsg == WM_MOUSEMOVE)
 			xLimpBarV()
-		
+
 			s1 := ''
 			s2 := ''
-
 
 			GetCursorPos (@nCol, @nRow)
 			ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
 			nColx := ar1[2]
 
-
 			If (!lDisphint)
-			//	DoEvents()
-				
 				DoEvents()
-				SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , Hb_AnsiToOem('Click e Arraste a Coluna para Mudar de Posição.')   )				
+				SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , Hb_AnsiToOem('Click e Arraste a Coluna para Mudar de Posição.')   )
 				SysWait(0.01)
 
-				lDisphint := .t.            
+				lDisphint := .t.
 			End If
 
 			nColx5 := 0
 			i:=1
 
 			nQT1 := xH_xClcDir(  Len(aMapsCol[1])   ) - 1
-			
+
 
 			//msginfo(Str( nQt1 ))
 
@@ -858,83 +823,111 @@ Function EventHeaMtr()
 
 			lDragMode := .t.
 
-			While (GetAsyncKeyState(VK_LBUTTON) != 0) 
-					
-					GetCursorPos (@nCol, @nRow)
-					ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
-					nColx := ar1[2]
+			While (GetAsyncKeyState(VK_LBUTTON) != 0)
 
+				GetCursorPos (@nCol, @nRow)
+				ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
+				nColx := ar1[2]
 
-					If (nColx5 == 0)
-						nColx5 := nColx
-					End If 
+				If (nColx5 == 0)
+					nColx5 := nColx
+				End If
 
-					If ( Abs(nColx - nColx5) > 1)
+				If ( Abs(nColx - nColx5) > 1)
 
-						
+					DoEvents()
+					nTarget := xBusqTar( nColSav1  , lFrente1 )
+
+					DoEvents()
+
+					If (nColx < 10) .And. (nColSele > 0) .And. (nQConter > 1)
+						nZ1 := xDoScrolV( .f. , .t. , .t.  , .f. )
+						nQConter--
+						nColSav1 -= nZ1
+						xMoveWin( nColSele , nColSav1 , lFrente1 )
+						SysWait(0.03)
 						DoEvents()
-
-						nTarget := xBusqTar( nColSav1  , lFrente1 )
-
+						yUpHead1(  cHeaderJan , -(nZ1) )
 						DoEvents()
+					Else 
 
-						If (nColx > (nLimite1 - 10) ) .And. (nColSele > 0) .And. (nQConter <= nQT1)						    
+						If (nColx > (nLimite1 - 10) ) .And. (nColSele > 0) .And. (nQConter <= nQT1)
 							nZ1 := xDoScrolV( .t. , .t. , .t.  , .f. )
-							nQConter++														
-							nColSav1 += nZ1							
+							nQConter++
+							nColSav1 += nZ1
 							xMoveWin( nColSele , nColSav1 , lFrente1 )
-							SysWait(0.06)																	
+							SysWait(0.03)
 							DoEvents()
 							yUpHead1(  cHeaderJan , (nZ1) )
 							DoEvents()
-						Else 	
+						Else
 							If (nColx  > nColx5)
-								lFrente1 := .t.							
+								lFrente1 := .t.
 								nColSav1 += ( nColx - nColx5  )
-							Else 
-								lFrente1 := .f. 
-								nColSav1 -= ( nColx - nColx5  )
-							End If 
+							Else
+								lFrente1 := .f.
+								nColSav1 -= ( nColx5 - nColx  )
+							End If
 
-
-						
 							If (nTarget > 0)
 								nColTarget := nTarget
 								BT_ClientAreaInvalidateAll(   cHeaderJan )
 								xDcBarHeader()
 
 								DoEvents()
-								SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , hb_AnsitoOem('Trocar a Posição , Coluna ' + QuotedStr(Alltrim(aMapsCol[nTarget][1]  )) ) )									
+								SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , hb_AnsitoOem('Trocar a Posição , Coluna ' + QuotedStr(Alltrim(aMapsCol[nTarget][1]  )) ) )
 								SysWait(0.01)
 
 							End If
 
-
-							//DoEvents()
-							//SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , Hb_AnsiToOem('Movendo a Coluna ' + Alltrim(cTituloCol) )    )				
-							//SysWait(0.01)			
+							lDragMode := .t.
 
 							xMoveWin( nColSele , nColSav1 , lFrente1 )
-							
 							nColx5 := nColx
 
+							If !lMove1
+								lMove1 := (nColSele != nColTarget)
+							End If
 
-						End If 								
-						DoEvents()
-					Else 
+						End If
 
+					End If 	
+					DoEvents()
 
-					End If 
-
-
-
-					For i := 1 To 255
-						GetAsyncKeyState(i)
-					Next i
+				Else
 
 
+				End If
 
-			Enddo 
+				For i := 1 To 255
+					GetAsyncKeyState(i)
+				Next i
+
+			Enddo
+
+			If  (lMove1) .And. (nColSele > 0) 
+			
+			    If (nColSele != nColTarget) 				
+				    xTroquePos(nColSele , nColTarget , aCabecs[nColSele] )
+					DoEvents()
+				End If  	
+
+				nColSele1 := 0
+				nColSele  := 0
+				DoEvents()
+				yRefresh( c_BrowName )
+				DoEvents()
+				lMove1 := .f.
+				lDragMode := .f.
+
+				BT_BitmapRelease(hBit201)
+				hBit201 := Nil	
+
+				SysWait(0.05)
+				xH_CalcBar()
+				SysWait(0.04)
+			    	
+			End If
 
 			//msginfo('ok2')
 
@@ -1187,11 +1180,11 @@ Function EventHeaMtr()
 				Return
 			End If
 
-			If ((nColx2 := xSearchLim(  nColx )) > 0) .And. (!lSizeMode)				
+			If ((nColx2 := xSearchLim(  nColx )) > 0) .And. (!lSizeMode)
 				xDoHint(    , 'Redimensiona a Coluna ' + Hb_AnsiToOem(Alltrim( aMapsCol[nColx2][1])) + '  '  + Str(nColSel1))
 				SetWindowCursor( nHWnd  , 'CURSORSIZE' )
 				DoEvents()
-				lSizeMode := .t.				
+				lSizeMode := .t.
 				Return
 			Else
 
@@ -1205,12 +1198,12 @@ Function EventHeaMtr()
 			End If
 
 			If (nColAntx != aCords[1][2]) .And. (nColAntx > 0 ) .And. (nColAntx <= Len(aMapsCol) )
-				
+
 				nColSel1 := 0
-				
+
 				n1 := aMapsCol[  nColAntx  ][2]
 				n3 := aMapsCol[  nColAntx  ][5]
-				
+
 
 				BT_ClientAreaInvalidateAll(   cHeaderJan )
 				nColAntx := aCords[1][2]
@@ -1218,7 +1211,7 @@ Function EventHeaMtr()
 				DoEvents()
 				xDcBarHeader()
 				DoEvents()
-				
+
 			End If
 
 			If Len(aCords) > 0
@@ -1270,34 +1263,54 @@ Static Function xTroquePos(nColSele , nColTarget , cCabec1 )
 	Local cC1 := aCabecs[nColTarget]
 	Local nN1  := aColsTam[nColTarget]
 	Local cTp  := aTipsy[nColTarget]
+	Local nH1
+	Local c1  := aCabecs[nColSele]
+	Local n2  := aColsTam[nColSele]
+	Local c3  := aTipsy[nColSele]
+	Local n1  := Len(aCabecs)
 
-	aCabecs[nColTarget] := aCabecs[nColSele]
-	aCabecs[nColSele]   := cC1
+	nH1 := CursorOn1( cHeaderSombra )
+
+	
+	//msginfo(Str(   Len(aCabecs)  )   + '   ' +  Str(   Len(aColsTam)  )   )
 
 
-	aColsTam[nColTarget] := aColsTam[nColSele]
-	aColsTam[nColSele]   := nN1
 
+	Adel( aCabecs ,  nColSele )
+	Asize(aCabecs , n1 - 1)
 
-	aTipsy[nColTarget] := aTipsy[nColSele]
-	aTipsy[nColSele]   := cTp
+	Adel( aColsTam ,  nColSele )
+	Asize(aColsTam , n1 - 1)
+
+	
+	Adel( aTipsy ,  nColSele )
+	Asize(aTipsy , n1 - 1)
+	
+    DoEvents()
+
+	Hb_Ains( aCabecs ,   nColTarget  , c1 , .t.  )
+	Hb_Ains( aColsTam ,  nColTarget  , n2 , .t.  )
+	Hb_Ains( aTipsy   ,  nColTarget  , c3 , .t.  )
+
+    DoEvents()
+
+	
 
 
 	ySetTam( aColsTam )
-
 	DoEvents()
 
-
-	xChangeOrd( nColSele ,  nColTarget  )
+	xChangeOrd(   nColSele , nColTarget )
 	xMapCols( aCabecs , aColsTam , aTipsy )
 
 	BT_ClientAreaInvalidateAll(   cHeaderJan )
 	DoEvents()
 	yDcBarH1eMtr()
 
-	SysWait(0.02)
+	xH_CalcBar()
 
-	//aColsTam
+	SysWait(0.02)
+	CursorOff1(  nH1  , '')
 
 
 REturn .t.
@@ -1306,10 +1319,10 @@ REturn .t.
 Static Function xBusqTar( nPoint , lFrente5 )
 
 	Local nColz1 := 0
-	Local nQtt   := xGetColQw1()
+	Local nQtt   := nQT1
 	Local nLimite := xGetInfCw1( nQtt , 2)
 
-	
+
 	If lFrente5
 		N1 := Ascan( aMapsCol , { |a| Abs(a[2] - nPoint) <= 25     })
 
@@ -1320,8 +1333,9 @@ Static Function xBusqTar( nPoint , lFrente5 )
 		End If
 
 	Else
-		N1 := Ascan( aMapsCol , { |a| Abs(nPoint - a[2] ) <= 25     })
+		N1 := Ascan( aMapsCol , { |a| Abs(a[3] - nPoint) <= 25     })
 	End If
+
 
 	nColz1 := n1
 
@@ -1413,18 +1427,20 @@ Return n2
 
 Function xRetTam( nTam )
 	//Local nTam := 0
-	Local hDC 
-	Local hFont 
+	Local hDC
+	Local hFont
 	Local BTstruct
 	Local cTexto
-	Local n12 
+	Local n12
+	Local cFontHead := FONTBROWSER
+	//FONTBROWSER
 
 	hDC = BT_CreateDC ( cHeaderJan  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct )
-	hFont := HMG_CreateFont (  hDC , FONTBROWSER, FONTBROWSERSIZE, .f., .f., .f., .f. )
+	hFont := HMG_CreateFont (  hDC , cFontHead, FONTBROWSERSIZE, .f., .f., .f., .f. )
 
 	cTexto := Replicate('A' ,  nTam )
 	n12 := GetTextWidth( hDC , cTexto , hfont )
-	
+
 	BT_DeleteDC (BTstruct )
 
 
@@ -1466,7 +1482,7 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
 			nAcum2 += ( (nColx +  nTam + 1 ) - nColx )
 			Aadd( aMapsCol , {   aCabs[n1] , nColx , nColx +  nTam , aTipos1[n1] ,   nTam ,  aTamx1[n1] , nAcum  , nAcum2 }  )
 
-	//		SaveLog('Colunas.txt' , aMapsCol[n1][1] + '  ' + Str(aMapsCol[n1][2])  + '   ' + Str(aMapsCol[n1][3]) + '   ' + Str(aMapsCol[n1][5]) + XQUEBRA   )
+			//		SaveLog('Colunas.txt' , aMapsCol[n1][1] + '  ' + Str(aMapsCol[n1][2])  + '   ' + Str(aMapsCol[n1][3]) + '   ' + Str(aMapsCol[n1][5]) + XQUEBRA   )
 			nColx += (nTam + 1)
 			If (nTam >=  nLimiteAtu)
 				Return .f.
@@ -1484,17 +1500,14 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
 			nAcum2 += ( (nColx +  nTam + 1 ) - nColx )
 
 			Aadd( aMapsCol , {   '   ' , nColx , nColx +  nTam + 1 , 'C' ,   nTam ,  10  , nAcum  , nAcum2 }  )
-			
+
 
 		End If
 
 	Next
 
 
-	
 
-     
-	
 
 	//msginfo(Str(     nAcum2 ))
 
@@ -1565,11 +1578,11 @@ Function xH_xClcDir( nTotCol1 )
 
 	Local nCol1 := 0
 	Local nSaldo1
-	Local lOk  := .f. 
+	Local lOk  := .f.
 	Local nY1  := xH_RtLimite()
-	
 
-	While !lOk 
+
+	While !lOk
 
 		nCol1++
 
@@ -1584,10 +1597,10 @@ Function xH_xClcDir( nTotCol1 )
 				lOk := .t.
 				Exit
 			End If
-		Else 
+		Else
 			nCol1 := 1
-			Exit 
-		End If         
+			Exit
+		End If
 
 	Enddo
 
@@ -1827,6 +1840,26 @@ Function yDragOff()
 REturn
 
 
+Function DraVertL( hDc1 , nCol , nHeight1 )
+
+	BT_DrawLine ( hDc1, 0 , nCol   , nHeight1 , nCol    ,   {63,69,72}, 1 )
+	BT_DrawLine ( hDc1, 0 , nCol+1 , nHeight1,  nCol+1  ,   {144,152,157}, 1 )
+
+
+Return
+
+Static Function xCaptBmp(nCol1)
+
+	Local nTam1  := aMapsCol[nCol1][3] - aMapsCol[nCol1][2]
+	LOCAL Height := BT_ClientAreaHeight (cHeaderJan)
+	Local nColx  := nColIniBrw
+	
+	nColx :=  (aMapsCol[nCol1][2] - 0) //13
+	hBit201 := BT_BitmapCaptureWindow ( cHeaderJan , 0 , nColx , nTam1 - 1  , Height )
+
+    Bt_BitMapSaveFile(  hBit201 , 'hBity221.Bmp'    )
+
+Return
 
 Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
@@ -1860,14 +1893,17 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
 	hDC = BT_CreateDC ( cJanela  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct )
 
+	BT_DrawLine ( hDC, 0 , 0 , 0 , Width, {100,103,105}, 1 )
+
 	If lEnabled2
-		BT_DrawGradientFillVertical ( hDC ,   0 , 0  , Width ,    Height    , CORHEAD1  , CORHEAD1 )
+		BT_DrawGradientFillVertical ( hDC ,   1 , 0  , Width    ,    Height - 1    , CORHEAD1  , CORHEAD1 )
 	else
-		BT_DrawGradientFillHorizontal ( hDC ,   0 , 0  , Width ,    Height    ,  {110,110,110}  , GRAY )
+		BT_DrawGradientFillHorizontal ( hDC ,   1 , 0  , Width ,    Height  - 1  ,  {110,110,110}  , GRAY )
 	End If
 
 	//BT_DrawGradientFillHorizontal ( hDC ,   0 , 0  , Width ,    Height    ,  {128,128,128}  , {128,128,128} )
 
+	BT_DrawLine ( hDC, Height - 1 , 0 , Height - 1 , Width, {75,75,75}, 1 )
 
 
 	If (nColHeader > 0)
@@ -1905,28 +1941,26 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
 		If (nColSel1 > 0) .And. (nColSel1 = n1)
 			If nColSel1 != Len(aCabecs)
-				BT_DrawGradientFillHorizontal ( hDC ,   1 ,  nColx  , nTam + 1 ,    Height    ,CORHEAD3 , CORHEAD4 )
+				BT_DrawGradientFillHorizontal ( hDC ,   1 ,  nColx  , nTam - 1 ,    Height - 1    ,CORHEAD3 , CORHEAD4 )
 			Else
-				BT_DrawGradientFillHorizontal ( hDC ,   1 ,  nColx  , nTam + 250 ,    Height    , CORHEAD3 , CORHEAD4 )
+				BT_DrawGradientFillHorizontal ( hDC ,   1 ,  nColx  , nTam + 250 ,    Height - 1    , CORHEAD3 , CORHEAD4 )
 			End If
 
 		Else
 
-           
+
 			If (nColTarget == n1)
 				If nColTarget ==  Len(aCabecs)
-					BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 300 ,    Height    ,CORHEAD3, CORHEAD4 )
+					BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 300 ,    Height  - 1   ,CORHEAD3, CORHEAD4 )
 				Else
-					BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam + 1 ,    Height    ,CORHEAD3 , CORHEAD4 )
+					BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  , nTam - 1 ,    Height - 1   ,CORHEAD3 , CORHEAD4 )
 				End If
-
 			End If
-			
+
 
 		End If
 
-		//BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
-	//	BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
+		DraVertL( hDc  , nColx , Height - 1 )
 
 
 		If (nOrdemSel == n1)
@@ -1934,7 +1968,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 		End If
 
 		BT_DrawText ( hDC , nLinha  ,nColx + 5 ,     Padc( Alltrim(  Hb_AnsiToOem(aMapsCol[n1][1] ))   ,   nTam2 + 1  )   , cFontHead  , nfontSize , WHITE,  {230,230,230}   , ;
-		nTypeText ,	nAlingText, nOrientation )
+			nTypeText ,	nAlingText, nOrientation )
 
 		nColx += nTam1
 
@@ -1942,15 +1976,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
 
 	nColx += aMapsCol[Len(aMapsCol)][5]
-
-//	BT_DRAWEDGE (hDC, 1, nColx , nColx + 2     , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
-	//BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
-
-	//BT_DRAWEDGE (hDC, 1, nColx+1 , nColx + 3   , Height ,  BDR_SUNKENINNER  , BF_LEFT + BF_RIGHT)
-
-//	BT_DrawText ( hDC , nLinha  , nColIniBrw+nCol ,   Hb_AnsiToOem(cTexto1) , cFontHead  , nfontSize , WHITE,  {230,230,230}   , ;
-	//	nTypeText ,	nAlingText, nOrientation )
-
+	DraVertL( hDc  , nColx , Height - 1 )
 
 	If !lEnabled2
 		REturn
@@ -1979,46 +2005,39 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
 
 		If nColSele != Len(aCabecs)
-			BT_DrawGradientFillHorizontal ( hDC ,   1 ,  nColx  , nTam - 5   ,    Height    ,  CORHEAD2, CORHEAD2 )
+			BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx  - 3 , nTam - 1   ,    Height - 1    ,  CORHEAD4, CORHEAD3 )
 		Else
-			BT_DrawGradientFillHorizontal ( hDC ,   1 ,  nColx  , nTam + 350   ,    Height    ,  CORHEAD2 , CORHEAD2 )
+			BT_DrawGradientFillHorizontal ( hDC ,   1 ,  nColx  , nTam + 350   ,    Height  - 1   ,  CORHEAD4 , CORHEAD3 )
 		End If
 
 		If nOrdemSel == nColSele
 			BT_DrawBitmapTransparent (hDC  , 6 ,  nColx+2 , 16  , 16 , BT_STRETCH, Iif(lAscending ,  hBitOrd1 ,  hBitOrd2 ) )
 		End If
 
-		BT_DrawGradientFillVertical ( hDC ,   1 ,  nColx - 1 ,    nTam1 - 2       ,    Height    ,CORHEAD4, CORHEAD3 )
-
 
 		BT_DrawText ( hDC , nLinha  , nColx,   Hb_AnsiToOem(cTexto1) , cFontHead  , nfontSize, WHITE,  {230,230,230}   , ;
 			BT_TEXT_TRANSPARENT+BT_TEXT_BOLD ,	nAlingText, nOrientation )
 
-		
-		hBit201 := BT_BitmapCaptureWindow ( cJanela , 0 , nColx , nTam - 5  , Height )
-		
-
+		//If (hBit201 == Nil) .And. (!lDragMode)
+		///	hBit201 := BT_BitmapCaptureWindow ( cJanela , 0 , nColx , nTam - 5  , Height )
+		//End If
 
 	End If
 
 
 	If (lDragMode) .And. (nColMove > 0) .And. (nColMove <= Len(aMapsCol))
-
-
 		nColx1 := aMapsCol[nColMove][2] // +nIncr1
 		nColx2 := aMapsCol[nColMove][5]
-
-
 		nColx1 := nColY1
-
 		If (nColHeader != 0)
 			nColX1 +=  -(nColHeader)
 		End If
-
-
 		BT_DrawBitmapAlphaBlend (hDC, 0 ,  nColx1  , nColx1+nColx2, Height, 110 , BT_COPY  , hBit201)
-
 	End If
+
+
+	BT_DrawLine ( hDC, 0 , 0 , 0 , Width, {100,103,105}, 1 )
+	BT_DrawLine ( hDC, Height - 1 , 0 , Height - 1 , Width, {75,75,75}, 1 )
 
 
 
@@ -2028,7 +2047,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 	BT_BitmapRelease (hBitOrd1)
 	BT_BitmapRelease (hBitOrd2)
 
-	BT_BitmapRelease(hBit201)
+	//BT_BitmapRelease(hBit201)
 
 
 
