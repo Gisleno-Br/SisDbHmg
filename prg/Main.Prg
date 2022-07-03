@@ -2316,7 +2316,7 @@ Function SaveLog(cArqLog,cTexto)
 	Local cText := cTexto
 
 	If File(cArqLog)
-		cText := hb_memoRead(cArqLog)+' '+cTexto 
+		cText := hb_memoRead(cArqLog)+' '+cTexto + QUEBRA
 	End If 
 
 
@@ -2407,12 +2407,31 @@ Return
 		SCROLLINFO si;
 
 	hwnd = (HWND) HMG_parnl (1);
+		GetScrollInfo (hwnd, SB_VERT, &si);
+
+
+	hb_retni( si.nPos  );
+
+	}
+
+
+
+	HB_FUNC ( GETHSCROLLVALUE )
+
+	{
+
+	HWND hwnd;
+		SCROLLINFO si;
+
+	hwnd = (HWND) HMG_parnl (1);
 		GetScrollInfo (hwnd, SB_HORZ, &si);
 
 
-	hb_retni( si.nTrackPos  );
+	hb_retni( si.nPos  );
 
 	}
+
+
 
 
 	HB_FUNC ( SETVSCROLLVALUE )

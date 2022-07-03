@@ -772,9 +772,10 @@ Function xChangeOrd( nOrigem ,  nDest )
 	Local n1 := 1
 	Local nSalva
 	Local aM2 := {}
+	Local y 
+	Local aM1
 
-
-	am1 := {}
+	aM1 := {}
 
 	y := Len(aMt1[1])
 
@@ -789,20 +790,15 @@ Function xChangeOrd( nOrigem ,  nDest )
 				nOri := aMt1[i][z]
 			End If 
 		Next 	
+		hb_AIns( aM1 ,  nDest , nOri , .T.)
 		Aadd(aM2 , aM1)
 	Next	
 
+	aMt1 := Aclone(aM2)
 
-
-/*
-	For n1 := 1 To Len(aMt1)
-		nSalva := aMt1[n1][nDest]
-		aMt1[n1][nDest]   := aMt1[n1][nOrigem]
-		aMt1[n1][nOrigem] := nSalva
-	Next
-	*/
-
+	DoEvents()	
 	xGoTop()
+
 
 
 REturn
@@ -859,6 +855,8 @@ Function xBarInicio()
 REturn (nColEsquerda == 1)
 
 
+Function xGetScrolPos()
+Return nColScrool
 
 
 Function xBarFim()
