@@ -800,7 +800,6 @@ Function xChangeOrd( nOrigem ,  nDest )
 	xGoTop()
 
 
-
 REturn
 
 
@@ -857,6 +856,12 @@ REturn (nColEsquerda == 1)
 
 Function xGetScrolPos()
 Return nColScrool
+//Iif( nColScrool < 0,0,nColScrool)
+
+Function xInitScroll()
+    nColScrool := 0
+Return 
+
 
 
 Function xBarFim()
@@ -2356,12 +2361,12 @@ Function EventBrowMtr( nHWnd, nMsg, nWParam, nLParam )
 			//msginfo('lp23')
 			cObjSelected := 'BrowserMtr'
 
-			If (lHasHeader)
+			If (lHasHeader) .And. (!isDrgMode())
 				DoEvents()
 				yOffBarra( cBarrah  )
 				yDcBarH1eMtr()
 				DoEvents()
-				yDragOff()
+				//yDragOff()
 				DoEvents()
 				DoEvents()
 			End If

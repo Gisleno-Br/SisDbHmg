@@ -170,6 +170,10 @@ Return xH_xClcDir(  nColTotal  )
 Function xRetIsFim()
 Return lScrollFim
 
+Function xRetIsIni()
+Return lScrollIni
+
+
 
 Function Xh_RetPasy()
 Return nPassoy
@@ -663,12 +667,13 @@ Return
 Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 )
 
     Local nSaldo1 := xH_ColResto( xH_RtLimite() )       
-    Local aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)
+    //Local aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)
     Local nW1 := GetProperty(  cBrwName , 'Width'  ) - 21
     Local np1
     Local nI1     
     Local nSoma1 := 0
     Local nColAtu := 0
+    Local aMInfo := {}
 
     DEFAULT lModo1 := .f. 
     DEFAULT lAtuBar := .t. 
@@ -679,6 +684,7 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 )
     
     If lFrente       
         If !lModo1
+
             nSaldo1 := xH_ColResto( xH_RtLimite() )              
             aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)                            
 
@@ -693,41 +699,51 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 )
 
             //Coluna a Coluna
 
-            If nQContador >= nQ1
+            If (lScrollFim)
                 xDialog( hb_ANSIToOEM("Não ha mais tela para Rolar a Direita."))
                 Return
             End If             
-
-            DoEvents()    
-
-            //msginfo('ok2')          
+            /*
             
-
-            DoEvents()                
-            nQContador++                            
-
-            //If (nQContador = nQ1 )
-            If (nQContador = nQ1 )
+            If (lScrollFim)
                 nZ1  := xGetInfCw1(   nColtotal    , 3  )
-                nSaldo1 := Abs((xGetInfCw1(   nColtotal   , 3  ) - (xGetScrolPos() +  xH_RtLimite() )  )  +15)     
+                nSaldo1 := Abs((xGetInfCw1(   nColtotal   , 3  ) - (xGetScrolPos() +  xH_RtLimite() )  )  )     
                 DoEvents()
                 lScrollFim := .t. 
+                msginfo('fim')
                 
             Else                     
                 nColAtu := xGetColPos( .t. )                                                    
+                if nColAtu == 0 
+                    msginfo(Str(  nColAtu) + '   ' + Str(  xGetScrolPos()   )    )
+                End If    
                 nSaldo1 := xGetInfCw1(   nColAtu   , 5  ) 
                 lScrollFim := .f. 
             End If           
+            */
+
+            nColAtu := xGetColPos( .t. )                                                                    
+            nSaldo1 := xGetInfCw1(   nColAtu   , 5  ) 
+
+            lScrolIni := .f. 
+
                 
             If (xGetScrolPos() == 0)
                 nSaldo1 += nColIniBrw
             End If 
 
+            If ( (nColAtu+1) == (nColtotal - 1))
+                nDiff :=  (xCalcTam() - (xGetScrolPos()+xH_RtLimite()) )                
+                If nSaldo1 > nDiff
+                   nSaldo1 -= nDiff                   
+                End If 
+            End If 
 
-            lScrollFim := ((xGetScrolPos()+xH_RtLimite()) > xCalcTam())
+            
+            
 
             If lScrollFim 
-           //     msginfo('fim')
+                //msginfo('fim')
             End If 
 
 
@@ -737,25 +753,27 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 )
 
             DoEvents()
             SysWait(0.06)                
-            yScrollCaM( .t. , .f. , nSaldo1  , lAtuHead1 )               
-            
+
+            xDoScrolHroz( .t. , nSaldo1 , lAtuHead1 , lAtuBar )
+
+            /*
+            yScrollCaM( .t. , .f. , nSaldo1  , lAtuHead1 )                           
 
             If lAtuBar
                 yUpdatBha1( Xh_RetPasy()     )
                 yDcBarH1()                                                              
             End If 
 
+            lScrolIni := .F. 
+
             yDcBarH1eMtr()
-            DoEvents()                
+            DoEvents()                           
+            */
 
-
-
+            lScrollFim := ((xGetScrolPos()+xH_RtLimite()) >= (xCalcTam() ) )
+            
         End If                    
-
     Else 
-
-
-
         If !lModo1
 
             If (nQContador == 0)
@@ -788,14 +806,15 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 )
 
 
 
-            If nQContador == 0
+            If (lScrolIni) 
                 xDialog( hb_ANSIToOEM("Não ha mais ESpaço para Rolar a Esquerda."))
-                Return
+                Return 
             End If 
 
-            xGetColPos( .t. )
+          //  xGetColPos( .t. )
 
             //If nQContador == nQ1                           
+            /*
             If (lScrollFim)
                nI1 := xRetAscan( xGetScrolPos()  )                              
                nSaldo1 := (xGetScrolPos() - xGetInfCw1(   nI1    , 2  ))+5            
@@ -810,13 +829,10 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 )
                 End If 
                 
             End If      
-            
-            //If (nQContador == 1)
-            If (lScrolIni)
-                //msginfo('lp2')
+            */
 
-                nSaldo1 += nColIniBrw                 
-            End If 
+            nColAtu := xGetColPos( .f. )   
+            nSaldo1 := (xGetScrolPos() - xGetInfCw1(   nColAtu   , 2  )) + 5        
 
             aMInfo := {}
             Aadd(aMInfo , nSaldo1)
@@ -824,6 +840,12 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 )
 
             DoEvents()
             SysWait(0.06)                
+
+            xDoScrolHroz( .f. , nSaldo1 , lAtuHead1 , lAtuBar )
+            lScrollFim := .f. 
+            DoEvents()  
+
+            /*
             yScrollCaM( .f. , .f. , nSaldo1 , lAtuHead1  )               
             lScrollFim := .f. 
 
@@ -833,25 +855,39 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 )
             End If 
 
             yDcBarH1eMtr()
-
             DoEvents()                
-            nQContador--
-
-            
-            lScrolIni := (nQContador == 1)
             lScrollFim := .f. 
-
-            If (nQContador == 0)
-                xInitSxy()
-            End If 
-
-            If lScrolIni
-                //msginfo('ini')
-
-            End If 
+            */
 
 
+
+            lScrolIni := (nColAtu == 1)
+
+             If lScrolIni
+                n1 := xGetScrolPos()
+
+                If (n1 != 0)
+                    xDoScrolHroz( .f. ,  n1 , lAtuHead1 , lAtuBar )
+
+                    /*
+               
+                    yScrollCaM( .f. , .f. , n1 , lAtuHead1  )      
+                    If lAtuBar
+                        yUpdatBha1( -(Xh_RetPasy())     )            
+                        yDcBarH1()                                                             
+                    End If 
+                    yDcBarH1eMtr()
+                    DoEvents()    
+                    SysWait(0.03)
+                    */
+               
             
+                End If 
+
+
+                xInitSxy()
+                xInitScroll()
+            End If 
             //xGetColPos( .t. )
 
 
@@ -864,6 +900,19 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 )
 Return nSaldo1
 
 
+Function xDoScrolHroz( lFrente , nValue , lAtuH , lAtBar )
+
+    DoEvents()
+    yScrollCaM( lFrente , .f. , nValue , lAtuH  )      
+    If lAtBar
+        yUpdatBha1(  Iif(  !lFrente , -(Xh_RetPasy()) ,  Xh_RetPasy()  )    )            
+        yDcBarH1()                                                             
+    End If 
+    yDcBarH1eMtr()
+    DoEvents()    
+    SysWait(0.03)
+
+Return                     
 
 Function xRoleTela( lFrente , nQp1  , lUpdBar1  , nConter , nQSkip )
 
