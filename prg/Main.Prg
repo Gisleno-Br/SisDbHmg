@@ -510,7 +510,8 @@ FUNCTION Main
 	Public lMainJan := .t.
 
 
-	Public  aCorSub1 := {145,200,200 }
+	Public  aCorSub1   := WHITE
+	Public  aFonteSub1 := { 79 , 84 , 94}
 
 	Public CorDisabled := {192,192,192}
 
@@ -554,10 +555,9 @@ FUNCTION Main
 	//Load Window fSplitSubMenu
 
 
-
 	Private aRotinas := {}
 
-	Private nMainSel  := 0
+	//Private nMainSel  := 0
 	Private nClearSel := 0
 
 	Private cOpMainSel  := ''
@@ -706,7 +706,7 @@ END LABEL
 
 //SysWait(.3)
 
-	xMenuMain( 'fSplit6' ,  70 , 1  , aOpcoes , aItens )
+	xMenuMain( 'fSplit6' ,  70 , 0  , aOpcoes , aItens )
 
 	SysWait(.2)
 

@@ -100,21 +100,14 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  , lPopUp  )
 			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
 			ON PAINT xSombra( ThisWindow.Name , nTop + 15 , nLeft+17  )
 		END WINDOW
-	Else
-		//+3
+	Else		
 
 		DEFINE WINDOW WinSombra1 AT nTop + 12 , nLeft+15 WIDTH nColTamMenu - 7 HEIGHT (Len(aOp1) * nItemSubHeight) - 2 TITLE 'Sombra1' ;
 			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
 			ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+9  )
 		END WINDOW
 
-
-		//ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+9  )
-
-
-
 	End If
-
 
 
 	BT_ClientAreaInvalidateAll(   'WinSombra1'  )
@@ -122,7 +115,7 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  , lPopUp  )
 
 
 
-	DEFINE WINDOW Win_Menu1 AT nTop, nLeft+3 WIDTH nColTamMenu HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight ,  300 + 4    ) TITLE 'Men1' ;
+	DEFINE WINDOW Win_Menu1 AT nTop, nLeft+1 WIDTH nColTamMenu HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight ,  300 + 4    ) TITLE 'Men1' ;
 		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR aCorSub1 VIRTUAL HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight+1 ,  (Len(aOp1) * nItemSubHeight)+10  ) ;
 		ON PAINT xPaintMenu( ThisWindow.Name , aOpz11 , nItemx2 , nItemZ1 , cOpy2 , 0 , 0 ,  .f. ,  .t. ,  ,  , .t. )
 	END WINDOW
@@ -132,7 +125,7 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  , lPopUp  )
 	*// Janelas com as Setas Navegação para baixo e cima.
 
 	If  (Len(aOpz11) > XMAXITEM)
-		DEFINE WINDOW Win_Scroll1 AT nTop+GetProperty('Win_Menu1' , 'Height')   , nLeft+3 WIDTH nColTamMenu  HEIGHT 32 TITLE 'T1' ;
+		DEFINE WINDOW Win_Scroll1 AT nTop+GetProperty('Win_Menu1' , 'Height')   , nLeft+1 WIDTH nColTamMenu  HEIGHT 32 TITLE 'T1' ;
 			NOMAXIMIZE NOMINIMIZE NOSIZE CHILD PANEL PARENT &cParent NOSYSMENU NOCAPTION BACKCOLOR GRAY ;
 			ON PAINT xPaintScrool( ThisWindow.Name )
 		END WINDOW
@@ -155,7 +148,6 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  , lPopUp  )
 
 	ShowScrollBar( GetFormHandle( 'Win_Menu1' ), 0, .F. )
 	ShowScrollBar( GetFormHandle( 'Win_Menu1' ), 1, .F. )
-
 
 	_ShowWindow("WinSombra1")
 

@@ -1146,7 +1146,8 @@ Function xTecBrowMtr()
 
 
 	//MOUSEMOVE DA BARRAV
-	If (nMsg == WM_MOUSEMOVE) .And. (nHWnd == GetProperty(  cBarraVSombra , "HANDLE" ))
+	If (nMsg == WM_MOUSEMOVE) .And. (nHWnd == GetProperty(  cBarraVSombra , "HANDLE" )) .And. ;
+	   (  cObjSelected == 'BarraV')
 
 		lTracking75 := .f.
 
@@ -1199,6 +1200,8 @@ Function xTecBrowMtr()
 			lTracking135 := .t.
 			lTracking75  := .t.
 		End If
+
+		//msginfo('zz1 ' + cObjSelected)
 
 	End If
 

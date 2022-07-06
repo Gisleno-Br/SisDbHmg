@@ -542,7 +542,12 @@ FUNCTION xInit()
     
 	
 
-	SetProperty("fSplit6","Height", (np2 - 22) - GetProperty( "fSplit6","Row" ) )
+	SetProperty("fSplit6","Height", 522)
+
+	//SetProperty("fSplit6","BackColor",aCorSub1)
+
+
+	SetProperty("fSplit6","Col",0)
 
 
 	SetProperty("fSplit5","Width",nDesktopWidth - nLop)

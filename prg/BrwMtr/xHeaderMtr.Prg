@@ -72,7 +72,7 @@ Static lEnabledy := .t.
 Static lTrack39 := .f.
 
 Static lSizeMode := .f.
-//Static lDragMode := .f. 
+Static lDragHeader := .f. 
 
 Static cTable := ''
 
@@ -99,7 +99,7 @@ Static lAscending := .f.
 
 Static nColSele := 1
 
-Static lDragMode := .f.
+//Static lDragHeader := .f.
 Static nSteps    := 5
 Static nColx5    := 0
 
@@ -184,8 +184,7 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 		TITLE 'xHeaderSombra1' + Left(cHName,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION NOAUTORELEASE NOMINIMIZE NOMAXIMIZE BACKCOLOR WHITE ;
 
-		/*
-
+		
 		DEFINE LABEL Label2
 			ROW    0
 			COL    0
@@ -207,18 +206,18 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 			BACKCOLOR Nil
 			FONTCOLOR NIL
 		END LABEL
-		*/
+		
 
 
 	END WINDOW
 
-	//CREATE EVENT PROCNAME EventHeaMtr() HWND GetControlHandle(  'Label2' ,  cHeaderSombra ) STOREINDEX nIndex22
-	//EventProcessAllHookMessage(nIndex22 , .t.)
+	CREATE EVENT PROCNAME EventHeaMtr() HWND GetControlHandle(  'Label2' ,  cHeaderSombra ) STOREINDEX nIndex22
+	EventProcessAllHookMessage(nIndex22 , .t.)
 
 	nIndex22 := 34322
 
-	CREATE EVENT PROCNAME EventHeaMtr() HWND GetFormHandle(  cHeaderSombra ) STOREINDEX nIndex22
-	EventProcessAllHookMessage(nIndex22 , .t.)
+	//CREATE EVENT PROCNAME EventHeaMtr() HWND GetFormHandle(  cHeaderSombra ) STOREINDEX nIndex22
+	//EventProcessAllHookMessage(nIndex22 , .t.)
 
 	//InstallEventHandler('EventHeaMtr')
 
@@ -324,7 +323,8 @@ Return
 Function yLimpMode()
 
 	lSizeMode := .f.
-	lDragMode := .f.
+	//lDragHeader := .f.
+	lDragHeader := .f. 
 	lDraHighM := .f.
 	nColSel1 := 0
 	nColAntx := 0
@@ -675,10 +675,10 @@ Function EventHeaMtr()
 	End If
 
 
-	//If nHWnd == GetControlHandle(  'Label2' ,  cHeaderSombra )
+	If nHWnd1 == GetControlHandle(  'Label2' ,  cHeaderSombra )
 
 
-	If nHWnd1 == GetProperty(  cHeaderSombra   , "HANDLE" )
+	//If nHWnd1 == GetProperty(  cHeaderSombra   , "HANDLE" )
 
 		If (nMsg == WM_LBUTTONDBLCLK)
 
@@ -717,11 +717,14 @@ Function EventHeaMtr()
 				Return
 			End If
 
+			lDragHeader := .t.
+
 			//msginfo(Str(nColSele))
 
 			//SysWait(0.06)
 
 			xCaptBmp(nColSele)
+		//	SetBrwDrgM( .t. , 1 )						
 			UxLib96()
 
 			nColSav1 := aMapsCol[nColSele][2]
@@ -838,14 +841,14 @@ Function EventHeaMtr()
 		If (nMsg == WM_LBUTTONUP)
 
 			lSizeMode := .f.
-			lDragMode := .f.
+			lDragHeader := .f.
 			lAndamento := .f.
 
 			lDraHighM := .f.
 
 			nColSav1 := 0
 			nColx5 := 0
-			//msginfo('3332')
+			msginfo('3332')
 
 
 
@@ -858,6 +861,8 @@ Function EventHeaMtr()
 			s2 := ''
 
 			DoEvents()
+
+			cObjSelected := 'HeaderMtr'
 
 			//msginfo('r1')
 
@@ -872,13 +877,10 @@ Function EventHeaMtr()
 
 			If (!lDisphint)
 				DoEvents()
-				//SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , Hb_AnsiToOem('Click e Arraste a Coluna para Mudar de Posição.')   )
-
+				SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , Hb_AnsiToOem('Click e Arraste a Coluna para Mudar de Posição.')   )
 				xDoHint( , Hb_AnsiToOem('Click e Arraste a Coluna para Mudar de Posição.') )
 				SysWait(0.01)
-
 				DoEvents()
-
 				lDisphint := .t.
 			End If
 
@@ -890,125 +892,136 @@ Function EventHeaMtr()
 				GetAsyncKeyState(i)
 			Next i
 
-			lDragMode := .t.
+			//lDragHeader := .t.
 			lPassou := .f. 
 			//DRAGMODE
 
 			nDiff1:=0
 
+
 			If nColSele > 0
 				nDiff1 := (xGetScrolPos() + nColx) - (  xGetInfCw1( nColSele , 2  )      )
 			Else 				
-			    Return 	
+			
 			End If 		
 
+			
 
+			While (GetAsyncKeyState(VK_LBUTTON) != 0) .And. (lDragHeader)
+			   //.And. (lDragHeader) 			  
 
-			While (GetAsyncKeyState(VK_LBUTTON) != 0) 			  
+				For i := 1 To 255
+					GetAsyncKeyState(i)					
+				Next i
+
+				DoEvents()
 
 				GetCursorPos (@nCol, @nRow)
 				ar1 := GetPos_ScreenToClient(   nHWnd1 , nRow, nCol )
 				nColx := (xGetScrolPos()+ar1[2])
-
 				DoEvents()
-
-				//msginfo(' ds ' + Str(nColx))
-
+				
 				If ( (nColx - nDiff1) > nLimite1)
 					SysWait(0.03)
 					nColx += 1
 					lPassou := .t.
 					DoEvents()									
 					nColx5 := nColx+1			
-					//msginfo('l12111')	
 				End If 
 
-				SysWait(0.03)
-
 				If (nColx5 == 0) .And. (!lPassou)
-					nColx5 := nColx
-					//msginfo(' x5 ' + str(nColx5))
+					nColx5 := nColx					
 				End If
 
-				DoEvents()
+				//DoEvents()
 
 
-				If ( Abs(nColx - nColx5) > 1) .or. (lPassou)
-					
+				If ( Abs(nColx - nColx5) > 1) .or. (lPassou)					
 					DoEvents()					
 					nTarget := xBusqTar(  (nColx - nDiff1)  , lFrente1 )										
-					DoEvents()
+				
 
-					If (nColx < 10) .And. (nColSele > 0) .And. (nQConter > 1)
-						nZ1 := xDoScrolV( .f. , .t. , .t.  , .f. )
-						nQConter--
-						nColSav1 -= nZ1
-						xMoveWin( nColSele , nColSav1 , lFrente1 )
-						SysWait(0.01)
-						DoEvents()
-						yUpHead1(  cHeaderJan , -(nZ1) )
+					If ( (  nColx - xGetScrolPos()  )   < 10) .And. (nColSele > 0) //.And. (nQConter > 1)
+
+						If !lIni						
+
+							nZ1 := xDoScrolV( .f. , .t. , .t.  , .t. , .f.  )
+							
+							If nZ1 != -1									
+								nColx5 := nColx			
+								DoEvents()															
+							Else 
+								lIni := .t. 
+							End If 					
+							
+						    SysWait(0.01)
+							DoEvents()						
+
+						End If 
 					
 					Else 	
 						If ( ( nColx - xGetScrolPos())  > (nLimite1 - 10) ) .And. (nColSele > 0) 						     
 
 							 If (!lFim)					    							 	
-							 	SysWait(0.07)
+							 	SysWait(0.01)
 							 	DoEvents()
 							    
-								nZ1 := xDoScrolV( .t. , .t. , .t.  , .t. , .f.  )												
+								nZ1 := xDoScrolV( .t. , .t. , .t.  , .t. , .f.  )																				
 								nz1 := 0
 						
 								If nZ1 != -1									
 									nColx5 := nColx			
-									DoEvents()									
-								Else 
-								
+									DoEvents()															
+									//msginfo('ok2')
+								Else 								    
 									DoMethod('fFiltrosCad' , 'SetFocus')
 									SysWait(0.02)
-									yRefresh(c_BrowName)
-									SysWait(0.02)
-									DoEvents()
+									yRefresh(c_BrowName)							
+									DoEvents()								
+									lFim := .t. 									
+								End If 	
 
-									lFim := .t. 
-
-								End If 								
+								SysWait(0.04)
+								DoEvents()						
 
 						    Else 
 							
 							End If 							
 
 						Else			
+
 							lPassou := .f.
+
 
 							If (nTarget > 0) .And. ( nTarget <= (Len(aMapsCol) - 1) )
 								nColTarget := nTarget
 								BT_ClientAreaInvalidateAll(   cHeaderJan )
 								xDcBarHeader()							
 								DoEvents()
-								//SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , hb_AnsitoOem('Trocar a Posição , Coluna ' + ; 
-								//QuotedStr(Alltrim(aMapsCol[nTarget][1]  )) ) )
-								DoEvents()										
+								SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , hb_AnsitoOem('Trocar a Posição , Coluna ' + ; 
+								QuotedStr(Alltrim(aMapsCol[nTarget][1]  )) ) )
+								DoEvents()																		
 							End If
 
 							DoEvents()
 
-							//msginfo(Str( nTarget  ) + ' ' + Str(nColSele)  )
+							lIni := .f. 
+							lFim := .f.
 
-							lDragMode := .t.
-							xMoveWin( nColSele , nColx - nDiff1 , lFrente1   )
+							lDragHeader := .t.
+							xMoveWin( nColSele , nColx - nDiff1 , lFrente1   )							
 							nColx5 := nColx
 
-							//SysWait(0.03)
+							SysWait(0.03)
 
 							If !lMove1
 								lMove1 := (nColSele != nColTarget)
 							End If
 
-							DoEvents()
 
 						End If
-
 					End If 	
+
 					DoEvents()
 
 				Else
@@ -1020,9 +1033,14 @@ Function EventHeaMtr()
 					GetAsyncKeyState(i)
 				Next i
 
-			Enddo
+				DoEvents()
 
-		//	msginfo('ok2')
+			Enddo								
+
+			lDragHeader := .f. 
+			SetBrwDrgM( .f. , nColx5 )							
+
+			//msginfo('ok2')
 
 			If  (lMove1) .And. (nColSele > 0) 
 
@@ -1031,41 +1049,24 @@ Function EventHeaMtr()
 			    If (nColSele != nColTarget) .And. ( nColTarget <= (Len(aMapsCol) - 1) )	.And. (nColTarget > 0)			
 				    xTroquePos(nColSele , nColTarget , aCabecs[nColSele] )
 					DoEvents()					
-				End If  	
-/*
+				End If  			
+
 
 				BT_BitmapRelease(hBit201)
 				hBit201 := Nil	
-
 				lMove1 := .f.
-				lDragMode := .f.
-
+				lDragHeader := .f.
 				nColSele1 := 0
 				nColSele  := 0
 				nColTarget := 0
-
-				//DoEvents()
-				//yRefresh( c_BrowName )
-				//DoEvents()
-				//SysWait(0.09)
-
-				//SetBrwDrgM( .f. , nColx5 )		
-				
+				DoEvents()
+				yRefresh( c_BrowName )
+				DoEvents()
+				SetBrwDrgM( .f. , nColx5 )						
 				nColMove := 0
-			//	BT_ClientAreaInvalidateAll(   cHeaderJan )
+				BT_ClientAreaInvalidateAll(   cHeaderJan )
+				SysWait(0.06)
 
-			//	DoEvents()
-
-				
-			//	SysWait(0.06)
-
-				//DoMethod( cHeaderSombra , 'Show')
-				//DoEvents()
-				
-
-				//SysWait(0.09)
-				//msginfo('ok2')
-				*/
 			    	
 			End If			
 
@@ -1078,14 +1079,16 @@ Function EventHeaMtr()
 			//SetWindowCursor( nHWnd , IDC_ARROW)
 			aCords := xSearchPos(  nColx )
 
+
 			If Len(aCords) = 0
 				lSizeMode := .F.
-				lDragMode := .F.
+				lDragHeader := .F.
 				lAndamento := .f.
 				lTrack39 := .f.
 				xApagueH( cHeaderJan )
 				xDcBarHeader()
 				DoEvents()
+				//msginfo('Zero')
 				Return
 			End If
 
@@ -1126,17 +1129,10 @@ Function EventHeaMtr()
 			If Len(aCords) > 0
 
 				If !lTrack39
-					//DoEvents()
-
+					
 					SysWait(0.02)
 					nColSel1 := aCords[1][2]
-					//lTracking546 := .t.
-
-
-
 					UxLib96()
-
-					//msginfo(' Dbl ' + Str( nColSel1 ))
 
 
 					nColAntx := aCords[1][2]
@@ -1729,12 +1725,12 @@ Function yUpHead1( cHeader1 ,  nValor   )
 return
 
 Function isDrgMode()
-REturn (lDragMode)
+REturn (lDragHeader)
 
 Function yDragOff()
 
 	lSizeMode := .f.
-	lDragMode := .f.
+	//lDragHeader := .f.
 	lAndamento := .f.
 
 	nColTarget := 0
@@ -1926,7 +1922,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 		BT_DrawText ( hDC , nLinha  , nColx,   Hb_AnsiToOem(cTexto1) , cFontHead  , nfontSize, WHITE,  {230,230,230}   , ;
 			BT_TEXT_TRANSPARENT+BT_TEXT_BOLD ,	nAlingText, nOrientation )
 
-		//If (hBit201 == Nil) .And. (!lDragMode)
+		//If (hBit201 == Nil) .And. (!lDragHeader)
 		///	hBit201 := BT_BitmapCaptureWindow ( cJanela , 0 , nColx , nTam - 5  , Height )
 		//End If
 
@@ -1934,8 +1930,8 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
 
 
-	//If (lDragMode) .And. (nColMove > 0)  	
-	If (lDragMode) .And. (nColMove > 0) .And. (nColMove <= Len(aMapsCol))  //.And. (hBit201 != Nil )
+	//If (lDragHeader) .And. (nColMove > 0)  	
+	If (lDragHeader) .And. (nColMove > 0) .And. (nColMove <= Len(aMapsCol))  //.And. (hBit201 != Nil )
 	  //  If (nColY1 <= (Len(aMapsCol) - 1) )
 			//.And. (nCol <= (Len(aMapsCol) - 1) )
 			nColx1 := aMapsCol[nColMove][2] // +nIncr1
@@ -1944,7 +1940,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 			If (nColHeader != 0)
 				nColX1 +=  -(nColHeader)
 			End If
-		//	BT_DrawBitmapAlphaBlend (hDC, 0 ,  nColx1  , nColx1+nColx2, Height, 110 , BT_COPY  , hBit201)
+			BT_DrawBitmapAlphaBlend (hDC, 0 ,  nColx1  , nColx1+nColx2, Height, 110 , BT_COPY  , hBit201)
 			//msginfo('ok2')
 	//	End If 
 	End If
@@ -1963,7 +1959,7 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 	BT_BitmapRelease (hBitOrd1)
 	BT_BitmapRelease (hBitOrd2)
 
-	//BT_BitmapRelease(hBit201)
+//	BT_BitmapRelease(hBit201)
 
 
 

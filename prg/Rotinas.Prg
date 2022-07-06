@@ -310,15 +310,10 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 	Local lSeta1
 	Local nTYpe
 	Local nLine := 00
-
 	Local hBit10
 	Local hBit11
-
-
 	Local nHeightBmp := nItemSubHeight * Len(aMtrOp)
-
 	Local hBitmap2
-
 
 	LOCAL Width  := BT_ClientAreaWidth  (cForm)
 	LOCAL Height := BT_ClientAreaHeight (cForm)
@@ -329,24 +324,13 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
 	Local cTexto := ''
 
-	Local hBitOk := BT_BitmapLoadFile ( 'img\ngi.png')
-
-	
+	Local hBitOk := BT_BitmapLoadFile ( 'img\ngi.png')	
 	Local hBitSeta := BT_BitmapLoadFile ( 'SETATRANSP')
-
 	Local nRow := -(GetProperty( cForm    , "VscrollBar" , "Value"))
-
-
-	Local nLineSeta := nTamSubMenuConsulta
-
+	Local nLineSeta := nTamSubMenuConsulta	
 	Local nLinDrop := 0
-
 	Local lEnabled := .t.
-
 	Local cCor
-
-
-
 
 	DEFAULT nItemDropedDown := 0
 	DEFAULT nHeightDroped   := 0
@@ -360,54 +344,52 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 	DEFAULT lPopup := .f. 
 
 
-
-
 	If lSetas
 
 		If !lHitB
 			hBit10 := BT_BitmapLoadFile ( 'SETAB2' )
-			//SETAB2
 		Else
 			hBit10 := BT_BitmapLoadFile ('SETAB2D')
 		End If
-
-
 		If !lHitT
 			hBit11 := BT_BitmapLoadFile ( 'SETAC2' )
 		Else
-			hBit11 := BT_BitmapLoadFile ( 'SETAC2D'  )
-			//SETAC2D
+			hBit11 := BT_BitmapLoadFile ( 'SETAC2D'  )			
 		End If
 
 	End If
 
-	hBitMap2 := BT_BitmapCreateNew (nWidthBmp , nHeightBmp , BLACK)
-
-	hDC := BT_CreateDC (hBitmap2, BT_HDC_BITMAP  , @BTstruct)
-
+	//hBitMap2 := BT_BitmapCreateNew (nWidthBmp , nHeightBmp , BLACK)
+	//hDC := BT_CreateDC (hBitmap2, BT_HDC_BITMAP  , @BTstruct)
 
 	hDC2 = BT_CreateDC ( cForm  , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
 
 
 	If (nOpselx1 = 0)
-
+		/*
 		If !lSubMenu1
 			BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , WHITE , WHITE  )
 		Else
-			BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , aCorSub1 , aCorSub1  )
+			BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , WHITE , WHITE  )
 		End If
+		aCorSub1
+		*/
+
+		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , aCorSub1 , aCorSub1  )
+
 
 	End If
 
 	If nClear1 > 0
-
+		/*
 		If !lSubMenu1
 			BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemSubHeight)    , 0  , nColTamMenu ,    nHeightBmp    ,  WHITE  , WHITE  )
 		Else
-			BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemSubHeight)    , 0  , nColTamMenu ,    nHeightBmp    ,  aCorSub1  , aCorSub1  )
-		End If
+			BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemSubHeight)    , 0  , nColTamMenu ,    nHeightBmp    ,  WHITE  , WHITE  )
+		End If	
+		*/
 
-
+		BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemSubHeight)    , 0  , nColTamMenu ,    nHeightBmp    ,  aCorSub1  , aCorSub1  )
 
 	End If
 
@@ -415,11 +397,8 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 	For n1 := 1 To Len(aMtrOp)
 
 		cTexto := alltrim(  Right( aMtrOp[n1][1]  , Len(  aMtrOp[n1][1] ) - 2  ) )
-
 		lEnabled := aMtrOp[n1][3]
-
 		lSeta1   := .f.
-
 
 		If Len(aMtrOp[n1]) >= 5
 			lSeta1   := aMtrOp[n1][5]
@@ -436,18 +415,15 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 					Iif( Alltrim(cTextSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ;
 					nAlingText, nOrientation )
 
-
 				BT_DrawBitmap (hDC2  , nLine  + nRow    , 1   , 20  , 20 , BT_STRETCH, hBitOk)
 
 			Else
 
-				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , WHITE  , aCorSub1  )
-				
+				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , WHITE  , aCorSub1  )				
 
 				BT_DrawText ( hDC2 , nLine + nRow  , 35 ,  Hb_AnsiToOem( cTexto ), XFONT1, 9,  FONTCOR ,  aCorSub1  , ;
 					Iif( Alltrim(cTextSel) = Alltrim(cTexto)  ,  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT ,  BT_TEXT_TRANSPARENT)   , ;
 					nAlingText, nOrientation )
-
 
 				If lSeta1 				
 					BT_DrawBitmapTransparent ( hDC2,  nLine  + nRow   , Width - 20    , 16 , 16 , BT_COPY   ,  hBitSeta , {7,101,125} )
@@ -459,13 +435,10 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 		Else
 
 			nTypeText    := BT_TEXT_TRANSPARENT
-
 			cCor := FONTCOR
 
 			If !aMtrOp[n1][3]
-
 				cCor := CorDisabled
-
 				If lSubMenu1
 					cCor := CorDisabled2
 				End If
@@ -480,50 +453,34 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 				If lSeta1 				
 					BT_DrawBitmapTransparent ( hDC2,  nLine  + nRow   , Width - 20    , 16 , 16 , BT_COPY   ,  hBitSeta , {7,101,125} )
 				End If 	
-
-
 			End If
 
 		End If
 
-
-
 		nLine += (nItemSubHeight)
-
 
 		If (nItemDropedDown > 0) .and. (!lPopup)
 			If (nItemDropedDown == n1)
 				nLinDrop := nLine
 				nLine += Iif( !lSetas , nHeightDroped  , (nTamSubMenuConsulta + ( 2 * nItemSubHeight))   )
 			End If
-
 		Else 
 
 
 		End If
 
-
 	Next
 
 
 
-	If (lSetas) .And. (!lSubMenu1) .And. (!lPopup)
-	
-		//.And. ( 1 = 2)
-
-		//BT_STRETCH
-		BT_DrawBitmap (hDC2, nLinDrop + nLineSeta - 2                  ,   0   , nColTamMenu , 16 , 3 , hBit10)
-		BT_DrawBitmap (hDC2, nLinDrop + nLineSeta + nItemSubHeight - 4 ,   0   , nColTamMenu  , 16 , 3 , hBit11)
-
-
-		BT_BitmapRelease ( hBit10 )
+	If (lSetas) .And. (!lSubMenu1) .And. (!lPopup)			
+		BT_DrawBitmap (hDC2, nLinDrop + nLineSeta                      ,   0   , nColTamMenu , 16 , 3 , hBit10)
+		BT_DrawBitmap (hDC2, nLinDrop + nLineSeta + nItemSubHeight - 2 ,   0   , nColTamMenu  , 16 , 3 , hBit11)
+		BT_BitmapRelease ( hBit10 )		
 		BT_BitmapRelease ( hBit11 )
-
-
-
 	End If
 
-	BT_DeleteDC (BTstruct )
+	//BT_DeleteDC (BTstruct )
 	BT_DeleteDC (BTstruct2 )
 	//bt_Bit
 
@@ -540,9 +497,6 @@ Function xLimpSub(cJan , nOpsely , nClr , nHeight1 , nitemH1 , nColTam1 , nRow1 
 	DEFAULT nColTam1 := nColTamMenu
 
 	DEFAULT nRow1 := -(GetProperty( cJan , "VscrollBar" , "Value"))
-	
-
-	
 
 
 	// msginfo(Str(  nRow1 ))
@@ -619,9 +573,9 @@ Function xPaintSub()
 
 
 
-	hBitMap2 := BT_BitmapCreateNew (nWidthBmp , nHeightBmp , BLACK)
+	//hBitMap2 := BT_BitmapCreateNew (nWidthBmp , nHeightBmp , BLACK)
 
-	hDC := BT_CreateDC (hBitmap2, BT_HDC_BITMAP  , @BTstruct)
+	//hDC := BT_CreateDC (hBitmap2, BT_HDC_BITMAP  , @BTstruct)
 
 
 	hDC2 = BT_CreateDC ( cMenuName , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
