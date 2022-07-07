@@ -440,9 +440,9 @@ FUNCTION NovaConsulta( cTabela, lMovTable )
 	OBTN_Create( cJanx, 6595, "Excluir", 322, 165 ,  62,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
 	OBTN_Font( cJanx, 6595,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
-	AAdd( aButx1, {  6598,  OBTN_Handle( cJanx, 6598 ),   {|| Iif(lOk2 := GrvConsul( cTabela  ) , xFechaCon()  , ) },  cJanx   } )
+//	AAdd( aButx1, {  6598,  OBTN_Handle( cJanx, 6598 ),   {|| Iif(lOk2 := GrvConsul( cTabela  ) , xFechaCon()  , ) },  cJanx   } )
 
-	AAdd( aButx1, {  6599,  OBTN_Handle( cJanx, 6599 ),   {||   xFechaCon()   },  cJanx   } )
+	//AAdd( aButx1, {  6599,  OBTN_Handle( cJanx, 6599 ),   {||   xFechaCon()   },  cJanx   } )
 
 	AAdd( aButx1, {  6597,  OBTN_Handle( cJanx, 6597 ),   {|| AddPar1( .T., cTabela ) },  cJanx   } )
 	AAdd( aButx1, {  6596,  OBTN_Handle( cJanx, 6596 ),   {|| AddPar1( .F., cTabela ) },  cJanx   } )
@@ -479,17 +479,6 @@ FUNCTION NovaConsulta( cTabela, lMovTable )
 
 
 RETURN lok2
-
-
-Function xFechaCon()
-
-	_FechaJan('fCriaConsulta' )
-
-	if _IsWindowDefined('fFiltro')
-		DestroyWindow( fFiltro.HANDLE	)
-	End If	
-
-Return 
 
 Function _FechaJan(   cJanx1 )
 

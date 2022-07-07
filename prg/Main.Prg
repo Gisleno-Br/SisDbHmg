@@ -76,10 +76,12 @@ MEMVAR _HMG_SYSDATA
 
 
 
+
+
 Static lSubOpen := .f.
 
 
-DECLARE WINDOW fSplit10
+//DECLARE WINDOW fSplit10
 
 DECLARE WINDOW Win_MenuPrincipal
 
@@ -510,7 +512,14 @@ FUNCTION Main
 	Public lMainJan := .t.
 
 
-	Public  aCorSub1   := WHITE
+	// Cor de Fundo Menus
+	Public  aCorSub2   := {234,249,255}
+
+	Public  aCorSub1   := {229,237,242}
+
+	Public aMenuBarCor := {216,228,236}
+
+
 	Public  aFonteSub1 := { 79 , 84 , 94}
 
 	Public CorDisabled := {192,192,192}
@@ -545,11 +554,6 @@ FUNCTION Main
 
 
 
-
-	Load Window Main
-
-
-	Main.Maximize()
 
 
 	//Load Window fSplitSubMenu
@@ -590,7 +594,12 @@ FUNCTION Main
 		{"2-Pedidos","Vendas" , .t.  , Nil } , {"2-Orçamento","Orçamento" , .f. , Nil }  , {"3-Listagem Clientes","Lista" , .f. , Nil  } ,    {"4-Configurações","" , .f. , Nil  } }
 
 
+	
 
+	Load Window Main
+
+
+	//Main.Maximize()
 
 
 
@@ -610,27 +619,8 @@ FUNCTION Main
 
 	nEveLabel := 0
 
-	HMG_ChangeWindowStyle( fSplit6.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
 
-
-
-
-
-	//WS_EX_DLGMODALFRAME
-	HMG_ChangeWindowStyle( fSplit3.Handle, WS_EX_DLGMODALFRAME , NIL, .T., .T. )
-
-	HMG_ChangeWindowStyle( fSplit4.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
-
-	//HMG_ChangeWindowStyle(fSplit2.Handle    , 0x00010200 , NIL, .F., .F.)
-	//HMG_ChangeWindowStyle( fSplit2.Handle  ,WS_EX_TOOLWINDOW  , NIL, .t., .t.)
-
-
-
-	//HMG_ChangeWindowStyle(fSplitsubMenu.Handle    , 0x00010200 , NIL, .F., .F.)
-//	HMG_ChangeWindowStyle(fSplitSubMenu.Handle  ,WS_EX_TOOLWINDOW  , NIL, .t., .t.)
-
-
-
+/*
 	DEFINE LABEL fLabel1Dt
 	PARENT    fSplit3
 	ROW       18
@@ -689,7 +679,7 @@ TRANSPARENT .T.
 ACTION msginfo('ok')
 //FONTBOLD .t.
 END LABEL
-
+*/
 
 
 	Private aButTop := {}
@@ -698,21 +688,31 @@ END LABEL
 
 
 
-	//CREATE EVENT PROCNAME ProcWindowMsg()  STOREINDEX nIndex22   // ADD
+//	CREATE EVENT PROCNAME ProcWindowMsg()  STOREINDEX nIndex22   // ADD
 	//EventProcessHMGWindowsMessage (nIndex22, .F.)
+
 
 
 
 
 //SysWait(.3)
 
-	xMenuMain( 'fSplit6' ,  70 , 0  , aOpcoes , aItens )
-
-	SysWait(.2)
-
 	
 
+
+
+	
+	//DoEvents()
+
+	xMenuMain( 'Main' ,  70 , 0  , aOpcoes , aItens )
+
+	//SysWait(.5)
+
+
 	Main.Activate
+
+
+	//msginfo('lp22')
 
 
 
@@ -720,6 +720,50 @@ END LABEL
 
 RETURN
 
+Function MainFocus()
+
+     //msginfo('ok23')
+
+	// DoEvents()
+     If _IsWindowDefined('Win_MenuPrincipal')
+	 	//msginfo('ok2')
+	//	yDCMenu1()
+	//	SysWait(.3)
+	 Else 
+	//    xMenuMain( 'Main' ,  70 , 0  , aOpcoes , aItens )	
+	 End If 
+
+REturn 
+
+
+Function xCliente()
+
+
+
+	If ( FindWindowEx( ,, , "Clientes"  ) > 0 )
+		yAviso( 'Este Cadastro ja esta Ativo.' ,, .f. )
+		//RefreshAll('fSplitSubMenu')
+	Else
+
+		If Len(aButTop) > 0
+		//	ReleaseTeto()
+		End If
+
+
+		cActiveJan := "FClien"
+
+		aAdd( aButTop ,  { 0 ,  "Clientes" , .t.  }     )
+		//nCol1 := ButtonsTop( .t. )
+
+		cControl := ''
+		cForm    := ''
+		CadCli()
+
+
+	End If
+
+
+Return
 
 
 
@@ -728,6 +772,12 @@ Function ProcWindowMsg()
        // msginfo('ok2')
       IF EventMSG() == WM_LBUTTONDBLCLK  
     //     msginfo('Dblckkkk') 
+      
+      ENDIF
+
+
+	  IF EventMSG() == 24 
+         msginfo('Dblckkkk') 
       
       ENDIF
 
@@ -750,6 +800,9 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 	Local nCol2 := 0
 
 
+
+
+
 	//Local nLhn := GetProperty( 'fSplitSubMenu' , 'Height')
 
 	*// Eventos Sub menu.
@@ -760,12 +813,20 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 	If nHWnd == GetProperty(  'Main' , "HANDLE" )
 
 		If (nMsg == 71)
+			//msginfo('lp22222')
 			//WM_WINDOWPOSCHANGED
 			If (_IsWindowDefined( cActiveJan)) .And. (cActiveJan != "Main")
 				xShowBrw(  cTabela  )
 				//msginfo('lp22')
 			End If
 		End If
+
+
+
+		If (nMsg == 5)
+		    msginfo('l22')
+
+		End If 
 
 
 
@@ -778,6 +839,8 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 
 	End If
+
+	/*
 
 	If nHWnd == GetProperty(  'fSplit2' , "HANDLE" )
 
@@ -810,8 +873,12 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 	End If
 
+	*/
+
 
 	*// Janela Superior Direita
+
+	/*
 
 	If nHWnd == GetProperty(  'fSplit10' , "HANDLE" )
 
@@ -837,6 +904,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 
 	End If
+	*/
 
 
 
@@ -868,51 +936,6 @@ REturn
 
 
 
-Function xMenuPrin()
-
-	Local nHnd  := Nil
-
-	Local n1    := 1
-
-
-	EscondeJan()
-
-
-	cActiveJan  := "Main"
-
-	If _isControlDefined('Image_5' , 'fSplit2')
-		SetProperty('fSplit2','Image_5','Visible', .f.)
-		If _isControlDefined('Img' + Right(cLblSelected,4) , 'fSplit2' )
-			SetProperty('fSplit2','Img' + Right(cLblSelected,4)   ,'Visible', .f.)
-		End If
-	End If
-
-
-	cLblSelected := ''
-
-	For n1 := 1 to Len(aButTop)
-		aButTop[n1][3] := .f.
-	Next
-
-	ButtonsTop( .f. )
-
-
-	If nHanSelected > 0
-		//	EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, nHanSelected  ), .T.)
-		PostMessage( nHanSelected   , WM_MOUSELEAVE , 0, 0)
-	End If
-
-
-	nHanSelected := 0
-
-	Refreshall('fSplitSubMenu')
-	SysWait(.1)
-
-	//msginfo('ok')
-
-
-
-Return
 
 
 
@@ -939,28 +962,6 @@ Return
 
 
 
-Function EscondeJan()
-
-	Local i := 1
-	Local nTam := Len(aJanelas)
-	Local lDel := .f.
-
-	Aeval( aButTop , { |a| HideJan(a[2]) } )
-
-Return
-
-Function HideJan( cJanela )
-
-	If _isWindowDefined(  'F' + Left(cJanela,5) )
-		DoMethod(  'F' + Left(cJanela,5)    , "Hide" )
-	Else
-
-	End If
-
-	RefreshAll('fSplitSubMenu')
-
-Return
-
 
 
 
@@ -982,24 +983,10 @@ RETURN NIL
 
 Function CaptTelas(  cExtra )
 
-	hBit10 := BT_BitmapCaptureWindow ('fSplit5' , 0 , 0 , fSplit5.Width , fSplit5.Height)
-	hBit11 := BT_BitmapCaptureWindow ('fSplit2' , 0 , 0 , fSplit2.Width , fSplit2.Height)
-	hBit12 := BT_BitmapCaptureWindow ('fSplit10' , 0 , 0 , fSplit10.Width , fSplit10.Height)
-
-	hBit13 := BT_BitmapCaptureWindow ('Win_MenuPrincipal' , 0 , 0 , fSplit6.Width , fSplit6.Height)
-
-
-	Default cExtra := ''
-
-
-
-	BT_BitmapSaveFile (hBit10  , "hBit10.bmp")
-	BT_BitmapSaveFile (hBit11  , "hBit11.bmp")
-	BT_BitmapSaveFile (hBit12  , "hBit12.bmp")
-
-	BT_BitmapSaveFile (hBit13  , "hBit13.bmp")
 
 Return
+
+
 
 Function xIndexEvent(nHandle1 , cTipo  )
 
@@ -1059,419 +1046,6 @@ Return nInd
 
 
 
-Function ButtonsTop( lCria )
-
-	Local cMenuName := 'fSplit2'
-	Local nCol := 34
-	Local nHBut1
-	Local nColx := 0
-	Local nRow := 1
-	Local nHandle1
-	Local cLabelx
-	Local cLabel3
-	Local nacum := 33
-	Local cUltl := ''
-	Local nPulo := 130
-	Local cSelected := ''
-	Local cValor    := ''
-	Local n1
-
-
-	Default lCria := .t.
-
-
-	If lCria
-		aCords := {}
-	End If
-
-
-	For n1 := 1 To Len(aButTop)
-
-		cLabelx := "LblUp" + StrZero(n1,4)
-
-		If lCria
-
-			cUltl   := cLabelx
-
-			If !_IsControlDefined( cLabelx, cMenuName )
-
-				DEFINE LABEL &(cLabelx)
-				PARENT    fSplit2
-				ROW       10
-				COL       nCol
-				WIDTH     110
-				HEIGHT    40
-				VALUE     " " + Hb_AnsiToOem( alltrim(  aButTop[n1][2] )   )
-				ALIGNMENT LEFT
-				FONTNAME "Arial"
-				FONTSIZE 9
-				BACKCOLOR {7,101,125}
-				FONTCOLOR {255,255,255}
-				TRANSPARENT .f.
-				VISIBLE .T.
-				ACTION ( PlaceJan( This.Name , 'F' + Left(Alltrim(This.Value),5) ) , ShowJan( alltrim(This.Value) ) 	)
-			END LABEL
-
-
-			SetProperty( 'fSplit2' , cLabelx , 'BACKCOLOR' , {9,111,137} )
-
-			//	EventProcessAllHookMessage(EventCreate({ || LabelEventHandler() },  GetControlHandle( cLabelx  ,  'fSplit2')   ), .T.)
-
-
-			Aadd( aCords  , { cLabelx , nCol ,nCol+110  , "F" + Left(  Alltrim(  aButTop[n1][2] ) , 5)  }  )
-
-			If aButTop[n1][3]
-				cSelected := cLabelx
-				cValor    := 'F' + Left(Hb_AnsiToOem( alltrim(  aButTop[n1][2] )   ),5)
-			End If
-
-			cImagex := "Img_" + StrZero(n1,4)
-
-
-			@ 1,nCol+110 IMAGE &(cImagex) OF fSplit2  PICTURE "img\Fechax.Bmp" WIDTH 20 HEIGHT 40 STRETCH ACTION FechaJan(  This.Name )
-
-			//EventProcessAllHookMessage(EventCreate({ || LabelEventHandler() },  GetControlHandle( cImagex  ,  'fSplit2')   ), .T.)
-
-			nHandle1 := GetControlHandle( cLabelx , 'fSplit2'  )
-
-			SetHandCursor( nHandle1, CURSORHAND )
-			SetHandCursor( GetControlHandle( cImagex , 'fSplit2' ) , CURSORHAND )
-
-			nAcum += nPulo
-
-		End If
-
-
-		nColx := nCol
-
-	Else
-
-		//SysWait(.3)
-
-		If _IsControlDefined( cLabelx, cMenuName )
-			SetProperty('fSplit2', cLabelx , 'Visible'    , .t. )
-			SetProperty('fSplit2', "Img_" + StrZero(n1,4) , 'Visible' , .t. )
-		End If
-
-	End If
-
-	nCol += nPulo+2
-
-Next
-
-
-If !Empty(cSelected)
-	PlaceJan(  cSelected , cValor )
-End If
-
-lVScrool := .f.
-
-
-If (nacum >= GetProperty('fSplit2','Width'))
-	lVScrool := .t.
-	lVertScrol( .t. )
-End If
-
-
-Return nColx
-
-Function FechaJan(  cJanela  , lExclBut , nI1 , nI2)
-
-	Local cId := Right(cJanela,4)
-	Local cJan  := GetProperty('fSplit2' , 'LblUp' + cid , 'Value' )
-	Local nCol1 := GetProperty('fSplit2' , 'LblUp' + cid , 'Col' )
-	//Local nCol2 := GetProperty('fSplit2' , 'Img_' + cid , 'Col' )
-	Local n1
-	Local n2
-	Local nTam := Len(aButTop)
-	Local cImg1
-	Local lRealoca := .f.
-	Local nindx := 0
-
-	Default lExclBut := .f.
-
-	Default nI1 := 0
-	Default nI2 := 0
-
-
-	n1 := ascan(aButTop , {|a| alltrim(a[2]) == alltrim(cJan) })
-
-	If n1 > 0
-
-		*// Exclue janela mais a Direita.
-		If !((cId =  StrZero( Len(aButTop) , 4)   ) .And. (Len(aButTop) >= 2)  )
-			lRealoca := .t.
-		End If
-
-
-		adel( aButTop , n1)
-		aSize( aButTop , nTam - 1 )
-
-
-
-		_ReleaseControl( 'LblUp' + cid  , 'fSplit2' )
-		_ReleaseControl( 'Img_' + cid  , 'fSplit2' )
-		_ReleaseControl( 'Img' + cid  , 'fSplit2' )
-		//sysWait(.2)
-
-
-
-		//DelImgBut()
-
-		If Len(aButTop) = 0
-			clblSelected := ''
-		Else
-
-			If Len(aButTop) > 1
-
-				If Val(cId) != Len(aButTop)
-					xRealocButs( Val(cId) , nCol1  ,  )
-				End If
-
-				//clblSelected := "LblUp" + StrZero( Len(aButTop) ,4)
-
-				If !Empty(Alltrim(cLblSelected))
-					// _ReleaseControl( cLblSelected , 'fSplit2' )
-					_ReleaseControl('Image_5' , 'fSplit2' )
-
-					cImg1 := 'Img' + Right(cLblSelected,4)
-
-					_ReleaseControl( cImg1 , 'fSplit2' )
-
-					n2 := Val( Right(Alltrim(cLblSelected) , 4)  )
-
-					If _IsControlDefined('LblUp' + StrZero(n2,4) , 'fSplit2')
-						SetProperty('fSplit2' ,  'LblUp' + StrZero(n2,4) , 'Visible' ,  .t.   )
-						SetProperty('fSplit2' ,"Img_"    + StrZero(n2,4) , 'Visible',   .t.   )
-					End If
-
-					cLblSelected := ''
-
-				End If
-
-			Else
-
-				If (lRealoca)
-					xRealocButs( Val(cId) , nCol1  ,  )
-				End If
-
-			End If
-
-
-		End If
-
-	End If
-
-
-
-	If _IsWindowDefined( 'F' + Left(alltrim(cJan),5) )
-		Refreshall('fSplitSubMenu')
-		DoMethod(   'F' + Left(alltrim(cJan),5) , 'Release' )
-		//SysWait(.2)
-	Else
-
-	End If
-
-
-	//SysWait(.3)
-
-
-	cActiveJan := 'Main'
-
-	//xHMenuPrin()
-
-	//SysWait(.3)
-
-	nindx := xIndexEvent( nHanSelected  )
-
-	If  (nIndx == 0)
-		//EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, nHanSelected  ), .T.)
-	Else
-		//	EventStop( nIndx , .f. )
-	End If
-
-
-	nHanSelected := 0
-
-	If nindexHndcli > 0
-		//EventRemove(nindexHndcli)
-	End If
-
-
-	//Refreshall('fSplitSubMenu')
-
-
-
-	//xHMenuPrin()
-	xMenuPrin()
-
-
-	PostMessage(  nHanSelected , WM_MOUSEMOVE , 0 ,0)
-	SysWait(.1)
-	PostMessage(  nHanSelected , WM_MOUSELEAVE , 0 ,0)
-
-	SysWait(.2)
-
-Return
-
-
-Function xRealocButs( nId , nColx )
-	Local n1 := 1
-	Local nColz := nColx
-	Local nColAnt := 0
-	Local nColini := 34
-	Local laJuste := .f.
-
-	IF (cLblSelected != ( 'LblUp' + StrZero(nId , 4)  ) )
-		laJuste := .t.
-	End If
-
-	laJuste := .f.
-
-	For n1 := 1 to 300
-
-
-		If _isControlDefined('LblUp' + StrZero(n1,4) , 'fSplit2' )
-
-
-			SetProperty('fSplit2' ,  'LblUp' + StrZero(n1,4) , 'Col' ,  nColIni       )
-			SetProperty('fSplit2' ,"Img_"    + StrZero(n1,4) , 'Col',   nColini+110   )
-
-			nColIni += 130
-
-		Else
-
-
-		End If
-
-	Next
-
-Return
-
-Function ReleaseTeto()
-
-	Local n1
-	Local cLabelx
-	Local cImagex := ''
-
-	For n1 := 1 To Len(aButTop)
-
-		cLabelx := "LblUp" + StrZero(n1,4)
-
-		//msginfo(cLabelx)
-
-
-		If _IsControlDefined( cLabelx, 'fSplit2' )
-			_ReleaseControl( cLabelx , 'fSplit2')
-		End If
-
-		cImagex := "Img_" + StrZero(n1,4)
-
-		If _IsControlDefined( cImagex , 'fSplit2' )
-			_ReleaseControl( cImagex , 'fSplit2')
-		End If
-
-		aButTop[n1][3] := .f.
-
-	Next
-
-Return
-
-
-Function lVertScrol( lVisible )
-
-	Local nLeft := GetProperty('Main','Width' )
-
-	SetProperty('fSplit10', 'imgEsquerda','Visible', lVisible )
-	SetProperty('fSplit10', 'imgDireita','Visible', lVisible )
-
-	If lVisible
-		SetProperty("fSplit10","Image_1",  "Visible" , .f.)
-	Else
-		SetProperty("fSplit10","Image_1",  "Visible" , .t.)
-	End If
-
-
-
-Return
-
-
-Function ScrolVert(nDirecao)
-
-	Local ncumt := (32 +    (130 * Len(aButTop) ))
-
-	//msginfo('tingido')
-
-	If nDirecao == 1
-		//msginfo(Str( nacumz ) + ' ' + Str(ncumt) )
-
-		If nacumz > ncumt
-			//msginfo('tingido')
-		Else
-		//	nColScrool +=  130
-			nacumz     +=  130
-		End If
-
-	Else
-
-		If nacumz > GetProperty('fSplit2','Width')
-			//nColScrool -= 130
-			nacumz     -=  130
-		Else
-			nacumz := GetProperty('fSplit2','Width')
-			// msginfo('tingido')
-		End If
-
-
-		//msginfo(Str( nacumz ) + ' ' + Str(ncumt) )
-	End If
-
-	//SysWait(.4)
-//	_HMG_PRINTER_SETHSCROLLVALUE( GetFormHandle(  'fSplit2'  )  , nColScrool)
-
-	//RefreshAll('fSplit2')
-
-	_ShowWindow( 'fSplit2')
-	SysWait(.3)
-
-
-	msginfo('l')
-
-Return
-
-
-function TestBut()
-
-	aButTop := {}
-
-	aAdd( aButTop ,  { 0 ,  "F1rne33edore1" , .t.  }     )
-	aAdd( aButTop ,  { 0 ,  "Forne2cedore2" , .t.  }     )
-	aAdd( aButTop ,  { 0 ,  "Fornece44443" , .t.  }     )
-	aAdd( aButTop ,  { 0 ,  "Forne333dore4" , .t.  }     )
-	aAdd( aButTop ,  { 0 ,  "Forn3cedores5" , .t.  }     )
-	aAdd( aButTop ,  { 0 ,  "Fornecedddore6" , .t.  }     )
-
-
-	aAdd( aButTop ,  { 0 ,  "Fornecedddore7" , .t.  }     )
-	aAdd( aButTop ,  { 0 ,  "Fornecedddore8" , .t.  }     )
-	aAdd( aButTop ,  { 0 ,  "Fornecedddore9" , .t.  }     )
-
-	aAdd( aButTop ,  { 0 ,  "Fornecedddor10" , .t.  }     )
-	aAdd( aButTop ,  { 0 ,  "Fornecedddor11" , .t.  }     )
-	aAdd( aButTop ,  { 0 ,  "Fornecedddor12" , .t.  }     )
-
-
-
-	nacumz := GetProperty('fSplit2','Width')
-
-	ButtonsTop( .t.)
-	// lVertScrol( .t. )
-	//RefreshAll('fSplit2')
-
-	// msginfo('ok')
-
-
-Return
 
 
 FUNCTION SaidaFocus(aLb)
@@ -1484,53 +1058,7 @@ FUNCTION SaidaFocus(aLb)
 
 RETURN NIL
 
-Function HideMenuPrin( lVisible1 )
 
-	Local n1
-
-	For n1 := 1 To Len(aOpcoes)
-		If _IsControlDefined( aOpcoes[n1][1]   ,"fSplit6")
-			SetProperty("fSplit6", aOpcoes[n1][1]  ,"Visible", lVisible1  )
-		End If
-	Next
-
-
-Return
-
-
-Function HideAll(cForm1 , lVisible)
-
-	Local n := 1
-	Local cLabel := ""
-
-	Default lVisible := .f.
-
-	If nLevelMenu   == 1
-		HideMenuPrin(lVisible)
-	End If
-
-
-	fSplit4.fUserDb.Visible := lVisible
-	fSplit4.fLabelUser.Visible := lVisible
-	fSplit4.fServerDb.Visible := lVisible
-
-	fSplit3.fLabel1Dt.Visible := lVisible
-
-	fSplit3.Label_1.Visible := lVisible
-
-	//fSplit4.fUserDb.Visible := .f.
-
-
-	For n := 1 to 4
-		For z := 1 to 99
-			cLabel := "MenuX" + StrZero(n,2)+StrZero(z,2)
-			If _IsControlDefined(cLabel,cForm1)
-				SetProperty(cForm1,cLabel,"Visible", lVisible)
-			End If
-		Next
-	Next
-
-Return
 
 	// Criar e exibe itens do menu (pop pup)
 /*
@@ -1953,131 +1481,6 @@ RETURN NIL
 
 
 
-Function OpenOpcao( cCadastro , cTitulo , nHandle1 )
-
-	If cCadastro = 'Fornecedores'
-
-		If ( FindWindowEx( ,, , cTitulo  ) > 0 )
-			yAviso( 'Este Cadastro ja esta Ativo.'  )
-			RefreshAll('fSplitSubMenu')
-		Else
-
-
-
-			If Len(aButTop) > 0
-				ReleaseTeto()
-			End If
-
-			cActiveJan  := "FForne"
-
-			aAdd( aButTop ,  { 0 ,  "Fornecedores" , .t.  }     )
-			nCol1 := ButtonsTop( .t. )
-
-			cControl := ''
-			cForm    := ''
-
-			MntFornec()
-
-
-		End If
-
-	End If
-
-	If cCadastro = 'Vendedores'
-
-
-		If ( FindWindowEx( ,, , cTitulo  ) > 0 )
-			yAviso( 'Este Cadastro ja esta Ativo.'  )
-			//yAviso( 'Este Cadastro ja esta Ativo.' )
-			RefreshAll('fSplitSubMenu')
-		Else
-
-			If Len(aButTop) > 0
-				ReleaseTeto()
-			End If
-
-			cActiveJan := "FVende"
-
-			aAdd( aButTop ,  { 0 ,  "Vendedores" , .t.  }     )
-			nCol1 := ButtonsTop( .t. )
-
-			cControl := ''
-			cForm    := ''
-			MntVend()
-
-
-
-
-		End If
-
-	End If
-
-
-
-
-
-
-	If cCadastro = 'Clientes'
-
-		If ( FindWindowEx( ,, , cTitulo  ) > 0 )
-			yAviso( 'Este Cadastro ja esta Ativo.' ,, .f. )
-			RefreshAll('fSplitSubMenu')
-		Else
-
-			If Len(aButTop) > 0
-				ReleaseTeto()
-			End If
-
-			cActiveJan := "FClien"
-
-			aAdd( aButTop ,  { 0 ,  "Clientes" , .t.  }     )
-			nCol1 := ButtonsTop( .t. )
-
-			cControl := ''
-			cForm    := ''
-
-			//xBrowser
-			CadCli()
-
-
-
-		End If
-
-
-	End If
-
-
-REturn
-
-
-Function xCliente()
-
-
-
-	If ( FindWindowEx( ,, , "Clientes"  ) > 0 )
-		yAviso( 'Este Cadastro ja esta Ativo.' ,, .f. )
-		RefreshAll('fSplitSubMenu')
-	Else
-
-		If Len(aButTop) > 0
-			ReleaseTeto()
-		End If
-
-
-		cActiveJan := "FClien"
-
-		aAdd( aButTop ,  { 0 ,  "Clientes" , .t.  }     )
-		nCol1 := ButtonsTop( .t. )
-
-		cControl := ''
-		cForm    := ''
-		CadCli()
-
-
-	End If
-
-
-Return
 
 Function xHighSubMenu(  cForm , cControl )
 
@@ -2138,49 +1541,7 @@ Return
 
 Function ShowButTop( lShow )
 
-	Local n1
-	Local cLabelx
-	Local cImgx
-	Local cImgName
-
-
-	For n1 := 1 To Len(aButTop)
-
-		cLabelx := "LblUp" + StrZero(n1,4)
-
-		cImgx := "Img_" + StrZero(n1,4)
-
-		If _IsControlDefined(cLabelx , 'fSplit2')
-			SetProperty('fSplit2',cLabelx,'Visible', lShow )
-
-		End If
-
-		If _isControlDefined(cImgx , 'fSplit2')
-			SetProperty('fSplit2',cImgx,'Visible', lShow )
-		End If
-
-	Next
-
-	SetProperty('fSplit2','Image_1','Visible', lShow)
-	SetProperty('fSplit10','Image_1','Visible', lShow)
-
-
-	If (lVScrool)
-		SetProperty('fSplit10','ImgEsquerda','Visible', lShow)
-		SetProperty('fSplit10','ImgDireita','Visible', lShow)
-		//SetProperty('fSplit10','Image_1','Visible', lShow)
-	End If
-
-	If !Empty(cLblSelected)
-
-		cImgName := 'Img' + Right(cLblSelected,4)
-		If _IsControlDefined('Image_5','fSplit2')
-			SetProperty('fSplit2','Image_5','Visible', lShow)
-			SetProperty('fSplit2',cImgName,'Visible',  lShow)
-		End If
-
-	End If
-
+	
 
 REturn
 

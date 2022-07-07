@@ -644,12 +644,12 @@ Function xFechaJan( cInd1 )
 		End If 
 		*/		
 
-		FechaJan('Img' + cInd1   , , )
+	//	FechaJan('Img' + cInd1   , , )
 
 					
 	Else		
 		
-		xSetOpcao()
+	//	xSetOpcao()
 
 
 	End If
@@ -1053,29 +1053,6 @@ Function ProcFiltro( cTab1 , lEfect )
 
 REturn
 
-Function ResButSel()
-
-	Local cTexto
-	Local lok := .f.
-
-	If _isWindowDefined('fSplit2')
-		If _isControlDefined( cLblSelected , 'fSplit2')
-			cTexto := GetProperty('fSplit2' ,cLblSelected , 'Value')
-
-			_ReleaseControl('Image_5' , 'fSplit2' )
-			_ReleaseControl('Img' + Right(cLblSelected ,4) , 'fSplit2' )
-
-			SetProperty('fSplit2','Image_1','Visible', .t.)
-
-			PutImagem(nColSelx , cTexto , Right(cLblSelected ,4) )
-
-			lOk := .t.
-
-		End If
-	End If
-
-
-Return lOk
 
 Function InitTela(  lIni1  , nColz1)
 
@@ -5197,86 +5174,6 @@ Return
 
 
 
-Function PlaceJan(  cLbl , cJanela  )
-
-	//Local cTexto := GetProperty('fSplit2',cLabel,'Value')
-	Local nCol   := GetProperty('fSplit2',cLbl ,'Col')
-	Local cTexto := GetProperty('fSplit2' ,cLbl , 'Value')
-	Local cLblAnt := cLblSelected
-
-
-	Local nCol1 := 0
-	Local nRow1 := 0
-	Local hWnd
-	Local cControlName
-	Local cFormName
-	Local zCord
-
-	Local nIndice := 0
-
-	Default cJanela := ''
-
-
-	//SysWait(.1)
-
-	//msginfo(cTexto)
-
-
-	GetCursorPos (@nCol1, @nRow1)
-
-	hWnd := WindowFromPoint (nCol1, nRow1)
-
-
-	//Msginfo(str(nCol1) + '  ' + cTexto )
-
-	If !Empty( alltrim(cLblSelected ))
-
-		If _IsControlDefined(cLblSelected , 'fSplit2' )
-			SetProperty('fSplit2',cLblSelected ,'Visible', .t. )
-			SetProperty('fSplit2', 'Img_' + Right(cLblSelected,4) , 'Visible' , .t. )
-
-			If _IsControlDefined('Img' + Right(cLblSelected,4) , 'fSplit2' )
-				SetProperty('fSplit2', 'Img' + Right(cLblSelected,4) , 'Visible' , .f. )
-			End If
-		End If
-
-	End If
-
-
-
-
-
-
-
-	cLblSelected := cLbl
-	SetProperty('fSplit2',cLbl,'Visible',.f.)
-	SetProperty('fSplit2', 'Img_' + Right(cLbl,4) , 'Visible' , .f. )
-
-	//Aadd( aCords  , { cLabelx , nCol ,nCol+110} )
-
-	nColSelx := nCol
-
-	nIndice := Ascan(aCords , {|a| a[1] == cLblSelected})
-
-	IF nindice > 0
-		//nCol := aCords[nIndice][2]
-	End If
-
-
-
-	PutImagem(nCol , cTexto , Right(cLbl,4) )
-
-	If !Empty(cJanela)
-		//cActiveJan  := cJanela
-		If _isControlDefined('br_Grid' , cJanela )
-			BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cJanela  )) , Nil , .t. )
-		End If
-
-	End If
-
-	//msginfo('ok')
-
-Return
 
 
 
@@ -5315,7 +5212,7 @@ End If
 End If
 
 Return
-
+/*
 
 Function PutImagem(nColx , cTexto , cSeq1 )
 
@@ -5418,6 +5315,7 @@ Function PutImagem(nColx , cTexto , cSeq1 )
 
 Return
 
+*/
 
 
 

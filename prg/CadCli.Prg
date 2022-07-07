@@ -154,7 +154,7 @@ FUNCTION xInitCad()
 
 
    AAdd( aButCli, {  353,  OBTN_Handle( cJanx, 353 ),   {|| ( PushButton( cJanx, 353 ), GrvClien(lNovo ) )    },  cJanx   } )
-   AAdd( aButCli, {  54,  OBTN_Handle( cJanx, 54 ),   {||  _FechaJan( cJanx )  },  cJanx   } )
+   //AAdd( aButCli, {  54,  OBTN_Handle( cJanx, 54 ),   {||  _FechaJan( cJanx )  },  cJanx   } )
 
 // AAdd( aButCli, {  98 ,  OBTN_Handle(  'fCadCli' , 98 ),   { || ( PushButton( 'fCadCli' , 98) , xPesqCep() )  } ,  'fCadCli'   } )
 

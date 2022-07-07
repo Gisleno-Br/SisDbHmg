@@ -513,12 +513,25 @@ FUNCTION xInit()
 	cUserDb := cUser1
 	cPassDb := cSen1
 
-	//SysWait(.2)
+
+	BT_ClientAreaInvalidateAll('Win_MenuPrincipal')
+	DoEvents()
+	yDCMenu1()
+
+
+	DoMethod( 'Win_MenuPrincipal' , 'Activate')  
+
+
 
 	
-	SetWindowCursor( GetFormHandle( 'Main'  ) , 'CURSOR1' )  
 
+//	SysWait(.2)
 
+	//msginfo('ok2')
+	
+	//SetWindowCursor( GetFormHandle( 'Main'  ) , 'CURSOR1' )  
+
+     /*
 	DO EVENTS
 
 
@@ -527,6 +540,7 @@ FUNCTION xInit()
 
 	np1 := (nDesktopHeight - 81) - GetProperty("fSplit4","Height" )
 	np2 := np1 - GetProperty("fSplit3","Height" )
+
 
 	SetProperty("fSplit3","Row", np2  - 0 )
 	SetProperty("fSplit4","Row", np1 )
@@ -572,19 +586,15 @@ FUNCTION xInit()
 	//SetWindowCursor( GetFormHandle( 'Main'  ) , IDC_ARROW)  
 
 	SysWait(.2)
+	*/
 
 
+
+	//SysWait(.2)
+
+	//SysWait(0.04)
 	
 
-	//xMenuMain( 'Main' ,  70 , 1  , aOpcoes , aItens )
-
-
-
-	//DoMethod('Win_MenuPrincipal'  , 'Activate')
-
-	//DoMethod('Win_MenuPrincipal'  , 'SetFocus')
-
-	//msginfo('ok22')
 
 	
 

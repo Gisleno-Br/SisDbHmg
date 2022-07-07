@@ -233,14 +233,6 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 
 	SET WINDOW &cHName TRANSPARENT TO Iif(!lEnabled2 , 167 , 0)
 
-
-
-//DoEvents()
-
-
-
-
-
 	nTotz2 := xMapCols( aCabecs , aColsTam , aTipsy )
 
 	If !CheckRet( nTotz2)
