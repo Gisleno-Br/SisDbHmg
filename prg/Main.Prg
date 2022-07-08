@@ -119,7 +119,9 @@ FUNCTION Main
 	Public aRotHnd := {}
 	Public lAtivaBlack := .f.
 
-	Public nColTamMenu := 189
+	
+
+	Public nColTamMenu := 205
 
 	Public nConst1 := 60
 	Public nConst2 := 0
@@ -785,6 +787,7 @@ Function ProcWindowMsg()
 Return 
 
 
+
 Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 	Local cOpcao := ''
@@ -798,8 +801,6 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 	Local nRow2 :=0
 	Local nCol2 := 0
-
-
 
 
 
@@ -824,7 +825,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 
 		If (nMsg == 5)
-		    msginfo('l22')
+		  //  msginfo('l22')
 
 		End If 
 

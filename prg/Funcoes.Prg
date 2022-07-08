@@ -516,12 +516,10 @@ FUNCTION xInit()
 
 	BT_ClientAreaInvalidateAll('Win_MenuPrincipal')
 	DoEvents()
-	yDCMenu1()
+	yDCMenu1()	
 
 
 	DoMethod( 'Win_MenuPrincipal' , 'Activate')  
-
-
 
 	
 
