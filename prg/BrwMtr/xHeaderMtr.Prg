@@ -1744,6 +1744,16 @@ Function DraVertL( hDc1 , nCol , nHeight1 )
 
 Return
 
+
+
+Function DraVertH( hDc1 , nRow , nWidth )
+
+	BT_DrawLine ( hDc1, nRow ,  0   , nWidth , 1    ,   {63,69,72}, 1 )
+	BT_DrawLine ( hDc1, nRow+1 ,0   , nWidth,  1    ,    {144,152,157}, 1 )
+
+
+Return
+
 Static Function xCaptBmp(nCol1)
 
 	Local nTam1  := aMapsCol[nCol1][3] - aMapsCol[nCol1][2]
@@ -1913,19 +1923,14 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 
 		BT_DrawText ( hDC , nLinha  , nColx,   Hb_AnsiToOem(cTexto1) , cFontHead  , nfontSize, WHITE,  {230,230,230}   , ;
 			BT_TEXT_TRANSPARENT+BT_TEXT_BOLD ,	nAlingText, nOrientation )
-
-		//If (hBit201 == Nil) .And. (!lDragHeader)
-		///	hBit201 := BT_BitmapCaptureWindow ( cJanela , 0 , nColx , nTam - 5  , Height )
-		//End If
+	
 
 	End If
 
 
 
 	//If (lDragHeader) .And. (nColMove > 0)  	
-	If (lDragHeader) .And. (nColMove > 0) .And. (nColMove <= Len(aMapsCol))  //.And. (hBit201 != Nil )
-	  //  If (nColY1 <= (Len(aMapsCol) - 1) )
-			//.And. (nCol <= (Len(aMapsCol) - 1) )
+	If (lDragHeader) .And. (nColMove > 0) .And. (nColMove <= Len(aMapsCol))  //.And. (hBit201 != Nil )	
 			nColx1 := aMapsCol[nColMove][2] // +nIncr1
 			nColx2 := aMapsCol[nColMove][5]
 			nColx1 := nColY1

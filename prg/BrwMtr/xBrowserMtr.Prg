@@ -1921,15 +1921,15 @@ Static Function xRecords( n1 , lFrente  )
 REturn
 
 
-Function xBmpToTrans(cImage , nColor )
+Function xBmpToTrans(cImage , nColor , nW1 , nH1 )
 
 	Local aRGBcolor   := SELCOR
-	Local hBitmapx    := BT_BitmapCreateNew (nColIniBrw , nItemBrwHeight, nColor)
+	Local hBitmapx    := BT_BitmapCreateNew (nW1 , nH1, nColor)
 	Local BTstruct3
 	Local hBolaAzul   := BT_BitmapLoadFile(cImage)
 	Local hDC3 		  := BT_CreateDC (hBitmapX , BT_HDC_BITMAP, @BTstruct3 )
 
-	BT_DrawBitmapTransparent (hDC3 , 0, 0, nColIniBrw, nItemBrwHeight, BT_COPY, hBolaAzul , Nil )
+	BT_DrawBitmapTransparent (hDC3 , 0, 0, nW1, nH1, BT_COPY, hBolaAzul , Nil )
 
 
 	BT_DeleteDC (BTstruct3 )

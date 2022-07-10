@@ -592,7 +592,7 @@ FUNCTION Main
 		{"1-Locais Estoque","" , .t.  , Nil } , {"1-Funções","" , .f. , Nil } , ;
 		{"1-Categoria Produto","" , .t. , Nil } , {"1-Unidades","" , .t. , Nil } , {"1-Tipo Produtos","",.f. , Nil  } ,;
 		{"1-Tipo Produto1s","" , .t. , Nil  },{"1-Tipo Produto2s","", .t. , Nil } ,{"1-Tipo Produt3os","" , .t. , Nil },{"1-Tipo Produt222os","", .f. , Nil  },{"1-Tipo 444Produtos","", .f. , Nil  }, ;
-		{ "1-Rotatividade","Rot" , .f. , Nil } , {"1-TES","TES1" , .t. , Nil  } , ;
+		{ "1-Rotatividade","Rot" , .t. , Nil } , {"1-TES","TES1" , .t. , Nil  } , ;
 		{"2-Pedidos","Vendas" , .t.  , Nil } , {"2-Orçamento","Orçamento" , .f. , Nil }  , {"3-Listagem Clientes","Lista" , .f. , Nil  } ,    {"4-Configurações","" , .f. , Nil  } }
 
 
@@ -1124,9 +1124,15 @@ Function OpMenu(aOpcoes , cJan , nLinha , cTitx , nIndx )
 Next
 
 
+
+
+
 Refreshall('fSplitSubMenu')
 
+
+
 //Refreshall('fSplit6')
+
 
 
 Return nRow

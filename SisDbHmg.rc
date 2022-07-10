@@ -50,6 +50,12 @@
 
     CHAVE      PNG     img\chave2.png
 
+
+    SETAB1    PNG img\Seta45_Baixo.Png 
+    SETAC1    PNG img\Seta45_cima.Png 
+
+    SETAE1    PNG img\Seta45_Esquerda.Png 
+
     
 
     BACK1       ARRAY   {229,237,242}
