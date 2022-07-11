@@ -1748,8 +1748,8 @@ Return
 
 Function DraVertH( hDc1 , nRow , nWidth )
 
-	BT_DrawLine ( hDc1, nRow ,  0   , nWidth , 1    ,   {63,69,72}, 1 )
-	BT_DrawLine ( hDc1, nRow+1 ,0   , nWidth,  1    ,    {144,152,157}, 1 )
+	BT_DrawLine ( hDc1, nRow ,  0   ,  nRow    ,  nWidth     ,   {63,69,72}    , 1 )
+	BT_DrawLine ( hDc1, nRow+1 ,0   ,  nRow+ 1 ,  nWidth + 1 ,    {144,152,157}, 1 )
 
 
 Return

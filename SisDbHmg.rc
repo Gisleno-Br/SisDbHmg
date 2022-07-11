@@ -9,7 +9,7 @@
     NAOPODE     CURSOR  img\aero_unavail_xl.Cur 
     CURSORSIZE  CURSOR  img\cursorx1.Cur 
     NEXT        PNG     img\go-next.Png 
-    SETATRANSP  PNG     img\0001.Png 
+    SETATRANSP  PNG     img\Seta45_Esquerda.Png
     EXCLA1      PNG     img\Exclamation3.Png
     ROLAGEM     PNG     img\Rolagem1.Png
     INTERRO1    PNG     img\Interrogacao.Png

@@ -116,6 +116,7 @@ FUNCTION Main
 
 
 
+
 	Public aRotHnd := {}
 	Public lAtivaBlack := .f.
 

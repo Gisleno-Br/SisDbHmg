@@ -171,6 +171,29 @@ Return lOk
 
 
 
+Function xFechaSub1(cTitulo)
+
+ 	Local lOk := .f. 
+	Local nHandle1  := DoFindWin(cTitulo)
+
+	If (nHandle1 > 0)
+
+		SendMessage( nHandle1, WM_SYSCOMMAND, SC_CLOSE , 0 )
+		DoEvents()
+		//DoEvents()
+
+		SendMessage( nHandle1, WM_SYSCOMMAND, WM_DESTROY , 0 )
+		DoEvents()
+
+		lOk := .t. 
+
+    End If 		
+
+
+
+
+REturn lOk 
+
 
 Function xFechaMen()
 

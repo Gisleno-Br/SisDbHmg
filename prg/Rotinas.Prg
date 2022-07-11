@@ -214,6 +214,7 @@ Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds)
 
 
 
+
 	DEFINE WINDOW Win_Msg AT nTop, nLeft WIDTH nWidth HEIGHT nHeight TITLE 'xHint'  ;
 		NOMAXIMIZE NOMINIMIZE NOSIZE CHILD NOSYSMENU NOCAPTION BACKCOLOR aBcolor
 
@@ -306,13 +307,9 @@ Function xLimpSub(cJan , nOpsely , nClr , nHeight1 , nitemH1 , nColTam1 , nRow1 
 	DEFAULT nRow1 := -(GetProperty( cJan , "VscrollBar" , "Value"))
 
 
-	// msginfo(Str(  nRow1 ))
-
-
-	If nOpsely > 0	
-	//	DO EVENTS 
-		BT_ClientAreaInvalidateRect( cJan , ( nHeight1  + nRow1 + ( (nOpsely - 1 ) * nitemH1)) , 0 , nColTam1 ,  nitemH1   , .t. )						
-		//DO EVENTS 
+	
+	If nOpsely > 0		
+		BT_ClientAreaInvalidateRect( cJan , ( nHeight1  + nRow1 + ( (nOpsely - 1 ) * nitemH1)) , 0 , nColTam1 ,  nitemH1   , .t. )								
 	End If
 
 
