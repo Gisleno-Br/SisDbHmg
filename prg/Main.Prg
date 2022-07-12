@@ -589,12 +589,12 @@ FUNCTION Main
 	Private aItens := { {"1-Clientes","Cadastro de Clientes" , .t.  , {  ||xCliente()  }  , .f. } , ;
 		{ "1-Fornecedores","Cadastro de Fornecedores" , .t.  , {||xFechaMen() }  , .t.  , { |a,b| xTesMenu(a,b)   }    } , ;
 		{ "1-Vendedores", "Cadastro de Vendedores" , .f.  , Nil , .f.  } , ;
-		{"1-Colaboradores","" , .f. } ,   {"1-Grupo Produtos","" , .f. , Nil  } , ;
-		{"1-Locais Estoque","" , .t.  , Nil } , {"1-Funções","" , .f. , Nil } , ;
+		{"1-Colaboradores","Colab1 ......." , .f. } ,   {"1-Grupo Produtos","" , .f. , Nil  } , ;
+		{"1-Locais Estoque","Estoque 1......" , .t.  , Nil } , {"1-Funções","" , .f. , Nil } , ;
 		{"1-Categoria Produto","" , .t. , Nil } , {"1-Unidades","" , .t. , Nil } , {"1-Tipo Produtos","",.f. , Nil  } ,;
 		{"1-Tipo Produto1s","" , .t. , Nil  },{"1-Tipo Produto2s","", .t. , Nil } ,{"1-Tipo Produt3os","" , .t. , Nil },{"1-Tipo Produt222os","", .f. , Nil  },{"1-Tipo 444Produtos","", .f. , Nil  }, ;
 		{ "1-Rotatividade","Rot" , .t. , Nil } , {"1-TES","TES1" , .t. , Nil  } , ;
-		{"2-Pedidos","Vendas" , .t.  , Nil } , {"2-Orçamento","Orçamento" , .f. , Nil }  , {"3-Listagem Clientes","Lista" , .f. , Nil  } ,    {"4-Configurações","" , .f. , Nil  } }
+		{"2-Pedidos","Vendas" , .t.  , Nil } , {"2-Orçamento","Orçamento" , .t. , Nil }  , {"3-Listagem Clientes","Lista" , .f. , Nil  } ,    {"4-Configurações","" , .f. , Nil  } }
 
 
 	
@@ -623,66 +623,6 @@ FUNCTION Main
 	nEveLabel := 0
 
 
-/*
-	DEFINE LABEL fLabel1Dt
-	PARENT    fSplit3
-	ROW       18
-	COL       51
-	WIDTH     140
-	HEIGHT    16
-	VALUE     Alltrim(Dtoc(dDataBase))
-	ALIGNMENT LEft
-	FONTCOLOR {102,102,102}
-	BACKCOLOR {255,255,255}
-	FONTBOLD .f.
-END LABEL
-
-DEFINE LABEL fLabelUser
-PARENT    fSplit4
-ROW       03
-COL       10
-WIDTH     140
-HEIGHT    16
-VALUE     Alltrim(cUserName)
-ALIGNMENT Left
-FONTCOLOR {102,102,102}
-BACKCOLOR {255,255,255}
-//TRANSPARENT .T.
-ACTION xMenuPrin()
-FONTBOLD .f.
-END LABEL
-
-
-
-DEFINE LABEL fUserDb
-PARENT    fSplit4
-ROW       32
-COL       10
-WIDTH     140
-HEIGHT    16
-VALUE     Alltrim(cUserDb)
-ALIGNMENT Left
-FONTCOLOR {102,102,102}
-BACKCOLOR {255,255,255}
-ACTION msginfo('ok')
-END LABEL
-
-
-DEFINE LABEL fServerDb
-PARENT    fSplit4
-ROW       51
-COL       10
-WIDTH     140
-HEIGHT    16
-VALUE     ""
-ALIGNMENT Left
-FONTCOLOR FONTCOR
-BACKCOLOR BACK1
-TRANSPARENT .T.
-ACTION msginfo('ok')
-//FONTBOLD .t.
-END LABEL
-*/
 
 
 	Private aButTop := {}
