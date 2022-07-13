@@ -572,6 +572,7 @@ FUNCTION Main
 
 
 
+
 	//HB_SetCodePage( "UTF8")
 
 	Private aOpcoes := {{"1-Cadastro",  "Acesso a Cadastros Gerais e Principais." , .t.  }, ;
@@ -581,6 +582,9 @@ FUNCTION Main
 
 
 	//cOpMainSel  := aOpcoes[1][1]
+
+
+
 
 
 
@@ -647,7 +651,7 @@ FUNCTION Main
 	
 	//DoEvents()
 
-	xMenuMain( 'Main' ,  70 , 0  , aOpcoes , aItens )
+	xMenuMain( 'Main' ,  70 , 1  , aOpcoes , aItens )
 
 	//SysWait(.5)
 
@@ -656,6 +660,7 @@ FUNCTION Main
 
 
 	//msginfo('lp22')
+
 
 
 
