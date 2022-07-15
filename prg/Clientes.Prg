@@ -664,19 +664,6 @@ Return
 
 
 
-Function RemoveHandler( cProcName )
-
-	Local nind := Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( cProcName  ) )  )
-	Local nTam := Len(_HMG_SYSDATA [ 60 ])
-
-	If (nInd > 0)
-		Adel(_HMG_SYSDATA [ 60 ] , nInd)
-		Asize( _HMG_SYSDATA [ 60 ] , nTam - 1 )
-	End If
-
-Return (nInd > 0)
-
-
 /*
 Function xHandleEsc()
 

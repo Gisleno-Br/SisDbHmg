@@ -54,6 +54,12 @@
     SETAB1    PNG img\Seta45_Baixo.Png 
     SETAC1    PNG img\Seta45_cima.Png 
 
+
+    SETAB1D    PNG img\Seta45_Baixo_Disable.Png 
+    SETAC1D    PNG img\Seta45_cima_Disable.Png 
+    
+
+
     SETAE1    PNG img\Seta45_Esquerda.Png 
 
     

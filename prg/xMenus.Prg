@@ -58,6 +58,8 @@ Static nLinhaAtual := 0
 
 Static nSetaSel := 0
 
+Static zBitMap1 
+
 
 
 //Static nHandle1 := 0
@@ -71,7 +73,8 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  , lPopUp  )
 
 	Local lOk     := .f.
 	Local nHeight := (Len(aOp1) * nItemSubHeight)+5
-	Local zBitMap1
+	//Local zBitMap1
+	Local i 
 
 	Default lPopUp := .f.
 
@@ -83,14 +86,8 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  , lPopUp  )
 	nAcumulador := 0
 
 
-	If _isWindowDefined( 'Win_Menu1')
-		_ShowWindow("Win_Menu1")
-		SysWait(.1)
-		Return
-	End If
 
-
-	zBitMap1 := BT_BitmapCaptureDesktop ( nTop + 12 , nLeft + 15 ,  nColTamMenu - 7 , 340  )
+    zBitMap1 := BT_BitmapCaptureDesktop ( nTop + 12 , nLeft + 15 ,  nColTamMenu - 7 , 340  )
 
 
 
@@ -107,7 +104,7 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  , lPopUp  )
 
 		DEFINE WINDOW WinSombra1 AT nTop + 12 , nLeft+15 WIDTH nColTamMenu - 7 HEIGHT (Len(aOp1) * nItemSubHeight) - 2 TITLE 'Sombra1' ;
 			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
-			ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+9 , zBitMap1  )
+			ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+9 , Nil  ) //zBitMap1
 		END WINDOW
 
 	End If
@@ -135,7 +132,13 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  , lPopUp  )
 
 	HMG_ChangeWindowStyle(  GetProperty(  'Win_Menu1' , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
 	HMG_ChangeWindowStyle(  GetProperty(  'Win_Scroll1' , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
-	
+
+
+
+
+	If (GetFormIndex ( "Win_Menu1" )  ==  0)		
+		Return 
+	End If 	
 
 
 	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventMenu1"  ) )  ) = 0
@@ -151,9 +154,16 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  , lPopUp  )
 	ShowScrollBar( GetFormHandle( 'Win_Menu1' ), 0, .F. )
 	ShowScrollBar( GetFormHandle( 'Win_Menu1' ), 1, .F. )
 
+
 	_ShowWindow("WinSombra1")
 
-	//sysWait(.1)
+	
+
+
+	If (GetFormIndex ( "Win_Menu1" )  ==  0)	
+		Return 
+	End If 	
+
 
 
 	_ShowWindow("Win_Menu1")
@@ -172,32 +182,6 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  , lPopUp  )
 
 
 	End If
-
-	DoEvents()
-
-	//msginfo('l2')
-
-	 //HMG_ChangeWindowStyle(   GetProperty(  'Win_Menu1' , 'HANDLE' )  , WS_EX_STATICEDGE, NIL, .T., .T. )
-
-	 
-	
-
-	
-	//HMG_ChangeWindowStyle(  GetProperty(  'Win_Menu1' , 'HANDLE' ) , WS_BORDER , NIL, .T. )
-	//HMG_ChangeWindowStyle(  GetProperty(  'Win_Scroll1' , 'HANDLE' ) , WS_BORDER , NIL, .T. )
-	//HMG_ChangeWindowStyle(  GetProperty(  'JanMenuSub' , 'HANDLE' ) , WS_BORDER , NIL, .T. )
-
-
-	//HMG_ChangeWindowStyle(  GetProperty(  'WinSombra1' , 'HANDLE' ) , WS_BORDER , NIL, .T. )
-
-	DoEvents()
-
-	BT_BitmapRelease(zBitMap1)
-
-	//If !isWindowActive('Win_Menu1' )
-	//	msginfo('not f')
-	//DoMethod( 'Win_Menu1' , 'Activate')
-	//End If
 
 
 Return lOk
@@ -230,6 +214,16 @@ Function xFechaSub1(cTitulo)
 REturn lOk 
 
 
+Function xCloseDlg( nHnd1 )
+
+	DestroyWindow(  nHnd1 )
+	SendMessage( nHnd1, WM_SYSCOMMAND, SC_CLOSE , 0 )	
+	SendMessage( nHnd1, WM_SYSCOMMAND, WM_DESTROY , 0 )
+	DoEvents()
+
+
+Return 
+
 Function xFechaMen()
 
 	Local nI1 := 0
@@ -239,10 +233,14 @@ Function xFechaMen()
 	Local nHandle3  := GetFormHandle("WinSombra1")
 
 	
-	DoEvents()
+	//DoEvents()
 
 	
 	If (nHandle1 > 0)
+
+		BT_BitmapRelease(zBitMap1)
+
+		/*
 
 		DestroyWindow(  nHandle1 )
 
@@ -254,11 +252,17 @@ Function xFechaMen()
 		SendMessage( nHandle1, WM_SYSCOMMAND, WM_DESTROY , 0 )
 
 		DoEvents()
+		*/
+
+		xCloseDlg( nHandle1 )
 
 		//msginfo('ff1')
 
 
 		If (nHandle2 > 0)
+			xCloseDlg( nHandle2 )
+
+			/*
 
 			SendMessage( nHandle2, WM_SYSCOMMAND, SC_CLOSE , 0 )
 
@@ -267,18 +271,24 @@ Function xFechaMen()
 
 			SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )			
 			DoEvents()
+			*/
+
 
 		End If
 
 
 		If (nHandle3 > 0)
 
+			/*
 			SendMessage( nHandle3, WM_SYSCOMMAND, SC_CLOSE , 0 )
 			DoEvents()
 			DoEvents()
 
 			SendMessage( nHandle3, WM_SYSCOMMAND, WM_DESTROY , 0 )
 			DoEvents()			
+			*/
+
+			xCloseDlg( nHandle3 )
 
 		End If
 
@@ -290,6 +300,8 @@ Function xFechaMen()
 		If !xDelEvent(nIndexEventX)
 			msginfo("Erro ao remover Handle Event 22 .")
 		End If
+
+		//DoEvents()
 
 
 
@@ -493,7 +505,7 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 
 
 
-		If ( nMsg == WM_MOUSEMOVE )
+		If ( nMsg == WM_MOUSEMOVE ) .And. ( _isWindowDefined('Win_Menu1') )
 		
 			If (nItemx2 > 0) .AND. (nWParam != 90)
 				If (nItemx2 = xOpSelPos( 'Win_Menu1' , 0 , Len(aOpz11) , 0 )	)						
@@ -507,13 +519,13 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 				nItemx2 := xOpSelPos( 'Win_Menu1', 0 , Len(aOpz11) , 0 )
 			End If
 
-			DoEvents()	
+			//DoEvents()	
 
 
 			nRow1 := -(GetProperty( 'Win_Menu1' , "VscrollBar" , "Value"))
 
 		
-			If (nItemx2 <= Len(aOpz11))
+			If (nItemx2 > 0) .And. (nItemx2 <= Len(aOpz11))
 				If !aOpz11[nItemx2][3]
 					SetWindowCursor( nHWnd , IDC_ARROW)
 					xHideHint()
@@ -552,14 +564,10 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 			End If
 
 
-
-			If (nItemx2 <= Len(  aOpz11 )) .And. ( !Empty( Alltrim(  aOpz11[nItemx2][2]  )   )) .AND. (nWParam != 90)
+			If (nItemx2 > 0) .And.  (nItemx2 <= Len(  aOpz11 )) .And. ( !Empty( Alltrim(  aOpz11[nItemx2][2]  )   )) .AND. (nWParam != 90)
 
 				cTp1 :=	  Alltrim( 	 aOpz11[nItemx2][2]  )
-
 				nRow1 := 0
-
-
 				GetCursorPos (@nCol, @nRow1)
 
 				If !_isWindowDefined("Win_Msg")
@@ -568,10 +576,7 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 					xDispHint( cTp1 , nRow1 + 15   , GetProperty('Win_Menu1', 'Col') + GetProperty('Win_Menu1', 'Width') + 3 + 5 )
 					DoFindWin('xHint')
 				End If
-
-
 				xDispUpTam(cTp1 )
-
 
 			Else
 				xHideHint()
@@ -610,45 +615,6 @@ Function xPaintScrool( cForm )
 
 	hDC2 = BT_CreateDC ( cForm  , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
 
-/*
-	
-	BT_DrawGradientFillHorizontal  (hDC2,  0  , 0 ,  nColTamMenu , 32   , {89,89,89} , {89,89,89})
-
-
-	If !lHttb
-		hBit10 := BT_BitmapLoadFile ( 'SETAB2' )
-		//SETAB2
-	Else
-		hBit10 := BT_BitmapLoadFile ('SETAB2D')
-	End If
-
-
-
-	If !lHttp
-		hBit11 := BT_BitmapLoadFile ( 'SETAC2' )
-	Else
-		hBit11 := BT_BitmapLoadFile ( 'SETAC2D'  )
-		//SETAC2D
-	End If
-
-
-	BT_DrawBitmap (hDC2,  0  ,  0   , nColTamMenu , 15 , 3 , hBit10)
-	BT_DrawBitmap (hDC2, 16 ,   0   , nColTamMenu  , 16 , 3 , hBit11)
-
-
-	BT_BitmapRelease ( hBit10 )
-	BT_BitmapRelease ( hBit11 )
-	*/
-
-
-	
-	
-
-
-	//DraVertL( hDc2  , 1 , 1 )
-
-
-
 	If nSetaSel == 0
 		BT_DrawGradientFillHorizontal  (hDC2,  0  , 0 ,  nColTamMenu , (nItemSubHeight * 2)   , aCorSub2 , aCorSub2)
 		
@@ -657,7 +623,7 @@ Function xPaintScrool( cForm )
 
 		BT_DrawBitmap ( hDC2,  2  , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   ,  bBmp3 )
 		BT_DrawBitmap ( hDC2,  20  , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   ,  bBmp4 )
-		DoEvents()
+		//DoEvents()
 	Else
 
 		If nSetaSel == 1
@@ -675,12 +641,12 @@ Function xPaintScrool( cForm )
 
 		End If
 
-		DoEvents()
+	//	DoEvents()
 
 	End If
 
 
-	DoEvents()
+//	DoEvents()
 
 	BT_BitmapRelease ( bBmp1 )
 	BT_BitmapRelease ( bBmp2 )
@@ -697,9 +663,11 @@ Return
 
 Static Function yLimpSetas()
 
-	nSetaSel := 0
-	BT_ClientAreaInvalidateAll( 'Win_Scroll1' )
-	DoEvents()	
+	If _isWindowDefined('Win_Scroll1')
+		nSetaSel := 0
+		BT_ClientAreaInvalidateAll( 'Win_Scroll1' )
+		//DoEvents()	
+	End If 
 
 Return
 
@@ -842,6 +810,21 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 
 
 Return
+
+
+
+Function RemoveHandler( cProcName )
+
+	Local nind := Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( cProcName  ) )  )
+	Local nTam := Len(_HMG_SYSDATA [ 60 ])
+
+	If (nInd > 0)
+		Adel(_HMG_SYSDATA [ 60 ] , nInd)
+		Asize( _HMG_SYSDATA [ 60 ] , nTam - 1 )
+	End If
+
+Return (nInd > 0)
+
 
 
 
