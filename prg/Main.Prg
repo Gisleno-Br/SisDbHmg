@@ -292,6 +292,9 @@ FUNCTION Main
 	Public XBACK1 := {232,246,239}
 
 	Public XFONT1  := 'Arial Unicode MS'
+	Public XFONT2  := 'Arial Unicode MS'
+	//'Arial Narrow'
+	//'Arial Rounded MT Bold'
 
 
 	Public BACKVERDE1 := {233,246,237}
@@ -577,7 +580,7 @@ FUNCTION Main
 
 	Private aOpcoes := {{"1-Cadastro",  "Acesso a Cadastros Gerais e Principais." , .t.  }, ;
 		{"2-Movimentos"				,   "Acesso a Movimentação de Estoque"   , .t.  },;
-		{"3-Relatórios"				,   "Relatorios do Sistema"  ,   .t. }  ,;
+		{"3-Relatórios"				,   "Relatorios do Sistema"  ,   .f. }  ,;
 		{"4-Parametros"				,  	"Parametros e Configurações Gerais" , .t.  } }
 
 
@@ -1552,9 +1555,9 @@ Function xTesMenu( nRow , nCol )
 	Local aZop1 := {}
 
 
-	Aadd(aZop1 , { "1-Impressão" , "Imp.Doc" , .t. , { || TestBrow()  }    }    )
-	Aadd(aZop1 , { "2-Visualizar Imp." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .t.    }   )
-	Aadd(aZop1 , { "3-Novo Arquivo   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "1-Pesquisar" , "Imp.Doc" , .t. , { || TestBrow()  }    }    )
+	Aadd(aZop1 , { "2-Excluir." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .f.    }   )
+	Aadd(aZop1 , { "3-Novo Cod.Barra" , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "4-Novo Arquivo2   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo3   " , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo4   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )

@@ -40,8 +40,8 @@ Static cOpy2 := ''
 Static nItDrop1 := 1
 Static nHtDrop := 300
 
-Static lHttb := .f.
-Static lHttp := .t.
+Static l_Httb := .f.
+Static l_Httt := .t.
 
 Static nAcumulador := 0
 
@@ -84,6 +84,8 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  , lPopUp  )
 	nItemZ1 := 1
 	cOpy2 := ''
 	nAcumulador := 0
+
+	aCorSub2 := WHITE
 
 
 
@@ -239,57 +241,15 @@ Function xFechaMen()
 	If (nHandle1 > 0)
 
 		BT_BitmapRelease(zBitMap1)
-
-		/*
-
-		DestroyWindow(  nHandle1 )
-
-
-		SendMessage( nHandle1, WM_SYSCOMMAND, SC_CLOSE , 0 )	
-		DoEvents()
-		DoEvents()
-
-		SendMessage( nHandle1, WM_SYSCOMMAND, WM_DESTROY , 0 )
-
-		DoEvents()
-		*/
-
-		xCloseDlg( nHandle1 )
-
-		//msginfo('ff1')
+		xCloseDlg( nHandle1 )	
 
 
 		If (nHandle2 > 0)
 			xCloseDlg( nHandle2 )
-
-			/*
-
-			SendMessage( nHandle2, WM_SYSCOMMAND, SC_CLOSE , 0 )
-
-			DoEvents()
-			DoEvents()
-
-			SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )			
-			DoEvents()
-			*/
-
-
 		End If
 
-
-		If (nHandle3 > 0)
-
-			/*
-			SendMessage( nHandle3, WM_SYSCOMMAND, SC_CLOSE , 0 )
-			DoEvents()
-			DoEvents()
-
-			SendMessage( nHandle3, WM_SYSCOMMAND, WM_DESTROY , 0 )
-			DoEvents()			
-			*/
-
+		If (nHandle3 > 0)		
 			xCloseDlg( nHandle3 )
-
 		End If
 
 
@@ -300,8 +260,6 @@ Function xFechaMen()
 		If !xDelEvent(nIndexEventX)
 			msginfo("Erro ao remover Handle Event 22 .")
 		End If
-
-		//DoEvents()
 
 
 
@@ -375,13 +333,9 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 			GetCursorPos (@nCol, @nRow)
 
 			aR1 := GetPos_ScreenToClient(   GetFormHandle(  'Win_Scroll1'  )  , nRow, nCol )
-
 			lCima := .t.
 
-			//Msginfo('2')
-
-
-			
+			//Msginfo('2')			
 
 			If (ar1[1]  < 16)				
 				lCima := .f.
@@ -389,25 +343,21 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 
 
 			If lCima
-
 				nSetaSel := 2
-
-				If !lHttp
+				If !l_Httt
 					SetWindowCursor( nHWnd , CURSORHAND  )
 				Else
-					//SetWindowCursor( nHWnd , 'NAOPODE' )
+					SetWindowCursor( nHWnd , 'NAOPODE' )
 				End If
 
 			Else
 
 				nSetaSel := 1
-
-				If !lHttb
+				If !l_Httb
 					SetWindowCursor( nHWnd , CURSORHAND  )
 				Else
-					//SetWindowCursor( nHWnd , 'NAOPODE' )
+					SetWindowCursor( nHWnd , 'NAOPODE' )
 				End If
-
 			End If
 
 			Bt_ClientAreaInvalidateAll( 'Win_Scroll1' )
@@ -420,7 +370,6 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 		If (nMsg == WM_LBUTTONDOWN)
 
 			GetCursorPos (@nCol, @nRow)
-
 			aR1 := GetPos_ScreenToClient(   GetFormHandle(  'Win_Scroll1'  )  , nRow, nCol )
 
 			lCima := .t.
@@ -429,18 +378,16 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 				lCima := .f.
 			End If
 
-
-
 			If (nLinha1 == 0)
 				nLinha1 := XMAXITEM
 			End If
 
-
+			//l_Httb
 
 			If lCima
-				ScrollMenu( 1 , GetProperty(  'Win_Menu1' , "HANDLE" ) , @nAcumulado , @nLinha1 ,   Len(aOpz11)  , @lHttp , @lHttb , 1 , 'Win_Menu1' , 300 , .f.  )
+				ScrollMenu( 1 , GetProperty(  'Win_Menu1' , "HANDLE" ) , @nAcumulador , @nLinha1 ,   Len(aOpz11)  , @l_Httt , @l_Httb , 1 , 'Win_Menu1' , 300 , .f.  )
 			Else
-				ScrollMenu( 2 , GetProperty(  'Win_Menu1' , "HANDLE" ) , @nAcumulador , @nLinha1 ,   Len(aOpz11)  , @lHttp , @lHttb , 1 , 'Win_Menu1' , 300 , .f. )
+				ScrollMenu( 2 , GetProperty(  'Win_Menu1' , "HANDLE" ) , @nAcumulador , @nLinha1 ,   Len(aOpz11)  , @l_Httt , @l_Httb , 1 , 'Win_Menu1' , 300 , .f. )
 			End if
 
 			Bt_ClientAreaInvalidateAll( 'Win_Scroll1' )
@@ -609,11 +556,21 @@ Function xPaintScrool( cForm )
 	Local bBmp2 := xBmpToTrans( 'SETAC1', aMenuBarCor , 16,16 )
 
 
+	LOCAL Width  := BT_ClientAreaWidth  (cForm)
+	LOCAL Height := BT_ClientAreaHeight (cForm)
+
+
+
 	Local bBmp3 := xBmpToTrans( 'SETAB1', aCorSub2 , 16,16 )
 	Local bBmp4 := xBmpToTrans( 'SETAC1', aCorSub2 , 16,16 )
 
 
+	Local bBmp5 := xBmpToTrans( 'SETAB1D', aCorSub2 , 16,16 )
+	Local bBmp6 := xBmpToTrans( 'SETAC1D', aCorSub2 , 16,16 )
+
+
 	hDC2 = BT_CreateDC ( cForm  , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
+	
 
 	If nSetaSel == 0
 		BT_DrawGradientFillHorizontal  (hDC2,  0  , 0 ,  nColTamMenu , (nItemSubHeight * 2)   , aCorSub2 , aCorSub2)
@@ -621,37 +578,71 @@ Function xPaintScrool( cForm )
 
 		DraVertH( hDc2 , 1   , nColTamMenu )
 
-		BT_DrawBitmap ( hDC2,  2  , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   ,  bBmp3 )
-		BT_DrawBitmap ( hDC2,  20  , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   ,  bBmp4 )
-		//DoEvents()
+		BT_DrawBitmap ( hDC2,  2  , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   ,  Iif(!l_Httb , bBmp3 ,  bBmp5 ) )
+		BT_DrawBitmap ( hDC2,  20  , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , Iif(!l_Httt , bBmp4 ,  bBmp6 ) )
+		
 	Else
+
+		DraVertH( hDc2 , 1   , nColTamMenu )
 
 		If nSetaSel == 1
 
-			BT_DrawGradientFillVertical ( hDC2 ,  0  , 0  ,    nColTamMenu      ,    ( nItemSubHeight)    , aMenuBarCor , aMenuBarCor  )
-			BT_DrawBitmap ( hDC2,  2   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , bBmp1 )
+
+			If !l_Httb			
+				BT_DrawGradientFillVertical ( hDC2 ,  0  , 0  ,    nColTamMenu      ,    ( nItemSubHeight)    , aMenuBarCor , aMenuBarCor  )
+				BT_DrawBitmap ( hDC2,  2   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , bBmp1 )
+			Else 
+				BT_DrawGradientFillHorizontal  (hDC2,  2  , 0 ,  nColTamMenu , (nItemSubHeight)   , aCorSub2 , aCorSub2)
+				BT_DrawBitmap ( hDC2,  2   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , bBmp5 )
+			End If 
+
+			If !l_Httt
+				BT_DrawBitmap ( hDC2,  20  , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   ,   bBmp4 )
+			End If 
 
 		End If
 
 
 		If nSetaSel == 2
 
-			BT_DrawGradientFillVertical ( hDC2 ,  20 , 0  ,    nColTamMenu      ,    ( nItemSubHeight)    , aMenuBarCor , aMenuBarCor  )
-			BT_DrawBitmap ( hDC2,  20   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , bBmp2 )
+			If !l_Httt
+				BT_DrawGradientFillVertical ( hDC2 ,  20 , 0  ,    nColTamMenu      ,    ( nItemSubHeight)    , aMenuBarCor , aMenuBarCor  )
+				BT_DrawBitmap ( hDC2,  20   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , bBmp2 )
+			Else 
+				BT_DrawGradientFillHorizontal  (hDC2,  20  , 0 ,  nColTamMenu , (nItemSubHeight)   , aCorSub2 , aCorSub2)
+				BT_DrawBitmap ( hDC2,  20   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , bBmp6 )
+			End If 
+
+			If !l_Httb
+				BT_DrawBitmap ( hDC2,  2   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , bBmp3 )
+			End If 
 
 		End If
 
-	//	DoEvents()
+		//DoEvents()
 
 	End If
 
 
-//	DoEvents()
+	//DoEvents()
 
 	BT_BitmapRelease ( bBmp1 )
 	BT_BitmapRelease ( bBmp2 )
+
 	BT_BitmapRelease ( bBmp3 )
 	BT_BitmapRelease ( bBmp4 )
+
+
+	BT_BitmapRelease ( bBmp5 )
+	BT_BitmapRelease ( bBmp6 )
+
+	DraVertL( hDC2 , 0 , Height , .t.)
+	DraVertL( hDC2 , Width - 1 , Height + 1 , .t.)
+
+	DraVertH( hDc2 , 0   , Width , .t.  )
+
+	DraVertH( hDc2 , Height - 1   , Width , .t.  )
+
 
 
 
@@ -721,15 +712,13 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 				nItemx2++
 				lTracking192 := .f.
 
-
 				If (nItemx2 > nMaxItem)
 
 					If (nLinhaAtual == 0)
 						nLinhaAtual := Int(nTamSubMenuConsulta / nItemSubHeight)
 					End If
 
-
-					ScrollMenu( 2 , GetProperty( cJanela , 'Handle' ) , @nScrLin , @nLinhaAtual , Len(aOpz11) , @lHttp , @lHttb , 1 , ;
+					ScrollMenu( 2 , GetProperty( cJanela , 'Handle' ) , @nScrLin , @nLinhaAtual , Len(aOpz11) , @l_Httt , @l_Httb , 1 , ;
 						'Win_Menu1' , GetProperty( cJanela , 'Height' )  )
 
 
@@ -737,7 +726,6 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 
 				Else
 					SendMessage( GetProperty(   cJanela , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
-
 				End If
 
 
@@ -764,7 +752,7 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 
 				If nItemX2 >= nMaxItem
 
-					ScrollMenu( 1 , GetProperty( cJanela , 'Handle' ) , @nScrLin , @nLinhaAtual , Len(aOpz11) , @lHttp , @lHttb , 1 , ;
+					ScrollMenu( 1 , GetProperty( cJanela , 'Handle' ) , @nScrLin , @nLinhaAtual , Len(aOpz11) , @l_Httt , @l_Httb , 1 , ;
 						cJanela , GetProperty(cJanela , 'Height' )  )
 
 
@@ -788,21 +776,6 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 
 
 		End If
-
-		/*
-
-		IF nWParam == VK_TAB
-
-			nMainSel := 1
-			lTracking42 := .f.
-			SendMessage( GetProperty(   'Win_Menu1' , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
-			SysWait(.1)
-
-
-		End If
-		*/
-
-
 
 	End If
 
