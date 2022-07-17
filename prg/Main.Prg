@@ -292,7 +292,7 @@ FUNCTION Main
 	Public XBACK1 := {232,246,239}
 
 	Public XFONT1  := 'Arial Unicode MS'
-	Public XFONT2  := 'Arial Unicode MS'
+	Public XFONT2  := 'Trebuchet MS'
 	//'Arial Narrow'
 	//'Arial Rounded MT Bold'
 
@@ -1573,6 +1573,21 @@ Function xTesMenu( nRow , nCol )
 	Aadd(aZop1 , { "  Novo Arquivo16   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo17   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo18   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+
+
+	/*
+	
+	While (_isWindowDefined ( "WinSombra1" )  ) .or. (   _isWindowDefined ( "Win_MenuSombra" )     ) .or. ;
+		(_isWindowDefined ( "Win_Scroll1" )  ) .or. (   _isWindowDefined ( "Win_Menu1"))
+		SysWait(0.05)
+		BT_DELAY_EXECUTION_WITH_DOEVENTS(250)
+	//	Return 
+	End If 	
+
+	*/
+
+
+
 
 
 	xMenuOp('Main' , aZop1 , nRow , nCol , .t.  )
