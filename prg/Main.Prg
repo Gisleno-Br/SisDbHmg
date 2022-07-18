@@ -18,9 +18,6 @@
 
 
 
-
-
-
 #define QUEBRA Chr(13)+Chr(10)
 
 #define SB_LINEUP           0    // ok
@@ -594,11 +591,11 @@ FUNCTION Main
 	Private nOpSel := 0
 
 	Private aItens := { {"1-Clientes","Cadastro de Clientes" , .t.  , {  ||xCliente()  }  , .f. } , ;
-		{ "1-Fornecedores","Cadastro de Fornecedores" , .t.  , {||xFechaMen() }  , .t.  , { |a,b| xTesMenu(a,b)   }    } , ;
+		{ "1-Fornecedores","Cadastro de Fornecedores" , .t.  ,  { || xFechaMen() } , .t.  , { |a,b,c,d| xTesMenu(a,b,c,d)   }    } , ;
 		{ "1-Vendedores", "Cadastro de Vendedores" , .f.  , Nil , .f.  } , ;
 		{"1-Colaboradores","Colab1 ......." , .f. } ,   {"1-Grupo Produtos","" , .f. , Nil  } , ;
 		{"1-Locais Estoque","Estoque 1......" , .t.  , Nil } , {"1-Funções","" , .f. , Nil } , ;
-		{"1-Categoria Produto","" , .t. , Nil } , {"1-Unidades","" , .t. , Nil } , {"1-Tipo Produtos","",.f. , Nil  } ,;
+		{"1-Categoria Produto", "" , .t. , { |a|  MsgInfo( ' zz ' +   Str(a)  ) } , .f. } , {"1-Unidades","" , .t. , Nil } , {"1-Tipo Produtos","",.f. , Nil  } ,;
 		{"1-Tipo Produto1s","" , .t. , Nil  },{"1-Tipo Produto2s","", .t. , Nil } ,{"1-Tipo Produt3os","" , .t. , Nil },{"1-Tipo Produt222os","", .f. , Nil  },{"1-Tipo 444Produtos","", .f. , Nil  }, ;
 		{ "1-Rotatividade","Rot" , .t. , Nil } , {"1-TES","TES1" , .t. , Nil  } , ;
 		{"2-Pedidos","Vendas" , .t.  , Nil } , {"2-Orçamento","Orçamento" , .t. , Nil }  , {"3-Listagem Clientes","Lista" , .f. , Nil  } ,    {"4-Configurações","" , .f. , Nil  } }
@@ -622,6 +619,8 @@ FUNCTION Main
 
 
 
+
+
 	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventHndMain"  ) )  ) = 0
 		InstallEventHandler( "EventHndMain" )
 	End If
@@ -632,37 +631,27 @@ FUNCTION Main
 
 
 
+
+
+
+
+
 	Private aButTop := {}
 
 
 
 
 
-//	CREATE EVENT PROCNAME ProcWindowMsg()  STOREINDEX nIndex22   // ADD
-	//EventProcessHMGWindowsMessage (nIndex22, .F.)
-
-
-
-
-
-//SysWait(.3)
-
-	
-
-
-
-	
-	//DoEvents()
-
 	xMenuMain( 'Main' ,  70 , 1  , aOpcoes , aItens )
 
-	//SysWait(.5)
+
+
+	_ShowWindow('Main')
 
 
 	Main.Activate
 
 
-	//msginfo('lp22')
 
 
 
@@ -750,6 +739,9 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 	Local nRow2 :=0
 	Local nCol2 := 0
+
+
+
 
 
 
@@ -1550,14 +1542,14 @@ Return
 
 
 
-Function xTesMenu( nRow , nCol )
+Function xTesMenu( nRow , nCol , aMatriz , nItemSel )
 
 	Local aZop1 := {}
 
 
-	Aadd(aZop1 , { "1-Pesquisar" , "Imp.Doc" , .t. , { || TestBrow()  }    }    )
+	Aadd(aZop1 , { "1-Pesquisar" , "Imp.Doc" , .t. , { | | TestBrow()  }    }    )
 	Aadd(aZop1 , { "2-Excluir." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .f.    }   )
-	Aadd(aZop1 , { "3-Novo Cod.Barra" , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "3-Novo Cod.Barra" , "Novo Arquivo..." , .t. , { | a | msginfo('k22 ' + Str(a) )     }    }  )
 	Aadd(aZop1 , { "4-Novo Arquivo2   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo3   " , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo4   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
@@ -1574,23 +1566,11 @@ Function xTesMenu( nRow , nCol )
 	Aadd(aZop1 , { "  Novo Arquivo17   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo18   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 
-
-	/*
-	
-	While (_isWindowDefined ( "WinSombra1" )  ) .or. (   _isWindowDefined ( "Win_MenuSombra" )     ) .or. ;
-		(_isWindowDefined ( "Win_Scroll1" )  ) .or. (   _isWindowDefined ( "Win_Menu1"))
-		SysWait(0.05)
-		BT_DELAY_EXECUTION_WITH_DOEVENTS(250)
-	//	Return 
-	End If 	
-
-	*/
+	//msginfo(Str(    Len(aMatriz)  ) + '   ' + Str(nItemSel)   )
 
 
 
-
-
-	xMenuOp('Main' , aZop1 , nRow , nCol , .t.  )
+	xMenuOp('Main' , aZop1 , nRow , nCol , .t. , aMatriz , nItemSel  )
 
 
 Return

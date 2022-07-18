@@ -1,6 +1,8 @@
 * HMG-IDE UNICODE Form Designer Generated Code
 * (c) Roberto Lopez - http://sites.google.com/site/hmgweb
 
+#define QUEBRA Chr(13)+Chr(10)
+
 DEFINE WINDOW TEMPLATE AT nMaximizedWindowRow , nMaximizedWindowCol WIDTH nMaximizedWindowWidth  HEIGHT nMaximizedWindowHeight VIRTUAL WIDTH Nil VIRTUAL HEIGHT Nil TITLE "DDDDD" ICON "demo" MAIN NOSIZE CURSOR NIL ON INIT xInit() ON RELEASE Nil ON INTERACTIVECLOSE Nil ON MOUSECLICK Nil ON MOUSEDRAG Nil ON MOUSEMOVE Nil ON SIZE Nil ON MAXIMIZE Nil ON MINIMIZE Nil ON PAINT Nil BACKCOLOR {255,255,255} NOTIFYICON NIL NOTIFYTOOLTIP NIL ON NOTIFYCLICK Nil ON GOTFOCUS MainFocus() ON LOSTFOCUS Nil ON SCROLLUP Nil ON SCROLLDOWN Nil ON SCROLLLEFT Nil ON SCROLLRIGHT Nil ON HSCROLLBOX Nil ON VSCROLLBOX Nil
 
 //DrawTransp('Main' , hBitMain )
@@ -37,15 +39,14 @@ DEFINE WINDOW TEMPLATE AT nMaximizedWindowRow , nMaximizedWindowCol WIDTH nMaxim
         ACTION Nil
     END IMAGE
 
-
-    
+   
 
     DEFINE LABEL LblMsg1
-        ROW    760
+        ROW    200
         COL    350
-        WIDTH  120
-        HEIGHT 24
-        VALUE "Label_1"
+        WIDTH  650
+        HEIGHT 200
+        VALUE "GISLENO GUIMARÃES JUNIOR" + QUEBRA + "GISLENO GUIMARÃES JUNIOR" + QUEBRA + "GISLENO GUIMARÃES JUNIOR" 
         FONTNAME "Arial"
         FONTSIZE 9
         TOOLTIP ""
@@ -54,17 +55,17 @@ DEFINE WINDOW TEMPLATE AT nMaximizedWindowRow , nMaximizedWindowCol WIDTH nMaxim
         FONTUNDERLINE .F.
         FONTSTRIKEOUT .F.
         HELPID Nil
-        VISIBLE .F.
-        TRANSPARENT .T.
+        VISIBLE .T.
+        TRANSPARENT .f.
         ACTION Nil
         AUTOSIZE .F.
-        BACKCOLOR NIL
-        FONTCOLOR {255,255,255}
+        BACKCOLOR WHITE
+        FONTCOLOR BLACK
     END LABEL
 
     DEFINE BUTTON Button_1
-        ROW    0
-        COL    2045
+        ROW    250
+        COL    520
         WIDTH  10
         HEIGHT 28
 

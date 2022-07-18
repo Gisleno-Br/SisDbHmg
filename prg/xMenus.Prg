@@ -73,12 +73,13 @@ Static lTracking285 := .f.
 
 STATIC lTracking192 := .f.
 
-Function xMenuOp( cParent , aOp1 , nTop , nLeft  , lPopUp  , lEnabled )
+Function xMenuOp( cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz , nItemSel  ,  lEnabled )
 
 	Local lOk     := .f.
 	Local nHeight := (Len(aOp1) * nItemSubHeight)+5
 	//Local zBitMap1
 	Local i 
+	Local nItemz1 := 0
 
 	Default lPopUp := .f.
 	Default lEnabled := .t. 
@@ -93,29 +94,39 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  , lPopUp  , lEnabled )
 	lEnabled2 := lEnabled
 
 	aCorSub2 := WHITE
+			
 
-	//SysWait(0.05)
+	BT_DELAY_EXECUTION_WITH_DOEVENTS(550)	
+
+	nItemz1 := xOpSelPos( 'JanMenuSub', 0 , Len(aMatriz) , 0 )
 
 
+	If (nItemZ1 != nItemSel)
+		Return 
+	End If 
 
-	//msginfo('Chamou')
+	DoEvents()
 
-    zBitMap1 := BT_BitmapCaptureDesktop ( nTop + 12 , nLeft + 15 ,  nColTamMenu - 7 , 340  )
+
+    zBitMap1 := BT_BitmapCaptureWindow (  cParent ,   nTop + 15   , nLeft + 15 ,  nColTamMenu - 6 , 335  )
+
+
+	Bt_BitmapSaveFile(  zBitMap1 , 'Sombra_1.bmp'  )
 
 
 	*//Janela Efeito Sombra.
 	If !_isWindowDefined('WinSombra1')
 		If  (Len(aOpz11) > XMAXITEM)
 			
-			DEFINE WINDOW WinSombra1 AT nTop + 12 , nLeft+17 WIDTH nColTamMenu - 7 HEIGHT 295+40 TITLE 'Sombra1' ;
+			DEFINE WINDOW WinSombra1 AT nTop + 15 , nLeft+15 WIDTH nColTamMenu - 6 HEIGHT 295+60 TITLE 'Sombra1' ;
 				NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
-				ON PAINT xSombra( ThisWindow.Name , nTop + 12 , nLeft+17 , zBitMap1 )
+				ON PAINT xSombra( ThisWindow.Name , 0  , 0 , zBitMap1 )
 			END WINDOW
 		Else			
 
-			zBitMap1 := BT_BitmapCaptureDesktop ( nTop + 12 , nLeft + 15 ,  nColTamMenu - 7 , (Len(aOp1) * nItemSubHeight) - 2   )
+			zBitMap1 := BT_BitmapCaptureDesktop ( nTop + 15 , nLeft + 15  ,  nColTamMenu  , (Len(aOp1) * nItemSubHeight) - 2   )
 
-			DEFINE WINDOW WinSombra1 AT nTop + 12 , nLeft+15 WIDTH nColTamMenu - 7 HEIGHT (Len(aOp1) * nItemSubHeight) - 2 TITLE 'Sombra1' ;
+			DEFINE WINDOW WinSombra1 AT nTop + 12 , nLeft+15 WIDTH nColTamMenu  HEIGHT (Len(aOp1) * nItemSubHeight) - 2 TITLE 'Sombra1' ;
 				NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
 				ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+9 , Nil  ) //zBitMap1
 			END WINDOW
@@ -124,7 +135,7 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  , lPopUp  , lEnabled )
 	End If 
 
 
-	BT_ClientAreaInvalidateAll(   'WinSombra1'  )
+	//BT_ClientAreaInvalidateAll(   'WinSombra1'  )
 
 	
 	DEFINE WINDOW Win_Menu1 AT nTop, nLeft+1 WIDTH nColTamMenu HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight ,  300    ) TITLE 'Men1' ;
@@ -196,6 +207,13 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  , lPopUp  , lEnabled )
 	ShowScrollBar( GetFormHandle( 'Win_Menu1' ), 0, .F. )
 	ShowScrollBar( GetFormHandle( 'Win_Menu1' ), 1, .F. )
 
+	
+
+	If (GetFormIndex ( "Win_Scroll1" )  ==  0)	
+		Return 
+	End If 	
+
+
 	_ShowWindow( 'Win_Scroll1' )
 
 	
@@ -204,6 +222,12 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  , lPopUp  , lEnabled )
 	If (GetFormIndex ( "Win_Menu1" )  ==  0)	
 		Return 
 	End If 	
+
+
+	BT_ClientAreaInvalidateAll(   'WinSombra1'  )
+	_ShowWindow( 'WinSombra1' )	
+
+	 msginfo('ko2') 
 
 
 	
@@ -230,22 +254,11 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  , lPopUp  , lEnabled )
 	End If
 
 
-	//_ShowWindow("Win_Menu1")
-
-
-	_ShowWindow( 'Win_MenuSombra' )
-
-	/*
-	BT_ClientAreaInvalidateAll(   'Win_Menu1'  )
-	DoEvents()
-	yDCMenu11_()
-	*/
-
 	
 
-	DoEvents()
-
+	_ShowWindow( 'Win_MenuSombra' )	
 	xAtu_Men1()
+
 
 
 
@@ -671,14 +684,16 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 					Return
 				End If
 
+				//msginfo('ok22')
+
+				DoEvents()
+
 				If (aOpz11[nItemx2][4] != Nil )
-					Eval( aOpz11[nItemx2][4]   )
+					Eval( aOpz11[nItemx2][4]  ,  nItemx2  )
 					Return
 				End If
 
-				xAtu_Men1()
-
-				//msginfo('ok22')
+				xAtu_Men1()				
 
 
 			End If

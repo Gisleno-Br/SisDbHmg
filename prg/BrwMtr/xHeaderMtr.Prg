@@ -1738,13 +1738,15 @@ REturn
 
 Function DraVertL( hDc1 , nCol , nHeight1 , lSingle )
 
+	Local aCorBorda := {153,153,153}
+
 	DEFAULT lSingle := .f. 
 
-	BT_DrawLine ( hDc1, 0 , nCol   , nHeight1 , nCol    ,   {63,69,72}, 1 )
+	BT_DrawLine ( hDc1, 0 , nCol   , nHeight1 , nCol    ,   aCorBorda ,   1 )
 
 
 	If !lSingle
-		BT_DrawLine ( hDc1, 0 , nCol+1 , nHeight1,  nCol+1  ,   {144,152,157}, 1 )
+		BT_DrawLine ( hDc1, 0 , nCol+1 , nHeight1,  nCol+1  ,   aCorBorda , 1 )
 	End If 
 
 
@@ -1756,13 +1758,14 @@ Function DraVertH( hDc1 , nRow , nWidth , lSingle )
 
 	//aMenuBarCor
 	//BT_DrawLine ( hDc1, nRow ,  0   ,  nRow    ,  nWidth     ,   {63,69,72}    , 1 )
+	Local aCorBorda := {153,153,153}
 
 	DEFAULT lSingle := .f. 
 
-	BT_DrawLine ( hDc1, nRow ,  0   ,  nRow    ,  nWidth     ,   GRAY , 1 )
+	BT_DrawLine ( hDc1, nRow ,  0   ,  nRow    ,  nWidth     ,   aCorBorda , 1 )
 
 	If !lSingle
-		BT_DrawLine ( hDc1, nRow+1 ,0   ,  nRow+ 1 ,  nWidth + 1 ,  aCorSub2 , 1 )
+		BT_DrawLine ( hDc1, nRow+1 ,0   ,  nRow+ 1 ,  nWidth + 1 ,  aCorBorda , 1 )
 	End If 
 
 

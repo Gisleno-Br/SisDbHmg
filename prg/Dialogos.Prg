@@ -996,8 +996,8 @@ Return (lOk)
 Function xSombra(  cJanela , nRow1  , nCol1 , zBitmap1  )
 
 
-	LOCAL Width  := BT_ClientAreaWidth  (cJanela)
-	LOCAL Height := BT_ClientAreaHeight (cJanela)
+	LOCAL Width  := BT_ClientAreaWidth(cJanela)
+	LOCAL Height := BT_ClientAreaHeight(cJanela)
 
 	Local BTstruct
 
@@ -1012,7 +1012,7 @@ Function xSombra(  cJanela , nRow1  , nCol1 , zBitmap1  )
 
 
 
-	//zBitMap := BT_BitmapCaptureDesktop ( nRow1 , nCol1 , Width + 15 , Height + 25 )
+	zBitMap := BT_BitmapCaptureDesktop ( nRow1 , nCol1 , Width + 15 , Height + 25 )
 
 	zBitMap2 := BT_BitmapLoadFile('SOMBRA5')
 
@@ -1061,11 +1061,13 @@ Function xSombra(  cJanela , nRow1  , nCol1 , zBitmap1  )
 	//BT_DrawBitmap (hDC, Height - 5  , Width - 5 , 5, 105, BT_COPY, zBitmap2 )
 
 
-	//BT_DrawBitmap (hDC, 0 , 0 , Width, Height, BT_COPY, zBitmap1 )
+	BT_DrawBitmap (hDC, 0 , 0 , Width , Height  , BT_COPY, zBitmap )
 
 
 	//BT_DrawGradientFillHorizontal  (hDC,  Height - 2  ,  0  ,  Width - 5 ,  1  ,{212,212,212} , {212,212,212} )
-	BT_DrawBitmapAlphaBlend (hDC, 0 , 0 , Width   , Height  , 55  , BT_COPY, zBitmap1 )
+
+
+	//BT_DrawBitmapAlphaBlend (hDC, 0 , 0 , Width   , Height  , 125  , BT_COPY, zBitmap1 )
 
 	//BT_DrawBitmapAlphaBlend (hDC, 0 , 0 , Width - 1  , Height - 1  , 85  , BT_COPY, zBitmap1 )
 

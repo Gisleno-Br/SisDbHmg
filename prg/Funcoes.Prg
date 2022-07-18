@@ -518,6 +518,33 @@ FUNCTION xInit()
 	DoEvents()
 	yDCMenu1()	
 
+/*
+	
+		DEFINE LABEL Label1
+			PARENT    Main		
+			ROW       125
+			COL       180
+			WIDTH     250
+			HEIGHT    20
+			FONTNAME  'Arial'
+			FONTSIZE  10			
+			VALUE     '    AAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBBBBB      ' 
+			ALIGNMENT Left
+			VISIBLE .T.
+			TRANSPARENT .f.
+			AUTOSIZE .F. 
+			FONTCOLOR RED
+			BACKCOLOR WHITE
+		END LABEL
+		*/
+
+
+	//	DoEvents()
+
+	//SetProperty( GetControlHandle( 'LblMsg1' , 'Main' ) , 'Value' , '1111111112222222222222' )
+
+	//_showWindow('Main')
+	//DoEvents()
 
 	DoMethod( 'Win_MenuPrincipal' , 'Activate')  
 
