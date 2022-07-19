@@ -80,6 +80,8 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz , nItemSe
 	//Local zBitMap1
 	Local i 
 	Local nItemz1 := 0
+	Local nCol2 
+	Local nRow2 
 
 	Default lPopUp := .f.
 	Default lEnabled := .t. 
@@ -101,41 +103,69 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz , nItemSe
 	nItemz1 := xOpSelPos( 'JanMenuSub', 0 , Len(aMatriz) , 0 )
 
 
-	If (nItemZ1 != nItemSel)
+	If (nItemZ1 != nItemSel) .or. ( _IsWindowDefined('Win_Menu1'))
 		Return 
 	End If 
 
 	DoEvents()
 
+	nCol2 := (nLeft+1)+nColTamMenu - 1
 
-    zBitMap1 := BT_BitmapCaptureWindow (  cParent ,   nTop + 15   , nLeft + 15 ,  nColTamMenu - 6 , 335  )
 
+    Private zBitMap0 
+	//:= BT_BitmapCaptureClientArea(  cParent ,   nTop + 15  ,  nCol2 ,  4  , 325  )
+	//BT_BitmapCaptureWindow (  cParent ,   nTop + 15  ,  nCol2 ,  12  , 335  )
+	//BT_BitmapCaptureClientArea
 
-	Bt_BitmapSaveFile(  zBitMap1 , 'Sombra_1.bmp'  )
+	//zBitMap1 := BT_BitmapCaptureWindow ( cParent , nTop + 15,      (nLeft + 15 ) +  nColTamMenu - 15     , 16  , 335  )
+
+	
+	DoEvents()
+
+	Private zBitMap5 := BT_BitmapCaptureClientArea ( cParent , (nTop + 15) + 335    ,  nLeft+8   ,  nColTamMenu + 5  , 4  )
+
+	//zBitMap3 := BT_BitmapCaptureWindow ( cParent , nTop + 15,      (nLeft + 15 ) +  (nColTamMenu - 3)     , 1  , 335  )
+
+	
+	DoEvents()
+
+	Bt_BitmapSaveFile(  zBitMap5 , 'xSombra_1300.bmp'  )
+
+	//Bt/_BitmapSaveFile(  zBitMap0 , 'Sombra_0.bmp'  )
+
+	DoEvents()
 
 
 	*//Janela Efeito Sombra.
 	If !_isWindowDefined('WinSombra1')
-		If  (Len(aOpz11) > XMAXITEM)
+		If  (Len(aOpz11) > XMAXITEM)			
+
+			zBitMap0 := BT_BitmapCaptureClientArea(  cParent ,   nTop + 15  ,  nCol2 ,  4  , 325  )
 			
-			DEFINE WINDOW WinSombra1 AT nTop + 15 , nLeft+15 WIDTH nColTamMenu - 6 HEIGHT 295+60 TITLE 'Sombra1' ;
+			DEFINE WINDOW WinSombra1 AT nTop + 15 , nCol2 WIDTH 4 HEIGHT 325 TITLE 'Sombra1' ;
 				NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
-				ON PAINT xSombra( ThisWindow.Name , 0  , 0 , zBitMap1 )
+				ON PAINT xSombra( ThisWindow.Name , 0  , 0 , zBitMap0  , .t. )
 			END WINDOW
 		Else			
 
-			zBitMap1 := BT_BitmapCaptureDesktop ( nTop + 15 , nLeft + 15  ,  nColTamMenu  , (Len(aOp1) * nItemSubHeight) - 2   )
+			zBitMap0 := BT_BitmapCaptureClientArea(  cParent ,   nTop + 15  ,  nCol2 ,  4  , (Len(aOp1) * nItemSubHeight) - 2  )
 
-			DEFINE WINDOW WinSombra1 AT nTop + 12 , nLeft+15 WIDTH nColTamMenu  HEIGHT (Len(aOp1) * nItemSubHeight) - 2 TITLE 'Sombra1' ;
+			DEFINE WINDOW WinSombra1 AT nTop + 12 , nLeft+15 WIDTH 4  HEIGHT (Len(aOp1) * nItemSubHeight) - 2 TITLE 'Sombra1' ;
 				NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
-				ON PAINT xSombra( ThisWindow.Name , nTop + 6 , nLeft+9 , Nil  ) //zBitMap1
+				ON PAINT xSombra( ThisWindow.Name , 0  , 0 , zBitMap0  , .t. )
 			END WINDOW
 
 		End If
 	End If 
 
+	BT_ClientAreaInvalidateAll(   'WinSombra1'  )
+	_ShowWindow( 'WinSombra1' )	
+
+
 
 	//BT_ClientAreaInvalidateAll(   'WinSombra1'  )
+
+	//SET WINDOW WinSombra1 TRANSPARENT   TO 50
 
 	
 	DEFINE WINDOW Win_Menu1 AT nTop, nLeft+1 WIDTH nColTamMenu HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight ,  300    ) TITLE 'Men1' ;
@@ -177,6 +207,9 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz , nItemSe
 	HMG_ChangeWindowStyle(  GetProperty(  'Win_ScrolSombra' , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
 
 	HMG_ChangeWindowStyle(  GetProperty(  'Win_MenuSombra' , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
+
+
+	HMG_ChangeWindowStyle(  GetProperty(  'WinSombra1' , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
 
 	
 	ShowScrollBar( GetFormHandle( 'Win_ScrolSombra' ), 0, .F. )
@@ -224,10 +257,8 @@ Function xMenuOp( cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz , nItemSe
 	End If 	
 
 
-	BT_ClientAreaInvalidateAll(   'WinSombra1'  )
-	_ShowWindow( 'WinSombra1' )	
-
-	 msginfo('ko2') 
+	
+	// msginfo('ko2') 
 
 
 	
@@ -455,6 +486,9 @@ Function xFechaMen()
 	Local nHandle5  := GetFormHandle("Win_Scroll1")
 	Local nHandle6  := GetFormHandle("Win_ScrolSombra")
 	Local nHandle7  := GetFormHandle("Win_MenuSombra")
+
+	BT_BitmapRelease(zBitMap0)
+	BT_BitmapRelease(zBitMap5)
 	
 	
 	If (nHandle1 > 0)

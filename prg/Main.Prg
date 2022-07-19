@@ -17,7 +17,6 @@
 
 
 
-
 #define QUEBRA Chr(13)+Chr(10)
 
 #define SB_LINEUP           0    // ok
@@ -96,6 +95,9 @@ Prg\BrwMtr\xBarHMtr.Prg
 Prg\BrwMtr\xBrowserMtr.Prg
 Prg\BrwMtr\xHeaderMtr.Prg
 */
+
+
+
 
 
 

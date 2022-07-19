@@ -39,14 +39,38 @@ DEFINE WINDOW TEMPLATE AT nMaximizedWindowRow , nMaximizedWindowCol WIDTH nMaxim
         ACTION Nil
     END IMAGE
 
-   
+    
 
-    DEFINE LABEL LblMsg1
-        ROW    200
+    DEFINE LABEL LblMsg2
+        ROW    150
         COL    350
         WIDTH  650
         HEIGHT 200
-        VALUE "GISLENO GUIMARÃES JUNIOR" + QUEBRA + "GISLENO GUIMARÃES JUNIOR" + QUEBRA + "GISLENO GUIMARÃES JUNIOR" 
+        VALUE "GISLENO GUIMARAES JUNIOR" + QUEBRA + "GISLENO GUIMARAES JUNIOR" + QUEBRA + "GISLENO GUIMARAES JUNIOR" 
+        FONTNAME "Arial"
+        FONTSIZE 9
+        TOOLTIP ""
+        FONTBOLD .F.
+        FONTITALIC .F.
+        FONTUNDERLINE .F.
+        FONTSTRIKEOUT .F.
+        HELPID Nil
+        VISIBLE .T.
+        TRANSPARENT .f.
+        ACTION Nil
+        AUTOSIZE .F.
+        BACKCOLOR WHITE
+        FONTCOLOR BLACK
+    END LABEL
+
+   
+
+    DEFINE LABEL LblMsg1
+        ROW    420
+        COL    110
+        WIDTH  650
+        HEIGHT 200
+        VALUE "GISLENO GUIMARAES JUNIOR" + QUEBRA + "GISLENO GUIMARAES JUNIOR" + QUEBRA + "GISLENO GUIMARAES JUNIOR" 
         FONTNAME "Arial"
         FONTSIZE 9
         TOOLTIP ""
