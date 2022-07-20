@@ -289,8 +289,7 @@ Function xSelSubItem(nWParam1 , nHWnd1)
 
 				DoEvents()			
 
-				nIdMenu1 := nItemx1				
-				lSubOpen := .t.
+				nIdMenu1 := nItemx1							
 				xAtuMen2()				
 				nRow2 := 0
 				nCol2 := 0
@@ -298,6 +297,8 @@ Function xSelSubItem(nWParam1 , nHWnd1)
 
 					GetCursorPos( @nCol2 , @nRow2)					
 					DoEvents()
+
+					lSubOpen := .t.
 
 
 					If !((Len(aOpx1[nItemx1]) > 5) .And. (   aOpx1[nItemx1][5]   ))						
@@ -882,6 +883,34 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 
 
 Return
+
+
+Function xRefreshMain()
+
+
+ 	BT_ClientAreaInvalidateAll('Win_MenuPrincipal')
+	DoEvents()
+	yDCMenu1()
+	DoEvents()
+
+
+	If lSubMenu 
+		BT_ClientAreaInvalidateAll('JanMenuSub')
+		DoEvents()
+		yDCMenu2()
+	End If 
+
+	DoEvents()
+
+	//BT_ClientAreaInvalidateAll(   'Win_Menu1'  )
+
+	If (lSubOpen) .and. (_isWindowDefined('Win_Menu1'))
+      	xAtu_Men1()
+	End If 
+
+
+
+Return 
 
 Function xAtuMain( lAtu1 )
 

@@ -989,12 +989,61 @@ Function CheckRet( cVar )
 	 End If   
 
 Return (lOk)	 
+
+
+Function xSombra()
+Return 
+
+
+Function xSombra3( cJanela  , zBmp1 )
+
+	LOCAL Width  := BT_ClientAreaWidth(cJanela)
+	LOCAL Height := BT_ClientAreaHeight(cJanela)
+
+	Local BTstruct , BTstruct3
+	Local hDC := BT_CreateDC ( cJanela  , BT_HDC_INVALIDCLIENTAREA , @BTstruct)
+
+	Local hB1 := BT_BitmapCreateNew ( 4 , 4 ,  {135,135,135}  )
+
+
+	hDC3 := BT_CreateDC ( hB1 , BT_HDC_BITMAP, @BTstruct3 )
+
+
+	BT_DrawGradientFillHorizontal( hDC , 0,0 , Width , Height , {212,212,212} , {212,212,212}    )
+
+	BT_DrawSetPixel (hDC , 0, 0 , { 143,143,143,143})
+
+	For n1 := 0 to 3
+
+		BT_DrawSetPixel (hDC, 3 , n1 , {241,241,241})
+		BT_DrawSetPixel (hDC, n1 , 3 ,  {241,241,241})
+		DoEvents()
+
+	Next 
+
+
+	BT_DrawSetPixel (hDC, 1, 0 , {172,172,172}   )
+	BT_DrawSetPixel (hDC, 1, 1 , {172,172,172}   )
+	BT_DrawSetPixel (hDC , 0, 1 , {172,172,172}   )
+
+
+	DoEvents()
+
+	BT_DrawBitmapAlphaBlend (hDC ,  0 , 0  , 4 ,  4  , 85 , BT_COPY  , zBmp1)
+	DoEvents()
+
+	
+
+	BT_DeleteDC ( BTstruct )
+	BT_DeleteDC ( BTstruct3 )
+
+	BT_BitmapRelease ( hB1 )
+
+
+
+Return 
   
-
-
-
-Function xSombra(  cJanela , nRow1  , nCol1 , zBitmap1 , lVeritcal  )
-
+Function xSombraHor(  cJanela , nRow1  , nCol1 , zBitmap1   )
 
 	LOCAL Width  := BT_ClientAreaWidth(cJanela)
 	LOCAL Height := BT_ClientAreaHeight(cJanela)
@@ -1007,14 +1056,54 @@ Function xSombra(  cJanela , nRow1  , nCol1 , zBitmap1 , lVeritcal  )
 
 	Local zBmp2
 
-
-
-
-
 	Local hDC := BT_CreateDC ( cJanela  , BT_HDC_INVALIDCLIENTAREA , @BTstruct)
 
 	Local hB1 := BT_BitmapCreateNew ( Width , Height ,  {135,135,135}  )
 
+	hDC3 := BT_CreateDC ( hB1 , BT_HDC_BITMAP, @BTstruct3 )
+
+
+	BT_DrawGradientFillHorizontal( hDC3, 0,0 , Width ,1 , {143,143,143} , { 143,143,143,143}    )
+	BT_DrawGradientFillHorizontal( hDC3, 1,0 , Width ,1 , {172,172,172} ,  {172,172,172}        )
+	BT_DrawGradientFillHorizontal( hDC3, 2,0 , Width ,1 , {212,212,212} , {212,212,212}    )
+	BT_DrawGradientFillHorizontal( hDC3, 3,0 , Width ,1 , {241,241,241} , {241,241,241}    )
+	BT_DrawGradientFillHorizontal( hDC3, 4,0 , Width ,1 ,  WHITE , WHITE    )
+
+	
+	BT_DrawBitmapAlphaBlend (hDC3 ,  0 , 0  , Width ,  5  , 45 , BT_COPY  , zBitmap1)
+	DoEvents()
+
+
+	BT_DrawDCtoDC (hDC, 0, 0, Width ,   5, BT_SCALE, hDC3, 0, 0, Width , 5)
+	DoEvents()
+
+	BT_BitmapRelease ( hB1 )
+	BT_DeleteDC ( BTstruct )
+	BT_DeleteDC ( BTstruct3 )
+
+
+Return 
+
+
+Function xSombraVert(  cJanela , nRow1  , nCol1 , zBitmap1   )
+
+
+	LOCAL Width  := BT_ClientAreaWidth(cJanela)
+	LOCAL Height := BT_ClientAreaHeight(cJanela)
+
+    Local lVeritcal := .t.
+
+	Local BTstruct , BTstruct3
+
+	//Local zBitMap
+	Local zBitMap2
+	Local zBmp1 
+
+	Local zBmp2
+
+
+	Local hDC := BT_CreateDC ( cJanela  , BT_HDC_INVALIDCLIENTAREA , @BTstruct)
+	Local hB1 := BT_BitmapCreateNew ( Width , Height ,  {135,135,135}  )
 	hDC3 := BT_CreateDC ( hB1 , BT_HDC_BITMAP, @BTstruct3 )
 
 
@@ -1025,7 +1114,6 @@ Function xSombra(  cJanela , nRow1  , nCol1 , zBitmap1 , lVeritcal  )
 		BT_DrawGradientFillVertical( hDC3, 0,2 , 1 ,Height , {212,212,212} , {212,212,212}    )
 		BT_DrawGradientFillVertical( hDC3, 0,3 , 1 ,Height , {241,241,241} , {241,241,241}    )
 		BT_DrawGradientFillVertical( hDC3, 0,4 , 2 ,Height ,  WHITE , WHITE    )
-
 
 		
 		BT_DrawBitmapAlphaBlend (hDC3 ,  0 , 0  , 5,  Height  , 45 , BT_COPY  , zBitmap1)
@@ -1039,139 +1127,12 @@ Function xSombra(  cJanela , nRow1  , nCol1 , zBitmap1 , lVeritcal  )
 
 
 
+
 	End If 
-
-
-
-
-
-	//Local hB2 := BT_BitmapCreateNew ( 1,  Height ,  {163,163,163}  )
-	//Local hB3 := BT_BitmapCreateNew ( 1,  Height ,  {200,200,200}  )
-	//Local hB4 := BT_BitmapCreateNew ( 1,  Height ,  {228,228,228}  )
-
-
-
-
-	//zBitMap := BT_BitmapCaptureWindow (  cJanela , 0 , 0 , Width , Height )
-
-	//Bt_BitmapSaveFile(  hB1 , 'Fundo1.bmp'  )
-
-	//zBitMap2 := BT_BitmapLoadFile('SOMBRA5')
-
-
-
-//	zBmp1 := BT_BitmapLoadFile('y0133.Bmp')
-//	zBmp2 := BT_BitmapLoadFile('y0134.Bmp')
-
-
-/*
-
-	BT_DrawGradientFillHorizontal  (hDC,  0  , 0 ,  Width  - 6,        Height - 5   , {89,89,89} , {89,89,89})
-	BT_DrawGradientFillHorizontal  (hDC,  0  ,      Width - 5  ,  1 ,  Height - 5 , {89,89,89} , {89,89,89} )
-
-	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width - 4  ,  1 	,  Height - 5 , {143,143,143} , {143,143,143}   )
-	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width - 3  ,  1 	,  Height - 5 , {172,172,172} , {172,172,172}  )
-	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width  - 2 ,  1 	,  Height - 5  , {212,212,212} , {212,212,212} )
-
-
-	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width  - 1 ,  1 	,  Height - 5  , {241,241,241} , {241,241,241}  )
-	BT_DrawGradientFillHorizontal  (hDC,  0  ,  Width  - 0 ,  1 	,  Height - 5  ,{252,252,252}  , {252,252,252}  )
-
-
-
-
-
-	BT_DrawGradientFillHorizontal  (hDC,  Height - 6  ,  0   , Width - 5 ,  1  , {89,89,89} , {89,89,89}  )
-
-
-	BT_DrawGradientFillHorizontal  (hDC,  Height - 5  ,  0  ,  Width - 5  ,  1  , {89,89,89} , {89,89,89}   )
-
-
-	BT_DrawGradientFillHorizontal  (hDC,  Height - 4  ,  0  ,  Width - 5 ,  1  ,{143,143,143} , {143,143,143}  )
-	BT_DrawGradientFillHorizontal  (hDC,  Height - 3  ,  0  ,  Width - 5 ,  1  ,{172,172,172} , {172,172,172})
-	BT_DrawGradientFillHorizontal  (hDC,  Height - 2  ,  0  ,  Width - 5 ,  1  ,{212,212,212} , {212,212,212} )
-	BT_DrawGradientFillHorizontal  (hDC,  Height - 1   ,  0  , Width - 5  ,  1  ,{241,241,241} , {241,241,241})
-
-
-	BT_DrawGradientFillHorizontal  (hDC,  Height      ,  0  ,  Width - 5 ,  1  ,{252,252,252}  , {252,252,252})
-	*/
-
-
-	//BT_BitmapPasteAlphaBlend ( @hB1   ,  0, 0 , Width , Height , 100 , BT_COPY , zBitmap1)
-	//BT_BitmapPasteAlphaBlend ( @hB2   ,  1, 0 , 1 , Height , 155 , BT_COPY , zBitmap1)
-	//BT_BitmapPasteAlphaBlend ( @hB3   ,  2, 0 , 1 , Height , 195 , BT_COPY , zBitmap1)
-	//BT_BitmapPasteAlphaBlend ( @hB4   ,  4, 0 , 1 , Height , 250 , BT_COPY , zBitmap1)
-
-/*
-	Bt_BitmapSaveFile(  hB1 , 'Menu123.bmp'  )
-	Bt_BitmapSaveFile(  hB2 , 'Menu324a.bmp'  )	//
-	Bt_BitmapSaveFile(  hB3 , 'Menu54.bmp'  )
-	Bt_BitmapSaveFile(  hB4 , 'Menu54_y.bmp'  )
-
-	
-
-	If !lEnabled2
-		BT_DrawDCtoDCAlphaBlend (hDC2, 0, 0, Width1, Height1, 156 , BT_SCALE, hDC1, 0, 0, Width1, Height1)
-	Else
-		BT_DrawDCtoDC (hDC2, 0, 0, Width2, Height2, BT_SCALE, hDC1, 0, 0, Width1, Height1)
-	End If
-	*/
-
-
-	//BT_DrawBitmapAlphaBlend (hDC3 ,  0 , 0  , 5,  Height  , 45 , BT_COPY  , zBitmap1)
-
-	
-
-	//DoEvents()
-
-
-
-	//BT_DrawDCtoDCAlphaBlend (hDC, 0, 0, 4, Height, 45 , BT_SCALE, hDC3, 0, 0, 4 , Height)
-
-	//BT_DrawDCtoDC (hDC, 0, 0, 5 , Height, BT_SCALE, hDC3, 0, 0, 4, Height)
-
-
-	//DoEvents()
-
-
-
-//	BT_DrawBitmap (hDC, 0  , 0 , 4, Height, BT_COPY, hB1 )
-
-
-	 //BT_DrawBitmap (hDC, 0 , 0 , Width , Height  , BT_COPY, hB1 )
-
-	// BT_DrawBitmap (hDC, 0 , 1 , 1 , Height  , BT_COPY, hB2 )
-	// BT_DrawBitmap (hDC, 0 , 2 , 1 , Height  , BT_COPY, hB3 )
-	// BT_DrawBitmap (hDC, 0 , 3 , 1 , Height  , BT_COPY, hB4 )
-
-
-
-
-	Bt_BitmapSaveFile(  hB1 , 'Menu134__a.Bmp'  )
-
-
-	//BT_DrawGradientFillHorizontal  (hDC,  Height - 2  ,  0  ,  Width - 5 ,  1  ,{212,212,212} , {212,212,212} )
-
-
-	//BT_DrawBitmapAlphaBlend (hDC, 0 , 0 , Width   , Height  , 125  , BT_COPY, zBitmap1 )
-	
-
-	//BT_DrawBitmapAlphaBlend (hDC, 0 , 0 , Width - 1  , Height - 1  , 85  , BT_COPY, zBitmap1 )
-
-	//BT_DrawBitmapAlphaBlend (hDC, 0 , 0 , Width - 2  , Height - 2  , 45  , BT_COPY, zBitmap1 )
-
-		
-		/*
-		BT_BitmapRelease ( hB2 )
-		BT_BitmapRelease ( hB3 )
-		BT_BitmapRelease ( hB4 )
-		*/
 
 	BT_BitmapRelease ( hB1 )
 	BT_DeleteDC ( BTstruct )
 	BT_DeleteDC ( BTstruct3 )
-
-
 
 Return
 

@@ -1433,7 +1433,8 @@ Function SysWait(nWait)
 
 	Do While Seconds() - iTime < nWait
 		ntim++
-		DO EVENTS
+		DoEvents()
+	//	hb_releaseCPU()
 		//SaveLog( 'Syswait.txt' ,  " SysWait " + Str(nTim) )
 	EndDo
 

@@ -757,6 +757,10 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 	If nHWnd == GetProperty(  'Main' , "HANDLE" )
 
 		If (nMsg == 71)
+
+			If cActiveJan = 'Main'
+				xRefreshMain()
+			End If 
 			//msginfo('lp22222')
 			//WM_WINDOWPOSCHANGED
 			If (_IsWindowDefined( cActiveJan)) .And. (cActiveJan != "Main")
