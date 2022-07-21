@@ -172,16 +172,20 @@ Function xMenuMain( cParent , nRow1 , nCol1 , aOpPrin , aSubOps , lEnabled11 )
 Return
 
 
+
 Function xLimpSubIt( lDc )
+
+	Local cJan := xRetSubName()
 
 	DEFAULT lDc := .f.
 
+	
 
 	If nItemClr > 0
 		xLimpSub( 'JanMenuSub' ,  @nItemClr ,  @nItemx1 , 0 )
 
 		If lSubOpen
-			If _isWindowDefined('Win_Menu1')
+			If _isWindowDefined(cJan)
 				xFechaMen()
 				lSubOpen := .f.
 			End If 	
@@ -198,6 +202,8 @@ Function xLimpSubIt( lDc )
 
 
 REturn
+
+
 
 Function xLimpSetas( lZera )
 
@@ -1875,9 +1881,6 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 	Local cCor
 
 
-	Local nSizeFont := 9
-
-
 
 
 	Local bBmp1 := xBmpToTrans( 'SETAB1', aMenuBarCor , 16,16 )
@@ -1938,6 +1941,11 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 	For n1 := 1 To Len(aMtrOp)
 
 		cTexto := alltrim(  Right( aMtrOp[n1][1]  , Len(  aMtrOp[n1][1] ) - 2  ) )
+
+		IF lPopup
+			cTexto := Alltrim( aMtrOp[n1][1]  )
+		End If 
+
 		lEnabled := aMtrOp[n1][3]
 		lSeta1   := .f.
 
@@ -1955,13 +1963,30 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 			nTypeText    := BT_TEXT_TRANSPARENT
 			nTypeText    := BT_TEXT_BOLD			
-			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , aMenuBarCor  , aMenuBarCor  )
-			BT_DrawText ( hDC2 , nLine + nRow  , Iif(!lSubMenu1 , 25 ,32)  ,  Hb_AnsiToOem( cTexto ), XFONT2, nSizeFont  ,  cCor ,  aCorSub2   , ;
-				Iif(!lPopUp , BT_TEXT_TRANSPARENT+BT_TEXT_BOLD  , BT_TEXT_TRANSPARENT )  , nAlingText, nOrientation)
-				//Iif( (Alltrim(cTextSel) = Alltrim(cTexto))   ,  BT_TEXT_TRANSPARENT+BT_TEXT_BOLD ,  BT_TEXT_TRANSPARENT)   , ;
-				//nAlingText, nOrientation )
+			
+            //h1Font := HMG_CreateFont (  hDC  , XFONT2 , nSizeFont, .t. ,  .f. , .f. , .f. )
 
-			//.And. (!lSubMenu1)
+			//cText := BT_TEXTOUT_SIZE( GetFormHandle(cJanela)  ,  Hb_AnsiToOem( cTexto ) , XFONT2  , nSizeFont , 2)	
+                                                                                //   
+
+			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , aMenuBarCor  , aMenuBarCor  )
+
+			If !lPopUp			
+				BT_DrawText ( hDC2 , nLine + nRow  , Iif(!lSubMenu1 , 25 ,32)  ,  Hb_AnsiToOem( cTexto ), XFONT2, nSizeFont  ,  cCor ,  aCorSub2   , ;
+				Iif(!lPopUp , BT_TEXT_TRANSPARENT+BT_TEXT_BOLD  , BT_TEXT_TRANSPARENT )  , nAlingText, nOrientation)
+
+			Else 
+				 If (At('%' , cTexto) > 0)
+					DrawSubl(   hDC2 , nLine + nRow  , 32 , Alltrim(Hb_AnsiToOem( cTexto ))  )
+				 Else 
+				 	BT_DrawText ( hDC2 , nLine + nRow  , Iif(!lSubMenu1 , 25 ,32)  ,  Hb_AnsiToOem( cTexto ), XFONT2, nSizeFont  ,  cCor ,  aCorSub2   , ;
+					Iif(!lPopUp , BT_TEXT_TRANSPARENT+BT_TEXT_BOLD  , BT_TEXT_TRANSPARENT )  , nAlingText, nOrientation)
+				 End If 
+
+			End If 
+			
+
+			
 
 
 			If !lSubMenu1
@@ -1993,21 +2018,34 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 			If !lSubMenu1
 
+
 				If Alltrim(cTextSel) = Alltrim(cTexto)
-					nTypeText    := BT_TEXT_TRANSPARENT+BT_TEXT_BOLD
-					//nTypeText    := BT_TEXT_BOLD
+					nTypeText    := BT_TEXT_TRANSPARENT+BT_TEXT_BOLD				
 				End If
 
 				BT_DrawText ( hDC2 , nLine + nRow  , 25 ,  Hb_AnsiToOem( cTexto ), XFONT2, nSizeFont,  cCor , aCorSub1 , nTypeText, nAlingText, nOrientation )
 
-			Else
-				BT_DrawText ( hDC2 , nLine + nRow  , 32 ,  Hb_AnsiToOem( cTexto ), XFONT2, nSizeFont,  cCor , aCorSub2 , nTypeText, nAlingText, nOrientation )
+			Else			
 
-				//BT_TEXTOUT_SIZE(   )
+				If !lPopUp
+					BT_DrawText ( hDC2 , nLine + nRow  , 32 ,  Hb_AnsiToOem( cTexto ), XFONT2, nSizeFont,  cCor , aCorSub2 , nTypeText, nAlingText, nOrientation )
+				Else 
+
+				    If (At('%' , cTexto) > 0)
+					   DrawSubl(   hDC2 , nLine + nRow  , 32 , Alltrim(Hb_AnsiToOem( cTexto ))  )
+
+					Else 
+			    		BT_DrawText ( hDC2 , nLine + nRow  , 32 ,  Hb_AnsiToOem( cTexto ), XFONT2, nSizeFont,  cCor , aCorSub2 , nTypeText, nAlingText, nOrientation )
+					End If 
+
+				End If 
+
+				
 
 				If lSeta1
 					BT_DrawBitmapTransparent ( hDC2,  nLine  + nRow   , Width - 20    , 16 , 16 , BT_COPY   ,  hBitSeta , {7,101,125} )
 				End If
+
 			End If
 
 		End If
@@ -2131,11 +2169,61 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 	End If 
 
-
-
 	BT_DeleteDC (BTstruct2 )
 
-
-
 REturn
+
+
+
+Function DrawSubl(  hDC5 , nLinha  , Coluna , cText15  )
+
+  Local n1 := At('%' , cText15 )
+
+  Local c1 := Left(cText15 , n1 - 1)
+  Local c2 := Substr(cText15,n1,1)
+  Local nCol1 := Coluna 
+
+  Local nTypeText    := BT_TEXT_TRANSPARENT
+  Local cCor := FONTCOR2
+  Local lok := .f. 
+
+  	
+  Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
+  Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
+	
+
+  Local cLetr 
+
+
+  For n2 := 1 To Len(cText15)
+
+
+		cLetr := Substr( cText15 , n2 , 1)
+			//w := BT_DrawTextSize(hDC5, cLetr , nSizeFont  ,  BT_TEXT_TRANSPARENT )
+
+
+		If (cLetr != '%')	
+
+			hFont := HMG_CreateFont (  hDC5 , XFONT2, nSizeFont, .f., .f., .f., .f. )
+			n12 := GetTextWidth( hDC5 , cLetr , hfont )
+			nTypeText    := BT_TEXT_TRANSPARENT
+
+
+			If lOk 
+				nTypeText    := BT_TEXT_TRANSPARENT+BT_TEXT_UNDERLINE
+				lOk := .f. 
+			End If 
+
+			BT_DrawText ( hDC5 , nLinha  , nCol1 ,  Hb_AnsiToOem( cLetr)  , XFONT2, nSizeFont ,  cCor , aCorSub2 , nTypeText, nAlingText, nOrientation )
+			nCol1 += n12
+
+		Else 
+		   lOk := .t.	
+
+		End If
+
+  Next 
+
+
+Return 
 

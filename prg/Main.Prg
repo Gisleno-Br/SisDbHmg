@@ -123,6 +123,10 @@ FUNCTION Main
 
 	Public nColTamMenu := 205
 
+	Public nSizeFont := 9
+
+
+
 	Public nConst1 := 60
 	Public nConst2 := 0
 
@@ -1551,14 +1555,15 @@ Return
 Function xTesMenu( nRow , nCol , aMatriz , nItemSel )
 
 	Local aZop1 := {}
+	Local cName1 := 'M_' + StrZero( Int( hb_Random( Val( StrTran( Time(), ":" ) ) ) ), 8 ) + 'Zty1'
 
 
-	Aadd(aZop1 , { "1-Pesquisar" , "Imp.Doc" , .t. , { | | TestBrow()  }    }    )
-	Aadd(aZop1 , { "2-Excluir." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .f.    }   )
-	Aadd(aZop1 , { "3-Novo Cod.Barra" , "Novo Arquivo..." , .t. , { | a | msginfo('k22 ' + Str(a) )     }    }  )
-	Aadd(aZop1 , { "4-Novo Arquivo2   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "  Novo Arquivo3   " , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "  Novo Arquivo4   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "Pesq%uisar" , "Imp.Doc" , .t. , { | | TestBrow()  }    }    )
+	Aadd(aZop1 , { "Ex%cluir." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .f.    }   )
+	Aadd(aZop1 , { "Novo Cod.Barr%a" , "Novo Arquivo..." , .t. , { | a | msginfo('k22 ' + Str(a) )     }    }  )
+	Aadd(aZop1 , { "%Novo Arquivo2   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "Trac%ker Contabil" , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "%Legenda" , "Novo Arquivo..." , .t. , { || ( msginfo('ok2') ,  xFechaMen() )    }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo5   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
@@ -1574,9 +1579,11 @@ Function xTesMenu( nRow , nCol , aMatriz , nItemSel )
 
 	//msginfo(Str(    Len(aMatriz)  ) + '   ' + Str(nItemSel)   )
 
+	//msginfo(cName1)
 
 
-	xMenuOp('Main' , aZop1 , nRow , nCol , .t. , aMatriz , nItemSel  )
+
+	xMenuOp( cName1 , 'Main' , aZop1 , nRow , nCol , .t. , aMatriz , nItemSel  )
 
 
 Return
