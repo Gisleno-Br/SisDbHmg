@@ -123,6 +123,9 @@ FUNCTION Main
 
 	Public nColTamMenu := 205
 
+	//Public nIt5 := 0
+
+
 	Public nSizeFont := 9
 
 

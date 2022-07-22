@@ -545,7 +545,7 @@ REturn
 
 Function yAviso( cMsg )
 
-  xDialog(cMsg1)
+ // xDialog(cMsg1)
 
 Return 
 

@@ -291,34 +291,34 @@ Function xSelSubItem(nWParam1 , nHWnd1)
 		xAtuMen2()
 		If (nItemx1 > 0) .And. (nItemx1 <= Len(aOpx1)) .And. (Len(aOpx1[nItemx1]) > 5)
 
-			If aOpx1[nItemx1][5]
-
+			If aOpx1[nItemx1][5]				
 				DoEvents()			
-
 				nIdMenu1 := nItemx1							
 				xAtuMen2()				
 				nRow2 := 0
 				nCol2 := 0
+
 				If (nWParam1 != 90 ) .And. (  nItemx1 <= Len(aOpx1) )
 
 					GetCursorPos( @nCol2 , @nRow2)					
-					DoEvents()
+					//DoEvents()
 
 					lSubOpen := .t.
-
 
 					If !((Len(aOpx1[nItemx1]) > 5) .And. (   aOpx1[nItemx1][5]   ))						
 						Return 
 					End If 
 
 
-					DoEvents()
+					//DoEvents()
 
-					//msginfo('g1')
 					
-					Eval( aOpx1[nItemx1][6]  ,  (nRow2 - nItemSubHeight) + 1    , ;
+					
+					Eval( aOpx1[nItemx1][6]  ,  (nRow2 - nItemSubHeight)   , ;
 						GetProperty( 'JanMenuSub'  , 'Col') + nColTamMenu + 5  , aOpx1 , nItemX1   )
 
+					Return 	
+					//msginfo('ok2')	
 
 				Else
 
@@ -329,6 +329,7 @@ Function xSelSubItem(nWParam1 , nHWnd1)
 		End If
 
 	End If
+
 
 
 	If (nWParam1 != 90)
@@ -347,7 +348,6 @@ Function xSelSubItem(nWParam1 , nHWnd1)
 
 			xDispUpTam(cTp1 )
 			DoEvents()
-
 
 		Else
 			xHideHint()
@@ -658,6 +658,8 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 						DoMethod( 'JanMenuSub' , 'Activate')
 					End If
 
+
+
 				End If
 
 			End If
@@ -667,20 +669,24 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 
 		If ( nMsg == WM_MOUSEMOVE ) .or. (nWParam = 90)
 	
-			DoEvents()
+			//DoEvents()
 			GetCursorPos (@nCol1, @nRow1)
-			DoEvents()
+			//DoEvents()
 		
 			If  (nLinhaDrop > 0) .And. (nRow1 >= nLinhaDrop) .and. (Abs( nRow1 - nLinhaDrop) >= 15) .And. ;
 					(nRow1 <= (nLinhaDrop+GetProperty('JanMenuSubSombra' , 'Height')+nItemSubHeight    ))				
 
 				DoEvents()
 
-				If (nIt5 != xOpSelPos( 'JanMenuSub' , 0 , Len(aOpx1) , 0 ))
-					xSelSubItem(nWParam , nHWnd)
-					lSubMenu := .t.
-					nIt5 := xOpSelPos( 'JanMenuSub' , 0 , Len(aOpx1) , 0 )
+				
+				If (nIt5 != xOpSelPos( 'JanMenuSub' , 0 , Len(aOpx1) , 0 ))								
+					
+					lSubMenu := .t.					
+					nIt5 := xOpSelPos( 'JanMenuSub' , 0 , Len(aOpx1) , 0 )			
+					xSelSubItem(nWParam , nHWnd)					
 					DoEvents()
+
+					
 				Else
 
 				End If
@@ -711,7 +717,8 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 				End If
 
 				If lSubMenu
-					nIt5 := 0				
+					nIt5 := 0	
+				//	msginfo('f1')			
 				End If
 
 				//xLimpSetas( .t. )
@@ -1840,6 +1847,7 @@ Function yDCM2Row( nRow , nHeight )
 
 Return
 
+
 Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDropedDown , nHeightDroped , lSetas , lSubMenu1 , lHitB , lHitT  , lPopup )
 
 	Local aRGBcolor := BACK1
@@ -1858,6 +1866,7 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 	Local hBit11
 	Local nHeightBmp := nItemSubHeight * Len(aMtrOp)
 	Local hBitmap2
+
 
 	LOCAL Width  := BT_ClientAreaWidth  (cForm)
 	LOCAL Height := BT_ClientAreaHeight (cForm)
