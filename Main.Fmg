@@ -40,7 +40,7 @@ DEFINE WINDOW TEMPLATE AT nMaximizedWindowRow , nMaximizedWindowCol WIDTH nMaxim
     END IMAGE
 
     
-
+/*
     DEFINE LABEL LblMsg2
         ROW    150
         COL    350
@@ -87,6 +87,7 @@ DEFINE WINDOW TEMPLATE AT nMaximizedWindowRow , nMaximizedWindowCol WIDTH nMaxim
         FONTCOLOR BLACK
     END LABEL
 
+
     DEFINE BUTTON Button_1
         ROW    250
         COL    520
@@ -114,6 +115,8 @@ DEFINE WINDOW TEMPLATE AT nMaximizedWindowRow , nMaximizedWindowCol WIDTH nMaxim
         PICTURE Nil
         PICTALIGNMENT TOP
     END BUTTON
+
+    */
 
 END WINDOW
 

@@ -514,111 +514,27 @@ FUNCTION xInit()
 	cPassDb := cSen1
 
 
-	BT_ClientAreaInvalidateAll('Win_MenuPrincipal')
+	If _isWindowDefined('Win_MenuPrincipal')
+		BT_ClientAreaInvalidateAll('Win_MenuPrincipal')
+		DoEvents()
+		yDCMenu1()	
+
+		DoMethod( 'Win_MenuPrincipal' , 'Activate')  
+	End If 
+
+
+	
+	//_ShowWindow( cSubRetSubName())
+
+	xAtu_Men1( .f. )
 	DoEvents()
-	yDCMenu1()	
-
-/*
-	
-		DEFINE LABEL Label1
-			PARENT    Main		
-			ROW       125
-			COL       180
-			WIDTH     250
-			HEIGHT    20
-			FONTNAME  'Arial'
-			FONTSIZE  10			
-			VALUE     '    AAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBBBBB      ' 
-			ALIGNMENT Left
-			VISIBLE .T.
-			TRANSPARENT .f.
-			AUTOSIZE .F. 
-			FONTCOLOR RED
-			BACKCOLOR WHITE
-		END LABEL
-		*/
-
-
-	//	DoEvents()
-
-	//SetProperty( GetControlHandle( 'LblMsg1' , 'Main' ) , 'Value' , '1111111112222222222222' )
-
-	//_showWindow('Main')
-	//DoEvents()
-
-	DoMethod( 'Win_MenuPrincipal' , 'Activate')  
 
 	
-
-//	SysWait(.2)
-
-	//msginfo('ok2')
-	
-	//SetWindowCursor( GetFormHandle( 'Main'  ) , 'CURSOR1' )  
-
-     /*
-	DO EVENTS
-
-
-	SetProperty("fSplit4","fUserDb","Value",cBanco)
-	SetProperty("fSplit4","fServerDb","Value",cServer)
-
-	np1 := (nDesktopHeight - 81) - GetProperty("fSplit4","Height" )
-	np2 := np1 - GetProperty("fSplit3","Height" )
-
-
-	SetProperty("fSplit3","Row", np2  - 0 )
-	SetProperty("fSplit4","Row", np1 )
-
-	SetProperty("fSplit5","Row",nDesktopHeight - 80 )
-
-
-	SetProperty("fSplit6","Row",61 )
-
-
-	np1 := (nDesktopHeight - 81) - GetProperty("fSplit4","Height" )
-	np2 := np1 - GetProperty("fSplit3","Height" )
-    
-	
-
-	SetProperty("fSplit6","Height", 522)
-
-	//SetProperty("fSplit6","BackColor",aCorSub1)
-
-
-	SetProperty("fSplit6","Col",0)
-
-
-	SetProperty("fSplit5","Width",nDesktopWidth - nLop)
-
-	SetProperty("fSplit2","Width",nDesktopWidth - 50 )
-
-	SetProperty("fSplit10","Height", GetProperty("fSplit2","Height" ) )
-
-	SetProperty("fSplit10","Width", nDesktopWidth - 1232 )
-
-	SetProperty("fSplit10","Col",  nDesktopWidth - 50)
-
-	
-
-
-	SetProperty("fSplit10","Row", GetProperty("fSplit2","Row" )+23)
-
-	ShowScrollBar( GetFormHandle( 'fSplit2' ), 0, .F. )
-	ShowScrollBar( GetFormHandle( 'fSplit2' ), 1, .F. )
-
-
-	//SetWindowCursor( GetFormHandle( 'Main'  ) , IDC_ARROW)  
-
-	SysWait(.2)
-	*/
+	yDCScrool1()
+	DoMethod(  xRetSubName() , 'Activate')
 
 
 
-	//SysWait(.2)
-
-	//SysWait(0.04)
-	
 
 
 	

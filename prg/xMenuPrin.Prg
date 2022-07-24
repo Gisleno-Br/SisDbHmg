@@ -186,7 +186,7 @@ Function xLimpSubIt( lDc )
 
 		If lSubOpen
 			If _isWindowDefined(cJan)
-				xFechaMen()
+				xFechaMen()				
 				lSubOpen := .f.
 			End If 	
 		End If
@@ -308,8 +308,6 @@ Function xSelSubItem(nWParam1 , nHWnd1)
 					If !((Len(aOpx1[nItemx1]) > 5) .And. (   aOpx1[nItemx1][5]   ))						
 						Return 
 					End If 
-
-
 					//DoEvents()
 
 					
@@ -1797,9 +1795,12 @@ Return
 
 Static Function xAtuMen2()
 
-	BT_ClientAreaInvalidateAll( 'JanMenuSub' )
-	DoEvents()
-	yDCMenu2()
+	If _isWindowDefined('JanMenuSub')
+		BT_ClientAreaInvalidateAll( 'JanMenuSub' )
+		DoEvents()
+		yDCMenu2()
+	End If
+
 
 Return
 
@@ -2184,7 +2185,7 @@ REturn
 
 
 
-Function DrawSubl(  hDC5 , nLinha  , Coluna , cText15  )
+Function DrawSubl(  hDC5 , nLinha  , Coluna , cText15 , nCor   )
 
   Local n1 := At('%' , cText15 )
 
@@ -2210,7 +2211,6 @@ Function DrawSubl(  hDC5 , nLinha  , Coluna , cText15  )
 		cLetr := Substr( cText15 , n2 , 1)
 			//w := BT_DrawTextSize(hDC5, cLetr , nSizeFont  ,  BT_TEXT_TRANSPARENT )
 
-
 		If (cLetr != '%')	
 
 			hFont := HMG_CreateFont (  hDC5 , XFONT2, nSizeFont, .f., .f., .f., .f. )
@@ -2223,7 +2223,7 @@ Function DrawSubl(  hDC5 , nLinha  , Coluna , cText15  )
 				lOk := .f. 
 			End If 
 
-			BT_DrawText ( hDC5 , nLinha  , nCol1 ,  Hb_AnsiToOem( cLetr)  , XFONT2, nSizeFont ,  cCor , aCorSub2 , nTypeText, nAlingText, nOrientation )
+			BT_DrawText ( hDC5 , nLinha  , nCol1 ,  Hb_AnsiToOem( cLetr)  , nCor  , nSizeFont ,  nCor , aCorSub2 , nTypeText, nAlingText, nOrientation )
 			nCol1 += n12
 
 		Else 

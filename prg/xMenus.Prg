@@ -13,6 +13,7 @@
 #define SC_CLOSE            61536
 
 
+#define FONTCOR2 {84,84,84}
 
 
 
@@ -33,10 +34,10 @@
 
 #define XMAXITEM 15
 
-*//xMenuOp	
+////xMenuOp	
 
 Static aOpz11 := {}
-Static nItemx2 := 0
+Static nItemx2 := 1
 Static nItemZ1 := 1
 Static cOpy2 := ''
 Static nItDrop1 := 1
@@ -112,7 +113,7 @@ Function xMenuOp( cName , cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz ,
 
 	l_Popup := lPopUp
 	aOpz11 := Aclone(aOp1)
-	nItemx2 := 0
+	nItemx2 := 1
 	nItemZ1 := 1
 	cOpy2 := ''
 	nAcumulador := 0
@@ -122,6 +123,8 @@ Function xMenuOp( cName , cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz ,
 	
 
 	//aCorSub2 := WHITE
+
+	//msginfo( '2' )
 
 	If nItemSel > 0
 
@@ -134,6 +137,7 @@ Function xMenuOp( cName , cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz ,
 
 		If (nItemZ1 != nItemSel) .or. ( _IsWindowDefined(cSubMenuName)) .or. (   _IsWindowDefined(cSubMenuSombra) )
 			DoEvents()
+			//msginfo('Entrou')
 			hb_releaseCPU()				
 			Return
 		End If
@@ -144,13 +148,9 @@ Function xMenuOp( cName , cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz ,
 
 
 	nCol2 := (nLeft+1)+nColTamMenu - 1
-	//DoEvents()
 
-	//msginfo('Entrou')
-
-
-
-	*//Janela Efeito Sombra.
+	
+	
 	If !_isWindowDefined(cNSombra1)
 
 		nH1 := If(Len(aOpz11) > XMAXITEM , 325 , (Len(aOp1) * nItemSubHeight)  )
@@ -187,49 +187,68 @@ Function xMenuOp( cName , cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz ,
 	_ShowWindow( cNSombra1 )
 
 
-	DoEvents()
+	BT_ClientAreaInvalidateAll(   cNSombra3 )
+	_ShowWindow( cNSombra3 )	
+
+
+	//DoEvents()
 
 	DEFINE WINDOW &cSubMenuName AT nTop, nLeft+1 WIDTH nColTamMenu HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight ,  300    ) TITLE 'Men1' ;
 		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR aCorSub2 VIRTUAL HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight+1 ,  (Len(aOp1) * nItemSubHeight)+10  )  ;
-		ON PAINT xPaintMenu( cSubMenuName , aOpz11 , nItemx2 , nItemZ1 , cOpy2 , 0 , 0 ,  Len(aOpz11) > XMAXITEM     ,  .t. ,  ,  , .t. )
+		ON PAINT xPaintPopup(ThisWindow.Name , aOpz11 , nItemx2 , nItemZ1 , cOpy2 , 0 , 0 ,  Len(aOpz11) > XMAXITEM     ,  .t. ,  ,  , .t. )
 	END WINDOW
 
 
 	
-	DoEvents()
+	//DoEvents()
 
 	DEFINE WINDOW &cSubMenuSombra AT nTop, nLeft+1 WIDTH nColTamMenu HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight ,  300    ) TITLE 'MenSombra1' ;
 		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR BLACK VIRTUAL HEIGHT Iif(  Len(aOpz11) <=  XMAXITEM , nHeight+1 ,  (Len(aOp1) * nItemSubHeight)+10  ) 		
 	END WINDOW
 
 
-		*// Janelas com as Setas Navegação para baixo e cima.
 
+		
 
-	If  (Len(aOpz11) > XMAXITEM)
-		DEFINE WINDOW &cMenuScroll AT nTop+GetProperty( cSubMenuName , 'Height')   , nLeft+1 WIDTH nColTamMenu+1  HEIGHT 40 TITLE 'TShadow1' ;
+	If  (Len(aOpz11) > XMAXITEM) 
+		DEFINE WINDOW &cMenuScroll AT nTop+GetProperty( cSubMenuName , 'Height')   , nLeft+1 WIDTH nColTamMenu  HEIGHT 40 TITLE 'TShadow1' ;
 			NOMAXIMIZE NOMINIMIZE NOSIZE CHILD PANEL PARENT &cParent NOSYSMENU NOCAPTION BACKCOLOR GRAY ;
-			ON PAINT xPaintScrool( ThisWindow.Name )
+			ON PAINT xPaintScrool( ThisWindow.Name  )
 		END WINDOW
 
 
-		DEFINE WINDOW &cScrollSombra AT nTop+GetProperty( cSubMenuName , 'Height')   , nLeft+1 WIDTH nColTamMenu+1  HEIGHT 40 TITLE 'TShadow2' ;
+		DEFINE WINDOW &cScrollSombra AT nTop+GetProperty( cSubMenuName , 'Height')   , nLeft+1 WIDTH nColTamMenu  HEIGHT 40 TITLE 'TShadow2' ;
 			NOMAXIMIZE NOMINIMIZE NOSIZE CHILD PANEL PARENT &cParent NOSYSMENU NOCAPTION BACKCOLOR BLACK
 		END WINDOW
 
 
-		SET WINDOW &cSubMenuName TRANSPARENT   TO Iif(!lEnabled2 , 167 , 0)
+		
 		SET WINDOW &cMenuScroll TRANSPARENT TO Iif(!lEnabled2 , 167 , 0)
 
 
 	End If
 
+
+	SET WINDOW &cSubMenuName TRANSPARENT   TO Iif(!lEnabled2 , 167 , 0)
+
+	
+
 	//DoEvents()
 
 	HMG_ChangeWindowStyle(  GetProperty(  cSubMenuName , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
-	HMG_ChangeWindowStyle(  GetProperty(  cMenuScroll  , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
 
-	HMG_ChangeWindowStyle(  GetProperty(  cScrollSombra , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
+	If _IsWindowDefined(cMenuScroll)
+		HMG_ChangeWindowStyle(  GetProperty(  cMenuScroll  , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
+		HMG_ChangeWindowStyle(  GetProperty(  cScrollSombra , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
+
+		
+		ShowScrollBar( GetFormHandle( cScrollSombra), 0, .F. )
+		ShowScrollBar( GetFormHandle( cScrollSombra ), 1, .F. )
+
+	End If 
+
+
+	
 
 	HMG_ChangeWindowStyle(  GetProperty(  cSubMenuSombra , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
 
@@ -240,13 +259,12 @@ Function xMenuOp( cName , cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz ,
 	HMG_ChangeWindowStyle(  GetProperty(  cNSombra3 , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
 
 
-	ShowScrollBar( GetFormHandle( cScrollSombra), 0, .F. )
-	ShowScrollBar( GetFormHandle( cScrollSombra ), 1, .F. )
 
 	ShowScrollBar( GetFormHandle( cSubMenuSombra ), 0, .F. )
 	ShowScrollBar( GetFormHandle( cSubMenuSombra ), 1, .F. )
 
 	//DoEvents()
+
 
 
 	//msginfo('lp1')
@@ -273,13 +291,14 @@ Function xMenuOp( cName , cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz ,
 	ShowScrollBar( GetFormHandle( cSubMenuName ), 1, .F. )
 
 
+	If _IsWindowDefined(cMenuScroll)
+		If (GetFormIndex ( cMenuScroll )  ==  0)
+			Return
+		End If
+	End If 
 
-	If (GetFormIndex ( cMenuScroll )  ==  0)
-	    Return
-	End If
 
-
-	_ShowWindow( cMenuScroll )
+	//_ShowWindow( cMenuScroll )
 
 
 
@@ -294,11 +313,15 @@ Function xMenuOp( cName , cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz ,
 
 
 
-	BringToTop(GetFormHandle( cSubMenuName ))
-	BringToTop(GetFormHandle( cMenuScroll))
-	BringToTop(GetFormHandle( cScrollSombra))
-	BringToTop(GetFormHandle(  cSubMenuSombra ))
 
+	//BringToTop(GetFormHandle( cSubMenuName ))
+
+	If _IsWindowDefined(cMenuScroll)	
+		//	BringToTop(GetFormHandle( cMenuScroll))
+		//BringToTop(GetFormHandle( cScrollSombra))
+	End If 
+
+	//BringToTop(GetFormHandle(  cSubMenuSombra ))
 
 	If  (Len(aOpz11) > XMAXITEM) .And. (_isWindowDefined( cMenuScroll   ))
 
@@ -307,45 +330,30 @@ Function xMenuOp( cName , cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz ,
 		_ShowWindow( cMenuScroll )
 
 
-		//DoEvents()
-	//	BT_ClientAreaInvalidateAll(  cMenuScroll  )
+		DoEvents()
+		BT_ClientAreaInvalidateAll(  cMenuScroll  )
 
-		//yDCScrool1()
-		////DoEvents()
+		yDCScrool1()
+		DoEvents()
 
 
 	End If
 
 
-	
 
 	If (GetFormIndex ( cNSombra2 )  ==  0)
 		Return
 	End If
 
-	BT_ClientAreaInvalidateAll(   cNSombra2  )
-	_ShowWindow( cNSombra2 )
-
-	//DoEvents()
-
-
-
-	BT_ClientAreaInvalidateAll(   cNSombra3  )
-	_ShowWindow( cNSombra3 )
-
-	//DoEvents()
-
-
-
+	//
 	_ShowWindow( cSubMenuSombra)
-
-	//DoEvents()
 	xAtu_Men1( .f. )
 
+	DoEvents()
 
-	//DoEvents()
 
 	
+
 
 
 Return lOk
@@ -355,7 +363,11 @@ Function xCheckJan(  cJanela )
 	Local nCol1 , nRow1 
 	Local nHWnd2 
 
-    GetCursorPos (@nCol1, @nRow1)
+	If !_IsWindowDefined(cJanela)
+		REturn .f. 
+	End If 
+
+	GetCursorPos (@nCol1, @nRow1)
 	DoEvents()
 	nHWnd2 := WindowFromPoint (nCol1, nRow1)
 
@@ -364,19 +376,19 @@ Return (GetFormHandle(cJanela) == nHWnd2)
 
 Static Function xAtuMenuy()
 
-	DoEvents()
+	//	DoEvents()
 
 	If _isWindowDefined(cSubMenuName)
-		BT_ClientAreaInvalidateAll(   cSubMenuName  )
+		//BT_ClientAreaInvalidateAll(   cSubMenuName  )
 		//hb_releaseCPU()
-		//DoEvents()
+		DoEvents()
 		yDCMenu11_()
 
 		//hb_releaseCPU()
-		DoEvents()
-		//BT_DELAY_EXECUTION_WITH_DOEVENTS(15)
+		//	DoEvents()
+		BT_DELAY_EXECUTION_WITH_DOEVENTS(15)
 	Else 
-	//	msginfo('l21')
+		msginfo('l21')
 	End If 
 
 
@@ -426,11 +438,13 @@ Function xAtu_Men1( lVerifica )
 	yDCMenu11_()
 
 
-	DoEvents()
-	BT_ClientAreaInvalidateAll(   cMenuScroll  )
+	If _IsWindowDefined(cMenuScroll)
+		DoEvents()
+		BT_ClientAreaInvalidateAll(   cMenuScroll  )
 
-	yDCScrool1()
-	DoEvents()
+		yDCScrool1()
+		DoEvents()
+	End If 
 
 
 	BT_ClientAreaInvalidateAll(   cNSombra1 )
@@ -446,6 +460,7 @@ Function xAtu_Men1( lVerifica )
 
 	BT_ClientAreaInvalidateAll(   cNSombra3  )
 	_ShowWindow( cNSombra3 )
+	
 
 	DoEvents()
 
@@ -459,6 +474,7 @@ Function yDCMenu11_()
 
 	LOCAL hDC1, BTstruct1
 	LOCAL hDC2, BTstruct2 , BTstruct3
+	
 
 	Local nTypeText    := BT_TEXT_TRANSPARENT
 	Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
@@ -478,7 +494,7 @@ Function yDCMenu11_()
 	End If 
 
 
-   // hb_releaseCPU(5)
+	// hb_releaseCPU(5)
 
 
 
@@ -489,7 +505,7 @@ Function yDCMenu11_()
 	End If
 
 
- /*
+	/*
 	hBitMap2 := BT_BitmapCreateNew (Width1  , Height1 , WHITE )
 	hDC3 := BT_CreateDC (hBitMap2 , BT_HDC_BITMAP, @BTstruct3 )
 	BT_DrawDCtoDC (hDC3, 0, 0, Width2, Height2, BT_SCALE, hDC1, 0, 0, Width1, Height1)
@@ -502,7 +518,7 @@ Function yDCMenu11_()
 	BT_DeleteDC (BTstruct1)
 	BT_DeleteDC (BTstruct2)
 
-	//BT_ClientAreaInvalidateAll (cSubMenuSombra)
+	BT_ClientAreaInvalidateAll (cSubMenuSombra)
 	//DoEvents()
 
 Return
@@ -517,6 +533,8 @@ Function yDCScrool1()
 
 	LOCAL hDC1, BTstruct1
 	LOCAL hDC2, BTstruct2 , BTstruct3
+	
+	//, BTstruct3
 
 	Local nTypeText    := BT_TEXT_TRANSPARENT
 	Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
@@ -530,8 +548,15 @@ Function yDCScrool1()
 	hDC1 = BT_CreateDC (cMenuScroll, BT_HDC_ALLCLIENTAREA, @BTstruct1)
 	hDC2 = BT_CreateDC (cScrollSombra, BT_HDC_ALLCLIENTAREA, @BTstruct2)
 
+	
+	/*
+	hBitMap2 := BT_BitmapCreateNew (Width1  , Height1 , WHITE )
+	hDC3 := BT_CreateDC (hBitMap2 , BT_HDC_BITMAP, @BTstruct3 )
+	BT_DrawDCtoDC (hDC3, 0, 0, Width2, Height2, BT_SCALE, hDC1, 0, 0, Width1, Height1)
+	Bt_BitmapSaveFile(  hBitMap2 , 'Menu1133sombra.bmp'  )
+	*/
 
-
+	
 
 	If !lEnabled2
 		BT_DrawDCtoDCAlphaBlend (hDC2, 0, 0, Width1, Height1, 156 , BT_SCALE, hDC1, 0, 0, Width1, Height1)
@@ -589,15 +614,18 @@ Function xFechaMen()
 	Local nI1 := 0
 
 	Local nHandle1  := GetFormHandle(cSubMenuName)
-	Local nHandle2  := GetFormHandle(cMenuScroll)
+	Local nHandle2  := Iif(_isWindowDefined(cMenuScroll),GetFormHandle(cMenuScroll),0)
 
-	Local nHandle3  := GetFormHandle(cSubMenuSombra)
+	Local nHandle3  := Iif(_isWindowDefined(cSubMenuSombra),GetFormHandle(cSubMenuSombra),0)
 	//Local nHandle5  := GetFormHandle("Win_Scroll1")
-	Local nHandle4  := GetFormHandle(cScrollSombra)
+	Local nHandle4  := Iif(_isWindowDefined(cScrollSombra) ,GetFormHandle(cScrollSombra),0)
 
 	Local nHandle5  := GetFormHandle(cNSombra1)
 	Local nHandle6  := GetFormHandle(cNSombra2)
 	Local nHandle7  := GetFormHandle(cNSombra3)
+
+	//msginfo('xFecha')
+
 
 	BT_BitmapRelease(zBitMap0)
 	BT_BitmapRelease(zBitMap5)
@@ -655,7 +683,7 @@ Function xFechaMen()
 
 	End If
 
-//DoMethod('Main' , 'SetFocus')
+	//DoMethod('Main' , 'SetFocus')
 
 
 Return
@@ -683,7 +711,7 @@ Return lOk
 Function xAtuSetas()
 
 	//DoEvents()
-	BT_ClientAreaInvalidateAll(   'Win_Scroll1'  )
+	BT_ClientAreaInvalidateAll(   cScrollSombra )
 	yDCScrool1()
 	DoEvents()
 
@@ -709,12 +737,6 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 	If !_isWindowDefined(cSubMenuName)
 		Return
 	End If
-
-
-	If nHWnd != GetFormHandle(cSubMenuSombra)
-		Return
-	End If 
-
 	  
 
 	If ( _isWindowDefined( cScrollSombra) ) .And.  (nHWnd == GetProperty(  cScrollSombra , "HANDLE" ))
@@ -724,7 +746,7 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 
 			GetCursorPos (@nCol, @nRow)
 			aR1 := GetPos_ScreenToClient(   GetFormHandle(  cScrollSombra  )  , nRow, nCol )
-
+			//msginfo('l2')
 
 			If (nSetaSel == 2) .And. (ar1[1]  >= 16)
 				Return
@@ -733,12 +755,23 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 			If (nSetaSel == 1) .And. (ar1[1]  < 16)
 				Return
 			End If
-			yLimpSetas()
+
+			//yLimpSetas()
 			lCima := .t.
 
 			If (ar1[1]  < 16)
 				lCima := .f.
 			End If
+
+			nSetaSel := 0
+			DoEvents()
+			BT_ClientAreaInvalidateAll( cMenuScroll)
+			DoEvents()
+			yDCScrool1()
+
+			SysWait(0.05)
+
+
 
 			If lCima
 				nSetaSel := 2
@@ -756,14 +789,18 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 				End If
 			End If
 
+			//msginfo(Str(nSetaSel))
+
+			If nSetaSel != 0
+				//msginfo(Str(nSetaSel))	
+			End If 
+
+			//	SysWait(0.05)
 
 			DoEvents()
-			xAtuSetas()
-
-
+			BT_ClientAreaInvalidateAll( cMenuScroll)
+			DoEvents()
 			yDCScrool1()
-			DoEvents()
-
 
 		End If
 
@@ -813,6 +850,7 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 	//If (nHWnd == GetProperty(  'Win_Menu1' , "HANDLE" ))
 
 	If ( _isWindowDefined( cSubMenuSombra) ) .And. (nHWnd == GetProperty(  cSubMenuSombra , "HANDLE" ))
+		//If ( _isWindowDefined( cSubMenuName) ) .And. (nHWnd == GetProperty(  cSubMenuName , "HANDLE" ))
 
 	
 
@@ -823,6 +861,8 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 			BT_ClientAreaInvalidateAll( nHWnd  )
 			SetWindowCursor( nHWnd , IDC_ARROW )
 			xHideHint()
+
+			//msginfo('kk2')
 
 
 			xAtu_Men1()
@@ -854,40 +894,27 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 
 		If ( nMsg == WM_MOUSEMOVE ) .And. ( _isWindowDefined(cSubMenuName) )
 
-			  
-			//If (nItemx2 > 0) .AND. (nWParam != 90)
-				If (nItemx2 != xOpSelPos( cSubMenuName , 0 , Len(aOpz11) , 0 )	)
-					lTracking87 := .f. 
-				//	msginfo('z2 ' + Str(nItemx2) + '   ' + Str(xOpSelPos( cSubMenuName , 0 , Len(aOpz11) , 0 )	) )
-				 //	msginfo('z1')
-				 //	DoEvents()
-				 	//xSelItemY(nWParam , nHWnd)
-
-					xAtuMenuy()
-					DoEvents()
-
-
-					///SysWait(0.03)
-					
-
-					//saveLog( 'de1.txt' ,time() +    ' 1' + XQUEBRA)
-
-				Else 
-				    lTracking87 := .t.  								
-					//saveLog( 'de1.txt' ,time() +  ' 2 ' + XQUEBRA)
-					
-					//msginfo('z1')
-				End If
-
 				
+			
+			If (nItemx2 != xOpSelPos( cSubMenuName , 0 , Len(aOpz11) , 0 )	) //.And. (nWParam != 90)
+				lTracking87 := .f. 
+				xSelItemY(nWParam , nHWnd)			
+				DoEvents()	
+			Else 				    
+				lTracking87 := .t.  											
+			End If				
 
+
+			If nWParam != 90
 				nItemx2 := xOpSelPos( cSubMenuName , 0 , Len(aOpz11) , 0 )
-
-			//	msginfo('lp67')
-			//End If	
+			End If 
 
 
-/*
+			///
+
+			
+
+			/*
              
 			if !lTracking87
 				//lTracking87 := .t. 
@@ -921,101 +948,102 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 		
 			//DoEvents()
 
-		// 	If (nItemx2 > 0) .AND. (nWParam != 90)
-		// 		If (nItemx2 = xOpSelPos( cSubMenuName , 0 , Len(aOpz11) , 0 )	)
-		// 			Return
-		// 		End If
-		// 	End If
+			/*
+		 	If (nItemx2 > 0) .AND. (nWParam != 90)
+		 		If (nItemx2 = xOpSelPos( cSubMenuName , 0 , Len(aOpz11) , 0 )	)
+		 			Return
+		 		End If
+		 	End If
 
-		// 			//BT_DELAY_EXECUTION_WITH_DOEVENTS(50)
+		 			//BT_DELAY_EXECUTION_WITH_DOEVENTS(50)
 
 		// 	//DoEvents()
 
 
 
-		// 	If (nWParam != 90)
-		// 		nItemx2 := xOpSelPos( cSubMenuName, 0 , Len(aOpz11) , 0 )
-		// 	End Ifcp
-		// 	nRow1 := -(GetProperty( cSubMenuName , "VscrollBar" , "Value"))
+		 	If (nWParam != 90)
+		 		nItemx2 := xOpSelPos( cSubMenuName, 0 , Len(aOpz11) , 0 )
+		 	End If
+		 	nRow1 := -(GetProperty( cSubMenuName , "VscrollBar" , "Value"))
 
-		// 	If (nItemx2 > 0) .And. (nItemx2 <= Len(aOpz11))
-		// 		If !aOpz11[nItemx2][3]
-		// 			SetWindowCursor( nHWnd , IDC_ARROW)
-		// 			xHideHint()
-		// 			Return
-		// 		End If
-		// 	End If
-
-		
-
-
-		// 	If (nWParam != 90)
-		// 		//SetWindowCursor( nHWnd , CURSORHAND  )
-		// 	End If
-
-
-		// 	If nItemZ1 > 0
-		// 		xLimpSub( cSubMenuName  , @nItemZ1 ,  @nItemx2 , 0 )
-		// 	End If
-
-		// 	If nItemx2 > 0
-		// 		nItemZ1 := nItemx2
-		// 	Else
-		// 		Return
-		// 	End If
+		 	If (nItemx2 > 0) .And. (nItemx2 <= Len(aOpz11))
+		 		If !aOpz11[nItemx2][3]
+		 			SetWindowCursor( nHWnd , IDC_ARROW)
+		 			xHideHint()
+		 			Return
+		 		End If
+		 	End If
 
 		
 
-		// 	If nItemx2 > Len(aOpz11)
-		// 		xHideHint()
-		// 		Return
-		// 	End If
+
+		 	If (nWParam != 90)
+		 		//SetWindowCursor( nHWnd , CURSORHAND  )
+		 	End If
+
+
+		 	If nItemZ1 > 0
+		 		xLimpSub( cSubMenuName  , @nItemZ1 ,  @nItemx2 , 0 )
+		 	End If
+
+		 	If nItemx2 > 0
+		 		nItemZ1 := nItemx2
+		 	Else
+		 		Return
+		 	End If
+
+		
+
+		 	If nItemx2 > Len(aOpz11)
+		 		xHideHint()
+		 		Return
+		 	End If
 
 
 		// 	//yLimpSetas()
 
-		// 	If nItemx2 > 0
-		// 		//BT_ClientAreaInvalidateRect( cSubMenuName ,  nRow1  +  ( ( nItemx2 - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )
-		// 	End If
+		 	If nItemx2 > 0
+		 		BT_ClientAreaInvalidateRect( cSubMenuName ,  nRow1  +  ( ( nItemx2 - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )
+		 	End If
 
 	
 
 			
-		// 	If (nItemx2 > 0) .And.  (nItemx2 <= Len(  aOpz11 )) .And. ( !Empty( Alltrim(  aOpz11[nItemx2][2]  )   )) .AND. (nWParam != 90)
+		 	If (nItemx2 > 0) .And.  (nItemx2 <= Len(  aOpz11 )) .And. ( !Empty( Alltrim(  aOpz11[nItemx2][2]  )   )) .AND. (nWParam != 90)
 
-		// 		cTp1 :=	  Alltrim( 	 aOpz11[nItemx2][2]  )
-		// 		nRow1 := 0
-		// 		GetCursorPos (@nCol, @nRow1)
+		 		cTp1 :=	  Alltrim( 	 aOpz11[nItemx2][2]  )
+		 		nRow1 := 0
+		 		GetCursorPos (@nCol, @nRow1)
 
-		// 		If !_isWindowDefined("Win_Msg")
-		// 			CrieJanTip( nRow1  , GetProperty(cSubMenuName, 'Width') - 15 ,   Alltrim(cTp1)      ,, 0.5 )
-		// 		Else
-		// 			xDispHint( cTp1 , nRow1 + 15   , GetProperty( cSubMenuName, 'Col') + GetProperty( cSubMenuName, 'Width') + 3 + 5 )
-		// 			DoFindWin('xHint')
-		// 		End If
-		// 		xDispUpTam(cTp1 )
+		 		If !_isWindowDefined("Win_Msg")
+		 			CrieJanTip( nRow1  , GetProperty(cSubMenuName, 'Width') - 15 ,   Alltrim(cTp1)      ,, 0.5 )
+		 		Else
+		 			xDispHint( cTp1 , nRow1 + 15   , GetProperty( cSubMenuName, 'Col') + GetProperty( cSubMenuName, 'Width') + 3 + 5 )
+		 			DoFindWin('xHint')
+		 		End If
+		 		xDispUpTam(cTp1 )
 
-		// 	Else
-		// 		xHideHint()
-		// 	End If
+		 	Else
+		 		xHideHint()
+		 	End If
 			
 
 			
 
-		// 	If (nWParam != 90)
-		// 		lTracking192 := TrackMouseEvent(nHWnd)
-		// 	Else
-		// 		lTracking192 := .f.
-		// 	End If
+		 	If (nWParam != 90)
+		 		lTracking192 := TrackMouseEvent(nHWnd)
+		 	Else
+		 		lTracking192 := .f.
+		 	End If
 
-		// 	//msginfo('lp2')
+		 	msginfo('lp2')
 
-		// //	DoEvents()			
-		// 	//xAtu_Men1()
+			//DoEvents()			
+			//xAtu_Men1()
+		 	xAtuMenuy()
 
-		// 	xAtuMenuy()
-
-		//	DoEvents()			
+			//DoEvents()			
+			*/
 
 		
 
@@ -1030,90 +1058,88 @@ Return
 
 Static Function xSelItemY(nWParam , nHWnd1) 
 
-			Local nRow1
-			Local nCol
-
-            
-			// If (nItemx2 > 0) .AND. (nWParam != 90)
-			// 	If (nItemx2 = xOpSelPos( cSubMenuName , 0 , Len(aOpz11) , 0 )	)
-			// 		Return
-			// 	End If
-			// End If		
-
-					//BT_DELAY_EXECUTION_WITH_DOEVENTS(50)
-
-			//DoEvents()
-
-		//	msginfo('2')
+	Local nRow1
+	Local nCol       
 
 
-			If (nWParam != 90)
-				nItemx2 := xOpSelPos( cSubMenuName, 0 , Len(aOpz11) , 0 )
-			End If
 
-			nRow1 := -(GetProperty( cSubMenuName , "VscrollBar" , "Value"))
+	If (nWParam != 90)
+		nItemx2 := xOpSelPosy( cSubMenuName, 0 , Len(aOpz11) , 0 )
+	End If
 
-			If (nItemx2 > 0) .And. (nItemx2 <= Len(aOpz11))
-				If !aOpz11[nItemx2][3]
-					SetWindowCursor( nHWnd1 , IDC_ARROW)
-					xHideHint()
-					Return
-				End If
-			End If
+	nRow1 := -(GetProperty( cSubMenuName , "VscrollBar" , "Value"))
+
+	If (nItemx2 > 0) .And. (nItemx2 <= Len(aOpz11))
+		If !aOpz11[nItemx2][3]
+			SetWindowCursor( nHWnd1 , IDC_ARROW)
+			xHideHint()
+			Return
+		End If
+	End If
 
 
-			If nItemZ1 > 0
-				xLimpSub( cSubMenuName  , @nItemZ1 ,  @nItemx2 , 0 )
-			End If
+	If nItemZ1 > 0
+		xLimpSub( cSubMenuName  , @nItemZ1 ,  @nItemx2 , 0 )
+	End If
 
-			If nItemx2 > 0
-				nItemZ1 := nItemx2
-			Else
-				Return
-			End If
+	If nItemx2 > 0
+		nItemZ1 := nItemx2
+	Else
+		Return
+	End If
 
 		
 
-			If nItemx2 > Len(aOpz11)
-				xHideHint()
-				Return
-			End If
+	If nItemx2 > Len(aOpz11)
+		xHideHint()
+		Return
+	End If
 
 
-			//yLimpSetas()
+
+	If nItemx2 > 0
+		BT_ClientAreaInvalidateRect( cSubMenuName ,  nRow1  +  ( ( nItemx2 - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )
+	End If			
+
+
+	//xAtuSetas()
+	nSetaSel := 0
+	DoEvents()
+	BT_ClientAreaInvalidateAll( cMenuScroll)
+	DoEvents()
+	yDCScrool1()
+
 
 			
+	If (nItemx2 > 0) .And.  (nItemx2 <= Len(  aOpz11 )) .And. ( !Empty( Alltrim(  aOpz11[nItemx2][2]  )   )) .AND. (nWParam != 90)
 
-			
-			If (nItemx2 > 0) .And.  (nItemx2 <= Len(  aOpz11 )) .And. ( !Empty( Alltrim(  aOpz11[nItemx2][2]  )   )) .AND. (nWParam != 90)
+		cTp1 :=	  Alltrim( 	 aOpz11[nItemx2][2]  )
+		nRow1 := 0
+		GetCursorPos (@nCol, @nRow1)
 
-				cTp1 :=	  Alltrim( 	 aOpz11[nItemx2][2]  )
-				nRow1 := 0
-				GetCursorPos (@nCol, @nRow1)
+		If !_isWindowDefined("Win_Msg")
+			CrieJanTip( nRow1  , GetProperty(cSubMenuName, 'Width') - 15 ,   Alltrim(cTp1)      ,, 0.5 )
+		Else
+			xDispHint( cTp1 , nRow1 + 15   , GetProperty( cSubMenuName, 'Col') + GetProperty( cSubMenuName, 'Width') + 3 + 5 )
+			DoFindWin('xHint')
+		End If
+		xDispUpTam(cTp1 )
 
-				If !_isWindowDefined("Win_Msg")
-					CrieJanTip( nRow1  , GetProperty(cSubMenuName, 'Width') - 15 ,   Alltrim(cTp1)      ,, 0.5 )
-				Else
-					xDispHint( cTp1 , nRow1 + 15   , GetProperty( cSubMenuName, 'Col') + GetProperty( cSubMenuName, 'Width') + 3 + 5 )
-					DoFindWin('xHint')
-				End If
-				xDispUpTam(cTp1 )
-
-			Else
-				xHideHint()
-			End If
+	Else
+		xHideHint()
+	End If
 			
 			
 
-			If (nWParam != 90)
-				lTracking192 := TrackMouseEvent(nHWnd1)
-			Else
-				lTracking192 := .f.
-			End If
+	If (nWParam != 90)
+		lTracking192 := TrackMouseEvent(nHWnd1)
+	Else
+		lTracking192 := .f.
+	End If
 
-			xAtuMenuy()
-			DoEvents()
+	xAtuMenuy()
 
+		
 
 
 Return 
@@ -1121,14 +1147,19 @@ Return
 Static Function xClickOpt( nOpt1 )
 
 
- 	If !aOpz11[nOpt1][3]		
+	If !aOpz11[nOpt1][3]		
 		yaviso("Opção Indisponivel." , .f. )
 		Return
 	End If
 
-				//msginfo('ok22')
+	//msginfo('ok22')
 
 	DoEvents()
+
+
+	
+	DoEvents()
+	xFechaMen()
 	
 
 	If (aOpz11[nOpt1][4] != Nil )
@@ -1136,9 +1167,7 @@ Static Function xClickOpt( nOpt1 )
 		Return
 	End If
 
-
-    DoEvents()
-	xFechaMen()
+	
 
 
 
@@ -1168,6 +1197,7 @@ Function xPaintScrool( cForm )
 	Local bBmp6 := xBmpToTrans( 'SETAC1D', aCorSub2 , 16,16 )
 
 
+
 	hDC2 = BT_CreateDC ( cForm  , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
 
 
@@ -1177,7 +1207,11 @@ Function xPaintScrool( cForm )
 		BT_DrawBitmap ( hDC2,  2  , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   ,  Iif(!l_Httb , bBmp3 ,  bBmp5 ) )
 		BT_DrawBitmap ( hDC2,  20  , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , Iif(!l_Httt , bBmp4 ,  bBmp6 ) )
 
+		//msginfo('gtt')
+
+
 	Else		
+
 
 		If nSetaSel == 1
 
@@ -1194,6 +1228,7 @@ Function xPaintScrool( cForm )
 			End If
 
 		End If
+
 
 		If nSetaSel == 2
 
@@ -1245,10 +1280,15 @@ Static Function yLimpSetas()
 
 	If nSetaSel > 0
 		If _isWindowDefined( cMenuScroll )
+			//msginfo('ok22')
+			//SysWait(0.05)
 			nSetaSel := 0
 			xAtuSetas()
+			DoEvents()
 			yDCScrool1()
 			DoEvents()
+			SysWait(0.05)
+			//msginfo('ok2')
 		End If
 	End If
 
@@ -1259,7 +1299,7 @@ Return
 
 Function xRetira( cString )
 
- Local n1 := At('%' , cString )
+	Local n1 := At('%' , cString )
 
 Return If( n1 > 0 , Upper(Substr(cString , n1+ 1, 1)) , '')
 
@@ -1293,15 +1333,13 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 
 
 	If nMsg == WM_CHAR
-	 //  msginfo('Char ' + ch )
 
-	    nIndice1 :=  Ascan(  aOpz11 , { |a| xRetira(a[1]) == Upper(cH) }    )
+		//msginfo('Char ' + ch )
 
-		If nIndice1 > 0
-			//msginfo(Str(nIndice1))
-			BT_DELAY_EXECUTION_WITH_DOEVENTS(250)
+		nIndice1 :=  Ascan(  aOpz11 , { |a| xRetira(a[1]) == Upper(cH) }    )
+
+		If nIndice1 > 0		
 			xClickOpt( nIndice1 )
-			DoEvents()
 			Return 
 		End If 
 
@@ -1314,7 +1352,7 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 
 		If nWParam = VK_RETURN
 			lTracking42 := .f.
-			SendMessage( GetProperty(   cJanela , "HANDLE" ) , WM_LBUTTONDOWN ,  90 ,0 )
+			SendMessage( GetProperty(   cSubMenuSombra , "HANDLE" ) , WM_LBUTTONDOWN ,  90 ,0 )
 		End If
 
 
@@ -1322,10 +1360,13 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 		IF nWParam == VK_DOWN
 
 			xHideHint()
+
+			//msginfo('ok22')
 			If nItemx2 < Len(aOpz11)
 
 				nItemx2++
 				lTracking192 := .f.
+
 
 				If (nItemx2 > nMaxItem)
 
@@ -1333,14 +1374,30 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 						nLinhaAtual := Int(nTamSubMenuConsulta / nItemSubHeight)
 					End If
 
-					ScrollMenu( 2 , GetProperty( cJanela , 'Handle' ) , @nScrLin , @nLinhaAtual , Len(aOpz11) , @l_Httt , @l_Httb , 1 , ;
-						'Win_Menu1' , GetProperty( cJanela , 'Height' )  )
+					//msginfo('ok2')
 
+					ScrollMenu( 2 , GetProperty( cSubMenuName , 'Handle' ) , @nScrLin , @nLinhaAtual , Len(aOpz11) , @l_Httt , @l_Httb , 1 , ;
+						cSubMenuName , GetProperty( cSubMenuName , 'Height' )  )
 
-					//BT_ClientAreaInvalidateAll( 'Win_Scroll1' )
+					BT_ClientAreaInvalidateAll(   cSubMenuName  )
+					DoEvents()	
+					yDCMenu11_()
+
+					DoEvents()
+
+				
+					
+					If _IsWindowDefined(    cMenuScroll )
+						DoEvents()
+						BT_ClientAreaInvalidateAll( cMenuScroll)
+						DoEvents()
+						yDCScrool1()						
+						DoEvents()
+					End If
+					
 
 				Else
-					SendMessage( GetProperty(   cJanela , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
+					SendMessage( GetProperty(   cSubMenuSombra , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
 				End If
 
 				xAtuSetas()
@@ -1370,20 +1427,25 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 
 				If nItemX2 >= nMaxItem
 
-					ScrollMenu( 1 , GetProperty( cJanela , 'Handle' ) , @nScrLin , @nLinhaAtual , Len(aOpz11) , @l_Httt , @l_Httb , 1 , ;
-						cJanela , GetProperty(cJanela , 'Height' )  )
+					ScrollMenu( 1 , GetProperty(  cSubMenuName , "HANDLE" )  , @nScrLin , @nLinhaAtual , Len(aOpz11) , @l_Httt , @l_Httb , 1 , ;
+						cSubMenuName , GetProperty(cSubMenuName , 'Height' )  )
 
+					BT_ClientAreaInvalidateAll(   cSubMenuName  )
+					DoEvents()	
+					yDCMenu11_()
 
-					If _IsWindowDefined('Win_Scroll1')
-						//BT_ClientAreaInvalidateAll( 'Win_Scroll1' )
-						xAtuSetas()
+					DoEvents()				
+
+					If _IsWindowDefined(    cMenuScroll )
+						DoEvents()
+						BT_ClientAreaInvalidateAll( cMenuScroll)
+						DoEvents()
+						yDCScrool1()						
 						DoEvents()
 					End If
 
 				Else
-
-					SendMessage( GetProperty(   cJanela , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
-
+					SendMessage( GetProperty(   cSubMenuSombra , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
 				End If
 
 				//SysWait(.1)
@@ -1398,9 +1460,6 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 		End If
 
 	End If
-
-
-
 
 Return
 
@@ -1421,6 +1480,347 @@ Return (nInd > 0)
 
 Function xRetSubName()
 Return cSubMenuName
+
+
+
+Function xPaintPopup( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDropedDown , nHeightDroped , lSetas , lSubMenu1 , lHitB , lHitT  , lPopup )
+
+
+
+
+	Local aRGBcolor := BACK1
+	Local nWidthBmp := 170
+	Local nHandle1
+	Local nHandle2
+	Local hWnd
+	Local BTstruct
+	Local BTstruct2
+	Local hDc
+	Local hDc2
+	Local lSeta1 := .f.
+	Local nTYpe
+	Local nLine := 00
+	Local hBit10
+	Local hBit11
+	Local nHeightBmp := nItemSubHeight * Len(aMtrOp)
+	Local hBitmap2
+
+
+
+
+	LOCAL Width  := BT_ClientAreaWidth  (cForm)
+	LOCAL Height := BT_ClientAreaHeight (cForm)
+
+
+	Local nTypeText    := BT_TEXT_TRANSPARENT  //+ BT_TEXT_BOLD
+	Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
+	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
+	Local cTexto := ''
+
+	Local hBitSeta  :=  xBmpToTrans( 'SETATRANSP', aCorSub2 , 16,16 )
+	Local hBitSeta2 :=  xBmpToTrans( 'SETATRANSP', aMenuBarCor , 16,16 )
+
+	Local nRow := -(GetProperty( cForm    , "VscrollBar" , "Value"))
+	Local nLineSeta := nTamSubMenuConsulta
+	Local nLinDrop := 0
+	Local lEnabled := .t.
+	Local cCor
+
+
+
+
+	//Bt_BitmapSaveFile(  bBmp2 , 'SetaC12__222.Bmp'  )
+
+
+
+	DEFAULT nItemDropedDown := 0
+	DEFAULT nHeightDroped   := 0
+	DEFAULT lSetas          := .f.
+
+	DEFAULT lSubMenu1       := .f.
+
+	DEFAULT lHitB := .f.
+	DEFAULT lHitT := .f.
+
+	DEFAULT lPopup := .f.
+
+	
+
+
+	hDC2 = BT_CreateDC ( cForm  , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
+
+	If !lSubMenu1
+		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , aCorSub1 , aCorSub1  )
+	Else
+		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , aCorSub2 , aCorSub2  )
+	End If
+
+	If nClear1 > 0
+
+		If !lSubMenu1
+			BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemSubHeight)    , 0  , nColTamMenu ,    nHeightBmp    ,  aCorSub1  , aCorSub1  )
+		Else
+
+			BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemSubHeight)    , 0  , nColTamMenu ,    nHeightBmp    ,  aCorSub2  , aCorSub2  )
+			//msginfo('ok2')
+		End If
+
+	End If
+
+
+
+	For n1 := 1 To Len(aMtrOp)
+
+		cTexto := alltrim(  Right( aMtrOp[n1][1]  , Len(  aMtrOp[n1][1] ) - 2  ) )
+
+		IF lPopup
+			cTexto := Alltrim( aMtrOp[n1][1]  )
+		End If 
+
+		lEnabled := aMtrOp[n1][3]
+		lSeta1   := .f.
+
+		cCor := FONTCOR
+
+		IF lPopup
+			cCor := FONTCOR2
+		End If 
+
+		If Len(aMtrOp[n1]) >= 5
+			lSeta1   := aMtrOp[n1][5]
+		End If
+
+		If ((nOpselx1 > 0) .And. (nOpSelx1 = n1) .And. aMtrOp[n1][3] ) .or. (   (lEnabled ) .And. (nOpselx1 > 0) .And. ( Alltrim(cTextSel) = Alltrim(cTexto) )  )
+
+			nTypeText    := BT_TEXT_TRANSPARENT
+			nTypeText    := BT_TEXT_BOLD			
+
+			If !aMtrOp[n1][3]				
+				cCor := CorDisabled2
+			End If
+			
+
+			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , nColTamMenu ,    nItemSubHeight      , aMenuBarCor  , aMenuBarCor  )
+			
+			If (At('%' , cTexto) > 0)
+				DrawSubl(   hDC2 , nLine + nRow  , 32 , Alltrim(Hb_AnsiToOem( cTexto )) , cCor )
+			Else 
+				BT_DrawText ( hDC2 , nLine + nRow  , Iif(!lSubMenu1 , 25 ,32)  ,  Hb_AnsiToOem( cTexto ), XFONT2, nSizeFont  ,  cCor ,  aCorSub2   , ;
+					Iif(!lPopUp , BT_TEXT_TRANSPARENT+BT_TEXT_BOLD  , BT_TEXT_TRANSPARENT )  , nAlingText, nOrientation)
+			End If 
+			
+			If lSeta1
+				BT_DrawBitmapTransparent ( hDC2,  nLine  + nRow   , Width - 20    , 16 , 16 , BT_COPY   ,  hBitSeta2 , {7,101,125} )
+			End If
+			
+
+		Else
+
+			nTypeText    := BT_TEXT_TRANSPARENT
+			
+
+			IF lPopup
+				cCor := FONTCOR2
+			End If 
+
+
+			If !aMtrOp[n1][3]			
+				cCor := CorDisabled2		
+			End If
+
+			//	nTypeText    := BT_TEXT_BOLD
+			
+			
+			If (At('%' , cTexto) > 0)
+				DrawSubl(   hDC2 , nLine + nRow  , 32 , Alltrim(Hb_AnsiToOem( cTexto )) , cCor )
+			Else 
+				BT_DrawText ( hDC2 , nLine + nRow  , 32 ,  Hb_AnsiToOem( cTexto ), XFONT2, nSizeFont,  cCor , aCorSub2 , nTypeText, nAlingText, nOrientation )
+			End If 						
+
+			If lSeta1
+				BT_DrawBitmapTransparent ( hDC2,  nLine  + nRow   , Width - 20    , 16 , 16 , BT_COPY   ,  hBitSeta , {7,101,125} )
+			End If
+
+			
+
+		End If
+
+		nLine += (nItemSubHeight)
+
+		If (nItemDropedDown > 0) .and. (!lPopup)
+			If (nItemDropedDown == n1)
+				nLinDrop := nLine
+				nLine += Iif( !lSetas , nHeightDroped  , (nTamSubMenuConsulta + ( 2 * nItemSubHeight))   )
+			End If
+		Else
+
+
+		End If
+
+	Next
+	/*
+
+	If ((lSetas) .And. (!lSubMenu1) .And. (!lPopup))
+		
+		BT_DrawGradientFillVertical ( hDC2 ,  nLinDrop + nLineSeta - 2 , 0  ,    nColTamMenu + 1     ,    ( 2 * nItemSubHeight)    , aCorSub2 , aCorSub2  )
+
+		If nSetaSel == 0
+
+			//	DraVertH( hDc2 , nLinDrop + nLineSeta - 2   , nColTamMenu )
+			BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   ,;
+				Iif( lHitb  ,  bBmp5 ,  bBmp3 ) ) 
+			BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta + nItemSubHeight   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   ,  ;
+				Iif( lHitT  ,  bBmp6 ,  bBmp4 ) )			
+			
+		Else
+
+			If (nSetaSel == 2) 
+				// Cima // Up
+
+				If (!lHitT)				
+					BT_DrawGradientFillVertical ( hDC2 ,  nLinDrop + nLineSeta - 2 + nItemSubHeight  , 0  ,    nColTamMenu      ,    ( nItemSubHeight)    , aMenuBarCor , aMenuBarCor  )
+					BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta + nItemSubHeight - 1   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , bBmp2 )
+				Else 
+					BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta + nItemSubHeight - 1   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , bBmp6 )
+				End If 	
+
+				If (!lHitB)
+					BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , 	 bBmp3 )
+				End If 
+				
+			End If
+
+
+			If (nSetaSel == 1) 
+			   
+				// Baixo / Down
+
+				If (!lHitB)
+					BT_DrawGradientFillVertical ( hDC2 ,  nLinDrop + nLineSeta - 2  , 0  ,    nColTamMenu      ,    ( nItemSubHeight)    , aMenuBarCor , aMenuBarCor  )
+					BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , 	 bBmp1 )
+				Else 
+					BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , 	 bBmp5 )
+				End If 	
+
+				If  (!lHitT)
+					BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta + nItemSubHeight - 1   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , bBmp4 )
+				End If 
+
+			End If
+
+			//	DoEvents()
+
+		End If
+
+		//DoEvents()
+
+		
+
+	End If
+
+	*/
+
+
+
+	BT_BitmapRelease ( hBitSeta )
+	BT_BitmapRelease ( hBitSeta2 )
+
+
+	If (lSubMenu1) .or. (lPopup)
+		DraVertL( hDC2 , 0 , Height , .t.)
+		DraVertL( hDC2 , Width - 1  , Height + 1 , .t.)
+		DraVertH( hDc2 , 0   , nColTamMenu , .t.  )
+
+	Else 
+		If ((!lSubMenu1) .And. (!lPopup))
+			DraVertL( hDC2 , Width - 1  , Height + 1 , .t.)
+			DraVertH( hDc2 , Height - 1 ,   Width  , .t.  )
+		End If 	
+
+	End If 
+
+	DoEvents()
+
+	
+
+	BT_DeleteDC (BTstruct2 )
+
+REturn
+
+
+
+Static Function xOpSelPosy( cJan , nHeit2 , nItMax , nItDopred  , nHeightCalc , nScroolPos  )
+
+	Local nCol := 0
+	Local nRow := 0
+	Local ar1
+	Local NewPos
+	Local nRow1 := -(GetProperty( cJan , "VscrollBar" , "Value"))
+	Local nIa1 , nIa2
+
+	Local nItem := 0
+
+
+	DEFAULT nHeit2 := 0
+	DEFAULT nItDopred := 0
+
+	DEFAULT nHeightCalc := nItemSubHeight
+
+	DEFAULT nScroolPos := GetScrollPos( GetFormHandle(  cJan  ), 1 )
+
+	GetCursorPos (@nCol, @nRow)
+
+
+	aR1 := GetPos_ScreenToClient(   GetFormHandle(  cJan  )  , nRow, nCol )
+
+
+
+	//NewPos := GetScrollPos( GetFormHandle(  cJan  ), 1 )
+
+	NewPos := nScroolPos
+
+
+	If NewPos > 0
+		nItem := (Int( (NewPos+Ar1[1])     / nHeightCalc)+1)
+	Else
+		//nItem := (Int(Ar1[1] / nItemSubHeight)+1)
+		nItem := (Int(  Ar1[1]  / nHeightCalc)+1)
+	End If
+
+
+
+	If (nHeit2 > 0) .and. (nHeit2 < ar1[1] ) .And. (nHeit2 >= nHeightCalc) .And. (ar1[1] > (nItMax * nHeightCalc)   )
+		nItem := (Int( NewPos + (Ar1[1] - nHeit2) / nHeightCalc)+1)
+	End If
+
+	If (Ar1[1] - nHeit2) == 1
+		nItem := nItDopred+1
+	End If
+
+
+	//	msginfo(Str(nItem  ))
+
+	/*
+	If (lSetasDown) .And. (cJan != "Win_Browser")
+
+		nIa1 := (nItDopred * nHeightCalc) + nTamSubMenuConsulta
+		nIa2 := nIa1 + (nItemSubHeight * 2)
+
+		If (Ar1[1] >= nIa1) .And. (  Ar1[1] <= nIa2 )
+
+			If Ar1[1] <  (nIa1 + nHeightCalc )
+				nItem := 1000
+			Else
+				nItem := 2000
+			End If
+
+		End If
+
+	End If
+	*/
+
+Return Abs(nItem)
+
 
 
 

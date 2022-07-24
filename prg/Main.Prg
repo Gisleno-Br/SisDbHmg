@@ -600,7 +600,7 @@ FUNCTION Main
 	Private nOpSel := 0
 
 	Private aItens := { {"1-Clientes","Cadastro de Clientes" , .t.  , {  ||xCliente()  }  , .f. } , ;
-		{ "1-Fornecedores","Cadastro de Fornecedores" , .t.  ,  { || xFechaMen() } , .t.  , { |a,b,c,d| xTesMenu(a,b,c,d)   }    } , ;
+		{ "1-Fornecedores","Cadastro de Fornecedores" , .t.  ,  { || xFechaMen() } , .t.  , { |a,b,c,d| xTesMenu( 'MenCli1' ,a,b,c,d)   }    } , ;
 		{ "1-Vendedores", "Cadastro de Vendedores" , .f.  , Nil , .f.  } , ;
 		{"1-Colaboradores","Colab1 ......." , .f. } ,   {"1-Grupo Produtos","" , .f. , Nil  } , ;
 		{"1-Locais Estoque","Estoque 1......" , .t.  , Nil } , {"1-Funções","" , .f. , Nil } , ;
@@ -651,7 +651,9 @@ FUNCTION Main
 
 
 
-	xMenuMain( 'Main' ,  70 , 1  , aOpcoes , aItens )
+	//xMenuMain( 'Main' ,  70 , 1  , aOpcoes , aItens )
+	xTesMenu(  'MenuY1', 50 , 450 , {} , 0 )
+
 
 
 
@@ -766,8 +768,12 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 		If (nMsg == 71)
 
 			If cActiveJan = 'Main'
-				xRefreshMain()
+				If _IsWindowDefined('Win_MenuPrincipal')
+					xRefreshMain()
+				End If 
 			End If 
+
+
 			//msginfo('lp22222')
 			//WM_WINDOWPOSCHANGED
 			If (_IsWindowDefined( cActiveJan)) .And. (cActiveJan != "Main")
@@ -787,80 +793,9 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 
 
-		If (nmsg == WM_LBUTTONDBLCLK)
-			//.or.  (nMsg == WM_LBUTTONDOWN)
-			msginfo('lp3333')
-		End If
-
-
 	End If
 
-	/*
-
-	If nHWnd == GetProperty(  'fSplit2' , "HANDLE" )
-
-
-		If ( nMsg == WM_MOUSEMOVE )
-
-			GetCursorPos (@nCol, @nRow1)
-
-			If nCol <= 30
-				SetWindowCursor( nHWnd , CURSORHAND)
-			Else
-				SetWindowCursor( nHWnd , IDC_ARROW)
-			End If
-
-		End If
-
-
-		If (nMsg == WM_LBUTTONDOWN)
-
-
-			GetCursorPos (@nCol, @nRow1)
-
-			If nCol <= 30
-				//	msginfo(Str(   nCol ))
-			End If
-
-		End If
-
-
-
-	End If
-
-	*/
-
-
-	*// Janela Superior Direita
-
-	/*
-
-	If nHWnd == GetProperty(  'fSplit10' , "HANDLE" )
-
-
-		//SetWindowCursor( nHWnd , CURSORHAND)
-
-		If (nMsg == WM_LBUTTONDOWN)
-			//msginfo('ok')
-
-			If ExitApp()
-				RELEASE WINDOW All
-				Quit
-			End If
-
-		End If
-
-		If ( nMsg == WM_MOUSEMOVE )
-
-			SetWindowCursor( nHWnd , CURSORHAND)
-
-		End If
-
-
-
-	End If
-	*/
-
+	
 
 
 
@@ -1555,18 +1490,22 @@ Return
 
 
 
-Function xTesMenu( nRow , nCol , aMatriz , nItemSel )
+Function xTesMenu(  cNName , nRow , nCol , aMatriz , nItemSel )
 
 	Local aZop1 := {}
-	Local cName1 := 'M_' + StrZero( Int( hb_Random( Val( StrTran( Time(), ":" ) ) ) ), 8 ) + 'Zty1'
+	Local cName1 := cNName
+	 //'M_' + StrZero( Int( hb_Random( Val( StrTran( Time(), ":" ) ) ) ), 4 ) + 'Z1'
 
+	 
 
-	Aadd(aZop1 , { "Pesq%uisar" , "Imp.Doc" , .t. , { | | TestBrow()  }    }    )
-	Aadd(aZop1 , { "Ex%cluir." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .f.    }   )
-	Aadd(aZop1 , { "Novo Cod.Barr%a" , "Novo Arquivo..." , .t. , { | a | msginfo('k22 ' + Str(a) )     }    }  )
-	Aadd(aZop1 , { "%Novo Arquivo2   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "Trac%ker Contabil" , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "%Legenda" , "Novo Arquivo..." , .t. , { || ( msginfo('ok2') ,  xFechaMen() )    }    }  )
+	 
+
+	Aadd(aZop1 , { "Pesquisar" , "Imp.Doc" , .t. , { | | TestBrow()  }    }    )
+	Aadd(aZop1 , { "Excluir." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .f.    }   )
+	Aadd(aZop1 , { "Novo Cod.Barra" , "Novo Arquivo..." , .t. , { | a | msginfo('k22 ' + Str(a) )     }    }  )
+	Aadd(aZop1 , { "Novo %Arquivo2   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "Tracker %Contabil" , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "Legenda" , "Novo Arquivo..." , .t. , { || ( msginfo('ok2') ,  xFechaMen() )    }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo5   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
