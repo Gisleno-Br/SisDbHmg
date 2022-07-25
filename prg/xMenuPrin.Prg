@@ -138,6 +138,8 @@ Function xMenuMain( cParent , nRow1 , nCol1 , aOpPrin , aSubOps , lEnabled11 )
 	SET WINDOW Win_MenuPrincipal TRANSPARENT TO Iif(!lEnabled2 , 167 , 0)
 	SET WINDOW JanMenuSub TRANSPARENT TO Iif(!lEnabled2 , 167 , 0)
 
+
+
 	//HMG_ChangeWindowStyle( JanMenuSub.Handle    , WS_EX_DLGMODALFRAME,, NIL, .T., .T.)
 
 	_ShowWindow("Win_MPrincipalSombra")
@@ -685,6 +687,8 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 					DoEvents()
 
 					
+					
+
 				Else
 
 				End If
@@ -2185,54 +2189,4 @@ REturn
 
 
 
-Function DrawSubl(  hDC5 , nLinha  , Coluna , cText15 , nCor   )
-
-  Local n1 := At('%' , cText15 )
-
-  Local c1 := Left(cText15 , n1 - 1)
-  Local c2 := Substr(cText15,n1,1)
-  Local nCol1 := Coluna 
-
-  Local nTypeText    := BT_TEXT_TRANSPARENT
-  Local cCor := FONTCOR2
-  Local lok := .f. 
-
-  	
-  Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
-  Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
-	
-
-  Local cLetr 
-
-
-  For n2 := 1 To Len(cText15)
-
-
-		cLetr := Substr( cText15 , n2 , 1)
-			//w := BT_DrawTextSize(hDC5, cLetr , nSizeFont  ,  BT_TEXT_TRANSPARENT )
-
-		If (cLetr != '%')	
-
-			hFont := HMG_CreateFont (  hDC5 , XFONT2, nSizeFont, .f., .f., .f., .f. )
-			n12 := GetTextWidth( hDC5 , cLetr , hfont )
-			nTypeText    := BT_TEXT_TRANSPARENT
-
-
-			If lOk 
-				nTypeText    := BT_TEXT_TRANSPARENT+BT_TEXT_UNDERLINE
-				lOk := .f. 
-			End If 
-
-			BT_DrawText ( hDC5 , nLinha  , nCol1 ,  Hb_AnsiToOem( cLetr)  , nCor  , nSizeFont ,  nCor , aCorSub2 , nTypeText, nAlingText, nOrientation )
-			nCol1 += n12
-
-		Else 
-		   lOk := .t.	
-
-		End If
-
-  Next 
-
-
-Return 
 

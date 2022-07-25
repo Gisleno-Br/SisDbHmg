@@ -116,6 +116,7 @@ FUNCTION Main
 
 
 
+
 	Public aRotHnd := {}
 	Public lAtivaBlack := .f.
 
@@ -651,6 +652,8 @@ FUNCTION Main
 
 
 
+
+
 	//xMenuMain( 'Main' ,  70 , 1  , aOpcoes , aItens )
 	xTesMenu(  'MenuY1', 50 , 450 , {} , 0 )
 
@@ -737,6 +740,7 @@ Return
 
 
 
+
 Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 	Local cOpcao := ''
@@ -774,12 +778,18 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 			End If 
 
 
-			//msginfo('lp22222')
-			//WM_WINDOWPOSCHANGED
+
+			If _IsWindowDefined( 'MenuY1' )				
+				xShowPop()			
+			End If 
+
+
+			
 			If (_IsWindowDefined( cActiveJan)) .And. (cActiveJan != "Main")
-				xShowBrw(  cTabela  )
-				//msginfo('lp22')
+				xShowBrw(  cTabela  )			
 			End If
+
+
 		End If
 
 
@@ -1501,9 +1511,9 @@ Function xTesMenu(  cNName , nRow , nCol , aMatriz , nItemSel )
 	 
 
 	Aadd(aZop1 , { "Pesquisar" , "Imp.Doc" , .t. , { | | TestBrow()  }    }    )
-	Aadd(aZop1 , { "Excluir." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .f.    }   )
+	Aadd(aZop1 , { "E%xcluir." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .f.    }   )
 	Aadd(aZop1 , { "Novo Cod.Barra" , "Novo Arquivo..." , .t. , { | a | msginfo('k22 ' + Str(a) )     }    }  )
-	Aadd(aZop1 , { "Novo %Arquivo2   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "Novo %Arquivo2   " , "Novo Arquivo..." , .t. , { || ( DoEvents() ,  xDoit() ,    DoEvents() )   }    }  )
 	Aadd(aZop1 , { "Tracker %Contabil" , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "Legenda" , "Novo Arquivo..." , .t. , { || ( msginfo('ok2') ,  xFechaMen() )    }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo5   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
@@ -1527,9 +1537,33 @@ Function xTesMenu(  cNName , nRow , nCol , aMatriz , nItemSel )
 
 	xMenuOp( cName1 , 'Main' , aZop1 , nRow , nCol , .t. , aMatriz , nItemSel  )
 
+//	msginfo('ok2')
+
 
 Return
 
+
+Function xDoIt()
+
+   msginfo('ok2')
+
+   i := 1
+
+
+   xFechaMen()
+
+   //EventSTOP ( 5 , .T.) a
+
+   DoEvents()
+
+   //_SetActivationFocus(1)
+
+
+
+   DoEvents()
+
+
+REturn 
 
 
 

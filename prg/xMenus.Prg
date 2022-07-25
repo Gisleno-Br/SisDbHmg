@@ -278,12 +278,21 @@ Function xMenuOp( cName , cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz ,
 
 		InstallEventHandler( "EventMenu1" )
 		nIndexEventX := 20050
-		CREATE EVENT PROCNAME xKeySubMen()  STOREINDEX nIndexEventX
-		nIndexEventX := Len(_HMG_EventData)
+	
+		
+		nIndexEvent := Ascan(  _HMG_EventData , { |a| a[1] == 'xKeySubMen()' } ) 
 
-		//HWND GetFormHandle( 'Win_MenuSombra' )
+		If nIndexEvent == 0 
+			CREATE EVENT PROCNAME xKeySubMen()
+			nIndexEventX := Len(_HMG_EventData)
+		Else 
+			EventStop(  nIndexEvent , .f. )
+		End If 
+
+		
 
 	End If
+
 
 
 
@@ -362,6 +371,7 @@ Function xCheckJan(  cJanela )
 
 	Local nCol1 , nRow1 
 	Local nHWnd2 
+
 
 	If !_IsWindowDefined(cJanela)
 		REturn .f. 
@@ -671,13 +681,15 @@ Function xFechaMen()
 			Msginfo("Erro ao remover Handle Event.")
 		End If
 
-		If !xDelEvent(nIndexEventX)
-			msginfo("Erro ao remover Handle Event 22 .")
-		End If
+		EventSTOP ( nIndexEventX , .T.) 
+
+		//If !xDelEvent(nIndexEventX)
+		//	msginfo("Erro ao remover Handle Event 22 .")
+		//End If
 
 		DoEvents()
 
-		BT_DELAY_EXECUTION_WITH_DOEVENTS(45)
+		//BT_DELAY_EXECUTION_WITH_DOEVENTS(45)
 
 
 
@@ -696,11 +708,15 @@ Function xDelEvent(   nIndex )
 	Local lOk  := .f.
 	Local nTam := Len( _HMG_EventData   )
 
+
 	If nIndex <= Len(   _HMG_EventData )
 		Adel(   _HMG_EventData , nIndex  )
 		Asize(  _HMG_EventData , nTam - 1  )
 		lOk := .t.
 	End If
+
+	DoEvents()
+	DoEvents()
 
 
 Return lOk
@@ -737,6 +753,8 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 	If !_isWindowDefined(cSubMenuName)
 		Return
 	End If
+
+	
 	  
 
 	If ( _isWindowDefined( cScrollSombra) ) .And.  (nHWnd == GetProperty(  cScrollSombra , "HANDLE" ))
@@ -883,8 +901,15 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 
 		If (nMsg == WM_LBUTTONDOWN)
 
-			If (nItemx2 <= Len(aOpz11))           
-				xClickOpt( nItemx2 )
+			If nWParam != 120
+				If (nItemx2 <= Len(aOpz11))           
+					xClickOpt( nItemx2 )
+				End If
+			Else 
+				//msginfo(Str(nLParam))
+				xClickOpt( nLParam )
+				Return
+
 			End If
 
 		End If
@@ -1056,6 +1081,16 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 
 Return
 
+
+Function xShowPop()
+
+  	xAtu_Men1( .f. )
+	DoEvents()	
+	yDCScrool1()		
+
+
+Return 
+
 Static Function xSelItemY(nWParam , nHWnd1) 
 
 	Local nRow1
@@ -1154,21 +1189,22 @@ Static Function xClickOpt( nOpt1 )
 
 	//msginfo('ok22')
 
-	DoEvents()
+//	DoEvents()
+
+	
+	//DoEvents()
+	//xFechaMen()
 
 
 	
-	DoEvents()
-	xFechaMen()
-	
+	//DoEvents()
+
+
 
 	If (aOpz11[nOpt1][4] != Nil )
 		Eval( aOpz11[nOpt1][4]  ,  nOpt1  )
 		Return
 	End If
-
-	
-
 
 
 Return 
@@ -1338,16 +1374,26 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 
 		nIndice1 :=  Ascan(  aOpz11 , { |a| xRetira(a[1]) == Upper(cH) }    )
 
-		If nIndice1 > 0		
-			xClickOpt( nIndice1 )
-			Return 
+		If nIndice1 > 0				
+			//xClickOpt( nIndice1 )			
+			SendMessage( GetProperty(   cSubMenuSombra , "HANDLE" ) , WM_LBUTTONDOWN ,  120 ,nIndice1 )
+			
 		End If 
+
+		Return 
 
 	End If 
 
 
+
+
 	If nMsg == WM_KEYDOWN
 
+
+		If nWParam == 27
+			xFechaMen()
+			Return
+		End If 
 
 
 		If nWParam = VK_RETURN
@@ -1367,7 +1413,6 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 				nItemx2++
 				lTracking192 := .f.
 
-
 				If (nItemx2 > nMaxItem)
 
 					If (nLinhaAtual == 0)
@@ -1382,10 +1427,7 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 					BT_ClientAreaInvalidateAll(   cSubMenuName  )
 					DoEvents()	
 					yDCMenu11_()
-
-					DoEvents()
-
-				
+					DoEvents()				
 					
 					If _IsWindowDefined(    cMenuScroll )
 						DoEvents()
@@ -1393,8 +1435,7 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 						DoEvents()
 						yDCScrool1()						
 						DoEvents()
-					End If
-					
+					End If					
 
 				Else
 					SendMessage( GetProperty(   cSubMenuSombra , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
@@ -1420,11 +1461,8 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 			xHideHint()
 
 			If nItemx2 > 1
-
 				nItemx2--
 				lTracking192 := .f.
-
-
 				If nItemX2 >= nMaxItem
 
 					ScrollMenu( 1 , GetProperty(  cSubMenuName , "HANDLE" )  , @nScrLin , @nLinhaAtual , Len(aOpz11) , @l_Httt , @l_Httb , 1 , ;
@@ -1658,69 +1696,7 @@ Function xPaintPopup( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDro
 		End If
 
 	Next
-	/*
-
-	If ((lSetas) .And. (!lSubMenu1) .And. (!lPopup))
-		
-		BT_DrawGradientFillVertical ( hDC2 ,  nLinDrop + nLineSeta - 2 , 0  ,    nColTamMenu + 1     ,    ( 2 * nItemSubHeight)    , aCorSub2 , aCorSub2  )
-
-		If nSetaSel == 0
-
-			//	DraVertH( hDc2 , nLinDrop + nLineSeta - 2   , nColTamMenu )
-			BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   ,;
-				Iif( lHitb  ,  bBmp5 ,  bBmp3 ) ) 
-			BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta + nItemSubHeight   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   ,  ;
-				Iif( lHitT  ,  bBmp6 ,  bBmp4 ) )			
-			
-		Else
-
-			If (nSetaSel == 2) 
-				// Cima // Up
-
-				If (!lHitT)				
-					BT_DrawGradientFillVertical ( hDC2 ,  nLinDrop + nLineSeta - 2 + nItemSubHeight  , 0  ,    nColTamMenu      ,    ( nItemSubHeight)    , aMenuBarCor , aMenuBarCor  )
-					BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta + nItemSubHeight - 1   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , bBmp2 )
-				Else 
-					BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta + nItemSubHeight - 1   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , bBmp6 )
-				End If 	
-
-				If (!lHitB)
-					BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , 	 bBmp3 )
-				End If 
-				
-			End If
-
-
-			If (nSetaSel == 1) 
-			   
-				// Baixo / Down
-
-				If (!lHitB)
-					BT_DrawGradientFillVertical ( hDC2 ,  nLinDrop + nLineSeta - 2  , 0  ,    nColTamMenu      ,    ( nItemSubHeight)    , aMenuBarCor , aMenuBarCor  )
-					BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , 	 bBmp1 )
-				Else 
-					BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , 	 bBmp5 )
-				End If 	
-
-				If  (!lHitT)
-					BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta + nItemSubHeight - 1   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , bBmp4 )
-				End If 
-
-			End If
-
-			//	DoEvents()
-
-		End If
-
-		//DoEvents()
-
-		
-
-	End If
-
-	*/
-
-
+	
 
 	BT_BitmapRelease ( hBitSeta )
 	BT_BitmapRelease ( hBitSeta2 )
@@ -1746,6 +1722,59 @@ Function xPaintPopup( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDro
 	BT_DeleteDC (BTstruct2 )
 
 REturn
+
+Function DrawSubl(  hDC5 , nLinha  , Coluna , cText15 , nCor   )
+
+  Local n1 := At('%' , cText15 )
+
+  Local c1 := Left(cText15 , n1 - 1)
+  Local c2 := Substr(cText15,n1,1)
+  Local nCol1 := Coluna 
+
+  Local nTypeText    := BT_TEXT_TRANSPARENT
+  Local cCor := FONTCOR2
+  Local lok := .f. 
+
+  	
+  Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
+  Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
+	
+
+  Local cLetr 
+
+
+
+  For n2 := 1 To Len(cText15)
+
+
+		cLetr := Substr( cText15 , n2 , 1)
+			//w := BT_DrawTextSize(hDC5, cLetr , nSizeFont  ,  BT_TEXT_TRANSPARENT )
+
+		If (cLetr != '%')	
+
+			hFont := HMG_CreateFont (  hDC5 , XFONT2, nSizeFont, .f., .f., .f., .f. )
+			n12 := GetTextWidth( hDC5 , cLetr , hfont )
+			nTypeText    := BT_TEXT_TRANSPARENT
+
+
+			If lOk 
+				nTypeText    := BT_TEXT_TRANSPARENT+BT_TEXT_UNDERLINE
+				lOk := .f. 
+			End If 
+
+			BT_DrawText ( hDC5 , nLinha  , nCol1 ,  Hb_AnsiToOem( cLetr)  ,  XFONT2  , nSizeFont  ,  nCor , aCorSub2 , nTypeText, nAlingText, nOrientation )
+			nCol1 += n12 
+
+		Else 
+		   lOk := .t.	
+
+		End If
+
+  Next 
+
+
+Return 
+
 
 
 

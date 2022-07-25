@@ -209,7 +209,7 @@ Function TestBrow( cParent1 , cTabx  )
 	Local aTips
 	LOCAL nQReg
 	Local qReg1   := 200
-	Local calias  := "T_" + Left(cTabela,3)
+	Local calias  := "T_" + Left(cTabx,3)
 	local cTab1
 	local aCabex:={}
 	Local cTabela := cTabx

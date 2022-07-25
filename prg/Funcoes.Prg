@@ -521,23 +521,10 @@ FUNCTION xInit()
 
 		DoMethod( 'Win_MenuPrincipal' , 'Activate')  
 	End If 
-
-
 	
-	//_ShowWindow( cSubRetSubName())
 
-	xAtu_Men1( .f. )
-	DoEvents()
-
-	
-	yDCScrool1()
+	xShowPop()	
 	DoMethod(  xRetSubName() , 'Activate')
-
-
-
-
-
-	
 
 
 
