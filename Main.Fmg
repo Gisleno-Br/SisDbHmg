@@ -25,7 +25,7 @@ DEFINE WINDOW TEMPLATE AT nMaximizedWindowRow , nMaximizedWindowCol WIDTH nMaxim
        
 
 
-     
+     /*
 
     DEFINE IMAGE Image_1
         ROW    210
@@ -38,6 +38,9 @@ DEFINE WINDOW TEMPLATE AT nMaximizedWindowRow , nMaximizedWindowCol WIDTH nMaxim
         STRETCH .F.
         ACTION Nil
     END IMAGE
+
+    */
+    
 
     
 /*

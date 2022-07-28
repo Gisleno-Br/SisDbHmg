@@ -653,14 +653,18 @@ FUNCTION Main
 
 
 
-
 	//xMenuMain( 'Main' ,  70 , 1  , aOpcoes , aItens )
 	xTesMenu(  'MenuY1', 50 , 450 , {} , 0 )
 
-
-
-
+	
+	DoEvents()
 	_ShowWindow('Main')
+
+	DoEvents()
+
+
+
+
 
 
 	Main.Activate
@@ -778,16 +782,15 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 			End If 
 
 
-
 			If _IsWindowDefined( 'MenuY1' )				
 				xShowPop()			
 			End If 
-
-
 			
 			If (_IsWindowDefined( cActiveJan)) .And. (cActiveJan != "Main")
 				xShowBrw(  cTabela  )			
 			End If
+
+			//msginfo('lp22')
 
 
 		End If
@@ -1452,6 +1455,8 @@ Function ShowButTop( lShow )
 REturn
 
 
+
+
 Function D1Black(cJan,zBitMap)
 
 	Local hDc
@@ -1654,31 +1659,7 @@ Return
 		}
 
 
-	HB_FUNC( SETARROWCURSOR )
-	{
-	SetClassLong( ( HWND ) hb_parnl( 1 ), GCLP_HCURSOR, ( LONG ) LoadCursor( NULL, IDC_ARROW ) );
-		}
-
-	HB_FUNC( SETHANDCURSOR )
-	{
-	SetClassLong( ( HWND ) hb_parnl( 1 ), GCLP_HCURSOR, ( LONG ) LoadCursor( NULL, IDC_HAND ) );
-		}
-
-	HB_FUNC( SETWAITCURSOR )
-	{
-	SetClassLong( ( HWND ) hb_parnl( 1 ), GCLP_HCURSOR, ( LONG ) LoadCursor( NULL, IDC_WAIT ) );
-		}
-
-	HB_FUNC( SETSIZECURSOR )
-	{
-// SetClassLong( ( HWND ) hb_parnl( 1 ), GCLP_HCURSOR, ( LONG ) LoadCursor( NULL, IDC_SIZEWE ) );
-	}
-
-	HB_FUNC( SETDRAGCURSOR )
-	{
-//  SetClassLong( ( HWND ) hb_parnl( 1 ), GCLP_HCURSOR, ( LONG ) LoadCursor( NULL, IDC_SIZEALL ) );
-	//SendtoBack();
-		}
+	
 
 
 /*
@@ -1745,12 +1726,9 @@ Return
 
 
 	HWND hwnd;
-		HDC hdc;
-		PAINTSTRUCT ps;
-		TEXTMETRIC tm;
-		SCROLLINFO si;
+	SCROLLINFO si;
 
-	int nBt1 ;
+	
 
 	static int yPos;        // current vertical scrolling position
 
@@ -1762,8 +1740,7 @@ Return
 		yChar = hb_parni(2);
 
 	RECT rect3;
-
-	RECT rect4;
+	
 
 	GetClientRect(hwnd, &rect3);
 
@@ -1830,7 +1807,7 @@ Return
 		#define BMP_COPY_SCALE   2     // Ajusta proporcionalmente la imagen para que se vea completa en la ventana
 		#define BMP_COPY_STRETCH 3     // Aju
 
-
+/*
 		HB_FUNC (BMP_LOAD_FILE)
 		{
 		HBITMAP hBitmap;
@@ -1846,22 +1823,19 @@ Return
 			hb_retnl( (LONG) hBitmap );
 				}
 
-//*************************************************************************************************
-// BMP_RELEASE_HANDLE (hBitmap)
-//*************************************************************************************************
 			HB_FUNC (BMP_RELEASE_HANDLE)
 			{
 			hb_retni ((int) DeleteObject ((HBITMAP) hb_parnl (1)));
 				}
 
 
+*/
 
 
 
 
 
-
-
+/*
 
 			HB_FUNC (BMP_PAINT)
 			{
@@ -1931,7 +1905,7 @@ Return
 							}
 
 
-
+*/
 							#pragma ENDDUMP
 
 

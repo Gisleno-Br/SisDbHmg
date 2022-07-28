@@ -508,6 +508,7 @@ FUNCTION xInit()
 		QUIT
 	END IF
 
+
 	cServer := cIp
 	cBanco  := cBanc1
 	cUserDb := cUser1
@@ -523,8 +524,14 @@ FUNCTION xInit()
 	End If 
 	
 
-	xShowPop()	
+	
+	xShowPop()		
+	//DoMethod(  xRetSubName() , 'Show')
+
 	DoMethod(  xRetSubName() , 'Activate')
+
+	msginfo('ok2')
+
 
 
 
