@@ -122,7 +122,7 @@ FUNCTION Main
 
 	
 
-	Public nColTamMenu := 205
+	Public nColTamMenu := 165
 
 	//Public nIt5 := 0
 
@@ -1510,14 +1510,11 @@ Function xTesMenu(  cNName , nRow , nCol , aMatriz , nItemSel )
 	Local aZop1 := {}
 	Local cName1 := cNName
 	 //'M_' + StrZero( Int( hb_Random( Val( StrTran( Time(), ":" ) ) ) ), 4 ) + 'Z1'
-
-	 
-
 	 
 
 	Aadd(aZop1 , { "Pesquisar" , "Imp.Doc" , .t. , { | | TestBrow()  }    }    )
 	Aadd(aZop1 , { "E%xcluir." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .f.    }   )
-	Aadd(aZop1 , { "Novo Cod.Barra" , "Novo Arquivo..." , .t. , { | a | msginfo('k22 ' + Str(a) )     }    }  )
+	Aadd(aZop1 , { "Novo Cod.Barra" , "Novo Arquivo..." , .t. , { | a | msginfo('k22 ' + Str(a) )     }    ,   .t. ,   {|a,b|  xSubTeste( b , b )   } }  )
 	Aadd(aZop1 , { "Novo %Arquivo2   " , "Novo Arquivo..." , .t. , { || ( DoEvents() ,  xDoit() ,    DoEvents() )   }    }  )
 	Aadd(aZop1 , { "Tracker %Contabil" , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "Legenda" , "Novo Arquivo..." , .t. , { || ( msginfo('ok2') ,  xFechaMen() )    }    }  )
@@ -1546,6 +1543,27 @@ Function xTesMenu(  cNName , nRow , nCol , aMatriz , nItemSel )
 
 
 Return
+
+Function xSubTeste( nRow1 , nCol1 )
+
+  	Local aZop1 := {}
+  	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { |a| msginfo( Str(a) )     }    }  )
+  	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { |a| msginfo( Str(a) )     }    }  )
+  	Aadd(aZop1 , { "  Novo Arquivo12   " , "Novo Arquivo..." , .t. , { |a| msginfo( Str(a) )      }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo13   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo14   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo15   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo16   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo17   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo18   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+
+	
+
+	xMenuOp( 'MenuY2' , 'Main' , aZop1 , nRow1 , nCol1 , .t. , {} , 0  )
+
+
+
+Return 
 
 
 Function xDoIt()
