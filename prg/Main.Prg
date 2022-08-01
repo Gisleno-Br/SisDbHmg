@@ -1514,7 +1514,7 @@ Function xTesMenu(  cNName , nRow , nCol , aMatriz , nItemSel )
 
 	Aadd(aZop1 , { "Pesquisar" , "Imp.Doc" , .t. , { | | TestBrow()  }    }    )
 	Aadd(aZop1 , { "E%xcluir." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .f.    }   )
-	Aadd(aZop1 , { "Novo Cod.Barra" , "Novo Arquivo..." , .t. , { | a | msginfo('k22 ' + Str(a) )     }    ,   .t. ,   {|a,b|  xSubTeste( b , b )   } }  )
+	Aadd(aZop1 , { "Novo Cod.Barra" , "Novo Arquivo..." , .t. , { | a | msginfo('k22 ' + Str(a) )     }    ,   .t. ,   {|a,b|  xSubTeste( a , b )   } }  )
 	Aadd(aZop1 , { "Novo %Arquivo2   " , "Novo Arquivo..." , .t. , { || ( DoEvents() ,  xDoit() ,    DoEvents() )   }    }  )
 	Aadd(aZop1 , { "Tracker %Contabil" , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "Legenda" , "Novo Arquivo..." , .t. , { || ( msginfo('ok2') ,  xFechaMen() )    }    }  )
@@ -1537,7 +1537,7 @@ Function xTesMenu(  cNName , nRow , nCol , aMatriz , nItemSel )
 
 
 
-	xMenuOp( cName1 , 'Main' , aZop1 , nRow , nCol , .t. , aMatriz , nItemSel  )
+	xMenuOp( 'MenuY1' , 'Main' , aZop1 , nRow , nCol , .t. , aMatriz , nItemSel  )
 
 //	msginfo('ok2')
 
@@ -1556,12 +1556,9 @@ Function xSubTeste( nRow1 , nCol1 )
 	Aadd(aZop1 , { "  Novo Arquivo16   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo17   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo18   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-
 	
 
 	xMenuOp( 'MenuY2' , 'Main' , aZop1 , nRow1 , nCol1 , .t. , {} , 0  )
-
-
 
 Return 
 
