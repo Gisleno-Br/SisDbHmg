@@ -1501,6 +1501,7 @@ Function D1Black(cJan,zBitMap)
 
 
 
+
 Return
 
 
@@ -1514,32 +1515,32 @@ Function xTesMenu(  cNName , nRow , nCol , aMatriz , nItemSel )
 
 	Aadd(aZop1 , { "Pesquisar" , "Imp.Doc" , .t. , { | | TestBrow()  }    }    )
 	Aadd(aZop1 , { "E%xcluir." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .f.    }   )
-	Aadd(aZop1 , { "Novo Cod.Barra" , "Novo Arquivo..." , .t. , { | a | msginfo('k22 ' + Str(a) )     }    ,   .t. ,   {|a,b|  xSubTeste( a , b )   } }  )
+	Aadd(aZop1 , { "Novo Cod.Barra" , "Novo Arquivo CodBarra..." , .t. , { | a | msginfo('k22 ' + Str(a) )     }    ,   .t. ,   {|a,b|  xSubTeste( a , b )   } }  )
 	Aadd(aZop1 , { "Novo %Arquivo2   " , "Novo Arquivo..." , .t. , { || ( DoEvents() ,  xDoit() ,    DoEvents() )   }    }  )
 	Aadd(aZop1 , { "Tracker %Contabil" , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "Legenda" , "Novo Arquivo..." , .t. , { || ( msginfo('ok2') ,  xFechaMen() )    }    }  )
-	Aadd(aZop1 , { "  Novo Arquivo5   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "  Novo Arquivo12   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "  Novo Arquivo13   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "  Novo Arquivo14   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "  Novo Arquivo15   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "  Novo Arquivo16   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "  Novo Arquivo17   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "  Novo Arquivo18   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo5   " , "" , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo6   " , "" , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo6   " , "" , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo6   " , "" , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo6   " , "" , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo12   " , "" , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo13   " , "" , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo14   " , "" , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo15   " , "" , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo16   " , "" , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo17   " , "" , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo18   " , "" , .t. , { || msginfo('k22' )     }    }  )
 
 	//msginfo(Str(    Len(aMatriz)  ) + '   ' + Str(nItemSel)   )
-
 	//msginfo(cName1)
 
 
 
-	xMenuOp( 'MenuY1' , 'Main' , aZop1 , nRow , nCol , .t. , aMatriz , nItemSel  )
+	xMenuOp( 'MenuY1' , 'Main' , aZop1 , nRow , nCol , .t. , aMatriz ,   nItemSel  ,  , 1 )
 
 //	msginfo('ok2')
+
 
 
 Return
@@ -1558,7 +1559,11 @@ Function xSubTeste( nRow1 , nCol1 )
 	Aadd(aZop1 , { "  Novo Arquivo18   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	
 
-	xMenuOp( 'MenuY2' , 'Main' , aZop1 , nRow1 , nCol1 , .t. , {} , 0  )
+	xMenuSubOp( 'MenuY2' , 'Main' , aZop1 , nRow1 , nCol1 , .t.  ) 
+
+	 //xSetMenu1()
+
+	//msginfo('ok22')
 
 Return 
 
