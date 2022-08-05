@@ -16,7 +16,7 @@
 
 
 Static aOpz22 := {}
-Static nItemx21 := 1
+Static nItemx22 := 1
 Static nItemZ11 := 1
 Static cOpy22 := ''
 
@@ -30,9 +30,13 @@ Static zBitMap6
 Static cSubName1 := ''
 //Static aOpz22
 
+Static lTracking785 := .t.
+Static lTracking786 := .f.
 
+Static lEnabled2 := .t.
+Static lCheck1 := .f. 
 
-Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled )
+Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled ) 
 
  	Local cSubMenuName := cName 
 	Local cNSombra1 := cName + '_Sombra1'
@@ -41,21 +45,24 @@ Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled )
     Local nH1 
 	Local nCol2 
 
+	Local nItemz1 := 0
+
 	Local nHeight := (Len(aOp1) * nItemSubHeight)
 
 	Local cSubMenuSombra := 'wSombra_' + Right(cSubMenuName,4)
 
-	Private lEnabled2 := lEnabled
-	aOpz22 := Aclone(aOp1)
+	lEnabled2 := lEnabled
 
 	
-
+	aOpz22 := Aclone(aOp1)
 	nCol2 := (nLeft+1)+nColTamMenu - 1
 
 	If _isWindowDefined(cSubMenuName)
-		REturn 
-
+		Return 
 	End If 
+
+	xIniSubMenu()
+
 
 
 
@@ -66,7 +73,7 @@ Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled )
 
     DEFINE WINDOW &cSubMenuName AT nTop, nLeft+1 WIDTH nColTamMenu HEIGHT Iif(  Len(aOpz22) <=  XMAXITEM , nHeight ,  300    ) TITLE 'Men1' ;
 		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR aCorSub2 VIRTUAL HEIGHT Iif(  Len(aOpz22) <=  XMAXITEM , nHeight+1 ,  (Len(aOp1) * nItemSubHeight)+10  )  ;
-		ON PAINT xPaintPopup(ThisWindow.Name , aOpz22 , nItemx21 , nItemZ11 , cOpy22 , 0 , 0 ,  Len(aOpz22) > XMAXITEM     ,  .t. ,  ,  , .t. )
+		ON PAINT xPaintPopup(ThisWindow.Name , aOpz22 , nItemx22 , nItemZ11 , cOpy22 , 0 , 0 ,  Len(aOpz22) > XMAXITEM     ,  .t. ,  ,  , .t. )
 	END WINDOW
 
 
@@ -116,15 +123,6 @@ Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled )
 	END WINDOW
 
     
-/*
-	BT_ClientAreaInvalidateAll(   cNSombra1 )
-	_ShowWindow( cNSombra1 )
-
-
-	BT_ClientAreaInvalidateAll(   cNSombra3 )
-	_ShowWindow( cNSombra3 )	
-
-    */
 
     
 	HMG_ChangeWindowStyle(  GetProperty(  cSubMenuName , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
@@ -163,20 +161,134 @@ Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled )
 Return 
 
 
+Function xIniSubMenu()
+
+	nItemx22 := 0
+	nItemZ11 := 0
+	cOpy22 := ''
+
+	lCheck1 := .f. 
+
+Return 	
+
+Function xCloseSubMenu()
+
+	Local nI1 := 0
+
+	Local cName := 'MenuY2'
+	
+	Local cNSombra1 := cName + '_Sombra1'
+	Local cNSombra2 := cName + '_Sombra2'
+	Local cNSombra3 := cName + '_Sombra3'
+    
+	
+
+	Local cSubMenuSombra := 'wSombra_' + Right(cName,4)
+
+
+	Local nHandle1  := GetFormHandle(cName)
+	Local nHandle2  := GetFormHandle(cSubMenuSombra)
+	Local nHandle3  := GetFormHandle(cNSombra1)
+	Local nHandle4  := GetFormHandle(cNSombra2)
+	Local nHandle5  := GetFormHandle(cNSombra3)
+
+//	msginfo('xFecha')
+
+
+	If (nHandle1 > 0)
+
+		//msginfo('xFecha')
+	
+		xCloseDlg( nHandle1 )
+
+
+		If (nHandle2 > 0)
+			xCloseDlg( nHandle2 )
+		End If
+
+		If (nHandle3 > 0)
+			xCloseDlg( nHandle3 )
+		End If
+
+		If (nHandle4 > 0)
+			xCloseDlg( nHandle4 )
+		End If
+
+		If (nHandle5 > 0)
+			xCloseDlg( nHandle5 )
+		End If
+
+
+		If !RemoveHandler( "EventSubMen"  )
+			Msginfo("Erro ao remover Handle Event EventSubMen.")
+		End If
+
+
+		BT_DELAY_EXECUTION_WITH_DOEVENTS(30)		
+		DoEvents()		
+
+		//EXEC
+		
+	End If
+
+	//DoMethod('Main' , 'SetFocus')
+
+
+Return
+
+
+
+
 Function EventSubMen( nHWnd, nMsg, nWParam, nLParam )
 
 
 	Local cSubMenuSombra2 := 'MenuY2'
+	Local nPosy1
+	Local nRow , nCol 
+
+
+	If GetFormIndex(cSubMenuSombra2) == 0
+		Return 
+	End If 
 
 	// Sub Menu 
 	If ( _isWindowDefined( cSubMenuSombra2) ) .And.  (nHWnd == GetProperty(  cSubMenuSombra2 , "HANDLE" ))
 
-		//msginfo('lpp22')
+		
+		If (nMsg == WM_LBUTTONDOWN)
 
-	     //	msginfo('lpp22')
- 		If ( nMsg == WM_MOUSEMOVE )  //.And. (lTrck542)
-			//msginfo('lpp22')
+			If nWParam != 120
+				If (nItemx22 <= Len(aOpz22))           
+					xClickOpt( nItemx22 )
+				End If
+			Else 				
+				xClickOpt( nLParam )
+				Return
+			End If
 
+		End If
+
+	
+ 		If ( nMsg == WM_MOUSEMOVE )  .And. ( lTracking785) .And. (nWParam != 90)			
+			nPosy1 := xOpSelPos( cSubMenuSombra2 , 0 , Len(aOpz22) , 0 )
+			lTracking785 := (nItemx22 == nPosy1)				
+		End If 
+
+		If ( nMsg == WM_MOUSEMOVE )  .And. ( !lTracking785) .And. (nWParam != 90)			
+			xOpSelPos( cSubMenuSombra2 , 0 , Len(aOpz22) , 0 )
+			lTracking785 := .t.
+			xSelItemY(nWParam , nHWnd) 
+			lTracking21  := TrackMouseEvent(nHWnd)
+			yDCMenu11_()
+			DoEvents()
+			//msginfo('1')
+		End If 
+
+
+		If (nMsg == WM_MOUSELEAVE)			
+			lCheck1:=.t.
+			xCloseSubMenu()
+			DoEvents()
 		End If 
 
 
@@ -256,6 +368,12 @@ Static Function yDCMenu11_()
 	Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
 	Local nOrientation := BT_TEXT_DIAGONAL_ASCENDANT
 
+	DoEvents()
+
+	If !_isWindowDefined( cSubMenuSombra)		
+		Return 
+	End If 
+
 
 
 	//Local Width2  := GetProperty('Win_ScrolSombra' , 'Width' )
@@ -290,60 +408,67 @@ Static Function xSelItemY(nWParam , nHWnd1)
 	Local nRowy , nColy 
 	Local cY1 := 'MenuY1'
 	Local cY2 := 'MenuY2'
+	Local cTp1 := ''
 
 	Local cSubMenuSombra := 'wSombra_' + Right(cY2,4)
-
-
-
+	Local cSubMenuName   := cY2 
 
 	If (nWParam != 90)
 		nItemx22 := xOpSelPos( cSubMenuName, 0 , Len(aOpz22) , 0 )
 	End If
 
-	nRow1 := -(GetProperty( cSubMenuName , "VscrollBar" , "Value"))
-
 	
 	If (nItemx22 > 0) .And. (nItemx22 <= Len(aOpz22))
-		If !aOpz11[nItemx22][3]	
+		If !aOpz22[nItemx22][3]	
 			xHideHint()
 			Return
 		End If
 	End If
 
-	//DoEvents()
+	DoEvents()
 
-	//msginfo(Str(nItemx2))
+	//msginfo(Str(nItemx22))
 
 	If nItemZ11 > 0
 		xLimpSub( cSubMenuName  , @nItemZ11 ,  @nItemx22 , 0 )
 	End If
 
-	If nItemx2 > 0
+	If nItemx22 > 0
 		nItemZ11 := nItemx22
 	Else		
 		Return
 	End If
 
+	If nItemx22 > 0
+		BT_ClientAreaInvalidateRect( cSubMenuName ,  ( ( nItemx22 - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )
+	End If				
+	DoEvents()
+
+	
+  
+	If (nItemx22 > 0) .And.  (nItemx22 <= Len(  aOpz22 )) .And. ( !Empty( Alltrim(  aOpz22[nItemx22][2]  )   )) .AND. (nWParam != 90)
+		cTp1 :=	  Alltrim( 	 aOpz22[nItemx22][2]  )
+		xShowHintM( cTp1    )
+	Else
+		xHideHint()
+	End If		
 
 
-	If nItemx2 > Len(aOpz22)
-		xHideHint()		
+Return 
+
+
+Static Function xClickOpt( nOpt1 )
+
+
+	If !aOpz22[nOpt1][3]		
+		yaviso("Opção Indisponivel." , .f. )
 		Return
 	End If
 
-
-	If nItemx2 > 0
-		BT_ClientAreaInvalidateRect( cSubMenuName ,  nRow1  +  ( ( nItemx22 - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )
-	End If			
-
-	lTrackScrol := .f. 
-	
-
-	DoEvents()
-	
-
-	
-
+	If (aOpz22[nOpt1][4] != Nil )
+		Eval( aOpz22[nOpt1][4]  ,  nOpt1  )
+		Return
+	End If
 
 
 Return 
