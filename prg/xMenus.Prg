@@ -884,15 +884,12 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 
 
 
-	//Win_MenuSombra
-	//If (nHWnd == GetProperty(  'Win_Menu1' , "HANDLE" ))
-
-	If (( _isWindowDefined( cSubMenuSombra) ) .And. (nHWnd == GetProperty(  cSubMenuSombra , "HANDLE" ))) 		
-
-	
+	If (( _isWindowDefined( cSubMenuSombra) ) .And. (nHWnd == GetProperty(  cSubMenuSombra , "HANDLE" ))) 			
 	
 
-		If ( nMsg == WM_MOUSELEAVE )  	     
+		If ( nMsg == WM_MOUSELEAVE ) 
+			
+			//.And. (lTracking21) 	     
 
 			If _IsWindowDefined(cMenuScroll)
 				nSetaSel := 0		
@@ -951,25 +948,24 @@ Function EventMenu1( nHWnd, nMsg, nWParam, nLParam )
 		End If 
 
 
-		If ( nMsg == WM_MOUSEMOVE ) .and. (!lTracking192)			
+
+		If ( nMsg == WM_MOUSEMOVE ) .and. (!lTracking192)						
+			lTracking192 := .t.	
 			
-			lTracking192 := .t.							
-			lTracking21 := TrackMouseEvent(nHWnd)
-			If !xSelItemY(nWParam , nHWnd		)												                 
-			       
+			If nWParam == 0
+				lTracking21 := TrackMouseEvent(nHWnd)
+			End If 
+
+			If !xSelItemY(nWParam , nHWnd , nLParam		)												                 			       
 				If nItemSub> 0
-					If (nItemx2 != nItemSub)
-					//	msginfo('lp33 ' + Str(nItemx2) + '   ' +str(nItemSub) )
+					If (nItemx2 != nItemSub)					
 						DoEvents()					
 						xCloseSubMenu()
 						DoEvents()
 						nItemSub:=0
 					End If 
-
-				End If 
-				
-			End If 
-			//msginfo('f2'  + Str( nItemx2  ) + '   ' + Str(nPos1)) 	
+				End If 				
+			End If 			
 			
 
 		End If 
@@ -989,7 +985,7 @@ Function xShowPop()
 
 Return 
 
-Static Function xSelItemY(nWParam , nHWnd1) 
+Static Function xSelItemY(nWParam , nHWnd1 , nTecla ) 
 
 	Local nRow1
 	Local nCol       
@@ -1001,22 +997,52 @@ Static Function xSelItemY(nWParam , nHWnd1)
 	Local nItemY1
 	//Local nItemY2
 
+	DEFAULT nTecla := 1 
+
 	If (nWParam != 90)
 		nItemx2 := xOpSelPosy( cSubMenuName, 0 , Len(aOpz11) , 0 )
-	End If
-
-	nRow1 := -(GetProperty( cSubMenuName , "VscrollBar" , "Value"))
-
+		
 	
-	If (nItemx2 > 0) .And. (nItemx2 <= Len(aOpz11))
-		If !aOpz11[nItemx2][3]	
-			xHideHint()
-			Return .f. 
+		If (nItemx2 > 0) .And. (nItemx2 <= Len(aOpz11))
+			If !aOpz11[nItemx2][3]	
+				xHideHint()
+				Return .f. 
+			End If
 		End If
-	End If
+	Else 
+
+		 If (nTecla == 1) .or. (nTecla == 2)
+			While (nItemx2 <= Len(aOpz11)) .And. (!aOpz11[nItemx2][3])
+					If nTecla == 1
+						nItemx2++
+					Else 
+						nItemx2--	
+					End If 
+			Enddo
+		End If 
+
+
+		If (nTecla == 40)
+			nItemY2 := nItemx2 
+			If Len(aOpz11[nItemy2]) >= 6 				
+				nRowy := 2+GetProperty( 'MenuY1'  , 'Row') + Abs(  (nItemSubHeight *  (nItemy2 - 1)) - ( nItemSubHeight)  )
+				nColy := GetProperty( 'MenuY1'  , 'Col') + nColTamMenu + 8 
+				Eval( aOpz11[nItemy2][6]  ,  nRowy  , ;
+					nColy  , aOpz11 , nItemy2   )	
+				Return .t. 
+			Else 
+				PlayBeep()
+			End If 
+
+			Return .f. 
+
+
+		End If 
+
+	End If 
 
 	
-
+	nRow1 := -(GetProperty( cSubMenuName , "VscrollBar" , "Value"))
 
 	If nItemZ1 > 0
 		xLimpSub( cSubMenuName  , @nItemZ1 ,  @nItemx2 , 0 )
@@ -1032,7 +1058,7 @@ Static Function xSelItemY(nWParam , nHWnd1)
 
 	If nItemx2 > Len(aOpz11)
 		xHideHint()		
-		Return
+		Return .f. 
 	End If
 
 
@@ -1052,22 +1078,17 @@ Static Function xSelItemY(nWParam , nHWnd1)
 	End If 
 
 
-			   
-	
-
 	lTrackScrol := .f. 
 	xAtuMenuy()
 
 	DoEvents()
-	//BT_DELAY_EXECUTION_WITH_DOEVENTS(450)
+	
 
 	nItemy2 := xOpSelPosy( cSubMenuName, 0 , Len(aOpz11) , 0 )
 
 	If (nWParam != 90 ) .And. (  nItemy2 <= Len(aOpz11) )
 
 		GetCursorPos( @nCol2 , @nRow2)					
-					//DoEvents()
-
 		lSubOpen := .t.
 
 		If !((Len(aOpz11[nItemy2]) > 5) .And. (   aOpz11[nItemy2][5]   ))						
@@ -1095,16 +1116,12 @@ Static Function xSelItemY(nWParam , nHWnd1)
 
 			DoEvents()
 
-
 			If (nRowy > 0 ) .And. (nItemSub == 0)
 				lEntrouSub := .f.
 				nItemY2 := xOpSelPos( cJan1 , 0 , Len(aOpz11) , 0 )
 				
-				xHideHint()			
-
-		
-				BT_DELAY_EXECUTION_WITH_DOEVENTS(50)
-			//	hb_releaseCPU()
+				xHideHint()					
+				BT_DELAY_EXECUTION_WITH_DOEVENTS(50)		
 
 				nItemY1 := xOpSelPos( cJan1 , 0 , Len(aOpz11) , 0 )
 
@@ -1115,9 +1132,6 @@ Static Function xSelItemY(nWParam , nHWnd1)
 				End If
 
 				DoEvents()	
-
-				//msginfo('f1 ' + Str(nItemSub))
-
 				nItemSub   := nItemy2
 				Eval( aOpz11[nItemy2][6]  ,  nRowy  , ;
 							nColy  , aOpz11 , nItemy2   )		
@@ -1131,7 +1145,6 @@ Static Function xSelItemY(nWParam , nHWnd1)
 
 	End If 
 
-	msginfo('l1 22 ' + Str(nItemx2)  )
 	
 	If (nItemx2 > 0) .And.  (nItemx2 <= Len(  aOpz11 )) .And. ( !Empty( Alltrim(  aOpz11[nItemx2][2]  )   )) .AND. (nWParam != 90)
 		cTp1 :=	  Alltrim( 	 aOpz11[nItemx2][2]  )
@@ -1337,6 +1350,7 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 
 
 	Local ch := HMG_GetLastCharacter(@nHWnd)
+	Local cForm1 := ''
 
 	Local nMaxItem := Int(nTamSubMenuConsulta / nItemSubHeight)
 
@@ -1351,6 +1365,11 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 	nMsg    := nMsg1
 
 
+	//GetFormNameByHandle( nHWnd , @cForm1 )
+	//GetCompo
+
+	
+	
 	If nMsg == WM_CHAR
 
 		//msginfo('Char ' + ch )
@@ -1381,8 +1400,16 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 
 		If nWParam = VK_RETURN
 			lTracking42 := .f.
-			SendMessage( GetProperty(   cSubMenuSombra , "HANDLE" ) , WM_LBUTTONDOWN ,  90 ,0 )
+			SendMessage( GetProperty(   cSubMenuSombra , "HANDLE" ) , WM_LBUTTONDOWN ,  90 ,50 )
 		End If
+
+
+		If nWParam == VK_RIGHT		   
+		   If xSelItemY( 90 , Nil , 40		)												                 			       		   
+
+		   End If 		
+		   DoEvents()
+		End If 
 
 
 
@@ -1422,10 +1449,8 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 					End If					
 
 				Else
-					SendMessage( GetProperty(   cSubMenuSombra , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
-				End If
-
-				msginfo('l1 ' + Str(nItemx2)  )
+					SendMessage( GetProperty(   cSubMenuSombra , "HANDLE" ) , WM_MOUSEMOVE ,    90 , 1 )
+				End If				
 
 			   	xAtuSetas()
 				DoEvents()
@@ -1467,7 +1492,7 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 					End If
 
 				Else
-					SendMessage( GetProperty(   cSubMenuSombra , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )
+					SendMessage( GetProperty(   cSubMenuSombra , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,2 )
 				End If
 
 				//SysWait(.1)
@@ -1728,24 +1753,17 @@ Function DrawSubl(  hDC5 , nLinha  , Coluna , cText15 , nCor   )
 
   Local cLetr 
 
-//	DoEvents()
-	 
+//	DoEvents() 
 
 
   For n2 := 1 To Len(cText15)
 
-
-		cLetr := Substr( cText15 , n2 , 1)
-			//w := BT_DrawTextSize(hDC5, cLetr , nSizeFont  ,  BT_TEXT_TRANSPARENT )
+		cLetr := Substr( cText15 , n2 , 1)		
 
 		If (cLetr != '%')	
-
-			//hFont := HMG_CreateFont (  hDC5 , XFONT2, nSizeFont, .f., .f., .f., .f. )
-			
 		
 			n12 := GetTextWidth( hDC5 , cLetr , hMgFont )
 			nTypeText    := BT_TEXT_TRANSPARENT
-
 
 			If lOk 
 				nTypeText    := BT_TEXT_TRANSPARENT+BT_TEXT_UNDERLINE

@@ -1559,7 +1559,7 @@ Function xSubTeste( nRow1 , nCol1 )
 	Aadd(aZop1 , { "  Novo Arquivo18   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	
 
-	xMenuSubOp( 'MenuY2' , 'Main' , aZop1 , nRow1 , nCol1 , .t.  ) 
+	xMenuSubOp( 'MenuY2' , 'Main' , aZop1 , nRow1 , nCol1 , .t. , .t.   ) 
 
 	 //xSetMenu1()
 

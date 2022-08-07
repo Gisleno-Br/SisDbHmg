@@ -36,7 +36,7 @@ Static lTracking786 := .f.
 Static lEnabled2 := .t.
 Static lCheck1 := .f. 
 
-Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled ) 
+Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled , lItem1 ) 
 
  	Local cSubMenuName := cName 
 	Local cNSombra1 := cName + '_Sombra1'
@@ -51,6 +51,8 @@ Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled )
 
 	Local cSubMenuSombra := 'wSombra_' + Right(cSubMenuName,4)
 
+	DEFAULT lItem1 := .f. 
+
 	lEnabled2 := lEnabled
 
 	
@@ -61,7 +63,9 @@ Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled )
 		Return 
 	End If 
 
-	xIniSubMenu()
+	If !lItem1
+		xIniSubMenu()
+	End If 
 
 
 
@@ -156,15 +160,20 @@ Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled )
 	
 	InstallEventHandler( "EventSubMen" )	
 
+	DoEvents()
+	//msginfo('ok2')
+
 
 
 Return 
 
 
-Function xIniSubMenu()
+Function xIniSubMenu(   nInit  )
 
-	nItemx22 := 0
-	nItemZ11 := 0
+	DEFAULT nInit := 0
+
+	nItemx22 := nInit
+	nItemZ11 := nInit
 	cOpy22 := ''
 
 	lCheck1 := .f. 
@@ -399,7 +408,7 @@ Static Function yDCMenu11_()
 Return
 
 
-Static Function xSelItemY(nWParam , nHWnd1) 
+Static Function xSelItemY(nWParam , nHWnd1 , nTecla ) 
 
 	Local nRow1
 	Local nCol       
@@ -415,15 +424,31 @@ Static Function xSelItemY(nWParam , nHWnd1)
 
 	If (nWParam != 90)
 		nItemx22 := xOpSelPos( cSubMenuName, 0 , Len(aOpz22) , 0 )
-	End If
+	
 
 	
-	If (nItemx22 > 0) .And. (nItemx22 <= Len(aOpz22))
-		If !aOpz22[nItemx22][3]	
-			xHideHint()
-			Return
+		If (nItemx22 > 0) .And. (nItemx22 <= Len(aOpz22))
+			If !aOpz22[nItemx22][3]	
+				xHideHint()
+				Return
+			End If
 		End If
-	End If
+
+	Else 
+
+		If (nTecla == 1) .or. (nTecla == 2)
+			While (nItemx22 <= Len(aOpz22)) .And. (!aOpz22[nItemx22][3])
+					If nTecla == 1
+						nItemx22++
+					Else 
+						nItemx22--	
+					End If 
+			Enddo
+		End If 	
+
+
+	End If 
+
 
 	DoEvents()
 
