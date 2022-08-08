@@ -115,10 +115,11 @@ FUNCTION Main
 
 
 
-
-
 	Public aRotHnd := {}
 	Public lAtivaBlack := .f.
+
+
+
 
 	
 
@@ -530,7 +531,8 @@ FUNCTION Main
 
 	Public  aCorSub1   := {229,237,242}
 
-	Public aMenuBarCor := {216,228,236}
+	Public aMenuBarCor := {221,229,235}
+	//{216,228,236}
 
 
 	Public  aFonteSub1 := { 79 , 84 , 94}
@@ -1523,7 +1525,7 @@ Function xTesMenu(  cNName , nRow , nCol , aMatriz , nItemSel )
 	Aadd(aZop1 , { "  Novo Arquivo6   " , "" , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo6   " , "" , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo6   " , "" , .t. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "  Novo Arquivo6   " , "aaaaaaaa" , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo6   " , "" , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo12   " , "" , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo13   " , "" , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo14   " , "" , .t. , { || msginfo('k22' )     }    }  )
@@ -1554,7 +1556,7 @@ Function xSubTeste( nRow1 , nCol1 )
 	Aadd(aZop1 , { "  Novo Arquivo13   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo14   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo15   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "  Novo Arquivo16   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo16   " , "Novo Arquivo..." , .t. , { |a| msginfo('k22 '  +  '   ' + Str(a) )      }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo17   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo18   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	

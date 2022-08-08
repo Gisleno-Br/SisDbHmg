@@ -55,6 +55,8 @@ Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled , lItem1
 
 	lEnabled2 := lEnabled
 
+	nItemx22 := 1
+
 	
 	aOpz22 := Aclone(aOp1)
 	nCol2 := (nLeft+1)+nColTamMenu - 1
@@ -63,11 +65,10 @@ Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled , lItem1
 		Return 
 	End If 
 
-	If !lItem1
-		xIniSubMenu()
+	If !lItem1		
+		DoEvents()
+		xIniSubMenu()		
 	End If 
-
-
 
 
     cSubName1 := cName 
@@ -160,9 +161,31 @@ Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled , lItem1
 	
 	InstallEventHandler( "EventSubMen" )	
 
-	DoEvents()
-	//msginfo('ok2')
+	//DoEvents()
+	//msginfo( Str(nItemx22)  )
 
+
+
+Return 
+
+
+Function xSubupDown(  lDown  )
+
+	If !_isWindowDefined('MenuY2')
+	    Return 
+	End If 
+
+	If lDown 
+		If nItemx22 < Len(aOpz22)
+			nItemx22++
+			xSelItemY( 90 ,  GetFormHandle('MenuY2'), 250 ) 
+		End If 
+	Else 
+		If nItemx22 > 1
+			nItemx22--	
+			xSelItemY( 90 ,  GetFormHandle('MenuY2'), 250 ) 
+		End If
+	End If 
 
 
 Return 
@@ -201,8 +224,7 @@ Function xCloseSubMenu()
 	Local nHandle4  := GetFormHandle(cNSombra2)
 	Local nHandle5  := GetFormHandle(cNSombra3)
 
-//	msginfo('xFecha')
-
+	//msginfo('xFecha')
 
 	If (nHandle1 > 0)
 
@@ -353,6 +375,12 @@ Function xAtu_MenSub( lVerifica )
 
 	DoEvents()
 
+	
+	If (GetFormIndex ( cNSombra3)  ==  0)
+		Return
+	End If
+
+
 	BT_ClientAreaInvalidateAll(   cNSombra3  )
 	_ShowWindow( cNSombra3 )
 	
@@ -454,6 +482,10 @@ Static Function xSelItemY(nWParam , nHWnd1 , nTecla )
 
 	//msginfo(Str(nItemx22))
 
+	If !_isWindowDefined(cSubMenuName)
+		Return 
+	End If 
+
 	If nItemZ11 > 0
 		xLimpSub( cSubMenuName  , @nItemZ11 ,  @nItemx22 , 0 )
 	End If
@@ -478,6 +510,10 @@ Static Function xSelItemY(nWParam , nHWnd1 , nTecla )
 		xHideHint()
 	End If		
 
+	DoEvents()
+
+	//msginfo(Str(nItemx22))
+
 
 Return 
 
@@ -490,7 +526,14 @@ Static Function xClickOpt( nOpt1 )
 		Return
 	End If
 
+	
+	If _IsWindowDefined('MenuY2')	
+		xCloseSubMenu()
+	End If 
+
 	If (aOpz22[nOpt1][4] != Nil )
+		xFechaMen()
+		DoEvents()
 		Eval( aOpz22[nOpt1][4]  ,  nOpt1  )
 		Return
 	End If
