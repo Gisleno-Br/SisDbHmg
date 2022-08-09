@@ -414,8 +414,6 @@ FUNCTION Main
 
 
 
-
-
 	PUBLIC aEmpresa       := {}
 
 	PUBLIC dDataBase      := Date()
@@ -598,12 +596,10 @@ FUNCTION Main
 
 
 
-
-
 	Private nOpSel := 0
 
 	Private aItens := { {"1-Clientes","Cadastro de Clientes" , .t.  , {  ||xCliente()  }  , .f. } , ;
-		{ "1-Fornecedores","Cadastro de Fornecedores" , .t.  ,  { || xFechaMen() } , .t.  , { |a,b,c,d| xTesMenu( 'MenCli1' ,a,b,c,d)   }    } , ;
+		{ "1-Fornecedores","Cadastro de Fornecedores" , .t.  ,  { || xFechaMen() } , .f.  , { |a,b,c,d| xTesMenu( 'MenuY1' ,a,b,c,d)   }    } , ;
 		{ "1-Vendedores", "Cadastro de Vendedores" , .f.  , Nil , .f.  } , ;
 		{"1-Colaboradores","Colab1 ......." , .f. } ,   {"1-Grupo Produtos","" , .f. , Nil  } , ;
 		{"1-Locais Estoque","Estoque 1......" , .t.  , Nil } , {"1-Funções","" , .f. , Nil } , ;
@@ -628,11 +624,6 @@ FUNCTION Main
 
 	n := 1
 
-
-
-
-
-
 	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventHndMain"  ) )  ) = 0
 		InstallEventHandler( "EventHndMain" )
 	End If
@@ -640,23 +631,10 @@ FUNCTION Main
 
 	nEveLabel := 0
 
-
-
-
-
-
-
-
-
 	Private aButTop := {}
 
-
-
-
-
-
-	//xMenuMain( 'Main' ,  70 , 1  , aOpcoes , aItens )
-	xTesMenu(  'MenuY1', 50 , 450 , {} , 0 )
+	xMenuMain( 'Main' ,  70 , 1  , aOpcoes , aItens )
+	//xTesMenu(  'MenuY1', 50 , 450 , {} , 0 )
 
 	
 	DoEvents()
@@ -665,17 +643,7 @@ FUNCTION Main
 	DoEvents()
 
 
-
-
-
-
 	Main.Activate
-
-
-
-
-
-
 
 
 RETURN

@@ -71,6 +71,9 @@ Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled , lItem1
 	End If 
 
 
+	//BT_DELAY_EXECUTION_WITH_DOEVENTS(65)
+
+
     cSubName1 := cName 
 
     nH1 := If( (Len(aOpz22) > XMAXITEM) .And. ( Right(cSubMenuName,1) = '1') , 325 , (Len(aOp1) * nItemSubHeight)  )		
@@ -302,17 +305,23 @@ Function EventSubMen( nHWnd, nMsg, nWParam, nLParam )
 	
  		If ( nMsg == WM_MOUSEMOVE )  .And. ( lTracking785) .And. (nWParam != 90)			
 			nPosy1 := xOpSelPos( cSubMenuSombra2 , 0 , Len(aOpz22) , 0 )
+
+			
+
 			lTracking785 := (nItemx22 == nPosy1)				
+
 		End If 
 
 		If ( nMsg == WM_MOUSEMOVE )  .And. ( !lTracking785) .And. (nWParam != 90)			
+			//DoEvents()
 			xOpSelPos( cSubMenuSombra2 , 0 , Len(aOpz22) , 0 )
 			lTracking785 := .t.
 			xSelItemY(nWParam , nHWnd) 
 			lTracking21  := TrackMouseEvent(nHWnd)
 			yDCMenu11_()
+			//DoEvents()
 			DoEvents()
-			//msginfo('1')
+			
 		End If 
 
 
@@ -451,16 +460,15 @@ Static Function xSelItemY(nWParam , nHWnd1 , nTecla )
 	Local cSubMenuName   := cY2 
 
 	If (nWParam != 90)
-		nItemx22 := xOpSelPos( cSubMenuName, 0 , Len(aOpz22) , 0 )
-	
 
+		nItemx22 := xOpSelPos( cSubMenuName, 0 , Len(aOpz22) , 0 )
 	
 		If (nItemx22 > 0) .And. (nItemx22 <= Len(aOpz22))
 			If !aOpz22[nItemx22][3]	
 				xHideHint()
 				Return
 			End If
-		End If
+		End If	
 
 	Else 
 
@@ -486,9 +494,12 @@ Static Function xSelItemY(nWParam , nHWnd1 , nTecla )
 		Return 
 	End If 
 
-	If nItemZ11 > 0
-		xLimpSub( cSubMenuName  , @nItemZ11 ,  @nItemx22 , 0 )
+	If nItemZ11 > 0		
+		BT_ClientAreaInvalidateAll( cSubMenuName )
+		nItemZ11 := nItemx22
 	End If
+
+		
 
 	If nItemx22 > 0
 		nItemZ11 := nItemx22
@@ -498,9 +509,9 @@ Static Function xSelItemY(nWParam , nHWnd1 , nTecla )
 
 	If nItemx22 > 0
 		BT_ClientAreaInvalidateRect( cSubMenuName ,  ( ( nItemx22 - 1) * nItemSubHeight)  , 0 , nColTamMenu ,  nItemSubHeight - 1  , .t. )
-	End If				
-	DoEvents()
+	End If	
 
+	DoEvents()
 	
   
 	If (nItemx22 > 0) .And.  (nItemx22 <= Len(  aOpz22 )) .And. ( !Empty( Alltrim(  aOpz22[nItemx22][2]  )   )) .AND. (nWParam != 90)
@@ -510,6 +521,8 @@ Static Function xSelItemY(nWParam , nHWnd1 , nTecla )
 		xHideHint()
 	End If		
 
+
+	//yDCMenu11_()
 	DoEvents()
 
 	//msginfo(Str(nItemx22))

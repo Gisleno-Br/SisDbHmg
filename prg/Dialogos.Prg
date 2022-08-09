@@ -791,22 +791,28 @@ Function xFindEvent(  cEvent , nHandle1 )
     Local nindex1:=0
 	Local ni := 1
 
-	
-	Do Events
-	Do Events
+	DEFAULT nHandle1 := 0
+	//D
+	//Do Events
 
 
 	While nI <= Len(_HMG_EventData)
 
-		If (Valtype( _HMG_EventData[nI][2] ) == 'N') .And. (Valtype( _HMG_EventData[nI][1] ) == 'C')
-	
-			If  ((_HMG_EventData[nI][1] ==  cEvent ) .And. (_HMG_EventData[nI][2] ==  nHandle1 ))			
-				nIndex1 := ni
-			End If 	
+		If (Valtype( _HMG_EventData[nI][2] ) == 'N') .And. (Valtype( _HMG_EventData[nI][1] ) == 'C')	
+			If nHandle1 > 0 
+				If  ((_HMG_EventData[nI][1] ==  cEvent ) .And. (_HMG_EventData[nI][2] ==  nHandle1 ))			
+					nIndex1 := ni
+				End If 	
+			Else 
+				If  (_HMG_EventData[nI][1] ==  cEvent ) 
+					nIndex1 := ni			
+				End If 	
+			End If 
 
 		End If 	
 
 		ni++
+		DoEvents()
 
 	Enddo	
 

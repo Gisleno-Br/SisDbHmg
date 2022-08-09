@@ -149,24 +149,6 @@ Function xMenuOp( cName , cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz ,
 
 	
 
-	//aCorSub2 := WHITE
-
-	//msginfo( '2' )
- /*
-	If nItemSel > 0
-		BT_DELAY_EXECUTION_WITH_DOEVENTS(30)
-		hb_releaseCPU()
-		nItemz1 := xOpSelPos( 'JanMenuSub', 0 , Len(aMatriz) , 0 )
-		If (nItemZ1 != nItemSel) .or. ( _IsWindowDefined(cSubMenuName)) .or. (   _IsWindowDefined(cSubMenuSombra) )
-			DoEvents()			
-			hb_releaseCPU()				
-			Return
-		End If
-		DoEvents()
-	End If
-	*/
-
-
 	nCol2 := (nLeft+1)+nColTamMenu - 1
 
 	
@@ -300,33 +282,29 @@ Function xMenuOp( cName , cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz ,
 	ShowScrollBar( GetFormHandle( cSubMenuSombra ), 1, .F. )
 
 
-	If (Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventMenu1"  ) )  ) = 0) .And. ;
-	    ( Right(cSubMenuName,2) == 'Y1')
+
+	//If (Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( Hmg_ ( "EventMenu1"  ) )  ) = 0) .And. ;
+	  //  ( Right(cSubMenuName,2) == 'Y1')
 
 		InstallEventHandler( "EventMenu1" )
-		nIndexEventX := 20050
-	
-		
-		nIndexEvent := Ascan(  _HMG_EventData , { |a| a[1] == 'xKeySubMen()' } ) 
+		//nIndexEventX := 20050	
 
-	//	msginfo('k111')
+		nIndexEventX := xFindEvent(  'xKeySubMen()' )
+			
 
-		If nIndexEvent == 0 
+		//msginfo('k111 ' + Str( nIndexEventx))
+
+		If nIndexEventX == 0 
 			CREATE EVENT PROCNAME xKeySubMen()
 			nIndexEventX := Len(_HMG_EventData)
 		Else 
-			EventStop(  nIndexEvent , .f. )
+			EventStop(  nIndexEventX , .f. )
 		End If 
 
-		
-
-	End If
-
+	//End If
 
 	ShowScrollBar( GetFormHandle( cSubMenuName ), 0, .F. )
 	ShowScrollBar( GetFormHandle( cSubMenuName ), 1, .F. )
-
-
 	
 
 	If  (Len(aOpz11) > XMAXITEM) .And. (_isWindowDefined( cMenuScroll   ))
@@ -342,21 +320,7 @@ Function xMenuOp( cName , cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz ,
 
 
 	DoEvents()		
-	//_ShowWindow( cSubMenuSombra)
 	
-
-	//MSGINFO('lp')
-
-
-
-
-	
-	
-//	xAtu_Men1( .f. )
-	
-	
-	//DoEvents()
-
 
 	
 
@@ -720,7 +684,7 @@ Function xFechaMen()
 		End If
 
 		If !RemoveHandler( "EventMenu1"  )
-			Msginfo("Erro ao remover Handle Event.")
+			//Msginfo("Erro ao remover Handle Event.")
 		End If
 
 		EventSTOP ( nIndexEventX , .T.) 
@@ -1200,9 +1164,14 @@ Function xShowHintM( cMensagem    )
 		
  	nRow1 := 0
 	GetCursorPos (@nCol, @nRow1)
-	DoEvents()
+	//DoEvents()
+
 
 	GetFormNameByHandle( WindowFromPoint(  nCol , nRow1 ) , @cFormName  )
+
+	If Empty(Alltrim(cFormName))
+		Return 
+	End If 
 
     If !_isWindowDefined("Win_Msg")
 		CrieJanTip( nRow1  , GetProperty(cFormName, 'Width') - 15 ,   Alltrim(cMensagem)      ,, 0.5 )
@@ -1212,7 +1181,7 @@ Function xShowHintM( cMensagem    )
 	End If
 	xDispUpTam(cMensagem )
 
-	DoEvents()
+//	DoEvents()
 
 
 REturn 
@@ -1380,6 +1349,7 @@ Function xKeySubMen( nMsg1 , nwParam1 , cJanela  )
 	Local nMsg
 	Local nWParam
 	Local nIndice1 := 0
+
 
 
 	Local ch := HMG_GetLastCharacter(@nHWnd)
