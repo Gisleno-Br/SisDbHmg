@@ -1155,33 +1155,37 @@ Static Function xSelItemY(nWParam , nHWnd1 , nTecla )
 
 Return .f. 
 
-Function xShowHintM( cMensagem    )
+Function xShowHintM( cMensagem    , cFormName )
 
 	Local nRow1
 	Local nCol := 0
 
-	Local cFormName := ''
+	DEFAULT cFormName := ''
 		
  	nRow1 := 0
 	GetCursorPos (@nCol, @nRow1)
 	//DoEvents()
 
 
-	GetFormNameByHandle( WindowFromPoint(  nCol , nRow1 ) , @cFormName  )
+	If Empty(Alltrim(cFormName))
+		GetFormNameByHandle( WindowFromPoint(  nCol , nRow1 ) , @cFormName  )
+	End If 
 
 	If Empty(Alltrim(cFormName))
 		Return 
 	End If 
 
+	//DoEvents()
+
     If !_isWindowDefined("Win_Msg")
 		CrieJanTip( nRow1  , GetProperty(cFormName, 'Width') - 15 ,   Alltrim(cMensagem)      ,, 0.5 )
 	Else
-		xDispHint( cMensagem , nRow1 + 17   , GetProperty( cFormName, 'Col') + GetProperty( cFormName, 'Width') + 3 + 5 )
+		xDispHint( cMensagem , nRow1   , GetProperty( cFormName, 'Col') + GetProperty( cFormName, 'Width') + 3 + 18 )
 		DoFindWin('xHint')
 	End If
 	xDispUpTam(cMensagem )
 
-//	DoEvents()
+	
 
 
 REturn 

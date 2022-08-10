@@ -187,7 +187,7 @@ Function CloseJanTip(   nHwnd  )
 
 Return
 
-Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds)
+Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds , cParent )
 	LOCAL nHeight := 20 , nWidth := 304
 	Local hFont
 	Local FontHandle
@@ -195,6 +195,8 @@ Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds)
 	LOCAL hWnd, aBcolor, nWinRow := nTop, nWinCol := nLeft
 
 	DEFAULT nSeconds := 2
+	DEFAULT cParent := 'Main'
+
 	If ValType(ERROR) = "U"
 		aBcolor := {250,243,180}
 	Else
@@ -216,7 +218,7 @@ Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds)
 
 
 	DEFINE WINDOW Win_Msg AT nTop, nLeft WIDTH nWidth HEIGHT nHeight TITLE 'xHint'  ;
-		NOMAXIMIZE NOMINIMIZE NOSIZE CHILD NOSYSMENU NOCAPTION BACKCOLOR aBcolor
+		NOMAXIMIZE NOMINIMIZE NOSIZE CHILD PANEL PARENT &cParent NOSYSMENU NOCAPTION BACKCOLOR aBcolor
 
 		DEFINE LABEL Label_1
 			ROW         0
@@ -341,6 +343,7 @@ Function xDispUpTam(  cMsg1 )
 	If !IsWindowVisible(  GetFormHandle("Win_Msg") )
 		SetTamJan( Alltrim(cMsg1)  )
 		_ShowWindow("Win_Msg")
+		//DoEvents()
 	End If
 
 Return

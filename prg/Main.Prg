@@ -255,25 +255,6 @@ FUNCTION Main
 
 	
 	
-/*
-	Private aOpx1 := {}
-
-	Private nItemx1 := 0
-
-	Private nScrLin := 0
-
-	Private nLinhaAtual := 0
-
-	Private nItemClr := 0
-
-	Private l_Httb := .f.
-	Private l_Http := .t.
-
-
-	Private cOpSely := ''
-
-	*/
-
 
 
 	PRIVATE lOnToolTipCustomDraw := .T.
@@ -596,13 +577,14 @@ FUNCTION Main
 
 
 
+
 	Private nOpSel := 0
 
 	Private aItens := { {"1-Clientes","Cadastro de Clientes" , .t.  , {  ||xCliente()  }  , .f. } , ;
 		{ "1-Fornecedores","Cadastro de Fornecedores" , .t.  ,  { || xFechaMen() } , .f.  , { |a,b,c,d| xTesMenu( 'MenuY1' ,a,b,c,d)   }    } , ;
-		{ "1-Vendedores", "Cadastro de Vendedores" , .f.  , Nil , .f.  } , ;
-		{"1-Colaboradores","Colab1 ......." , .f. } ,   {"1-Grupo Produtos","" , .f. , Nil  } , ;
-		{"1-Locais Estoque","Estoque 1......" , .t.  , Nil } , {"1-Funções","" , .f. , Nil } , ;
+		{ "1-Vendedores", "Cadastro de Vendedores" , .t.  , Nil , .f.  } , ;
+		{"1-Colaboradores","Colab1 ......." , .t. } ,   {"1-Grupo Produtos","" , .t. , Nil  } , ;
+		{"1-Locais Estoque","Estoque 1......" , .t.  , Nil } , {"1-Funções","" , .t. , Nil } , ;
 		{"1-Categoria Produto", "" , .t. , { |a|  MsgInfo( ' zz ' +   Str(a)  ) } , .f. } , {"1-Unidades","" , .t. , Nil } , {"1-Tipo Produtos","",.f. , Nil  } ,;
 		{"1-Tipo Produto1s","" , .t. , Nil  },{"1-Tipo Produto2s","", .t. , Nil } ,{"1-Tipo Produt3os","" , .t. , Nil },{"1-Tipo Produt222os","", .f. , Nil  },{"1-Tipo 444Produtos","", .f. , Nil  }, ;
 		{ "1-Rotatividade","Rot" , .t. , Nil } , {"1-TES","TES1" , .t. , Nil  } , ;
