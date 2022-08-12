@@ -550,6 +550,7 @@ FUNCTION Main
 
 
 
+
 	//Load Window fSplitSubMenu
 
 
@@ -558,7 +559,7 @@ FUNCTION Main
 	//Private nMainSel  := 0
 	Private nClearSel := 0
 
-	Private cOpMainSel  := ''
+//	Private cOpMainSel  := ''
 
 
 
