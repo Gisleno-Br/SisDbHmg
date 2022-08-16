@@ -17,7 +17,8 @@
     OKVERDE1    BITMAP  img\okverde1.bmp 
     OKVERDE2    BITMAP  img\okverde2.bmp 
     OKVERDE3    BITMAP  img\okverde3.bmp 
-    OKMARK      PNG     img\ngi.png
+    OKMARK      PNG     img\ngi.Png
+    //ngi.png
 
     OKMARK22    PNG     img\ngi22.png    
 
