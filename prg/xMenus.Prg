@@ -1180,12 +1180,11 @@ Function xShowHintM( cMensagem    , cFormName )
     If !_isWindowDefined("Win_Msg")
 		CrieJanTip( nRow1  , GetProperty(cFormName, 'Width') - 15 ,   Alltrim(cMensagem)      ,, 0.5 )
 	Else
-		xDispHint( cMensagem , nRow1   , GetProperty( cFormName, 'Col') + GetProperty( cFormName, 'Width') + 3 + 18 )
+		xDispHint( cMensagem , nRow1 - 1   , GetProperty( cFormName, 'Col') + GetProperty( cFormName, 'Width') + 40 )
 		DoFindWin('xHint')
 	End If
-	xDispUpTam(cMensagem )
 
-	
+	xDispUpTam(cMensagem )	
 
 
 REturn 

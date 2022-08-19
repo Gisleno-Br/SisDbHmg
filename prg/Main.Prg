@@ -568,9 +568,9 @@ FUNCTION Main
 	//HB_SetCodePage( "UTF8")
 
 	Private aOpcoes := {{"1-Cadastro",  "Acesso a Cadastros Gerais e Principais." , .t.  }, ;
-		{"2-Movimentos"				,   "Acesso a Movimentação de Estoque"   , .t.  },;
+		{"2-Movimentos"				,   Hb_AnsiToOem("Acesso a Movimentação de Estoque")   , .t.  },;
 		{"3-Relatórios"				,   "Relatorios do Sistema"  ,   .f. }  ,;
-		{"4-Parametros"				,  	"Parametros e Configurações Gerais" , .t.  } }
+		{"4-Parametros"				,  	Hb_AnsiToOem("Parametros e Configurações Gerais") , .t.  } }
 
 
 	//cOpMainSel  := aOpcoes[1][1]
@@ -583,11 +583,17 @@ FUNCTION Main
 
 	Private nOpSel := 0
 
-	Private aItens := { {"1-Clientes","Cadastro de Clientes" , .t.  , {  ||xCliente()  }  , .f. } , ;
-		{ "1-Fornecedores","Cadastro de Fornecedores" , .t.  ,  { || xFechaMen() } , .f.  , { |a,b,c,d| xTesMenu( 'MenuY1' ,a,b,c,d)   }    } , ;
+	cText := "Usuario Logado As " + QUEBRA + ;
+	"17:00 do dia 12/12/20022 as " + QUEBRA + ;
+	"15:00 User: Gisleno.Junior" + 	QUEBRA +  "PC:4234334 Na Casa Guido"  + QUEBRA + ;
+	"Linha 0001 " + QUEBRA + "Linha 00002 "
+
+
+	Private aItens := { {"1-Clientes", Hb_AnsiToOem("Permiti Cadastrar Cliente e Fazer Manutenção")  , .t.  , {  ||xCliente()  }      } , ;
+		{ "1-Fornecedores", Hb_AnsiToOem("Permiti Cadastrar Fornecedores e Fazer Manutenção")  , .t.  ,  { ||  WinYeLLow( 200 , 200 , cText )   }     } , ;
 		{ "1-Vendedores", "Cadastro de Vendedores" , .t.  , Nil , .f.  } , ;
-		{"1-Colaboradores","Colab1 ......." , .t. } ,   {"1-Grupo Produtos","" , .f. , Nil  } , ;
-		{"1-Locais Estoque","Estoque 1......" , .t.  , Nil } , {"1-Funções","" , .f. , Nil } , ;
+		{"1-Colaboradores", Hb_AnsiToOem("Permiti Cadastrar Colaboradores e Fazer Manutenção")  , .t. } ,   {"1-Grupo Produtos","" , .f. , Nil  } , ;
+		{"1-Locais Estoque", Hb_AnsiToOem("Permiti Cadastrar o Estoque e Fazer Manutenção")  , .t.  , Nil } , {"1-Funções","" , .f. , Nil } , ;
 		{"1-Categoria Produto", "" , .t. , { |a|  MsgInfo( ' zz ' +   Str(a)  ) } , .f. } , {"1-Unidades","" , .t. , Nil } , {"1-Tipo Produtos","",.f. , Nil  } ,;
 		{"1-Tipo Produto1s","" , .t. , Nil  },{"1-Tipo Produto2s","", .t. , Nil } ,{"1-Tipo Produt3os","" , .t. , Nil },{"1-Tipo Produt222os","", .f. , Nil  },{"1-Tipo 444Produtos","", .f. , Nil  }, ;
 		{ "1-Rotatividade","Rot" , .t. , Nil } , {"1-TES","TES1" , .t. , Nil  } , ;
@@ -633,20 +639,6 @@ FUNCTION Main
 
 RETURN
 
-Function MainFocus()
-
-     //msginfo('ok23')
-
-	// DoEvents()
-     If _IsWindowDefined('Win_MenuPrincipal')
-	 	//msginfo('ok2')
-	//	yDCMenu1()
-	//	SysWait(.3)
-	 Else 
-	//    xMenuMain( 'Main' ,  70 , 0  , aOpcoes , aItens )	
-	 End If 
-
-REturn 
 
 
 Function xCliente()
@@ -678,24 +670,6 @@ Function xCliente()
 
 Return
 
-
-
-Function ProcWindowMsg()
-
-       // msginfo('ok2')
-      IF EventMSG() == WM_LBUTTONDBLCLK  
-    //     msginfo('Dblckkkk') 
-      
-      ENDIF
-
-
-	  IF EventMSG() == 24 
-         msginfo('Dblckkkk') 
-      
-      ENDIF
-
-
-Return 
 
 
 
@@ -772,28 +746,6 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 Return
 
 
-Function xRefresh()
-
-
-	If _isControlDefined('br_Grid' , cActiveJan)
-
-		_ShowWindow( cActiveJan)
-		SysWait(.2)
-
-		BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , Nil , .t. )
-
-	End If
-
-	msginfo('max')
-
-
-	//SysWait(.1)
-
-
-REturn
-
-
-
 
 
 
@@ -836,13 +788,6 @@ RETURN NIL
 
 
 
-
-
-
-Function CaptTelas(  cExtra )
-
-
-Return
 
 
 
@@ -906,508 +851,8 @@ Return nInd
 
 
 
-FUNCTION SaidaFocus(aLb)
-
-	LOCAL n
-
-	For n := 1 TO Len(aLb)
-		PostMessage(aLb[n][LABEL_HWND], WM_MOUSELEAVE, 0, 0)
-	Next
-
-RETURN NIL
-
-
-
-	// Criar e exibe itens do menu (pop pup)
-/*
-Function OpMenu(aOpcoes , cJan , nLinha , cTitx , nIndx )
-
-	Local n1
-	Local cLbl:=''
-	Local nRow := 0
-	Local lBlTitx1 := 'Lbl'+Left(cTitx,3)+StrZero(nLinha,4)
-
-	//SetProperty(cJan,"BACKCOLOR",BACK5)
-	DoMethod(cJan,"Refresh")
-	HMG_ChangeWindowStyle( fSplitSubMenu.Handle, WS_EX_CLIENTEDGE , NIL, .T., .T. )
-
-
-	HB_SETCODEPAGE("UTF8")
-	HB_SETCODEPAGE("PT850")
-
-
-	For n1 := 1 to Len(aOpcoes)
-
-		cLbl := "Mnx_" + Alltrim(Str( nIndx)) + "_" +  StrZero(n1  ,4)
-
-		If !_IsControlDefined(cLbl , cJan)
-
-			DEFINE LABEL &(cLbl)
-			PARENT    &(cJan)
-			//PARENT    fSplitSubMenu
-			ROW       nRow
-			COL       3
-			WIDTH     fsplit6.Width - 5
-			HEIGHT    nItemHeight
-			FONTNAME  XFONT1
-			FONTSIZE  10
-			//VALUE     '         '  + Padr(Alltrim(aOpcoes[n1]),70) + '                  '
-			VALUE     '         '  + Padr(Alltrim(Hb_AnsiToOem(aOpcoes[n1])),70) + '                  '
-			ALIGNMENT Left
-			TRANSPARENT .f.
-			FONTCOLOR FONTCOR
-			BACKCOLOR {229,237,242}
-		END LABEL
-
-
-		nRow+=nItemHeight
-
-		nHnd1 := GetProperty(cJan , cLbl  , "HANDLE")
-
-
-		//EventProcessAllHookMessage(EventCreate({ || LabelEventHandler(aOpcoes) }, nHnd1  ), .T.)
-
-
-
-		
-
-
-
-	Else
-		SetProperty( cJan ,cLbl  ,"Visible",.t.)
-		DoMethod(cJan , cLbl ,"Show" )
-	End If
-
-Next
-
-
-
-
-
-Refreshall('fSplitSubMenu')
-
-
-
-//Refreshall('fSplit6')
-
-
-
-Return nRow
-*/
-
-// Realiza a acomodaï¿½ï¿½o dos itens do menu abaixo do aberto atualmente.
-
-/*
-
-Function RestMenu(nOp1 , nLinha , nTam , nOpSel )
-
-	Local n1 := 0
-	Local nLin := 10
-	Local nHandle
-	Local cControl
-	Local cForm
-	Local lPula := .f.
-
-	Default nTam := 0
-
-	//aOpcoes[n][LABEL_HWND] := GetProperty("fSplit6", aOpcoes[n][LABEL_NAME] , "HANDLE")
-
-	For n1 := nOp1 to Len(aOpcoes)
-
-		nHandle := aOpcoes[n1][LABEL_HWND]
-
-		GetControlNameByHandle(nHandle, @cControl, @cForm)
-
-		SetProperty(cForm, cControl, "BACKCOLOR", {255,255,255} )
-		SetProperty(cForm, cControl, "FONTBOLD", .F.)
-
-		If !lPula
-
-			If nOpSel > 0
-				If n1 <= nOpsel
-					Nlin := aMtrPos[n1]
-				Else
-					nLin += nItemHeight
-				End If
-			Else
-
-				If n1 > 1
-					nLin += nItemHeight
-				End If
-
-			End If
-
-		Else
-			nLin += (nTam+nitemHeight)+2
-			lPula := .f.
-		End If
-
-		//msginfo(cForm)
-
-		SetProperty(cForm,cControl,'Row' , nLin)
-		DoMethod( cForm , cControl ,'Refresh' )
-
-
-		If nOpSel > 0
-			If N1 == nOpSel
-
-
-				SetProperty(cForm, cControl, "BACKCOLOR", {229,237,242}  )
-				SetProperty(cForm, cControl, "FONTBOLD", .T.)
-
-				SetProperty(cForm,'Image1' , 'Visible' , .t.)
-				SetProperty(cForm,'Image1' , 'Col' , 1)
-				SetProperty(cForm,'Image1' , 'Row' , nLin)
-
-
-				lPula := .t.
-
-			End If
-
-		End If
-
-	Next
-
-Return
-*/
-
-
-
-
-
-
-/////////////
-
-/*
-FUNCTION LabelEventHandler(aLabel)
-	STATIC lTracking27 := .F.
-	LOCAL  nHWnd   := EventHWND()
-	LOCAL  nMsg    := EventMSG()
-	LOCAL  nWParam := EventWPARAM()
-	LOCAL  cControl
-	Local nIndAnt
-	LOCAL  cForm
-	Local cName
-	Local lok := .f.
-	Local cop2 := ''
-
-	GetControlNameByHandle(nHWnd, @cControl, @cForm)
-
-	//msginfo(cControl)
-
-	If Empty(Alltrim(cControl))
-		Return
-	End If
-
-
-	SWITCH nMsg
-
-CASE WM_KEYDOWN
-
-
-CASE WM_KEYUP
-
-
-
-CASE WM_LBUTTONDOWN
-
-	//msginfo('down')
-
-	If (cForm = 'fSplit2')
-		//msginfo('ok')
-		return
-	End If
-
-
-	If (alltrim(cControl) = 'Img_seta1')
-		ScrTest(1 , nContItens  )
-		Return Nil
-	End If
-
-
-	If (alltrim(cControl) = 'img_seta2')
-		ScrTest(2 , nContItens )
-		Return Nil
-	End If
-
-
-
-	nacumz := GetProperty('fSplit2','Width')
-	cOpcao := GetProperty(cForm, cControl, "VALUE")
-
-	nHanSelected := nHWnd
-
-	nRow := 09
-
-	If ("Voltar" $ cOpcao)
-		HideAll("fSplit6" )
-		ShowMain()
-		nLevelMenu     := 1
-		//MenuPrin(.t.)
-		SaidaFocus(aOpcoes)
-
-		HideAll("fSplit3"  , .t. )
-		HideAll("fSplit4"  , .t. )
-
-	End If
-
-	If (Alltrim(cOpcao) $ "Cadastros.Movimentos.Relatorios.Parametros")
-
-		SetWindowControlsVisible( 'fSplitSubMenu' , .f. )
-
-		nTop   := GetProperty(cForm, cControl, "Row")
-		cDesc := GetProperty(cForm, cControl, "Value")
-
-		If (Alltrim(cDesc) == Alltrim(cOpAberto))
-
-			nHanAnterior := nHWnd
-
-			cOpAberto := ''
-			SetProperty(cForm,'Image1' , 'Visible' , .f.)
-			SetProperty('fSplit6','Image4' , 'Visible' , .f.)
-
-			RestMenu(1 , 0  , GetProperty('fSplitSubMenu' , 'Height') , 0 )
-			DoMethod('fSplitSubMenu' ,'Hide' )
-			OffSeta()
-
-			//msginfo('')
-			xHighMenu(  'fSplit6' , cControl    , GetProperty( 'fSplit6' ,  cControl , 'Row')    )
-
-
-		Else
-
-			nTop1   := GetProperty(cForm, cControl, "Row")
-			xDropDown(  cOpcao  , nTop1  )
-
-
-
-		End If
-
-	End If
-
-
-	nindice := Ascan(aItens , { |a| Right( a[1] , Len(a[1]) - 2 ) =  Alltrim(cOpcao)  })
-
-	If (nIndice > 0)
-
-		OpenOpcao( Right(aItens[ nIndice ][1] , Len(aItens[ nIndice ][1])  - 2) , aItens[ nIndice ][2]  , nHWnd )
-		Return
-
-	End If
-
-	lTracking27 := TrackMouseEvent(nHWnd)
-
-	If Alltrim(cOpcao) == 'Clientes'
-
-
-	End If
-
-CASE WM_MOUSEMOVE
-
-	//CursorHand()
-
-	SetWindowCursor( GetControlHandle( cControl , cForm  ),  CURSORHAND )
-
-
-	If (cForm = 'fSplit2')
-		//msginfo('ok')
-		return
-	End If
-
-
-
-	IF ! lTracking27
-
-		If Left(Upper(cControl),4) == 'IMG_'
-			//msginfo('ok')
-
-			If cControl == 'Img_seta1'
-				If alltrim(Upper(GetProperty(cForm , cControl , 'picture' ))) = Upper("img\setab2.png")
-					SetProperty(cForm , cControl , 'picture' , 'img\Setab22.Png' )
-				End If
-			End If
-
-			If cControl == 'img_seta2'
-				If Upper(alltrim(GetProperty(cForm , cControl , 'picture' ))) = Upper("img\setac2.png")
-					SetProperty(cForm , cControl , 'picture' , 'img\Setac22.Png' )
-				End If
-			End If
-
-			lTracking27 := TrackMouseEvent(nHWnd) //TME_LEAVE is default flag
-
-			Return
-
-		Else
-
-
-			If Alltrim(Left(cControl,3)) = 'Mnx'
-
-
-				xHighSubMenu(  cForm , cControl )
-
-			Else
-
-				nlinha1 := GetProperty(cForm, cControl , "Row")
-
-				cOpcao2 := GetProperty(cForm, cControl, "CAPTION" )
-
-				If Empty(Alltrim(cOpAberto))
-					xHighMenu(  cForm , cControl    , nLinha1   )
-				Else
-					If Alltrim(cOpcao2) != Alltrim(cOpAberto)
-						xHighMenu(  cForm , cControl    , nLinha1   )
-					End If
-				End If
-
-			End If
-
-			lTracking27 := TrackMouseEvent(nHWnd) //TME_LEAVE is default flag
-
-		Endif
-
-	End If
-
-
-
-Return
-
-	EXIT
-
-CASE WM_MOUSELEAVE
-
-	//msginfo('leva')
-
-	If cControl == 'Img_seta1'
-		If alltrim(Upper(GetProperty(cForm , cControl , 'picture' ))) = Upper("img\setab22.png")
-			SetProperty(cForm , cControl , 'picture' , 'img\Setab2.Png' )
-		End If
-		lTracking27  := .f.
-		Return Nil
-	End If
-
-	If cControl == 'img_seta2'
-		If alltrim(Upper(GetProperty(cForm , cControl , 'picture' ))) = Upper("img\setac22.png")
-			SetProperty(cForm , cControl , 'picture' , 'img\Setac2.Png' )
-		End If
-		lTracking27  := .f.
-		Return Nil
-	End If
-
-	If Alltrim(cControl) = 'LblTitMenu'
-
-		SetProperty(cForm, cControl, "TRANSPARENT", .T.)
-		SetProperty(cForm, cControl, "FONTBOLD", .t.)
-
-	Else
-
-		cOpcao2 := GetProperty(cForm, cControl, "CAPTION" )
-
-
-		If !Empty(cOpAberto)
-			//MSGINFO('l')
-			If Alltrim(cOpcao2) != Alltrim(cOpAberto)
-
-				cName := GetProperty(cForm, cControl , "NAME")
-
-				SetProperty(cForm, cControl, "BACKCOLOR", {255,255,255} )
-				SetProperty(cForm, cControl, "FONTBOLD", .F.)
-
-				If cForm == 'fSplit6'
-					SetProperty(cForm,"Image4","Visible",.f.)
-				End If
-
-			End If
-
-		Else
-
-			xOffMenu(cForm , cControl)
-			//Do Events
-
-
-		End If
-
-	End If
-
-	lTracking27  := .f.
-
-
-	EXIT
-
-	ENDSWITCH
-
-
-
-RETURN NIL
-
- */
-
-
-
-
-
-
-Function xHighSubMenu(  cForm , cControl )
-
-	SetProperty(cForm, cControl, "BACKCOLOR", {216,228,236} )
-	SetProperty(cForm, cControl, "FONTBOLD", .f.)
-
-Return
-
-Function xOffMenu(cForm1 , cControl1)
-
-	SetProperty(cForm1, cControl1, "BACKCOLOR", {255,255,255})
-	SetProperty(cForm1, cControl1, "FONTBOLD", .F.)
-
-	//Image1
-	If cForm1 == 'fSplit6'
-		SetProperty(cForm1,"Image4","Visible",.f.)
-		SetProperty(cForm1,"Image1","Visible",.f.)
-	End If
-
-Return
-
-
-Function xHighMenu(  cForm1 , cControl1    , nLinx   )
-
-	SetProperty(cForm1, cControl1, "BACKCOLOR", {216,228,236})
-	SetProperty(cForm1, cControl1, "FONTBOLD", .T.)
-
-
-	SetProperty(cForm1,"Image4","Visible",.t.)
-	SetProperty(cForm1,"Image4","Row",  nLinx )
-	SetProperty(cForm1,"Image4","Col", 1)
-
-Return
-
-
-Function PutSeta( nLin1  , nLin2 )
-
-	Local lVisible := .t.
-
-	SetProperty("fSplit6","img_seta1","Visible",lVisible)
-	SetProperty("fSplit6","img_seta2","Visible",lVisible)
-
-	SetProperty("fSplit6","img_seta1","Row",nLin1)
-	SetProperty("fSplit6","img_seta2","Row",nLin2)
-
-Return
-
-Function OffSeta()
-
-	Local lVisible := .f.
-
-	SetProperty("fSplit6","img_seta1","Visible",lVisible)
-	SetProperty("fSplit6","img_seta2","Visible",lVisible)
-
-Return
-
-
-
-Function ShowButTop( lShow )
-
 	
 
-REturn
 
 
 

@@ -7,6 +7,11 @@
 
 #define FONTCOR {0,106,133}
 
+
+
+#define QUEBRA Chr(13)+Chr(10)
+
+
 #define BACK1 {229,237,242}
 
 #define BACK5 {255,255,255}
@@ -164,7 +169,8 @@ FUNCTION SaveCampo( cCampo1, cTab1  )
 		oQuery:Destroy()
 		oQuery := Nil
 
-		RETURN .F.
+		Return .F.
+
 	END IF
 
 	oServer:Destroy()
@@ -189,13 +195,21 @@ Return
 
 Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds , cParent )
 	LOCAL nHeight := 20 , nWidth := 304
-	Local hFont
+	
 	Local FontHandle
+	Local BTstruct
+
+	Local hDC := BT_CreateDC ( 'Main' ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct )
+	Local hFont := HMG_CreateFont (  hDC , FONTBROWSER   , FONTBROWSERSIZE , .f., .f., .f., .f. )
+
+	Local n12 := GetTextWidth( hDC , 'A' , hfont )
 
 	LOCAL hWnd, aBcolor, nWinRow := nTop, nWinCol := nLeft
 
 	DEFAULT nSeconds := 2
 	DEFAULT cParent := 'Main'
+
+	nWidth := (n12 * Len(cMsg))+5
 
 	If ValType(ERROR) = "U"
 		aBcolor := {250,243,180}
@@ -218,18 +232,20 @@ Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds , cParent )
 
 
 	DEFINE WINDOW Win_Msg AT nTop, nLeft WIDTH nWidth HEIGHT nHeight TITLE 'xHint'  ;
-		NOMAXIMIZE NOMINIMIZE NOSIZE CHILD PANEL PARENT &cParent NOSYSMENU NOCAPTION BACKCOLOR aBcolor
+		NOMAXIMIZE NOMINIMIZE NOSIZE CHILD PANEL PARENT &cParent NOSYSMENU NOCAPTION BACKCOLOR Nil ; 
+		ON PAINT xPaintHint(  ThisWindow.Name   )
 
 		DEFINE LABEL Label_1
 			ROW         0
 			COL         1
-			WIDTH       450
+			WIDTH       nWidth
 			HEIGHT      15
 			VALUE       Hb_UTF8ToStr(cMsg)
-			FONTNAME    XFONT1
-			FONTSIZE    8
+			FONTNAME    FONTBROWSER
+			FONTSIZE    FONTBROWSERSIZE
 			FONTBOLD    .F.
 			BACKCOLOR   aBcolor
+			TRANSPARENT .T.
 			FONTCOLOR   BLACK
 			CENTERALIGN .f.
 		END LABEL
@@ -240,6 +256,13 @@ Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds , cParent )
 //SetProperty( "Win_msg" , "Label_1" , "Value" , cMsg )
 
 hWnd := GetFormHandle("Win_Msg")
+
+
+	HMG_ChangeWindowStyle(  hWnd, Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
+
+
+
+BT_DeleteDC (BTstruct )
 //HMG_ChangeWindowStyle(hWnd, WS_EX_CLIENTEDGE, NIL, .T.)
 
 
@@ -259,6 +282,24 @@ hWnd := GetFormHandle("Win_Msg")
    */
 
 Return hWnd
+
+Function xPaintHint(  cJanela )
+
+	LOCAL Width  := BT_ClientAreaWidth  (cJanela)
+	LOCAL Height := BT_ClientAreaHeight (cJanela)
+	Local BTstruct2
+
+	Local hDC2 := BT_CreateDC ( cJanela  , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
+
+	
+	BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , {250,242,176} , {250,242,176}  )
+
+
+	BT_DeleteDC (BTstruct2 )
+
+
+
+Return 
 
 
 Function xFecheAnimate( hWnd)
@@ -281,6 +322,7 @@ Function xHidehint()
 	If _isWindowDefined( 'Win_Msg' )
 		If IsWindowVisible(  GetFormHandle("Win_Msg") )
 			HideWindow( GetFormHandle("Win_Msg"))
+			//xFecheAnimate( GetFormHandle("Win_Msg"))
 		End If
 	End If
 
@@ -290,7 +332,17 @@ Return
 function SetTamJan( cMsg  )
 
 	Local  FontHandle := _SetFont (GetControlHandle( 'Label_1' , 'Win_Msg' ), 'Arial', 8 , .f. , .f. ,.f. ,.f. )
-	SetProperty(   'Win_msg' , 'Width' , GetTextWidth(  0,  Alltrim(cMsg) , FontHandle  )  + 1   )
+	Local BTstruct
+	Local hDC := BT_CreateDC ( 'Main' ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct )
+	Local hFont := HMG_CreateFont (  hDC , FONTBROWSER   , FONTBROWSERSIZE , .f., .f., .f., .f. )
+
+	Local n12 := GetTextWidth( hDC , cMsg , hfont )
+
+	SetProperty(   'Win_msg' , 'Width' , n12   )
+	
+
+	BT_DeleteDC (BTstruct )
+
 
 Return
 
@@ -470,4 +522,56 @@ Function xRetLinha(  cJan )
 	aR1 := GetPos_ScreenToClient(   GetFormHandle(  cJan  )  , nRow, nCol )
 
 Return Ar1[1]
+
+
+Function WinYeLLow(nRow , nCol , cMsg1 )
+
+    Local nLines := MlCount(   cMsg1    )    
+	Local nWidth := 205
+
+
+	If nLines <= 4          
+		nWidth := 209
+	End If 
+	
+
+
+ 	DEFINE WINDOW FormSplash;
+         AT nRow,nCol ;  
+         WIDTH nWidth ;
+         HEIGHT 175 ; 
+         BACKCOLOR WHITE ; 
+         NOSYSMENU;
+         NOSIZE;
+         NOMINIMIZE;
+         NOMAXIMIZE; 
+         NOCAPTION;
+         TOPMOST;
+         CHILD
+         
+         SET WINDOW FormSplash TRANSPARENT TO COLOR WHITE
+         
+         ON KEY ESCAPE ACTION FormSplash.Release
+
+		 If nLines <= 4          
+         	@ 0, 5 IMAGE Image_1 PICTURE 'JANAMARELA2'          
+         	@ 7 ,  75 LABEL Label_1 VALUE "Aviso" TRANSPARENT FONT 'Arial' SIZE 10 FONTCOLOR BLACK BOLD
+         	@ 25, 35 LABEL Label_2 VALUE cMsg1 TRANSPARENT  FONT "Arial" SIZE 8 FONTCOLOR BLACK HEIGHT 650 WIDTH 200
+
+		Else 
+
+			@ 0, 5 IMAGE Image_1 PICTURE 'JANAMARELA1'          
+         	@20,  75 LABEL Label_1 VALUE "Aviso" TRANSPARENT FONT 'Arial' SIZE 10 FONTCOLOR BLACK BOLD
+         	@45, 35 LABEL Label_2 VALUE cMsg1 TRANSPARENT  FONT "Arial" SIZE 8 FONTCOLOR BLACK HEIGHT 650 WIDTH 200
+
+		End If 
+		 
+         
+   END WINDOW
+
+
+	_ShowWindow(  'FormSplash'  )
+	DoEvents()
+
+Return 
 

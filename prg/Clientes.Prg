@@ -995,7 +995,7 @@ Function ProcFiltro( cTab1 , lEfect )
 
 			If _isWindowDefined( 'fSplit2' )
 
-				ShowButTop( .t. )
+			//	ShowButTop( .t. )
 				BT_ClientAreaInvalidateAll ('fSplit2')
 
 				If _isWindowDefined( 'fTop1' + Right(cActiveJan,5) )

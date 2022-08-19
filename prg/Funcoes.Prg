@@ -1013,7 +1013,7 @@ Function xCaptJan(cJanela)
 
 	If _isWindowDefined(cJanela)
 
-		CaptTelas()
+		//CaptTelas()
 
 		Ywidth := GetProperty(cJanela , "Width")
 		YHeight := GetProperty(cJanela , "Height")

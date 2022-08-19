@@ -2785,9 +2785,6 @@ FUNCTION BrowConsulta( cSqlp, aCabecario, aTamanhos, aCampos, cJanx1  , aTps , c
 
 	SetProperty( cFormPrin , 'LblTitulo' , 'Value' ,  Alltrim(cTitulo) + " " + Alltrim(cTitle)  )
 
-	xRefresh()
-
-
 
 RETURN lOk1
 
