@@ -521,8 +521,8 @@ FUNCTION xInit()
 		yDCMenu1()	
 
 		DoMethod( 'Win_MenuPrincipal' , 'Activate')  
+		REturn 
 	End If 
-	
 
 	
 	xShowPop()		
@@ -530,7 +530,6 @@ FUNCTION xInit()
 
 	DoMethod(  xRetSubName() , 'Activate')
 
-	msginfo('ok2')
 
 
 

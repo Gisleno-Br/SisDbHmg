@@ -125,6 +125,7 @@ FUNCTION Main
 
 	Public nColTamMenu := 165
 
+
 	//Public nIt5 := 0
 
 
@@ -590,8 +591,8 @@ FUNCTION Main
 
 
 	Private aItens := { {"1-Clientes", Hb_AnsiToOem("Permiti Cadastrar Cliente e Fazer Manutenção")  , .t.  , {  ||xCliente()  }      } , ;
-		{ "1-Fornecedores", Hb_AnsiToOem("Permiti Cadastrar Fornecedores e Fazer Manutenção")  , .t.  ,  { ||  WinYeLLow( 200 , 200 , cText )   }     } , ;
-		{ "1-Vendedores", "Cadastro de Vendedores" , .t.  , Nil , .f.  } , ;
+		{ "1-Fornecedores", Hb_AnsiToOem("Permiti Cadastrar Fornecedores e Fazer Manutenção")  , .t.  ,  { ||  xDialog("Teste OK O K O K OK" , .f. )   }     } , ;
+		{ "1-Vendedores", "Cadastro de Vendedores" , .t.  , {|| CloseYeLLow() } , .f.  } , ;
 		{"1-Colaboradores", Hb_AnsiToOem("Permiti Cadastrar Colaboradores e Fazer Manutenção")  , .t. } ,   {"1-Grupo Produtos","" , .f. , Nil  } , ;
 		{"1-Locais Estoque", Hb_AnsiToOem("Permiti Cadastrar o Estoque e Fazer Manutenção")  , .t.  , Nil } , {"1-Funções","" , .f. , Nil } , ;
 		{"1-Categoria Produto", "" , .t. , { |a|  MsgInfo( ' zz ' +   Str(a)  ) } , .f. } , {"1-Unidades","" , .t. , Nil } , {"1-Tipo Produtos","",.f. , Nil  } ,;
@@ -624,8 +625,8 @@ FUNCTION Main
 
 	Private aButTop := {}
 
-	xMenuMain( 'Main' ,  70 , 1  , aOpcoes , aItens )
-	//xTesMenu(  'MenuY1', 50 , 450 , {} , 0 )
+	//xMenuMain( 'Main' ,  70 , 1  , aOpcoes , aItens )
+	xTesMenu(  'MenuY1', 50 , 450 , {} , 0 )
 
 	
 	DoEvents()
@@ -705,7 +706,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 		If (nMsg == 71)
 
 			If cActiveJan = 'Main'
-				If _IsWindowDefined('Win_MenuPrincipal')
+				If _IsWindowDefined('Win_MenuPrincipal')					
 					xRefreshMain()
 				End If 
 			End If 
@@ -915,10 +916,10 @@ Function xTesMenu(  cNName , nRow , nCol , aMatriz , nItemSel )
 
 	Aadd(aZop1 , { "Pesquisar" , "Imp.Doc" , .t. , { | | TestBrow()  }    }    )
 	Aadd(aZop1 , { "E%xcluir." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .f.    }   )
-	Aadd(aZop1 , { "Novo Cod.Barra" , "" , .t. , { | a | msginfo('k22 ' + Str(a) )     }    ,   .t. ,   {|a,b|  xSubTeste( a , b )   } }  )
+	Aadd(aZop1 , { "Novo Cod.Barra" , "" , .t. , { | a |  xDialog("Teste OK O K O K OK" , .f. )       }    ,   .t. ,   {|a,b|  xSubTeste( a , b )   } }  )
 	Aadd(aZop1 , { "Novo %Arquivo2   " , "Novo Arquivo..." , .t. , { || ( DoEvents() ,  xDoit() ,    DoEvents() )   }    }  )
 	Aadd(aZop1 , { "Tracker %Contabil" , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "Legenda" , "Novo Arquivo..." , .t. , { || ( msginfo('ok2') ,  xFechaMen() )    }    }  )
+	Aadd(aZop1 , { "Legenda" , "Novo Arquivo..." , .t. , { || ( xDialog("Teste OK O K O K OK" , .f. ) ,  xFechaMen() )    }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo5   " , "" , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo6   " , "" , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo6   " , "" , .t. , { || msginfo('k22' )     }    }  )

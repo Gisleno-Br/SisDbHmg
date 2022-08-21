@@ -305,7 +305,7 @@ Return
 Function xFecheAnimate( hWnd)
 
 	
-	Local nSeconds := 0.5
+	Local nSeconds := 0.8
 
 	AnimateWindow(hWnd, (nSeconds*300), AW_VER_NEGATIVE)
 	hb_IdleSleep(nSeconds)
@@ -524,6 +524,18 @@ Function xRetLinha(  cJan )
 Return Ar1[1]
 
 
+Function CloseYeLLow()
+
+
+	If _isWindowDefined('yFormSplash')		
+		xCloseDlg( GetFormHandle(  'yFormSplash'   )    )
+		DoEvents()
+	End If 
+
+
+Return  
+
+
 Function WinYeLLow(nRow , nCol , cMsg1 )
 
     Local nLines := MlCount(   cMsg1    )    
@@ -536,7 +548,7 @@ Function WinYeLLow(nRow , nCol , cMsg1 )
 	
 
 
- 	DEFINE WINDOW FormSplash;
+ 	DEFINE WINDOW yFormSplash;
          AT nRow,nCol ;  
          WIDTH nWidth ;
          HEIGHT 175 ; 
@@ -549,28 +561,25 @@ Function WinYeLLow(nRow , nCol , cMsg1 )
          TOPMOST;
          CHILD
          
-         SET WINDOW FormSplash TRANSPARENT TO COLOR WHITE
+         SET WINDOW yFormSplash TRANSPARENT TO COLOR WHITE
          
-         ON KEY ESCAPE ACTION FormSplash.Release
+         ON KEY ESCAPE ACTION yFormSplash.Release
 
 		 If nLines <= 4          
          	@ 0, 5 IMAGE Image_1 PICTURE 'JANAMARELA2'          
          	@ 7 ,  75 LABEL Label_1 VALUE "Aviso" TRANSPARENT FONT 'Arial' SIZE 10 FONTCOLOR BLACK BOLD
          	@ 25, 35 LABEL Label_2 VALUE cMsg1 TRANSPARENT  FONT "Arial" SIZE 8 FONTCOLOR BLACK HEIGHT 650 WIDTH 200
-
 		Else 
-
 			@ 0, 5 IMAGE Image_1 PICTURE 'JANAMARELA1'          
          	@20,  75 LABEL Label_1 VALUE "Aviso" TRANSPARENT FONT 'Arial' SIZE 10 FONTCOLOR BLACK BOLD
          	@45, 35 LABEL Label_2 VALUE cMsg1 TRANSPARENT  FONT "Arial" SIZE 8 FONTCOLOR BLACK HEIGHT 650 WIDTH 200
-
 		End If 
 		 
          
    END WINDOW
 
 
-	_ShowWindow(  'FormSplash'  )
+	_ShowWindow(  'yFormSplash'  )
 	DoEvents()
 
 Return 

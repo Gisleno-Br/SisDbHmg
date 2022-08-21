@@ -94,8 +94,21 @@ Static nItemSub   := 0
 
 Static hMgFont 
 
+Static hBitSeta 
+Static hBitSeta2
+
+Static bBmp1
+Static bBmp2
 
 
+
+Static bBmp3
+Static bBmp4
+
+
+
+Static bBmp5
+Static bBmp6
 
 
 
@@ -111,6 +124,24 @@ Function xMenuOp( cName , cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz ,
 	Local nRow2
 
 	Local nH2 
+
+
+	
+	hBitSeta  :=  xBmpToTrans( 'SETATRANSP', aCorSub2 , 16,16 )
+	hBitSeta2 :=  xBmpToTrans( 'SETATRANSP', aMenuBarCor , 16,16 )
+
+
+	bBmp1 := xBmpToTrans( 'SETAB1', aMenuBarCor , 16,16 )
+	bBmp2 := xBmpToTrans( 'SETAC1', aMenuBarCor , 16,16 )
+
+
+	bBmp3 := xBmpToTrans( 'SETAB1', aCorSub2 , 16,16 )
+	bBmp4 := xBmpToTrans( 'SETAC1', aCorSub2 , 16,16 )
+
+	bBmp5 := xBmpToTrans( 'SETAB1D', aCorSub2 , 16,16 )
+	bBmp6 := xBmpToTrans( 'SETAC1D', aCorSub2 , 16,16 )
+
+
 
 	Default lPopUp := .f.
 	Default lEnabled := .t.
@@ -1010,6 +1041,7 @@ Static Function xSelItemY(nWParam , nHWnd1 , nTecla )
 			If Len(aOpz11[nItemy2]) >= 6 				
 				nRowy := 2+GetProperty( 'MenuY1'  , 'Row') + Abs(  (nItemSubHeight *  (nItemy2 - 1)) - ( nItemSubHeight)  )
 				nColy := GetProperty( 'MenuY1'  , 'Col') + nColTamMenu + 8 
+			//	msginfo(Str(nColy))
 				Eval( aOpz11[nItemy2][6]  ,  nRowy  , ;
 					nColy  , aOpz11 , nItemy2   )	
 				Return .t. 
@@ -1089,17 +1121,17 @@ Static Function xSelItemY(nWParam , nHWnd1 , nTecla )
 
 			If _isWindowDefined('JanMenuSub')
 				nRowy := (nRow2 - nItemSubHeight) 
-				nColy := GetProperty( 'JanMenuSub'  , 'Col') + nColTamMenu + 5 
+				nColy := Abs(GetProperty( 'JanMenuSub'  , 'Col')) + nColTamMenu + 5 
 				cJan1 := 'JanMenuSub'
 			End If 
 
 			nRowy := 0
 			nColy := 0
 
-
 			If _isWindowDefined('MenuY1')
 				nRowy := 2+GetProperty( 'MenuY1'  , 'Row') + Abs(  (nItemSubHeight *  (nItemy2 - 1)) - ( nItemSubHeight)  ) 
-				nColy := GetProperty( 'MenuY1'  , 'Col') + nColTamMenu + 8 
+				nColy := Abs(GetProperty( 'MenuY1'  , 'Col') + nColTamMenu + 8) 
+				//msginfo(Str(nColy))
 				cJan1 := 'MenuY1'
 			End If 
 
@@ -1218,21 +1250,10 @@ Function xPaintScrool( cForm )
 
 
 
-	Local bBmp1 := xBmpToTrans( 'SETAB1', aMenuBarCor , 16,16 )
-	Local bBmp2 := xBmpToTrans( 'SETAC1', aMenuBarCor , 16,16 )
-
+	
 
 	LOCAL Width  := BT_ClientAreaWidth  (cForm)
 	LOCAL Height := BT_ClientAreaHeight (cForm)
-
-
-
-	Local bBmp3 := xBmpToTrans( 'SETAB1', aCorSub2 , 16,16 )
-	Local bBmp4 := xBmpToTrans( 'SETAC1', aCorSub2 , 16,16 )
-
-
-	Local bBmp5 := xBmpToTrans( 'SETAB1D', aCorSub2 , 16,16 )
-	Local bBmp6 := xBmpToTrans( 'SETAC1D', aCorSub2 , 16,16 )
 
 
 
@@ -1300,15 +1321,6 @@ Function xPaintScrool( cForm )
 
 
 
-	BT_BitmapRelease ( bBmp1 )
-	BT_BitmapRelease ( bBmp2 )
-
-	BT_BitmapRelease ( bBmp3 )
-	BT_BitmapRelease ( bBmp4 )
-
-
-	BT_BitmapRelease ( bBmp5 )
-	BT_BitmapRelease ( bBmp6 )
 
 
 	BT_DeleteDC (BTstruct2 )
@@ -1601,8 +1613,6 @@ Function xPaintPopup( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDro
 	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
 	Local cTexto := ''
 
-	Local hBitSeta  :=  xBmpToTrans( 'SETATRANSP', aCorSub2 , 16,16 )
-	Local hBitSeta2 :=  xBmpToTrans( 'SETATRANSP', aMenuBarCor , 16,16 )
 
 	Local nRow := -(GetProperty( cForm    , "VscrollBar" , "Value"))
 	Local nLineSeta := nTamSubMenuConsulta
@@ -1749,8 +1759,8 @@ Function xPaintPopup( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDro
 	Next
 	
 
-	BT_BitmapRelease ( hBitSeta )
-	BT_BitmapRelease ( hBitSeta2 )
+	//BT_BitmapRelease ( hBitSeta )
+	//BT_BitmapRelease ( hBitSeta2 )
 
 
 	If (lSubMenu1) .or. (lPopup)
@@ -1944,5 +1954,6 @@ Static Function yActivScrol( nHWnd1  , nNovSeta )
 
 
 Return 
+
 
 
