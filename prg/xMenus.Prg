@@ -100,6 +100,9 @@ Static hBitSeta2
 Static bBmp1
 Static bBmp2
 
+Static nColSub1 := 0
+Static nRowSub1 := 0
+
 
 
 Static bBmp3
@@ -250,6 +253,8 @@ Function xMenuOp( cName , cParent , aOp1 , nTop , nLeft  ,  lPopUp  ,  aMatriz ,
 		ON PAINT xPaintPopup(ThisWindow.Name , aOpz11 , nItemx2 , nItemZ1 , cOpy2 , 0 , 0 ,  Len(aOpz11) > XMAXITEM     ,  .t. ,  ,  , .t. )
 	END WINDOW
 
+	nColSub1 := nLeft+nColTamMenu+2
+	nRowSub1 := nTop
 
 	
 //	DoEvents()
@@ -1130,8 +1135,8 @@ Static Function xSelItemY(nWParam , nHWnd1 , nTecla )
 
 			If _isWindowDefined('MenuY1')
 				nRowy := 2+GetProperty( 'MenuY1'  , 'Row') + Abs(  (nItemSubHeight *  (nItemy2 - 1)) - ( nItemSubHeight)  ) 
-				nColy := Abs(GetProperty( 'MenuY1'  , 'Col') + nColTamMenu + 8) 
-				//msginfo(Str(nColy))
+				nRowY := nRowSub1 + Abs(  (nItemSubHeight *  (nItemy2))  ) - ( nItemSubHeight)  
+				nColy := nColSub1			
 				cJan1 := 'MenuY1'
 			End If 
 
@@ -1156,7 +1161,7 @@ Static Function xSelItemY(nWParam , nHWnd1 , nTecla )
 
 				DoEvents()	
 				nItemSub   := nItemy2
-				//msginfo(Str(nItemy2))
+				
 				If (nItemy2 <= Len(aOpz11)) .And. (   Len(aOpz11[nItemy2]) >= 6   )
 					Eval( aOpz11[nItemy2][6]  ,  nRowy  , ;
 							nColy  , aOpz11 , nItemy2   )		

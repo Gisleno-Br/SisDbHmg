@@ -582,6 +582,9 @@ FUNCTION Main
 
 
 
+
+
+
 	Private nOpSel := 0
 
 	cText := "Usuario Logado As " + QUEBRA + ;
@@ -591,7 +594,7 @@ FUNCTION Main
 
 
 	Private aItens := { {"1-Clientes", Hb_AnsiToOem("Permiti Cadastrar Cliente e Fazer Manutenção")  , .t.  , {  ||xCliente()  }      } , ;
-		{ "1-Fornecedores", Hb_AnsiToOem("Permiti Cadastrar Fornecedores e Fazer Manutenção")  , .t.  ,  { ||  xDialog("Teste OK O K O K OK" , .f. )   }     } , ;
+		{ "1-Fornecedores", Hb_AnsiToOem("Permiti Cadastrar Fornecedores e Fazer Manutenção")  , .t.  ,  { ||  xDialog("Teste OK O K O K OK" , 1 )   }     } , ;
 		{ "1-Vendedores", "Cadastro de Vendedores" , .t.  , {|| CloseYeLLow() } , .f.  } , ;
 		{"1-Colaboradores", Hb_AnsiToOem("Permiti Cadastrar Colaboradores e Fazer Manutenção")  , .t. } ,   {"1-Grupo Produtos","" , .f. , Nil  } , ;
 		{"1-Locais Estoque", Hb_AnsiToOem("Permiti Cadastrar o Estoque e Fazer Manutenção")  , .t.  , Nil } , {"1-Funções","" , .f. , Nil } , ;
@@ -636,6 +639,8 @@ FUNCTION Main
 
 
 	Main.Activate
+
+
 
 
 RETURN
@@ -916,10 +921,10 @@ Function xTesMenu(  cNName , nRow , nCol , aMatriz , nItemSel )
 
 	Aadd(aZop1 , { "Pesquisar" , "Imp.Doc" , .t. , { | | TestBrow()  }    }    )
 	Aadd(aZop1 , { "E%xcluir." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .f.    }   )
-	Aadd(aZop1 , { "Novo Cod.Barra" , "" , .t. , { | a |  xDialog("Teste OK O K O K OK" , .f. )       }    ,   .t. ,   {|a,b|  xSubTeste( a , b )   } }  )
+	Aadd(aZop1 , { "Novo Cod.Barra" , "" , .t. , { | a |  xDialog("Teste OK O K O K OK" , 1 )       }    ,   .t. ,   {|a,b|  xSubTeste( a , b )   } }  )
 	Aadd(aZop1 , { "Novo %Arquivo2   " , "Novo Arquivo..." , .t. , { || ( DoEvents() ,  xDoit() ,    DoEvents() )   }    }  )
 	Aadd(aZop1 , { "Tracker %Contabil" , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "Legenda" , "Novo Arquivo..." , .t. , { || ( xDialog("Teste OK O K O K OK" , .f. ) ,  xFechaMen() )    }    }  )
+	Aadd(aZop1 , { "Legenda" , "Novo Arquivo..." , .t. , { || ( xDialog("Teste OK O K O K OK" , 2 ) ,  xFechaMen() )    }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo5   " , "" , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo6   " , "" , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo6   " , "" , .t. , { || msginfo('k22' )     }    }  )
@@ -938,9 +943,11 @@ Function xTesMenu(  cNName , nRow , nCol , aMatriz , nItemSel )
 
 
 
+
 	xMenuOp( 'MenuY1' , 'Main' , aZop1 , nRow , nCol , .t. , aMatriz ,   nItemSel  ,  , 1 )
 
 //	msginfo('ok2')
+
 
 
 

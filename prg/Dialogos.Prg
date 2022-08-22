@@ -23,7 +23,6 @@ Static zBitMap5
 Static zBitMap6
 
 
-
 DEFINE WINDOW main
 DECLARE WINDOW fSplit6
 
@@ -387,7 +386,7 @@ FUNCTION xMsgRun( cMsg1  , bBlock , lSombra )
         FONTCOLOR {150,150,150}
     END LABEL
 
-
+  
 
 
 
@@ -489,7 +488,7 @@ FUNCTION xIniProgress( nTp )
 RETURN
 
 
-Function xProcDlg(  cJanela , cText , lMsgRun    )
+Function xProcDlg(  cJanela , cText , lMsgRun   , nTipoX  )
 
 	LOCAL Width     := BT_ClientAreaWidth  ( cJanela ) 
 
@@ -497,15 +496,22 @@ Function xProcDlg(  cJanela , cText , lMsgRun    )
 
 	Local aRGBcolor := { 9, 111, 137 }
 
-	Local nTypeText    := BT_TEXT_TRANSPARENT
+	Local nTypeText    := BT_TEXT_TRANSPARENT + BT_TEXT_BOLD
 	//+ BT_TEXT_BOLD
 	Local nAlingText   := BT_TEXT_LEFT + BT_TEXT_TOP
 	Local nOrientation := BT_TEXT_NORMAL_ORIENTATION
 
 	Local hBitSeta := BT_BitmapLoadFile( 'OKVERDE3' )
 
+	Local hImg1 := BT_BitmapLoadFile( 'OKVERDE3' )
+	Local hImg2 := BT_BitmapLoadFile( 'EXCLA2' )
+	//BT_BitmapLoadFile( 'INTERRO1' )
+	//xBmpToTrans( 'INTERRO1' ,  WHITE)
+
 	//LOCAL hDC2
 	Local BTstruct2	
+
+	Local ctitulo := Iif(nTipox == 1 , 'Informação' , Iif( nTipoX == 2 , 'Aviso' , 'Pergunta' ) )
 	
 	
 
@@ -526,8 +532,48 @@ Function xProcDlg(  cJanela , cText , lMsgRun    )
 
 
 
+
+
+
 	If !lMsgRun
-		//BT_DrawText (hDC2 , 120 , 15 , alltrim(cText) , "arial", 9, BLACK ,  WHITE , , nAlingText, nOrientation)
+
+		If nTipoX == 3 
+			hImg1 := BT_BitmapLoadFile( 'INTERRO1' )
+			cTitulo := 'Pergunta'
+		End If 
+
+		If nTipoX == 2 
+			//excla2
+			hImg1 := BT_BitmapLoadFile( 'EXCLA2' )
+			cTitulo := 'Aviso'
+		End If 
+
+
+		BT_DrawText (hDC2 , 65 , 10 , Hb_AnsiToOEm(alltrim(cText)) , 'Arial', 9 , BLACK ,  {251,244,187} ,  BT_TEXT_TRANSPARENT , nAlingText, nOrientation)
+
+		
+
+
+		BT_DrawGradientFillVertical ( hDC2 ,  0,  0,  Width, 35 , WHITE , {251,244,187}  )
+
+		
+		BT_DrawGradientFillVertical ( hDC2 ,  150 ,  0,  wIDTH , Height ,  WHITE ,  {225,225,225} )
+
+		//BT_DrawBitmap (hDC2, 7      , 355   , 24, 24 , BT_SCALE , hImg1)
+
+		BT_DrawBitmapTransparent (hDC2  , 2 ,  5 , 24  , 24 , BT_STRETCH,  hImg1 , WHITE )
+
+		BT_DrawText (hDC2 , 7 , 355 , Hb_AnsiToOEm(alltrim(cTitulo)) , XFONT1, 11 , BLACK ,  {251,244,187} ,  nTypeText , nAlingText, nOrientation)
+
+
+		DraVertH( hDc2 , 149,   Width      , .t.  )
+
+
+//		Bt_BitmapSaveFile( hImg1 , 'sdf.Bmp' )
+
+		DoEvents()
+
+
 	Else 
 
 		BT_DrawBitmapTransparent ( hDC2,   50   ,  15   , 25 , 25 , BT_COPY   ,  hBitSeta , WHITE )
@@ -551,7 +597,7 @@ Function yAviso( cMsg )
 
 Return 
 
-Function xDialog( cMsg1 , lAsk1  )
+Function xDialog( cMsg1 , nTipoz  )
 	
 
 	//ON PAINT xProcDlg()
@@ -560,25 +606,26 @@ Function xDialog( cMsg1 , lAsk1  )
 	Local nLeft
 
 	Local zBitMap , zBitMap2
+	
+
+	Local cNSombra1 := 'WinS1'
+	Local cNSombra2 := 'WinS2'
+	Local cNSombra3 := 'WinS3'
 
 	Local cParent := ''
 
 	Local lRet := .f. 
 
-	Default lAsk1 := .f. 
+	Default nTipoz := 1
 
 	Private lRetx := .F.
-
 	Private lInstall := .f. 
 
-	Private cNSombra1 := 'WinS1'
-	Private cNSombra2 := 'WinS2'
-	Private cNSombra3 := 'WinS3'
 
 
 	GetFormNameByHandle ( GetActiveWindow(), @cParent )
 
-	//msginfo( cParent )
+	
 
 	lExit := .f. 
 
@@ -592,11 +639,10 @@ Function xDialog( cMsg1 , lAsk1  )
 		WIDTH 740 HEIGHT 240 ;
 		CHILD TITLE 'xDialog1'  ;		
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE ;
-		ON PAINT xProcDlg( ThisWindow.Name ,  cMsg1 )  				
+		ON PAINT xProcDlg( ThisWindow.Name ,  cMsg1 , , nTipoz )  				
 	END WINDOW	
-	
 
-	
+	/*
 
     DEFINE LABEL Labez1
 		PARENT Win_Dialog
@@ -662,6 +708,8 @@ Function xDialog( cMsg1 , lAsk1  )
         FONTCOLOR {150,150,150}
     END LABEL
 
+*/
+
 
 	CENTER WINDOW Win_Dialog 	
 
@@ -669,110 +717,72 @@ Function xDialog( cMsg1 , lAsk1  )
 	nTop  := GetProperTy('Win_Dialog' , 'Row') 
 	nLeft := GetProperTy('Win_Dialog' , 'Col')
 
+	
+	nCol2 := nLeft + GetProperty('Win_Dialog' , 'Width') 
+	nRowX := nTop + 240
 
-
-	//zBitMap := BT_BitmapCaptureDesktop ( nTop + 12 , nLeft + GetProperTy('Win_Dialog' , 'Width')  + 2 , 5 , GetProperTy('Win_Dialog' , 'Height') - 7  )
-
-	//zBitMap2 := BT_BitmapCaptureDesktop ( nTop + GetProperTy('Win_Dialog' , 'Height') + 1 , ;
-	 //nLeft+5 , GetProperTy('Win_Dialog' , 'Width')   , 6 )
-
-
-	//Bt_BitMapSaveFile(  zBitMap , 'y0133.bmp')
-//	Bt_BitMapSaveFile(  zBitMap2 , 'y0134.bmp')
-/*
-
-	zBitMap := BT_BitmapCaptureDesktop ( nTop + 12 , nLeft + 12 , GetProperty('Win_Dialog' , 'Width') - 7 , GetProperTy('Win_Dialog' , 'Height') - 7  )
 	
 
+	zBitMap0 := BT_BitmapCaptureClientArea(  cParent ,   nTop + 3  ,  nCol2+2 ,  6  , 220  )
 
 
-	DEFINE WINDOW WinSombra2 AT nTop + 12 , nLeft+12 WIDTH GetProperty('Win_Dialog' , 'Width') - 9 HEIGHT 240 TITLE 'Sombra2' ;
-			NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
-			ON PAINT xSombra( ThisWindow.Name , nTop  , nLeft  , zBitMap ) 			
-	END WINDOW
-	*/
-
-
-	
-	nCol2 := nLeft + GetProperty('Win_Dialog' , 'Width') + 2
-
-	zBitMap0 := BT_BitmapCaptureClientArea(  cParent ,   nTop + 5  ,  nCol2+2 ,  6  , 220  )
-
-
-	DEFINE WINDOW &cNSombra1 AT nTop + 5 , nCol2+2 WIDTH 6 HEIGHT 220 TITLE 'Sombra1' ;
-		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR BLACK VIRTUAL HEIGHT Nil VISIBLE .F. ;
+	DEFINE WINDOW &cNSombra1 AT nTop + 10 , nCol2 WIDTH 4 HEIGHT 229 TITLE 'Sombra11' ;
+		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD  BACKCOLOR BLACK VIRTUAL HEIGHT Nil VISIBLE .F. ;
 		ON PAINT xSombraVert( ThisWindow.Name , 0  , 0 , zBitMap0  )
 	END WINDOW
-
-
 		
-	nRowX	 := nTop + 221
+	//nRowX	 := nTop + 
 	zBitMap5 := BT_BitmapCaptureClientArea ( cParent , nRowx  ,  nLeft+15   ,  734  , 6  )
 
-
 	
-	DEFINE WINDOW &cNSombra2 AT nRowX, nLeft+15  WIDTH 734 HEIGHT 6 TITLE 'Sombra2' ;
-		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD  PANEL PARENT &cParent BACKCOLOR BLACK VIRTUAL HEIGHT Nil VISIBLE .F. ;
+	DEFINE WINDOW &cNSombra2 AT nRowX, nLeft+15  WIDTH 725 HEIGHT 4 TITLE 'Sombra12' ;
+		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD  BACKCOLOR BLACK VIRTUAL HEIGHT Nil VISIBLE .F. ;
 		ON PAINT xSombraHor( ThisWindow.Name , 0  , 0 , zBitMap5  )
 	END WINDOW
 
+	zBitMap6 := BT_BitmapCaptureClientArea ( cParent , nRowx , nCol2+2  ,  4 , 4  )
 
-	zBitMap6 := BT_BitmapCaptureClientArea ( cParent , nRowx , nCol2+1  ,  4 , 4  )
-
-	DEFINE WINDOW &cNSombra3 AT  nRowx , nCol2+1  WIDTH 4 HEIGHT 4 TITLE 'Sombra3' ;
-		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR RED VIRTUAL HEIGHT Nil VISIBLE .F.  ;
+	DEFINE WINDOW &cNSombra3 AT  nRowx - 1  , nCol2  WIDTH 4 HEIGHT 4 TITLE 'Sombra13' ;
+		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil VISIBLE .F.  ;
 		ON PAINT xSombra3( ThisWindow.Name , zBitMap6 )
 	END WINDOW
+
+	HMG_ChangeWindowStyle(  GetProperty(  cNSombra1 , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
+	HMG_ChangeWindowStyle(  GetProperty(  cNSombra2 , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
+	HMG_ChangeWindowStyle(  GetProperty(  cNSombra3 , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
 	
 
 	BT_ClientAreaInvalidateAll(   cNSombra1 )
 	_ShowWindow( cNSombra1 )
 
 	
-	DoEvents()
-
-
-
-
-	
-	DoEvents()
-	
 	BT_ClientAreaInvalidateAll(   cNSombra2 )
 	_ShowWindow( cNSombra2 )	
 
-
+	DoEvents()
+	
+	BT_ClientAreaInvalidateAll(   cNSombra3 )
+	_ShowWindow( cNSombra3 )	
 
 	DoEvents()
 
-	
-	//BT_ClientAreaInvalidateAll(   cNSombra3 )
-	//_ShowWindow( cNSombra3 )	
 
-
-    xProcinit(lAsk1)	
+    xProcinit(nTipoz)	
 	HMG_ChangeWindowStyle( Win_Dialog.Handle, WS_EX_DLGMODALFRAME, NIL, .T., .T. )
 	
 
 	
-
-	//DisableWindow(cActiveJan)
-
-
-
-	//WinSombra2.Show()
-	//Bt_ClientAreaInvalidateAll('WinSombra2')
-	
 	_ShowWindow('Win_Dialog')
-
     xWaitDlg()	
 
-	//msginfo('pl2')
+//	msginfo('pl2')
 	xFechaDlg()
 
 
 
 
 Return (lRetx)
+
 
 
 Function xIndiDlg()
@@ -792,13 +802,14 @@ Return
 
 
 
-Function xProcinit( lPergunta )
+Function xProcinit( nTipoY )
 
 	nIndexDlg22 := Len(_HMG_EventData) + 1	
 	CREATE EVENT PROCNAME EventDlg() HWND Win_Dialog.Handle STOREINDEX nIndexDlg22 
 		
 
-	If (!lPergunta)
+
+	If (nTipoY != 3)
 
 		OBTN_Create( 'Win_Dialog', 6652,  '&Ok'   , 185, 360 ,  75 ,  30,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont ) 
 		
@@ -829,8 +840,8 @@ Function xProcinit( lPergunta )
 		
 	Else 
 
-		OBTN_Create( 'Win_Dialog', 6653, "&Sim", 185, 292,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-		OBTN_Create( 'Win_Dialog', 6654, hb_ANSIToOEM( "&Não" ), 185, 355 ,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+		OBTN_Create( 'Win_Dialog', 6653, "&Sim", 185, 592,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+		OBTN_Create( 'Win_Dialog', 6654, hb_ANSIToOEM( "&Não" ), 185, 655 ,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 
 		OBTN_Font( 'Win_Dialog', 6653,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 		OBTN_Font( 'Win_Dialog', 6654,  { cFontName, nFontSize, .F., .F., .F., .F. } )
@@ -931,21 +942,19 @@ Return
 
 Function xFechaDlg()
 
-
+	
 	
 	Local nHandle1  := DoFindWin("xDialog1")
-
 	Local nHandle2  := DoFindWin("Sombra2")
-
-
-
-
 	Local nIndex1 := xFindEvent(  'EventDlg()' ,  GetFormHandle('Win_Dialog') ) 
 	Local nIndex2 := xFindEvent(  'InputEv2()' ,  OBTN_Handle( 'Win_Dialog', 6653 )   ) 
 	Local nIndex3 := xFindEvent(  'InputEv2()' ,  OBTN_Handle( 'Win_Dialog', 6654 )   ) 
-
 	Local nIndex4 := xFindEvent(  'InputEv2()' ,  OBTN_Handle( 'Win_Dialog', 6652 )   ) 
-	
+
+	Local nHandle3 := DoFindWin('Sombra11')
+	Local nHandle4 := DoFindWin('Sombra12')
+	Local nHandle5 := DoFindWin('Sombra13')
+		
 	
 	If (nIndex1 > 0)
 		xDelEvent(   nIndex1 )
@@ -968,25 +977,13 @@ Function xFechaDlg()
 
 
 	If nHandle1 > 0
-
-		
-	
 		nSeconds := 1
-
-
 		DO EVENTS
 		SendMessage( nHandle1, WM_SYSCOMMAND, SC_CLOSE , 0 )
-
-
 		DO EVENTS
 		DO EVENTS
-
-	
-
-
 		SendMessage( nHandle1, WM_SYSCOMMAND, WM_DESTROY , 0 )
 		DO EVENTS	
-
 	End If 
 	
 
@@ -996,15 +993,55 @@ Function xFechaDlg()
 		
 		DO EVENTS
 		SendMessage( nHandle2, WM_SYSCOMMAND, SC_CLOSE , 0 )
-
 		DO EVENTS
 		DO EVENTS
-
-
 		SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )
 		DO EVENTS
 
 	End If 
+	
+
+	If nHandle3 > 0		
+
+		
+		DO EVENTS
+		SendMessage( nHandle3, WM_SYSCOMMAND, SC_CLOSE , 0 )
+		DO EVENTS
+		DO EVENTS
+		SendMessage( nHandle3, WM_SYSCOMMAND, WM_DESTROY , 0 )
+		DO EVENTS
+
+
+
+	End If 
+	
+
+	If nHandle4 > 0		
+
+	
+	//	DO EVENTS
+		SendMessage( nHandle4, WM_SYSCOMMAND, SC_CLOSE , 0 )
+		DoEvents()
+	//	DO EVENTS
+		SendMessage( nHandle4, WM_SYSCOMMAND, WM_DESTROY , 0 )
+		//DO EVENTS
+
+	End If 
+
+
+	
+	If nHandle5 > 0		
+
+	
+	//	DO EVENTS
+		SendMessage( nHandle5, WM_SYSCOMMAND, SC_CLOSE , 0 )
+		DoEvents()
+	//	DO EVENTS
+		SendMessage( nHandle5, WM_SYSCOMMAND, WM_DESTROY , 0 )
+		//DO EVENTS
+
+	End If 
+
 
 
 
@@ -1080,7 +1117,9 @@ Function xSombra3( cJanela  , zBmp1 )
 	Local BTstruct , BTstruct3
 	Local hDC := BT_CreateDC ( cJanela  , BT_HDC_INVALIDCLIENTAREA , @BTstruct)
 
-	Local hB1 := BT_BitmapCreateNew ( 4 , 4 ,  {135,135,135}  )
+	Local hB1 := BT_BitmapCreateNew ( Width , Height ,  {135,135,135}  )
+
+	//Local hB1 := BT_BitmapCreateNew ( 4 , 4 ,  RED	  )
 
 
 	hDC3 := BT_CreateDC ( hB1 , BT_HDC_BITMAP, @BTstruct3 )
@@ -1104,10 +1143,18 @@ Function xSombra3( cJanela  , zBmp1 )
 	BT_DrawSetPixel (hDC , 0, 1 , {172,172,172}   )
 
 
+	//DoEvents()
+
+	BT_DrawBitmapAlphaBlend (hDC ,  0 , 0  , 4 ,  4  , 25 , BT_COPY  , zBmp1)
 	DoEvents()
 
-	BT_DrawBitmapAlphaBlend (hDC ,  0 , 0  , 4 ,  4  , 85 , BT_COPY  , zBmp1)
-	DoEvents()
+
+	
+	
+	//Bt_BitmapSaveFile(  zBmp1 , 'Menu11so2mbra.bmp'  )
+
+
+
 
 	
 

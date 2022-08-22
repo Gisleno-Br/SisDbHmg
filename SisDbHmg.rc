@@ -10,7 +10,8 @@
     CURSORSIZE  CURSOR  img\cursorx1.Cur 
     NEXT        PNG     img\go-next.Png 
     SETATRANSP  PNG     img\Seta45_Esquerda.Png
-    EXCLA1      PNG     img\Exclamation3.Png
+    EXCLA1      PNG     img\Exclamation_1.Png
+    EXCLA2      BITMAP  img\Exclamation3.Bmp
     ROLAGEM     PNG     img\Rolagem1.Png
     INTERRO1    PNG     img\Interrogacao.Png
     SOMBRA5     BITMAP  img\Sombra5.bmp
@@ -19,6 +20,11 @@
     OKVERDE3    BITMAP  img\okverde3.bmp 
     OKMARK      PNG     img\ngi.Png
     //ngi.png
+
+
+    EXCLAPNG PNG img\updinformation_ocean.Png
+
+    INTERRO2    BITMAP  img\InterroGaBmp.Bmp 
 
     OKMARK22    PNG     img\ngi22.png    
 
