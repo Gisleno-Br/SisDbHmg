@@ -520,6 +520,8 @@ FUNCTION xInit()
 		DoEvents()
 		yDCMenu1()	
 
+		DoEvents()
+
 		DoMethod( 'Win_MenuPrincipal' , 'Activate')  
 		REturn 
 	End If 

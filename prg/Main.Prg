@@ -528,10 +528,12 @@ FUNCTION Main
 	Public nYSizeFrame := GetSystemMetrics( SM_CYFRAME )
 
 
-	Public nMaximizedWindowCol    := 0 - nXSizeFrame
-	Public nMaximizedWindowRow    := 0 - nYSizeFrame
-	Public nMaximizedWindowWidth  := GetDesktopRealWidth()  + nXSizeFrame * 2
-	Public nMaximizedWindowHeight := GetDesktopRealHeight() + nYSizeFrame * 2
+	Public nMaximizedWindowCol    := 0 //- nXSizeFrame
+	Public nMaximizedWindowRow    := 0 //- nYSizeFrame
+	Public nMaximizedWindowWidth  := GetDesktopRealWidth()  //+ nXSizeFrame * 2
+	Public nMaximizedWindowHeight := GetDesktopRealHeight() //+ nYSizeFrame * 2
+
+
 
 
 
@@ -628,8 +630,8 @@ FUNCTION Main
 
 	Private aButTop := {}
 
-	//xMenuMain( 'Main' ,  70 , 1  , aOpcoes , aItens )
-	xTesMenu(  'MenuY1', 50 , 450 , {} , 0 )
+	xMenuMain( 'Main' ,  70 , 1  , aOpcoes , aItens )
+	//xTesMenu(  'MenuY1', 50 , 450 , {} , 0 )
 
 	
 	DoEvents()
@@ -919,12 +921,14 @@ Function xTesMenu(  cNName , nRow , nCol , aMatriz , nItemSel )
 	 //'M_' + StrZero( Int( hb_Random( Val( StrTran( Time(), ":" ) ) ) ), 4 ) + 'Z1'
 	 
 
+
+
 	Aadd(aZop1 , { "Pesquisar" , "Imp.Doc" , .t. , { | | TestBrow()  }    }    )
 	Aadd(aZop1 , { "E%xcluir." , "Vis Imp.Doc" , .t. , { || ( msginfo('k32' ) , xFechaMen() )    }   , .f.    }   )
-	Aadd(aZop1 , { "Novo Cod.Barra" , "" , .t. , { | a |  xDialog("Teste OK O K O K OK" , 1 )       }    ,   .t. ,   {|a,b|  xSubTeste( a , b )   } }  )
+	Aadd(aZop1 , { "Novo Cod.Barra" , "" , .t. , { | a |  xDialog("Teste OK O K O K OK" , 2 )       }    ,   .t. ,   {|a,b|  xSubTeste( a , b )   } }  )
 	Aadd(aZop1 , { "Novo %Arquivo2   " , "Novo Arquivo..." , .t. , { || ( DoEvents() ,  xDoit() ,    DoEvents() )   }    }  )
 	Aadd(aZop1 , { "Tracker %Contabil" , "Novo Arquivo..." , .f. , { || msginfo('k22' )     }    }  )
-	Aadd(aZop1 , { "Legenda" , "Novo Arquivo..." , .t. , { || ( xDialog("Teste OK O K O K OK" , 2 ) ,  xFechaMen() )    }    }  )
+	Aadd(aZop1 , { "Legenda" , "Novo Arquivo..." , .t. , { || ( Iif(xDialog("Teste OK O K O K OK" , 3 ) , msginfo('ok2') , )  )    }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo5   " , "" , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo6   " , "" , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo6   " , "" , .t. , { || msginfo('k22' )     }    }  )
@@ -940,6 +944,9 @@ Function xTesMenu(  cNName , nRow , nCol , aMatriz , nItemSel )
 
 	//msginfo(Str(    Len(aMatriz)  ) + '   ' + Str(nItemSel)   )
 	//msginfo(cName1)
+
+
+
 
 
 

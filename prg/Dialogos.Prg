@@ -41,6 +41,15 @@ Static Function xRetImgs( nId )
 	If (nId == 6652)
 		aMtr1 := {'OKVERDE1'  , 'OKVERDE2' , 3}
 	End If 
+
+	If (nId == 6653)
+		aMtr1 := {'OKVERDE1'  , 'OKVERDE2' , 3}
+	End If 
+
+	
+	If (nId == 6654)
+		aMtr1 := {'NOBUT1'  , 'NOBUT2' , 1}
+	End If 
  
 Return aMtr1
 
@@ -75,17 +84,24 @@ FUNCTION EventDlg()
 
 		If (nWParam == VK_O )			
 			lExit := .t.				 
-			Do Events 
+			DoEvents()
+			Return 
 		End If 
 
 		If (nWParam == VK_S)
 			lRetx := .T.			
+			lExit := .t.				 
+			DoEvents()
 			xFechaDlg()			
+			Return 
 		End If 
 
 		If (nWParam == VK_N)
 			lRetx := .F.			
+			lExit := .t.				 
+			DoEvents()
 			xFechaDlg()
+			Return 
 		End If
 
 
@@ -124,16 +140,20 @@ FUNCTION EventDlg()
 
 			If nId == 6652				 
 				 lExit := .t.				 
-				 Do Events 
+				 DoEvents() 
 			End If 
 
 			If nId == 6653
+				lExit := .t.				 
 				lRetx := .T.			
+				DoEvents()
 				xFechaDlg()			
 			End If 
 
 			If nId == 6654			
+				lExit := .t.				 
 				lRetx := .F.			
+				DoEvents()
 				xFechaDlg()
 			End If
 
@@ -460,7 +480,7 @@ FUNCTION xIniProgress( nTp )
 
 
 			OBTN_Create( cJanx, 6653, "Sim", 185, 375,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-			OBTN_Create( cJanx, 6654, hb_ANSIToOEM( "Não" ), 185, 435,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+			OBTN_Create( cJanx, 6654, hb_ANSIToOEM( "Não" ), 185, 435,  62,  24 ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 
 			OBTN_Font( cJanx, 6653,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 			OBTN_Font( cJanx, 6654,  { cFontName, nFontSize, .F., .F., .F., .F. } )
@@ -504,7 +524,7 @@ Function xProcDlg(  cJanela , cText , lMsgRun   , nTipoX  )
 	Local hBitSeta := BT_BitmapLoadFile( 'OKVERDE3' )
 
 	Local hImg1 := BT_BitmapLoadFile( 'OKVERDE3' )
-	Local hImg2 := BT_BitmapLoadFile( 'EXCLA2' )
+	//Local hImg2 := BT_BitmapLoadFile( 'EXCLA2' )
 	//BT_BitmapLoadFile( 'INTERRO1' )
 	//xBmpToTrans( 'INTERRO1' ,  WHITE)
 
@@ -538,7 +558,7 @@ Function xProcDlg(  cJanela , cText , lMsgRun   , nTipoX  )
 	If !lMsgRun
 
 		If nTipoX == 3 
-			hImg1 := BT_BitmapLoadFile( 'INTERRO1' )
+			hImg1 := BT_BitmapLoadFile( 'INTERRO2' )
 			cTitulo := 'Pergunta'
 		End If 
 
@@ -549,21 +569,17 @@ Function xProcDlg(  cJanela , cText , lMsgRun   , nTipoX  )
 		End If 
 
 
-		BT_DrawText (hDC2 , 65 , 10 , Hb_AnsiToOEm(alltrim(cText)) , 'Arial', 9 , BLACK ,  {251,244,187} ,  BT_TEXT_TRANSPARENT , nAlingText, nOrientation)
-
-		
+		BT_DrawText (hDC2 , 65 , 10 , Hb_AnsiToOEm(alltrim(cText)) , 'Arial', 9 , BLACK ,  {251,244,187} ,  BT_TEXT_TRANSPARENT , nAlingText, nOrientation)		
 
 
 		BT_DrawGradientFillVertical ( hDC2 ,  0,  0,  Width, 35 , WHITE , {251,244,187}  )
-
-		
 		BT_DrawGradientFillVertical ( hDC2 ,  150 ,  0,  wIDTH , Height ,  WHITE ,  {225,225,225} )
 
 		//BT_DrawBitmap (hDC2, 7      , 355   , 24, 24 , BT_SCALE , hImg1)
 
 		BT_DrawBitmapTransparent (hDC2  , 2 ,  5 , 24  , 24 , BT_STRETCH,  hImg1 , WHITE )
+		BT_DrawText (hDC2 , 7 , 355 , Hb_AnsiToOEm(Alltrim(cTitulo)) , XFONT1, 11 , BLACK ,  {251,244,187} ,  nTypeText , nAlingText, nOrientation)
 
-		BT_DrawText (hDC2 , 7 , 355 , Hb_AnsiToOEm(alltrim(cTitulo)) , XFONT1, 11 , BLACK ,  {251,244,187} ,  nTypeText , nAlingText, nOrientation)
 
 
 		DraVertH( hDc2 , 149,   Width      , .t.  )
@@ -775,8 +791,10 @@ Function xDialog( cMsg1 , nTipoz  )
 	_ShowWindow('Win_Dialog')
     xWaitDlg()	
 
-//	msginfo('pl2')
-	xFechaDlg()
+	
+	//xFechaDlg()
+
+	msginfo('pl2  --')
 
 
 
@@ -805,43 +823,24 @@ Return
 Function xProcinit( nTipoY )
 
 	nIndexDlg22 := Len(_HMG_EventData) + 1	
-	CREATE EVENT PROCNAME EventDlg() HWND Win_Dialog.Handle STOREINDEX nIndexDlg22 
-		
+	CREATE EVENT PROCNAME EventDlg() HWND Win_Dialog.Handle STOREINDEX nIndexDlg22 	
 
 
 	If (nTipoY != 3)
 
-		OBTN_Create( 'Win_Dialog', 6652,  '&Ok'   , 185, 360 ,  75 ,  30,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont ) 
-		
-		//, 'OKVERDE1'  , 3 , 'OKVERDE2')
-
+		OBTN_Create( 'Win_Dialog', 6652,  '&Ok'   , 185, 330 ,  75 ,  30,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont ) 
 		OBTN_Font( 'Win_Dialog', 6652,  { cFontName, nFontSize, .F., .F., .F., .F. } )
-
-
-
 
 		nIndexDlg22 := Len(_HMG_EventData) + 1	
 		
 		CREATE EVENT PROCNAME InputEv2() HWND OBTN_Handle( 'Win_Dialog', 6652 )  STOREINDEX nIndexDlg22 
-		EventProcessAllHookMessage(nIndexDlg22 , .t.)
-
-
-		//SysWait(0.09)
-
-		//msginfo('lp2')
-		
+		EventProcessAllHookMessage(nIndexDlg22 , .t.)		
 		lInstall := .t. 
-
-
-		//EventProcessAllHookMessage(EventCreate("InputEv2", OBTN_Handle( 'Win_Dialog', 6652 )), .T.)
-
-
-
 		
 	Else 
 
-		OBTN_Create( 'Win_Dialog', 6653, "&Sim", 185, 592,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
-		OBTN_Create( 'Win_Dialog', 6654, hb_ANSIToOEM( "&Não" ), 185, 655 ,  62,  24,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+		OBTN_Create( 'Win_Dialog', 6653, "&Sim", 185, 505,  80,  30 ,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
+		OBTN_Create( 'Win_Dialog', 6654, hb_ANSIToOEM( "&Não" ), 185, 590 ,  80 ,  30,  .T., .T., .T.,  8, RetColor1( 1 ), aBtnFont )
 
 		OBTN_Font( 'Win_Dialog', 6653,  { cFontName, nFontSize, .F., .F., .F., .F. } )
 		OBTN_Font( 'Win_Dialog', 6654,  { cFontName, nFontSize, .F., .F., .F., .F. } )
@@ -1041,6 +1040,11 @@ Function xFechaDlg()
 		//DO EVENTS
 
 	End If 
+
+
+	DoEvents()
+
+	//msginfo('lp11')
 
 
 

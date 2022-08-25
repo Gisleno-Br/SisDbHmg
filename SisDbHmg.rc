@@ -22,9 +22,16 @@
     //ngi.png
 
 
+    NOBUT1    BITMAP  img\No_But1.bmp 
+    NOBUT2    BITMAP  img\No_But2.bmp     
+
+    
+
+
     EXCLAPNG PNG img\updinformation_ocean.Png
 
-    INTERRO2    BITMAP  img\InterroGaBmp.Bmp 
+    INTERRO2    BITMAP  img\Interrogacao3.Bmp
+
 
     OKMARK22    PNG     img\ngi22.png    
 
