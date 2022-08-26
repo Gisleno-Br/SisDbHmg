@@ -258,7 +258,7 @@ Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds , cParent )
 hWnd := GetFormHandle("Win_Msg")
 
 
-	HMG_ChangeWindowStyle(  hWnd, Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
+//HMG_ChangeWindowStyle(  hWnd, Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
 
 
 
@@ -323,6 +323,11 @@ Function xHidehint()
 		If IsWindowVisible(  GetFormHandle("Win_Msg") )
 			HideWindow( GetFormHandle("Win_Msg"))
 			//xFecheAnimate( GetFormHandle("Win_Msg"))
+			//xCloseDlg( GetFormHandle("Win_Msg") )
+			//DoEvents()
+			//HideWindow(   'Win_msg')
+			//DoEvents()
+
 		End If
 	End If
 
@@ -373,32 +378,6 @@ Return
 
 
 
-Function xDispHint( cMsg1 , nRow1 , nCol1 )
-
-	SetTamJan( Alltrim(cMsg1)  )
-
-	Default nCol1 := 0
-
-	SetProperty( 'Win_Msg' , 'Row' , nRow1 - 35 )
-
-	If (nCol1 > 0)
-		SetProperty( 'Win_Msg' , 'Col' , nCol1  )
-	End If 
-
-	SetProperty( 'Win_Msg' , 'Label_1' , 'Value' , Alltrim(  (cMsg1) ) )
-
-
-Return
-
-Function xDispUpTam(  cMsg1 )
-
-	If !IsWindowVisible(  GetFormHandle("Win_Msg") )
-		SetTamJan( Alltrim(cMsg1)  )
-		_ShowWindow("Win_Msg")
-		//DoEvents()
-	End If
-
-Return
 
 
 

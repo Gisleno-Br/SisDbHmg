@@ -427,6 +427,9 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 
 			lModeTecla:=.f. 
 			xHideHint()
+			DoEvents()
+
+			//msginfo('g1')
 
 			
 
@@ -606,11 +609,15 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 
 
 
+
+
 		If ( nMsg == WM_MOUSEMOVE ) .And. (lTracking412) 
 		 
 			GetCursorPos (@nCol1, @nRow1)
 			lSuby := .f.
-			
+
+			lCondicao := .f. 
+
 			aR1 := GetPos_ScreenToClient( GetFormHandle(  'Win_menuPrincipal'  ) , nRow1 , nCol1 )
 			nLinDrop := (nItemDrop1 * nItemSubHeight)			
 			
@@ -621,7 +628,6 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 			If nItemDrop1 == 0
 				lCondicao := .f. 
 			Else 
-
 				
 				nRowY := Ar1[1]
 				lCondicao := (nLinDrop > 0) .And. (nRowY >= nLinDrop) .and. (Abs( nRowY - nLinDrop) >= 0) .And. ;
@@ -639,6 +645,10 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 						nPos9 := xOpSelPos( 'JanMenuSub' , 0 , Len(aOpx1) , 0 )
 					End If 
 
+					If nPos9 >= 1000
+						Return 
+					End If 
+
 					nSetaSel := 0
 					xDelMain()
 					
@@ -649,8 +659,7 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 					xLimpSetas( .t. )
 					DoEvents()
 					lTracking714  := TrackMouseEvent(nHWnd)
-					DoEvents()
-								
+					DoEvents()								
 
 					If !lTracking412
 						If (nPos9 > 0) .And. (nPos9 <= Len(aOpX1))
@@ -662,9 +671,6 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 					End If					
 
 				End If
-
-			
-
 
 			Else
 				
@@ -680,10 +686,8 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 				 	lTracking412 := .t. 																    
 				End If 
 
-
-
 				If (nPos9 >= 1000)
-					lTracking412 := .f. 
+					//lTracking412 := .f. 
 				End If 							
 
 				DoEvents()
@@ -706,12 +710,11 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 		End If
 
 
-		If ( nMsg == WM_MOUSEMOVE ) .And. (!lTracking412 ) 
-		    
-			//msginfo('11')
+
+		If ( nMsg == WM_MOUSEMOVE ) .And. (!lTracking412 ) 		    
+		//	msginfo('11')
 			lTracking412 := .t.			
-			//nItemx1 := nPos9		
-					
+			//nItemx1 := nPos9				
 
 			If (lSuby )
 		
@@ -733,8 +736,7 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 				yP1 := nItemx1			
 
 
-				If (nMainSel >= 1) .And. (nMainSel <= Len(aOpcoes)) .And. (nItemMenuAnt != nMainSel)
-				//	msginfo(Str(  nMainSel   ))
+				If (nMainSel >= 1) .And. (nMainSel <= Len(aOpcoes)) .And. (nItemMenuAnt != nMainSel)				
 					nItemMenuAnt := nMainSel
 				End If
 
@@ -774,14 +776,12 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 				
 					If (nMainSel = 2000)
 						nSetaSel := 2
-					End If
-					//xDelMain()
+					End If				
 
-					//msginfo( Str(nItemMenuAnt)   )
-					xLimpSub(  'Win_MenuPrincipal'  , @nItemMenuAnt ,  nItemMenuAnt ,  nHeightDrop )			
-					//xLimpSubIt(     .t. )
+					xAtuLinhas(  ( nItemMenuAnt *  nItemSubHeight) + nHeightDrop - nItemSubHeight  ,   nItemSubHeight ,     -1    )
 					DoEvents()
-					//Baixo/Down
+					
+					
 					If (nSetaSel == 1)
 
 						If (!l_Httb)
@@ -802,9 +802,7 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 						End If
 
 					End If	
-				
 				End If
-
 
 
 				If (nMainSel > Len(aOpcoes)) .And.  (nMaInSel < 1000)
@@ -833,10 +831,6 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 					Return
 
 				End If
-
-				//msginfo('33')				
-
-
 
 				If  (nMaInSel >= 1000)					
 					//lTracking412  := .t. 
@@ -894,9 +888,15 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 					//x := nItemX1
 
 					If (!Empty(Alltrim(cTp1)))
-						xShowHintM( Alltrim(cTp1) ,  'Win_MenuPrincipal' )
+
+						ny2:=nRowSub+(nMainSel * nItemSubHeight)
+						aRt := GetPos_ScreenToClient( GetFormHandle(  'Main'  ),  nY2   , nColSub1 )						
+
+						//msginfo(Str( aRt[1]  ))
+						//msginfo(Str(aRt[2] + GetProperty( 'Win_MenuPrincipal', 'Width') + 50))
+						xShowHintM( Alltrim(cTp1) ,  'Win_MenuPrincipal' , aRt[1] , aRt[2] + GetProperty( 'Win_MenuPrincipal', 'Width')+50 ) 
 					Else
-						xHideHint()
+						xHideHint()	
 					End If
 
 					nMaInSel := i				
@@ -1326,15 +1326,20 @@ Function xDropDown(  cJanelaSub  , cMenuDesc  , nTopx1 , cParent1 )
 	nScrLin     := 0
 
 	DoEvents()
+	/*
 	GetCursorPos(@nCol1 , @nRow1)		
 	nY2 := nRowSub + (nIndice   * nItemSubHeight)
 	aRt := GetPos_ScreentoClient( GetFormHandle(  'Main'  ),  nY2   , 0 )
     nLinRow := aRt[1]
 	nCol2 := 0
 	nRow2 := 0	
+	*/
+
+
 	ny2:=nRowSub+(nindice * nItemSubHeight)
 	aRt := GetPos_ScreenToClient( GetFormHandle(  'Main'  ),  nY2   , nColSub1 )
 	nLinRow := aRt[1]
+	//msginfo(' 222 ' + Str( aRt[2]))
 	xCrieJanSub(   aRt[1] , aRt[2]+2    )
 	aOpx1 := {}	
 	nLinhaDrop := aRt[1]	
@@ -1377,13 +1382,7 @@ Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred  , nHeightCalc , nScroolP
 
 	GetCursorPos (@nCol, @nRow)
 
-	aR1 := GetPos_ScreenToClient(   GetFormHandle(  cJan  )  , nRow, nCol )
-	//NewPos := GetScrollPos( GetFormHandle(  cJan  ), 1 )
-
-//	DoEvents()
-
-
-
+	aR1 := GetPos_ScreenToClient(   GetFormHandle(  cJan  )  , nRow, nCol )	
 	NewPos := nScroolPos
 
 	//msginfo('1')
@@ -1391,8 +1390,7 @@ Function xOpSelPos( cJan , nHeit2 , nItMax , nItDopred  , nHeightCalc , nScroolP
 
 	If NewPos > 0
 		nItem := (Int( (NewPos+Ar1[1])     / nHeightCalc)+1)
-	Else
-		//nItem := (Int(Ar1[1] / nItemSubHeight)+1)
+	Else		
 		nItem := (Int(  Ar1[1]  / nHeightCalc)+1)
 	End If
 
@@ -2025,6 +2023,7 @@ Function yDCMenu2()
 	End If
 
 
+
 	/*
 	hBitMap2 := BT_BitmapCreateNew (Width1  , Height1 , WHITE )
 
@@ -2346,16 +2345,15 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 		If nSetaSel == 0
 
-			//	DraVertH( hDc2 , nLinDrop + nLineSeta - 2   , nColTamMenu )
+			DraVertH( hDc2 , nLinDrop + nLineSeta - 2   , nColTamMenu )
 			BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   ,;
 				Iif( lHitb  ,  bBmp5 ,  bBmp3 ) )
 			BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta + nItemSubHeight   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   ,  ;
 				Iif( lHitT  ,  bBmp6 ,  bBmp4 ) )
 
-		Else
+			Else
 
-			If (nSetaSel == 2)
-				// Cima // Up
+			If (nSetaSel == 2)	
 
 				If (!lHitT)
 					BT_DrawGradientFillVertical ( hDC2 ,  nLinDrop + nLineSeta - 2 + nItemSubHeight  , 0  ,    nColTamMenu      ,    ( nItemSubHeight)    , aMenuBarCor , aMenuBarCor  )
@@ -2373,8 +2371,6 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 
 			If (nSetaSel == 1)
 
-				// Baixo / Down
-
 				If (!lHitB)
 					BT_DrawGradientFillVertical ( hDC2 ,  nLinDrop + nLineSeta - 2  , 0  ,    nColTamMenu      ,    ( nItemSubHeight)    , aMenuBarCor , aMenuBarCor  )
 					BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , 	 bBmp1 )
@@ -2386,16 +2382,8 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 					BT_DrawBitmap ( hDC2,  nLinDrop + nLineSeta + nItemSubHeight - 1   , Int(nColTamMenu/2) - 15    , 16 , 16 , BT_COPY   , bBmp4 )
 				End If
 
-			End If
-
-			//	DoEvents()
-
-		End If
-
-		//DoEvents()
-
-
-
+			End If		
+		End If	
 	End If
 
 
@@ -2438,12 +2426,20 @@ Function xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDrop
 			DraVertL( hDC2 , 0 , Height , .t.)
 			DraVertL( hDC2 , Width - 1  , Height + 1 , .t.)
 			DraVertH( hDc2 , 0   , nColTamMenu , .t.  )
+		Else 
+
 		End If 
 	Else
 		If ((!lSubMenu1) .And. (!lPopup))				
 			DraVertL( hDC2 , Width - 1  ,   Height     , .t.  )
 			DraVertH( hDc2 , Height - 1 ,   Width       , .t.  )
 		End If
+
+		If _isWindowDefined('JanMenuSub')
+		//	DraVertH( hDc2 ,200 ,   Width       , .t.  )
+
+		End If 
+
 	End If	
 
 	BT_DeleteDC (BTstruct2 )

@@ -1192,12 +1192,17 @@ Static Function xSelItemY(nWParam , nHWnd1 , nTecla )
 
 Return .f. 
 
-Function xShowHintM( cMensagem    , cFormName )
+Function xShowHintM( cMensagem    , cFormName  , nLinha1 , nColuna1)
 
 	Local nRow1
 	Local nCol := 0
+	Local ar1 
+	Local nRowY := 0 
+	Local nColY := 0
 
 	DEFAULT cFormName := ''
+	DEFAULT nLinha1   := 0
+	DEFAULT nColuna1  := 0
 		
  	nRow1 := 0
 	GetCursorPos (@nCol, @nRow1)
@@ -1212,19 +1217,75 @@ Function xShowHintM( cMensagem    , cFormName )
 		Return 
 	End If 
 
+
+	aR1 := GetPos_ScreenToClient(   GetFormHandle(  cFormName  )  , nRow1 , nCol )	
+
+	nRowy := nRow1 
+	nColy := GetProperty(cFormName, 'Width') - 15 
+
+	If nLinha1 != 0
+		nRowy := nLinha1
+		nColY := nColuna1	
+	End If 
+
+	If nColuna1 = 0
+		nColy := GetProperty( cFormName, 'Col') + GetProperty( cFormName, 'Width') + 50
+	//	msginfo('wewer')
+	End If 
+
+
 	//DoEvents()
 
     If !_isWindowDefined("Win_Msg")
-		CrieJanTip( nRow1  , GetProperty(cFormName, 'Width') - 15 ,   Alltrim(cMensagem)      ,, 0.5 )
+
+		CrieJanTip( nRowy  , nColy ,  Alltrim(Str(nRowY)) + '  ' +   Alltrim(cMensagem)      ,, 0.5 )
+	//	msginfo('Criou!')
 	Else
-		xDispHint( cMensagem , nRow1 - 1   , GetProperty( cFormName, 'Col') + GetProperty( cFormName, 'Width') + 50 )
+		//msginfo(Str(nColY))
+		DoEvents()
+		xDispHint( Alltrim(Str(nColy)) + '  ' + cMensagem , nRowy - 1   , nColY )
+		
 		DoFindWin('xHint')
+		//_ShowWindow('Win_msg')
+		//DoEvents()
 	End If
 
 	xDispUpTam(cMensagem )	
 
 
 REturn 
+
+
+Function xDispHint( cMsg1 , nRow1 , nCol1 )
+
+	SetTamJan( Alltrim(cMsg1)  )
+
+	Default nCol1 := 0
+
+	//msginfo(Str( nRow1 ))
+
+	SetProperty( 'Win_Msg' , 'Row' , nRow1  )
+
+	If (nCol1 > 0)
+		SetProperty( 'Win_Msg' , 'Col' , nCol1  )
+	End If 
+
+	SetProperty( 'Win_Msg' , 'Label_1' , 'Value' , Alltrim(  (cMsg1) ) )
+
+	//DoEvents()
+
+
+Return
+
+Function xDispUpTam(  cMsg1 )
+
+	If !IsWindowVisible(  GetFormHandle("Win_Msg") )
+		SetTamJan( Alltrim(cMsg1)  )
+		_ShowWindow("Win_Msg")
+		//DoEvents()
+	End If
+
+Return
 
 Static Function xClickOpt( nOpt1 )
 
