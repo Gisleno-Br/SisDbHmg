@@ -277,6 +277,7 @@ Function xLimpSubIt( lDc )
 	DEFAULT lDc := .f.
 
 	If nItemClr > 0
+		//msginfo(Str(  nItemClr  ))	
 		xLimpSub( 'JanMenuSub' ,  @nItemClr ,  @nItemx1 , 0 )
 
 		If lSubOpen
@@ -442,9 +443,7 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 
 					nMaInSel := 0
 					nItemx1  := 0
-
 					BT_ClientAreaInvalidateAll(  'JanMenuSub' )
-
 					yDCMenu2()
 
 					xLimpSetas( .t. )
@@ -778,6 +777,11 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 						nSetaSel := 2
 					End If				
 
+					//xLimpSubIt( .t.  )	
+					nItemx1  := 0
+					BT_ClientAreaInvalidateAll(  'JanMenuSub' )
+					yDCMenu2()
+					
 					xAtuLinhas(  ( nItemMenuAnt *  nItemSubHeight) + nHeightDrop - nItemSubHeight  ,   nItemSubHeight ,     -1    )
 					DoEvents()
 					
