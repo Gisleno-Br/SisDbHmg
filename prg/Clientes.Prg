@@ -182,6 +182,10 @@ FUNCTION CadCli()
 		{ '3-Parametro 1' , { || msginfo('ok4') } },;
 		{  '3-opções' , { || msginfo('ok5') } } }
 
+	//msginfo('k11')
+
+	DoEvents()
+
 
 	
 	Private nItMax := Int(nTamSubMenuConsulta / nItemSubHeight)
@@ -590,9 +594,9 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 	SetProperty( cFormPrin , "Title" , cTitle)
 
 
-	nI1 := Ascan(aCords , { |a| a[4] == cActiveJan})
+	//nI1 := Ascan(aCords , { |a| a[4] == cActiveJan})
 
-	cIndJan := Right(aCords[nI1][1],4)			
+	//cIndJan := Right(aCords[nI1][1],4)			
 
 	//ON KEY ESCAPE OF &cFormPrin ACTION xFechaJan( cIndJan )
 

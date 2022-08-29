@@ -959,6 +959,7 @@ Function xSel_Item()
 	Else 
 	    Return 	
 	End If
+	
 
 	If (Len(aOpx1) == 0) 
 		Return 

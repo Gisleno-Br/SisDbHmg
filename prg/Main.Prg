@@ -587,6 +587,7 @@ FUNCTION Main
 
 
 
+
 	Private nOpSel := 0
 
 	cText := "Usuario Logado As " + QUEBRA + ;
@@ -654,7 +655,7 @@ Function xCliente()
 
 
 	If ( FindWindowEx( ,, , "Clientes"  ) > 0 )
-		yAviso( 'Este Cadastro ja esta Ativo.' ,, .f. )
+		xDialog( 'Este Cadastro ja esta Ativo.' , .f. )
 		//RefreshAll('fSplitSubMenu')
 	Else
 

@@ -444,17 +444,10 @@ Function xBrowser( cTabx ,   aDatas1 , cParent   ,  cBrwName , nCol  , aCabecalh
 	Local nTam1 := GetTextoTam( ' '  , cActiveJan )
 	Local nIndex22
 	Private aOpx1 := 0
-	Private cAlias := Left(cTabx,4)
-
-	
+	Private cAlias := Left(cTabx,4)	
 	Private nLarg1  := GetDeskTopWidth() - 40
-
 	
-
-	
-
 	cSqlp  := GetSql( cTabx  , .f. )
-
 	DEFAULT nCol := 10
 	DEFAULT nRowIni   := 145
 	//145

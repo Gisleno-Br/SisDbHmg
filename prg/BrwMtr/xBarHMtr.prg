@@ -726,7 +726,7 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1 )
           
             If (lScrollFim)
                 If lAviso1
-                    xDialog( Hb_AnsiToOem("Não há Mais Tela para Rolar a Direita."))
+                    xDialog( ("Não há Mais Tela para Rolar a Direita.")  )
                 End If 
                 Return -1
             End If                       

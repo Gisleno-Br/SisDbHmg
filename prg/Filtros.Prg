@@ -57,7 +57,7 @@ FUNCTION LoadFitros( cTabela1 )
 		WIDTH 850 HEIGHT 350 ;      
 		CHILD TITLE 'xProcFiltro'  ;		
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE  ; 
-		ON PAINT xProcDlg( ThisWindow.Name ,  'Filtros - ' + Alltrim(cTabela) )  	 ;      
+		ON PAINT Nil ;
       ON GOTFOCUS yRefresh( 'LstBoxFiltro' )  
 	END WINDOW	
 
@@ -92,10 +92,10 @@ FUNCTION LoadFitros( cTabela1 )
 
 
    
-	WinSombra3.Show()
+	//WinSombra3.Show()
    
-	Bt_ClientAreaInvalidateAll('WinSombra3')	
-	//_ShowWindow('fFiltrosCad')
+	//Bt_ClientAreaInvalidateAll('WinSombra3')	
+	_ShowWindow('fFiltrosCad')
 
 
    cSalvaJan  :=  cActiveJan
@@ -110,22 +110,24 @@ FUNCTION LoadFitros( cTabela1 )
 
    Next   
 
+
+   nR := GetProperTy('fFiltrosCad' , 'Row')
+   nC := GetProperTy('fFiltrosCad' , 'Col')
+
+   xSombraZ( cSalvaJan , nR , nC  , nr+2 , nC+850       )
    
-   l_Ok := xBrowserMtr( 51 ,  aMtrFiltr , 'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' ,  'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' ,  'Campo 4'} , ;
+   l_Ok := xBrowserMtr( 30 ,  aMtrFiltr , 'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' ,  'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' ,  'Campo 4'} , ;
       {10,50,60 , 75 , 60 ,45,75  }  , {'C' , 'C' , 'C' , 'C' , 'C' ,'C' ,'C'} , .f. , .t. , 150 )
 
-
+   yRefresh( 'LstBoxFiltro'  ) 
    cHeaderName := 'Win_HeadMtr' + Left('LstBoxFiltro',4)
+   DoEvents()
+   yGoTop()
+   DoEvents()
+   //DoMethod( 'fFiltrosCad' , 'Activate')
 
-  // xDoInit()
 
-      
-   //CursorOff1( nHw1 , ''   )	
-
-   DoMethod( 'fFiltrosCad' , 'Activate')
-   //DoMethod( 'LstBoxFiltro' , 'SetFocus')
-
-   msginfo('OVer')
+   //msginfo('OVer')
 
 
    
@@ -1111,5 +1113,6 @@ FUNCTION GrvFiltro( cTabela, cDescr, cFiltro, cOrdem, lCresc )
 	oQuery := Nil
 
 Return .T.
+
 
 

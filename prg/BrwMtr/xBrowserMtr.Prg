@@ -63,8 +63,8 @@ Static nItemx5 := 1
 Static nClearIt2 := 1
 Static cOpMainSel  := ''
 Static nPageNumber := 1
-Static hBitOk
-Static hBitExcl
+//Static hBitOk
+//Static hBitExcl
 Static cBrowserName := ''
 Static cEspelhoBrw := ''
 Static cBarraVfrm := ''
@@ -159,6 +159,12 @@ Static nAcumz5 := 0
 
 Static lNoHorzScy := .f.
 
+
+Static bBmpZ 
+Static bBmpa 
+	
+Static hBitOk  
+Static hBitExcl 
 
 
 Function yRetLargura( aMatriz1 )
@@ -305,6 +311,12 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 
 
 	//msginfo(  Str( nLimiteCol  )  )
+
+	bBmpZ := xBmpToTrans( 'BOLAZAZUL1')
+	bBmpa := xBmpToTrans( 'NGITRANS' , SELCOR)
+	
+	hBitOk     := BT_BitmapLoadFile ('NGITRANS')
+	hBitExcl   := BT_BitmapLoadFile ('EXCLA1')
 
 
 	aCabec1 := Aclone(aCabecalho)
@@ -2172,11 +2184,14 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 	BT_DeleteDC (BTstruct )
 
+	/*
+
 	BT_BitmapRelease ( hBitOk )
 	BT_BitmapRelease ( hBitExcl )
 
 	BT_BitmapRelease (bBmpZ)
 	BT_BitmapRelease (bBmpa)
+	*/
 
 	//msginfo('Fim 2222')
 
