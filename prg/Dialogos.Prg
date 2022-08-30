@@ -1276,63 +1276,70 @@ Return
 
 
 
-Function xSombraZ( cParent , nTop , nLeft  , nWidth , nHeight   )
+Function xSombraZ( cParent , nTop1 , nLeft1  , nWidth , nHeight1   )
 
-/*
-  nTop  := GetProperTy('Win_Dialog' , 'Row') 
-	nLeft := GetProperTy('Win_Dialog' , 'Col')
+	Local nHeight  := nHeight1	
+	Local nTop := nTop1 
 
+	Local nLeft := nLeft1+1
 	
-	nCol2 := nLeft + GetProperty('Win_Dialog' , 'Width') 
-	nRowX := nTop + 240
-	*/	
-
-
-	Local zBitMap0 := BT_BitmapCaptureClientArea(  cParent ,   nTop + 3  ,  nCol2+2 ,  6  , 220  )
+	Local zBitMap0 
 	Local cNSombra1 := 'Sw__1'
 	Local cNSombra2 := 'Sw__2'
 	Local cNSombra3 := 'Sw__3'
 	Local zBitMap5
 	Local zBitMap6
 
+	Local aR1 := GetPos_ScreenToClient( GetFormHandle(cParent) , nTop , nLeft   )
+	Local aR2 := GetPos_ScreenToClient( GetFormHandle(cParent) , nTop + nHeight1 , nLeft+nWidth   )
 
 
-	DEFINE WINDOW &cNSombra1 AT nTop + 10 , nCol2 WIDTH 4 HEIGHT nHeight TITLE 'Sombra11' ;
+
+	nTop := nTop + 2
+	
+	nHeight -= Int( (10/100) * nHeight1)
+	nHeight -= 1
+
+	zBitMap0 := BT_BitmapCaptureClientArea(  cParent ,   ar1[1]+20   ,  ar1[2] + nWidth - 1 ,  6  , nHeight+16   )
+
+
+	DEFINE WINDOW &cNSombra1 AT ar1[1]+20 , ar1[2] + nWidth - 1  WIDTH 4 HEIGHT nHeight+16 TITLE 'Sombra11_' ;
 		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR BLACK VIRTUAL HEIGHT Nil VISIBLE .F. ;
 		ON PAINT xSombraVert( ThisWindow.Name , 0  , 0 , zBitMap0  )
-	END WINDOW
-		
-	//nRowX	 := nTop + 
-	zBitMap5 := BT_BitmapCaptureClientArea ( cParent , nRowx  ,  nLeft+15   ,  734  , 6  )
-
+	END WINDOW	
 	
-	DEFINE WINDOW &cNSombra2 AT nRowX, nLeft+15  WIDTH nWidth HEIGHT 4 TITLE 'Sombra12' ;
+		
+	nW1 := nWidth - 13 
+	zBitMap5 := BT_BitmapCaptureClientArea ( cParent ,ar2[1]  , nLeft+15  ,  nW1  , 6  )
+	 
+	DEFINE WINDOW &cNSombra2 AT  ar2[1]   , nLeft+15 WIDTH nW1 HEIGHT 4 TITLE 'Sombra12_' ;
 		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent  BACKCOLOR BLACK VIRTUAL HEIGHT Nil VISIBLE .F. ;
 		ON PAINT xSombraHor( ThisWindow.Name , 0  , 0 , zBitMap5  )
 	END WINDOW
 
-	zBitMap6 := BT_BitmapCaptureClientArea ( cParent , nRowx , nCol2+2  ,  4 , 4  )
+	zBitMap6 := BT_BitmapCaptureClientArea ( cParent , ar2[1]  , ar2[2] - 1   ,  4 , 4  )
 
-	DEFINE WINDOW &cNSombra3 AT  nRowx - 1  , nCol2  WIDTH 4 HEIGHT 4 TITLE 'Sombra13' ;
+	DEFINE WINDOW &cNSombra3 AT  ar2[1]  , ar2[2] - 1  WIDTH 4 HEIGHT 4 TITLE 'Sombra13_' ;
 		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR BLACK VIRTUAL HEIGHT Nil VISIBLE .F.  ;
 		ON PAINT xSombra3( ThisWindow.Name , zBitMap6 )
 	END WINDOW
+
 
 	HMG_ChangeWindowStyle(  GetProperty(  cNSombra1 , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
 	HMG_ChangeWindowStyle(  GetProperty(  cNSombra2 , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
 	HMG_ChangeWindowStyle(  GetProperty(  cNSombra3 , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
 	
 
-	BT_ClientAreaInvalidateAll(   cNSombra1 )
+	//BT_ClientAreaInvalidateAll(   cNSombra1 )
 	_ShowWindow( cNSombra1 )
 
 	
-	BT_ClientAreaInvalidateAll(   cNSombra2 )
+//	BT_ClientAreaInvalidateAll(   cNSombra2 )
 	_ShowWindow( cNSombra2 )	
 
-	DoEvents()
+	//DoEvents()
 	
-	BT_ClientAreaInvalidateAll(   cNSombra3 )
+	//BT_ClientAreaInvalidateAll(   cNSombra3 )
 	_ShowWindow( cNSombra3 )	
 
 	DoEvents()

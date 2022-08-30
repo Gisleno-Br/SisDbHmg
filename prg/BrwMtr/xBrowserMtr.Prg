@@ -568,7 +568,6 @@ Function xCalcTam()
 	nTam12 += n12
 
 
-
 	BT_DeleteDC (BTstruct )
 
 Return nTam12
@@ -1101,21 +1100,28 @@ Function xTecBrowMtr()
 				nColDrag := nCol
 			End If
 
+
 			DoEvents()
 
 			nConstH := Xh_RetPasy()
 			nPulo1 := 1
 
+
 			If (nCol > nColDrag) .And. (Abs(nCol - nColDrag) >= nPulo1) //.And. (nSaveCol > 0)
 
 				If ( yRetContador() < nQtotPass - 1  )
 
+					//msginfo(Str(nQtotPass - 1) + '   ' + Str( yRetContador()   )  )
+
 					yUpdatBha1(nCol - nColDrag )
 					nAcumP += (nCol - nColDrag)
+
+					//MSGINFO(Str(nAcumP))
 
 					If (nAcumP >=  (nQxy * nConstH)  )
 						nQxy++
 						xDoScrolV( .t. ,  .f. , .t. )
+						yIncConter(.t.)
 					End If
 					nColDrag := nCol
 					SysWait(0.02)
@@ -1123,10 +1129,12 @@ Function xTecBrowMtr()
 					nQxy--
 					yOffBarra( cBarrah  )
 					DoEvents()
-					//msginfo('Atingifo')
+					//msginfo('Atingifo ' + Str(nAcumP))
 				End If
+
 			Else
 				If (nCol < nColDrag) .And. (Abs(nColDrag - nCol) >= nPulo1) //And. (nSaveCol > 0)
+					//msginfo('g1')
 					If (yRetContador() > 0)
 						DoEvents()
 						yUpdatBha1( -( nColDrag - nCol  )  )
@@ -1135,17 +1143,22 @@ Function xTecBrowMtr()
 						If (nAcumP  <= (nConstH * nQxy) )
 							nQxy--
 							xDoScrolV( .f. ,  .f. ,    .f.  )
+						//	yIncConter(.f.)
 						End If
 
 						nColDrag := nCol
+						SysWait(0.02)
 
 					Else
+
 						nAcumP := 0
+						//msginfo('kk2')
 						yOffBarra( cBarrah  )
 						DoEvents()
 						nColDrag := 0
 
 					End If
+					
 				End If
 			End If
 
@@ -1727,7 +1740,6 @@ Static Function xGoUp( lMsg  )
 		End If
 		l_HitB := .f.
 
-
 		If (lHitt)
 
 			nInd1 := Ascan(aMDisplay , { |a|  a[1] == nIndex1 })
@@ -1768,7 +1780,7 @@ Static Function xGoUp( lMsg  )
 		nPageNumber := 1
 		nIndex1 := 1
 		If (!lMsg)
-			xDialog('Top Atingido!' , .f.  )
+			xDialog('Linha Top Atingido!' )
 		End If
 
 	End If

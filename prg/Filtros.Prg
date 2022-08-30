@@ -114,7 +114,7 @@ FUNCTION LoadFitros( cTabela1 )
    nR := GetProperTy('fFiltrosCad' , 'Row')
    nC := GetProperTy('fFiltrosCad' , 'Col')
 
-   xSombraZ( cSalvaJan , nR , nC  , nr+2 , nC+850       )
+   xSombraZ( cSalvaJan , nR , nC  , GetProperTy('fFiltrosCad','Width') , GetProperTy('fFiltrosCad','Height')      )
    
    l_Ok := xBrowserMtr( 30 ,  aMtrFiltr , 'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' ,  'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' ,  'Campo 4'} , ;
       {10,50,60 , 75 , 60 ,45,75  }  , {'C' , 'C' , 'C' , 'C' , 'C' ,'C' ,'C'} , .f. , .t. , 150 )

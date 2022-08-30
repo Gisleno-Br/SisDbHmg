@@ -208,6 +208,7 @@ Function xH_CalcBar( lAtuBarra )
 
     If nQB1 > 0
 
+
         nZ1 := Transform( (nQB1 / nColTotal) , '999,999.999999')         
         nP1 :=  Int( (nLargJan - 20)  * rTrans(  nZ1   ) )
         nTamBarra := (nLargJan - 20) - nP1               
@@ -489,7 +490,7 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                 SetBrwDrgM( .f. , nSaveCol )     
 
                 SysWait(0.07)
-                //msginfo('lp2')  
+               // msginfo('lp2')  
             
             End If            
           
@@ -532,15 +533,21 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
                 While (nModeBut = 1) .And. (!lTracking26)           
 
+
+
                     If (GetAsyncKeyState(VK_LBUTTON)) == 0					
                         SysWait(0.03)                                   
                         Exit 
                     End If  
                     
-                    xDoScrolV( .f. ,  , .t. )              
+                    xDoScrolV( .f. ,  , .t. )       
+                    DoEvents()
+
+                    SysWait(0.05)
+                  //  msginfo('1')       
                 
                 Enddo 
-
+               
             End If 
             
 
@@ -558,12 +565,16 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     
 
                     If (GetAsyncKeyState(VK_LBUTTON)) == 0					
-                        SysWait(0.03)                                   
+                        SysWait(0.03)                                                    
                         Exit 
                     End If           
-                    // msginfo('ok2')
+                    //msginfo('ok2')                    
 
                     xDoScrolV( .t. ,, .t. )                   
+                    DoEvents()
+
+                    SysWait(0.05)
+                  
 
                 Enddo 
                  
@@ -737,38 +748,28 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1 )
 
                 
             If (xGetScrolPos() == 0)
-                nSaldo1 += nColIniBrw
+                nSaldo1 += nColIniBrw 
             End If 
 
             If ( (nColAtu+1) == (nColtotal - 1))
                 nDiff :=  (xCalcTam() - (xGetScrolPos()+xH_RtLimite()) )                
                 If nSaldo1 > nDiff
-                   nSaldo1 -= nDiff                   
+                    nSaldo1 -= 50
+                  //  msginfo('lp2')
+                   //nSaldo1 -= nDiff                   
                 End If 
             End If             
-            
-           /*
-            aMInfo := {}
-            Aadd(aMInfo , nSaldo1)
-            Aadd(aMInfo , 1)
-            */
+       
 
             DoEvents()
-            //SysWait(0.06)                
-
-            
-
-            xDoScrolHroz( .t. , nSaldo1 , lAtuHead1 , lAtuBar )
-           // msginfo('z1')
+            SysWait(0.02)                            
 
 
+
+            xDoScrolHroz( .t. , nSaldo1 , lAtuHead1 , lAtuBar )       
             lScrollFim := ((xGetScrolPos()+xH_RtLimite()) >= (xCalcTam() ) )
 
-            //msginfo(Str(nSaldo1))
-
-            
-
-           // SysWait(0.03)
+            SysWait(0.02)
             
         End If                    
     Else 
@@ -818,7 +819,7 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1 )
             Aadd(aMInfo , 1)
 
             DoEvents()
-            SysWait(0.06)                
+            SysWait(0.03)                
 
             xDoScrolHroz( .f. , nSaldo1 , lAtuHead1 , lAtuBar )
             lScrollFim := .f. 
@@ -831,11 +832,14 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1 )
                 n1 := xGetScrolPos()
 
                 If (n1 != 0)
-                    xDoScrolHroz( .f. ,  n1 , lAtuHead1 , lAtuBar )
+                  //  xDoScrolHroz( .f. ,  n1 , lAtuHead1 , lAtuBar )
                 End If 
+
                 xInitSxy()
                 xInitScroll()
             End If             
+
+            SysWait(0.03)                
 
 
         End If 
