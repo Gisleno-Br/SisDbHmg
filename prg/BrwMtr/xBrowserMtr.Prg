@@ -403,8 +403,10 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 
 
 
+
 	cBarrah := xBarHMtr( cParent ,  cBrowserName , nRowIni+nAltura1 , nLarg1  ,  nLargX , cBrowserName , ;
 		(nQTotCol := xGetColQw1()) , nLarg1 - ((nLargTotal - nLargX) )   , cHeaderName , ((nLargTotal+1) > nLarg1)  , nCol	 )
+
 
 
 	//SET WINDOW Win_Browser TRANSPARENT TO 0
@@ -916,11 +918,11 @@ Function yScrollCaM( lFrente , lUpdBar , nW1 , lUpdHeader )
 
 	If (lUpdBar)
 		If lFrente
-			yUpdatBha1( nWidth )
+			//yUpdatBha1( nWidth )
 		Else
-			yUpdatBha1( -(nWidth) )
+			//yUpdatBha1( -(nWidth) )
 		End If
-		yDcBarH1()
+		//yDcBarH1()
 
 	End If
 
@@ -929,7 +931,6 @@ Function yScrollCaM( lFrente , lUpdBar , nW1 , lUpdHeader )
 	End If 
 
 	yDcToDc()
-
 	DoEvents()
 
 
@@ -1107,7 +1108,40 @@ Function xTecBrowMtr()
 			nPulo1 := 1
 
 
+			yUpdatBha1(nCol - nColDrag )
+			nAcumP += (nCol - nColDrag)
+
+					//MSGINFO(Str(nAcumP))
+
+			If (nAcumP >=  (nQxy * nConstH)  )
+				nQxy++
+						//xDoScrolV( .t. ,  .f. , .t. )
+				yIncConter(.t.)
+			End If
+			nColDrag := nCol
+			SysWait(0.02)
+
+
+
+
+
+             /*
 			If (nCol > nColDrag) .And. (Abs(nCol - nColDrag) >= nPulo1) //.And. (nSaveCol > 0)
+
+					yUpdatBha1(nCol - nColDrag )
+					nAcumP += (nCol - nColDrag)
+
+					//MSGINFO(Str(nAcumP))
+
+					If (nAcumP >=  (nQxy * nConstH)  )
+						nQxy++
+						//xDoScrolV( .t. ,  .f. , .t. )
+						yIncConter(.t.)
+					End If
+					nColDrag := nCol
+					SysWait(0.02)
+
+			    /*
 
 				If ( yRetContador() < nQtotPass - 1  )
 
@@ -1131,10 +1165,13 @@ Function xTecBrowMtr()
 					DoEvents()
 					//msginfo('Atingifo ' + Str(nAcumP))
 				End If
+			
 
 			Else
 				If (nCol < nColDrag) .And. (Abs(nColDrag - nCol) >= nPulo1) //And. (nSaveCol > 0)
 					//msginfo('g1')
+
+					/*
 					If (yRetContador() > 0)
 						DoEvents()
 						yUpdatBha1( -( nColDrag - nCol  )  )
@@ -1158,9 +1195,11 @@ Function xTecBrowMtr()
 						nColDrag := 0
 
 					End If
-					
+
+							
 				End If
 			End If
+			*/
 
 			Return
 

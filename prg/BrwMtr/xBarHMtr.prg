@@ -56,6 +56,18 @@ Static nLastMove := 0
 
 Static nAcumy := 0
 
+Static yBmpDireita  
+Static yBmpEsquerda 
+
+
+Static yBmpDireitad
+Static yBmpEsquerdad 
+
+Static yBmpDireita2  
+Static yBmpEsquerda2 
+
+
+
 
 
 Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanela  , cBrowser , nTotCol , nTamBar , cHeaderN1  , lDispo1  , nColuna )
@@ -70,6 +82,19 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
     nLargJan     := nLargJanela
 
     nLargCalc := xCalcTam()
+
+    yBmpDireita2  := BT_BitMapLoadFile('DIREITA1')    
+    yBmpEsquerda2 := BT_BitMapLoadFile('ESQUERDA1')
+
+    
+    yBmpDireita  := BT_BitMapLoadFile('DIREITA')    
+    yBmpEsquerda := BT_BitMapLoadFile('ESQUERDA')
+
+
+    yBmpEsquerdad := BT_BitMapLoadFile('ESQUERDAD')
+    yBmpDireitad  := BT_BitMapLoadFile('DIREITAD')
+
+
 
 
     lEnabledy := lDispo1
@@ -209,19 +234,22 @@ Function xH_CalcBar( lAtuBarra )
     If nQB1 > 0
 
 
+
         nZ1 := Transform( (nQB1 / nColTotal) , '999,999.999999')         
-        nP1 :=  Int( (nLargJan - 20)  * rTrans(  nZ1   ) )
-        nTamBarra := (nLargJan - 20) - nP1               
+        nP1 :=  Int( (nLargJan - 15)  * rTrans(  nZ1   ) )
+        nTamBarra := (nLargJan - 15) - nP1               
         nPassoy := Int( np1 / (nQB1 - 1 )) 
         nQ1 := (nQB1 - 1 )
 
+
+
         If lAtuBarra    
-            nScroxy += (  nTamAnt -  nTamBarra   )            
+            //nScroxy += (  nTamAnt -  nTamBarra   )            
             //nI1 := xRetAscan( xGetScrolPos()  )    
 
-            If xRetIsFim()
+          //  If xRetIsFim()
                 //msginfo('Fim')                     
-            End If     
+           // End If     
 
         End If
 
@@ -310,8 +338,8 @@ Static Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
     //- 20
 
 
-    Local yEsquerda := BT_BitMapLoadFile('ESQUERDA')
-    Local yDireita  := BT_BitMapLoadFile('DIREITA')
+//    Local yEsquerda := BT_BitMapLoadFile('ESQUERDA')
+    //Local yDireita  := BT_BitMapLoadFile('DIREITA')
 
     Local hDC2 := BT_CreateDC (cJanela ,   BT_HDC_INVALIDCLIENTAREA  , @BTstruct)
 
@@ -323,12 +351,13 @@ Static Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
 
 
     If (nAcende1 > 0) .And. ( Alltrim(cObjSelected) = 'BarraH')
-
+/*
         If nAcende1 = 2
-            yDireita  := BT_BitMapLoadFile('DIREITA1')
+            yBmpDireita2  := BT_BitMapLoadFile('DIREITA1')
         Else 
-            yEsquerda := BT_BitMapLoadFile('ESQUERDA1')
+            yBmpEsquerda2 := BT_BitMapLoadFile('ESQUERDA1')
         End If 
+        */
 
 
         lDesligado := .t. 
@@ -340,30 +369,45 @@ Static Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
     If (!lEnabledy)
 
         
-        BT_BitmapRelease (yEsquerda)
-        BT_BitmapRelease (yDireita)
+        //BT_BitmapRelease (yEsquerda)
+        //BT_BitmapRelease (yDireita)
 
-        yEsquerda := BT_BitMapLoadFile('ESQUERDAD')
-        yDireita  := BT_BitMapLoadFile('DIREITAD')
+        //yBmpEsquerdad := BT_BitMapLoadFile('ESQUERDAD')
+        //yBmpDireitad  := BT_BitMapLoadFile('DIREITAD')
 
     End If 
-
-
 
     BT_DrawGradientFillHorizontal ( hDC2 ,  0   , 0  , Width  ,    Height     ,  {230,230,230}  , {230,230,230}   )
+    
+
+     If (!lEnabledy)
+        BT_DrawBitmap (hDC2  , 0  , 0  	, 18  , 18  ,                  BT_COPY,  yBmpEsquerdad )
+        BT_DrawBitmap (hDC2  , 0  , Width - 22  	, 18  , 18  ,      BT_COPY,  yBmpDireitad  )
+    Else 
+
+        If (nAcende1 > 0) .And. ( Alltrim(cObjSelected) = 'BarraH')
+
+             If nAcende1 = 2
+                BT_DrawBitmap (hDC2  , 0  , 0  	, 18  , 18  ,                  BT_COPY,  yBmpEsquerda )
+                BT_DrawBitmap (hDC2  , 0  , Width - 22  	, 18  , 18  ,      BT_COPY,  yBmpDireita2  )
+             Else 
+                BT_DrawBitmap (hDC2  , 0  , 0  	, 18  , 18  ,                  BT_COPY,  yBmpEsquerda2 )
+                BT_DrawBitmap (hDC2  , 0  , Width - 22  	, 18  , 18  ,      BT_COPY,  yBmpDireita  )
+            End If 
+
+        Else 
+            BT_DrawBitmap (hDC2  , 0  , 0  	, 18  , 18  ,                  BT_COPY,  yBmpEsquerda )            
+            BT_DrawBitmap (hDC2  , 0  , Width - 22  	, 18  , 18  ,      BT_COPY,  yBmpDireita  )
+        End If 
 
 
-    BT_DrawBitmap (hDC2  , 0  , 0  	, 18  , 18  ,      BT_COPY,  yEsquerda )
-    BT_DrawBitmap (hDC2  , 0  , Width - 20  	, 18  , 18  ,      BT_COPY,  yDireita)
-
-    If Abs(nScroxy - Width) <= 10
-        //   msginfo('lp2')
     End If 
- 
+
+    
     
 
     If (!lDragMode) .And. (lEnabledy) .And. (!lDraHighM)
-        BT_DrawFillRoundRect (hDC2 , 4 , nScroxy , nWidBarra , 10 , 5 ,5 ,   {178 , 178 ,178}   , {178 , 178 ,178}  , 0)
+        BT_DrawFillRoundRect (hDC2 , 4 , nScroxy , nWidBarra , 10 , 5 ,5 ,   {178 , 178 ,178}   , {178 , 178 ,178}   , 0)
     Else 
 
         If lEnabledy
@@ -376,8 +420,8 @@ Static Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
 
     End If     
 
-    BT_BitmapRelease (yEsquerda)
-    BT_BitmapRelease (yDireita)
+  //  BT_BitmapRelease (yEsquerda)
+   // BT_BitmapRelease (yDireita)
 
     BT_DeleteDC (BTstruct )
 
@@ -734,10 +778,11 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1 )
 
         Else             
 
+
           
             If (lScrollFim)
                 If lAviso1
-                    xDialog( ("Não há Mais Tela para Rolar a Direita.")  )
+                    xDialog( Hb_AnsiToOem("Não há Mais Tela para Rolar a Direita.")  )
                 End If 
                 Return -1
             End If                       
@@ -751,20 +796,22 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1 )
                 nSaldo1 += nColIniBrw 
             End If 
 
+
+             /*
+
             If ( (nColAtu+1) == (nColtotal - 1))
                 nDiff :=  (xCalcTam() - (xGetScrolPos()+xH_RtLimite()) )                
                 If nSaldo1 > nDiff
-                    nSaldo1 -= 50
-                  //  msginfo('lp2')
+                 //   nSaldo1 -= 50
+                 //   msginfo('lp2')
                    //nSaldo1 -= nDiff                   
                 End If 
             End If             
+            */
        
 
             DoEvents()
             SysWait(0.02)                            
-
-
 
             xDoScrolHroz( .t. , nSaldo1 , lAtuHead1 , lAtuBar )       
             lScrollFim := ((xGetScrolPos()+xH_RtLimite()) >= (xCalcTam() ) )
@@ -825,21 +872,34 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1 )
             lScrollFim := .f. 
             DoEvents()  
 
+            If (xGetScrolPos() == 0)
+                MSGINFO('ok2')
+                    //nSaldo1 += nColIniBrw 
+            End If 
+
           
             lScrolIni := (nColAtu == 1)
 
              If lScrolIni
                 n1 := xGetScrolPos()
 
+                         
+
                 If (n1 != 0)
                   //  xDoScrolHroz( .f. ,  n1 , lAtuHead1 , lAtuBar )
                 End If 
 
+                xDoScrolHroz( .f. , n1 , lAtuHead1 , lAtuBar )
+
+                DoEvents()
+
                 xInitSxy()
                 xInitScroll()
+
+               
             End If             
 
-            SysWait(0.03)                
+           // SysWait(0.03)                
 
 
         End If 
@@ -855,14 +915,21 @@ Function xDoScrolHroz( lFrente , nValue , lAtuH , lAtBar )
 
     DoEvents()
     yScrollCaM( lFrente , .f. , nValue , lAtuH  )      
+
+    
+    
     If lAtBar
-        yUpdatBha1(  Iif(  !lFrente , -(Xh_RetPasy()) ,  Xh_RetPasy()  )    )            
-        yDcBarH1()                                                             
-    End If 
+        If xGetScrolPos()  != 0
+            yUpdatBha1(  Iif(  !lFrente , -(Xh_RetPasy()) ,  Xh_RetPasy()  )    )            
+            yDcBarH1()                                                             
+        End If  
+    End If  
+
+
     yDcBarH1eMtr()
     DoEvents()    
-  //  SysWait(0.03)
 
+ 
 Return                     
 
 Function xRoleTela( lFrente , nQp1  , lUpdBar1  , nConter , nQSkip )
