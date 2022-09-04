@@ -17,6 +17,7 @@
 
 
 
+
 #define QUEBRA Chr(13)+Chr(10)
 
 #define SB_LINEUP           0    // ok
@@ -585,9 +586,6 @@ FUNCTION Main
 
 
 
-
-
-
 	Private nOpSel := 0
 
 	cText := "Usuario Logado As " + QUEBRA + ;
@@ -616,6 +614,7 @@ FUNCTION Main
 
 
 
+
 	Private nRowIni := 10
 
 	//HB_SETCODEPAGE("UTF8")
@@ -634,6 +633,7 @@ FUNCTION Main
 	xMenuMain( 'Main' ,  70 , 1  , aOpcoes , aItens )
 	//xTesMenu(  'MenuY1', 50 , 450 , {} , 0 )
 
+	//msginfo('ok2')
 	
 	DoEvents()
 	_ShowWindow('Main')
@@ -882,12 +882,12 @@ Function D1Black(cJan,zBitMap)
 	If lAtivaBlack	
 
 
-
 		hDC    = BT_CreateDC ( cJan  , BT_HDC_INVALIDCLIENTAREA, @BTstruct)
 		BT_DrawGradientFillVertical (hDC,  nRow  ,  nCol  ,  Width,  Height , BLACK , BLACK)
 
 		BT_DrawBitmapAlphaBlend (hDC, nRow ,  nCol  , nil, nil, 120 , BT_COPY  , zBitmap)
 		BT_DeleteDC ( BTstruct )
+
 
 
 
@@ -1049,6 +1049,8 @@ END IMAGE
 SetProperty(cJanela1,Sclavel01,"Enabled",.F.)
 
 RETURN 
+
+
 
 
 

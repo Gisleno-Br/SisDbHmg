@@ -102,6 +102,7 @@ Static aMtrColor := {}
 Static nLinScrool := 0
 Static nItemScrool := 0
 Static lBrwVisible := .f.
+Static nQCont1 := 1
 Static nSave1 := 0
 Static aMVisible := {}
 Static nLinhaBarra := 1
@@ -124,7 +125,7 @@ Static nIndex1 := 1
 
 Static lExit := .f.
 
-Static nColDrag := 0
+Static nColDragy := 0
 
 Static lKeyPressed := .f.
 
@@ -676,7 +677,6 @@ Function yShowBMt(  cTable1 , lDisplay   )
 	DEFAULT lDisplay := .F.
 
 
-
 	If (_isWindowDefined(cBrwName))
 
 
@@ -1088,123 +1088,68 @@ Function xTecBrowMtr()
 			xHidehint()
 		End If
 
+		//DoEvents()
 
 		GetCursorPos (@nCol, @nRow)
 		ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
 		nCol := ar1[2]
+		
 
 		If (lDrag_Mode)
 
 			//msginfo('ok2')
 
-			If nColDrag == 0
-				nColDrag := nCol
-			End If
-
-
-			DoEvents()
-
-			nConstH := Xh_RetPasy()
-			nPulo1 := 1
-
-
-			yUpdatBha1(nCol - nColDrag )
-			nAcumP += (nCol - nColDrag)
-
-					//MSGINFO(Str(nAcumP))
-
-			If (nAcumP >=  (nQxy * nConstH)  )
-				nQxy++
-						//xDoScrolV( .t. ,  .f. , .t. )
-				yIncConter(.t.)
-			End If
-			nColDrag := nCol
-			SysWait(0.02)
-
-
-
-
-
-             /*
-			If (nCol > nColDrag) .And. (Abs(nCol - nColDrag) >= nPulo1) //.And. (nSaveCol > 0)
-
-					yUpdatBha1(nCol - nColDrag )
-					nAcumP += (nCol - nColDrag)
-
-					//MSGINFO(Str(nAcumP))
-
-					If (nAcumP >=  (nQxy * nConstH)  )
-						nQxy++
-						//xDoScrolV( .t. ,  .f. , .t. )
-						yIncConter(.t.)
-					End If
-					nColDrag := nCol
-					SysWait(0.02)
-
-			    /*
-
-				If ( yRetContador() < nQtotPass - 1  )
-
-					//msginfo(Str(nQtotPass - 1) + '   ' + Str( yRetContador()   )  )
-
-					yUpdatBha1(nCol - nColDrag )
-					nAcumP += (nCol - nColDrag)
-
-					//MSGINFO(Str(nAcumP))
-
-					If (nAcumP >=  (nQxy * nConstH)  )
-						nQxy++
-						xDoScrolV( .t. ,  .f. , .t. )
-						yIncConter(.t.)
-					End If
-					nColDrag := nCol
-					SysWait(0.02)
-				Else
-					nQxy--
-					yOffBarra( cBarrah  )
-					DoEvents()
-					//msginfo('Atingifo ' + Str(nAcumP))
-				End If
+			For i := 1 To 255
+				GetAsyncKeyState(i)
+			Next i					
+			
 			
 
-			Else
-				If (nCol < nColDrag) .And. (Abs(nColDrag - nCol) >= nPulo1) //And. (nSaveCol > 0)
-					//msginfo('g1')
-
-					/*
-					If (yRetContador() > 0)
-						DoEvents()
-						yUpdatBha1( -( nColDrag - nCol  )  )
-						nAcumP -= Abs(nColDrag - nCol)
-
-						If (nAcumP  <= (nConstH * nQxy) )
-							nQxy--
-							xDoScrolV( .f. ,  .f. ,    .f.  )
-						//	yIncConter(.f.)
-						End If
-
-						nColDrag := nCol
-						SysWait(0.02)
-
-					Else
-
-						nAcumP := 0
-						//msginfo('kk2')
-						yOffBarra( cBarrah  )
-						DoEvents()
-						nColDrag := 0
-
-					End If
-
-							
-				End If
+			If nColDragy == 0
+				nColDragy := nCol
 			End If
-			*/
+			//DoEvents()
 
-			Return
+			nConstH := Xh_RetPasy()	
+			nScr1 := nCol - nColDragy 
+
+			If nScr1 != 0
+				If (nCol > nColDragY) 
+					If (nQCont1 >= yRetQPAsso())				
+						nScr1 := 0
+					End If 
+				Else 					
+					If nCol < nColDragy					
+						If (nAcump <= 0)							
+							nScr1 := 0
+						End If 
+					End If 
+				End If 
+			End If 
 
 
-		End If
+			If (nScr1 != 0 )
+				yUpdatBha1(nScr1 )
+				nColDragy := nCol
+
+				nAcumP += (nScr1)
+
+				If (nAcumP >= (nQxy * nConstH)  )
+					nQxy++
+					nQCont1++			
+				End If 
+					
+			End If 
+
+			DoEvents()								
+			If (GetAsyncKeyState(VK_LBUTTON)) == 0					
+				lDrag_Mode := .f. 
+			End If 				
+
+
+
+		End If	
+
 
 	End If
 

@@ -6,6 +6,7 @@
 
 
 
+
 #define WM_DESTROY          0x0002
 #define SC_CLOSE            61536
 
@@ -112,6 +113,7 @@ Function xMenuMain( cParent , nRow1 , nCol1 , aOpPrin , aSubOps , lEnabled11 )
 	aOpcoes := Aclone( aOpPrin )
 	aSubOps := {}
 
+	
 	DEFAULT lEnabled11 := .t.
 
 	lEnabled2 := lEnabled11
@@ -136,6 +138,7 @@ Function xMenuMain( cParent , nRow1 , nCol1 , aOpPrin , aSubOps , lEnabled11 )
 	
 
 
+
 	DEFINE WINDOW Win_MenuPrincipal AT nRow1, nCol1 WIDTH nColTamMenu HEIGHT nHeightMen TITLE 'MenPrincipal1' ;
 		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION  CHILD PANEL PARENT &cParent BACKCOLOR aCorSub1 VIRTUAL HEIGHT nHeightMen+1 ;
 		ON PAINT xPaintMenu( 'Win_MenuPrincipal'  , aOpcoes , nMainSel , nClearSel , cOpMainSel , nItemDrop1 , nHeightDrop , lSetasDown , .f. , l_Httb , l_Http , .f.  )
@@ -146,24 +149,6 @@ Function xMenuMain( cParent , nRow1 , nCol1 , aOpPrin , aSubOps , lEnabled11 )
 		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION  CHILD PANEL PARENT &cParent BACKCOLOR Nil VIRTUAL HEIGHT nHeightMen+1
 	END WINDOW
 
-/*	
-
-	 DEFINE WINDOW JanMenuSub AT 0  , nCol1  WIDTH nColTamMenu  HEIGHT 500 TITLE 'Tsub' ;   //aCorSub1 //Win_MenuPrincipal
-	 	VISIBLE .f. NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION  CHILD PANEL PARENT &cParent BACKCOLOR aCorSub1 VIRTUAL HEIGHT 1500 ;		
-	 	ON PAINT xPaintMenu( 'JanMenuSub', aOpx1 , nItemx1 , nItemClr , cOpSely , 0 , 0 , .f. , .t.  )
-
-		              xPaintMenu( cForm , aMtrOp , nOpselx1 , nClear1 , cTextSel  , nItemDropedDown , nHeightDroped , lSetas , lSubMenu1 , lHitB , lHitT  , lPopup )
-	 END WINDOW
-
-
-	 DEFINE WINDOW JanMenuSubSombra AT 0   , nCol1 + 0 WIDTH nColTamMenu - 3  HEIGHT 500 TITLE 'Tsub2' ;   //aCorSub1 //Win_MenuPrincipal
-	 	VISIBLE .f. NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent  BACKCOLOR aCorSub2 VIRTUAL HEIGHT 1500  
-	 END WINDOW
-
-	 */
-
-	
-	//HideWindow(   GetFormHandle('JanMenuSubSombra')     )
 
 
 
@@ -173,21 +158,8 @@ Function xMenuMain( cParent , nRow1 , nCol1 , aOpPrin , aSubOps , lEnabled11 )
 	End If
 
 
-	//HMG_ChangeWindowStyle(  GetFormHandle('JanMenuSubSombra') , Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
-
-//	HMG_ChangeWindowStyle(  GetProperty(  'JanMenuSubSombra' , 'HANDLE' ) , WS_BORDER , NIL, .T. )
-//	HMG_ChangeWindowStyle(  GetProperty(  'JanMenuSub' , 'HANDLE' ) , WS_BORDER , NIL, .T. )
-
 
 	SET WINDOW Win_MenuPrincipal TRANSPARENT TO Iif(!lEnabled2 , 167 , 0)
-
-	//SET WINDOW JanMenuSub TRANSPARENT TO Iif(!lEnabled2 , 167 , 0)
-
-
-
-
-	//HMG_ChangeWindowStyle( JanMenuSub.Handle    , WS_EX_DLGMODALFRAME,, NIL, .T., .T.)
-
 	_ShowWindow("Win_MPrincipalSombra")
 
 
@@ -198,25 +170,6 @@ Function xMenuMain( cParent , nRow1 , nCol1 , aOpPrin , aSubOps , lEnabled11 )
 	ShowScrollBar( GetFormHandle( 'Win_MPrincipalSombra' ), 0, .F. )
 	ShowScrollBar( GetFormHandle( 'Win_MPrincipalSombra' ), 1, .F. )
 
-/*
-	ShowScrollBar( GetFormHandle( 'JanMenuSub' ), 0, .F. )
-	ShowScrollBar( GetFormHandle( 'JanMenuSub' ), 1, .F. )
-
-
-
-	ShowScrollBar( GetFormHandle( 'JanMenuSubSombra' ), 0, .F. )
-	ShowScrollBar( GetFormHandle( 'JanMenuSubSombra' ), 1, .F. )
-
-	HMG_ChangeWindowStyle(  GetProperty(  'JanMenuSubSombra' , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
-	HMG_ChangeWindowStyle(  GetProperty(  'JanMenuSub', 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
-
-		
-	ShowScrollBar( GetFormHandle( 'JanMenuSub'), 0, .F. )
-	ShowScrollBar( GetFormHandle(  'JanMenuSub' ), 1, .F. )
-	*/
-	
-
-//	_ShowWindow('Win_MenuPrincipal' )
 	BT_ClientAreaInvalidateAll('Win_MenuPrincipal')
 	DoEvents()
 	yDCMenu1()
@@ -224,8 +177,6 @@ Function xMenuMain( cParent , nRow1 , nCol1 , aOpPrin , aSubOps , lEnabled11 )
 
 	DoEvents()
 	_ShowWindow('Win_MenuPrincipal' )
-
-
 
 
 Return
@@ -269,6 +220,10 @@ Function xCrieJanSub(nLinha , nColuna )
 
 
 Return 
+
+
+
+
 
 Function xLimpSubIt( lDc )
 
@@ -650,15 +605,21 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 
 					nSetaSel := 0
 					xDelMain()
+
+
+
+
+
 					
 					lTracking412  := (nPos9 == nIt5)
 					lSuby := .t.					
 			
-
+					
 					xLimpSetas( .t. )
 					DoEvents()
 					lTracking714  := TrackMouseEvent(nHWnd)
-					DoEvents()								
+					DoEvents()						
+
 
 					If !lTracking412
 						If (nPos9 > 0) .And. (nPos9 <= Len(aOpX1))

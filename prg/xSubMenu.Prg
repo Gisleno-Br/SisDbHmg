@@ -15,10 +15,14 @@
 
 
 
+
+
+
 Static aOpz22 := {}
 Static nItemx22 := 1
 Static nItemZ11 := 1
 Static cOpy22 := ''
+
 
 
 
@@ -30,11 +34,14 @@ Static zBitMap6
 Static cSubName1 := ''
 //Static aOpz22
 
+
 Static lTracking785 := .t.
 Static lTracking786 := .f.
 
 Static lEnabled2 := .t.
 Static lCheck1 := .f. 
+
+
 
 Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled , lItem1 ) 
 
@@ -44,6 +51,7 @@ Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled , lItem1
 	Local cNSombra3 := cName + '_Sombra3'
     Local nH1 
 	Local nCol2 
+
 
 	Local nItemz1 := 0
 
@@ -71,6 +79,7 @@ Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled , lItem1
 	End If 
 
 
+
 	//BT_DELAY_EXECUTION_WITH_DOEVENTS(65)
 
 
@@ -83,6 +92,7 @@ Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled , lItem1
 		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR aCorSub2 VIRTUAL HEIGHT Iif(  Len(aOpz22) <=  XMAXITEM , nHeight+1 ,  (Len(aOp1) * nItemSubHeight)+10  )  ;
 		ON PAINT xPaintPopup(ThisWindow.Name , aOpz22 , nItemx22 , nItemZ11 , cOpy22 , 0 , 0 ,  Len(aOpz22) > XMAXITEM     ,  .t. ,  ,  , .t. )
 	END WINDOW
+
 
 
 	
@@ -103,6 +113,8 @@ Function xMenuSubOp( cName , cParent , aOp1 , nTop , nLeft  ,  lEnabled , lItem1
 		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD PANEL PARENT &cParent BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
 		ON PAINT xSombraVert( ThisWindow.Name , 0  , 0 , zBitMap0  )
 	END WINDOW
+
+
 
 
 

@@ -225,50 +225,38 @@ Function xH_CalcBar( lAtuBarra )
     Local nTamAnt := nTamBarra
     Local nI1
 
-    //msginfo(Str( nColTotal ))
-
     DEFAULT lAtuBarra := .f. 
+
 
     xh_InitLim()
 
     If nQB1 > 0
-
-
-
         nZ1 := Transform( (nQB1 / nColTotal) , '999,999.999999')         
         nP1 :=  Int( (nLargJan - 15)  * rTrans(  nZ1   ) )
         nTamBarra := (nLargJan - 15) - nP1               
         nPassoy := Int( np1 / (nQB1 - 1 )) 
-        nQ1 := (nQB1 - 1 )
-
-
-
-        If lAtuBarra    
-            //nScroxy += (  nTamAnt -  nTamBarra   )            
-            //nI1 := xRetAscan( xGetScrolPos()  )    
-
-          //  If xRetIsFim()
-                //msginfo('Fim')                     
-           // End If     
-
-        End If
-
-        
+        nQ1 := (nQB1 - 1 )             
         If _IsWindowDefined(cBarraName)         
             BT_ClientAreaInvalidateAll(cBarraName)  
             yDcBarH1()
             DoEvents() 
-        End If 
-    
+        End If     
     End If 
-
     
     xh_InitLim()
-
 
 Return nQB1
 
 
+
+Function yRetQPAsso()
+Return nQ1 + 1
+
+Function yBarRange()
+Return ( (nQ1 + 1)  * nTamBarra)
+
+Function yRetBarSize()
+Return nTamBarra
 
 
 
