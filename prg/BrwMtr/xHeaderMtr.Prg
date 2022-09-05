@@ -698,8 +698,8 @@ Function EventHeaMtr()
 		If (nMsg == WM_LBUTTONDOWN)
          
 			DoEvents()			
-			//msginfo('ok22')
 
+		
 			nColSele := nColSel1
 
 			DoEvents()
@@ -840,7 +840,7 @@ Function EventHeaMtr()
 
 			nColSav1 := 0
 			nColx5 := 0
-			msginfo('3332')
+			//msginfo('3332')
 
 
 
@@ -930,8 +930,7 @@ Function EventHeaMtr()
 
 				If ( Abs(nColx - nColx5) > 1) .or. (lPassou)					
 					DoEvents()					
-					nTarget := xBusqTar(  (nColx - nDiff1)  , lFrente1 )										
-				
+					nTarget := xBusqTar(  (nColx - nDiff1)  , lFrente1 )														
 
 					If ( (  nColx - xGetScrolPos()  )   < 10) .And. (nColSele > 0) //.And. (nQConter > 1)
 
@@ -1065,7 +1064,7 @@ Function EventHeaMtr()
 			DoEvents()
 
 			If !(GetAsyncKeyState(VK_LBUTTON)) == 0
-				Return
+			//	Return
 			End If
 
 			//SetWindowCursor( nHWnd , IDC_ARROW)
@@ -1085,9 +1084,10 @@ Function EventHeaMtr()
 			End If
 
 			If ((nColx2 := xSearchLim(  nColx )) > 0) .And. (!lSizeMode)
-				xDoHint(    , 'Redimensiona a Coluna ' + Hb_AnsiToOem(Alltrim( aMapsCol[nColx2][1])) + '  '  + Str(nColSel1))
-				//SetWindowCursor( nHWnd  , 'CURSORSIZE' )
 				DoEvents()
+				xDoHint(    , 'Redimensiona a Coluna ' + Hb_AnsiToOem(Alltrim( aMapsCol[nColx2][1])) + '  '  + Str(nColSel1))
+			//	SetWindowCursor( nHWnd  , 'CURSORSIZE' )
+				
 				lSizeMode := .t.
 				Return
 			Else
@@ -1386,7 +1386,7 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
 			nTam12 += nTam
 		Else
 
-			nTam1 := 10
+			nTam1 := 5
 			cTexto := Replicate('A' ,  nTam1 + 1  )
 			n12 := GetTextWidth( hDC , cTexto , hfont )
 			nTam := n12
@@ -1403,59 +1403,9 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
 	Next
 
 
-	//SaveLog(cArqTemp , '')
-	//SaveLog(cArqTemp ,  ' xCAlcTam : ' + Str(xCalcTam()) + '    Limite ' + Str( xH_RtLimite()) )
-
-	//msginfo(Str(     nAcum2 ))
-
-
-
-
-	//Altd()
-	/*
-
-    RemoveHandler('EventBrowMtr')
-    RemoveHandler('EventBarMtr')
-    RemoveHandler('EventHeaMtr')
-    RemoveHandler('EVENTHNDCLI')    
-    RemoveHandler('EventHndMain')
-
-    SysWait(0.06)
-
-
-    DoEvents()
-    */
-
-
-	/*
-
-    RemoveHandler('EventBrowMtr')
-    RemoveHandler('EventBarMtr')
-    RemoveHandler('EventHeaMtr')
-    RemoveHandler('EVENTHNDCLI')    
-    RemoveHandler('EventHndMain')
-
-    SysWait(0.06)
-    */
-
 
 
 	BT_DeleteDC (BTstruct )
-
-
-	/*
-
-    nres := xLimColResto( nLimiteAtu )
-
-    nColl1 := xLimCol( nLimiteAtu )
-    nPl1 := xLimPulo(1 , nres)   
-    */
-
-
-
-	//msginfo(Str( nTam12 ))
-
-
 
 Return nAcum2
 
@@ -1680,6 +1630,7 @@ Static Function xSearchLim(  nCol1 )
 		If (aCords[1][2]  == n1)
 			If (nColSel1 == aCords[1][2])
 				nColuna := n1
+				//msginfo('f11')
 			End If
 		End If
 	End If

@@ -65,6 +65,9 @@ Static cOpMainSel  := ''
 Static nPageNumber := 1
 //Static hBitOk
 //Static hBitExcl
+
+Static l_Eofh := .f. 
+Static l_Bofh := .t. 
 Static cBrowserName := ''
 Static cEspelhoBrw := ''
 Static cBarraVfrm := ''
@@ -1009,6 +1012,7 @@ Function xTecBrowMtr()
 	Local nCol
 	Local nMaxItem := Int(nTamSubMenuConsulta / nItemSubHeight)
 	Local nQTot := 7
+	Local cForm1 := ''
 	//xQbrwCol()
 
 	If HMG_GetLastMouseMessage (@nHWnd) == 513
@@ -1069,7 +1073,7 @@ Function xTecBrowMtr()
 	If (nMsg == WM_MOUSEMOVE)
 		//.And. (nHWnd == GetProperty(  cBrowserName , "HANDLE" ))
 
-		//msginfo('ko2')
+	//	msginfo('ok2 '+ cObjSelected )
 
 		If ((nHasFocus > 0) .or. (!lDrag_Mode)) .And. (lTracking135)
 			DoEvents()
@@ -1081,6 +1085,11 @@ Function xTecBrowMtr()
 			//	msginfo('ko33332')
 		End If
 
+		If (cObjSelected = 'BarraH') .And. (yRetAcende() > 0)
+			lDrag_Mode := .f.
+			//msginfo('ok222')
+		End If 
+
 		//DoEvents()
 
 
@@ -1089,39 +1098,58 @@ Function xTecBrowMtr()
 		End If
 
 		//DoEvents()
-
 		GetCursorPos (@nCol, @nRow)
+
+
+		nHWnd1 := WindowFromPoint (nCol, nRow)
+
+		cForm1 := ''
+
+		GetFormNameByHandle( nHWnd1 , @cForm1 )
+
+
+
 		ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
 		nCol := ar1[2]
+
 		
+
 
 		If (lDrag_Mode)
 
-			//msginfo('ok2')
+			If	(Alltrim(cObjSelected) != 'BarraH')			
+				Return
+			End If 
 
+			//msginfo(cForm1)
+		
 			For i := 1 To 255
 				GetAsyncKeyState(i)
-			Next i					
-			
-			
+			Next i											
 
 			If nColDragy == 0
 				nColDragy := nCol
-			End If
-			//DoEvents()
+			End If		
+
 
 			nConstH := Xh_RetPasy()	
 			nScr1 := nCol - nColDragy 
 
+
 			If nScr1 != 0
 				If (nCol > nColDragY) 
-					If (nQCont1 >= yRetQPAsso())				
-						nScr1 := 0
+					If (nQCont1 >= yRetQPAsso())																
+						l_Eofh := .t. 					
 					End If 
 				Else 					
 					If nCol < nColDragy					
 						If (nAcump <= 0)							
-							nScr1 := 0
+							nScr1 	  := 0
+							nQCont1   := 1
+							nColDragy := 0						
+							nQxy      := 1
+							l_Bofh := .t. 
+							DoEvents()							
 						End If 
 					End If 
 				End If 
@@ -1129,19 +1157,39 @@ Function xTecBrowMtr()
 
 
 			If (nScr1 != 0 )
-				yUpdatBha1(nScr1 )
-				nColDragy := nCol
 
-				nAcumP += (nScr1)
+				If ((nScr1 > 0) .And. (!l_Eofh)) .or. ; 
+					((nScr1 < 0) .And. (!l_Bofh))				   
+			
+					yUpdatBha1(nScr1 )
+					nColDragy := nCol
 
-				If (nAcumP >= (nQxy * nConstH)  )
-					nQxy++
-					nQCont1++			
+					nAcumP += nScr1					
+
+					If nScr1 > 0 	
+						If (nAcumP >= (nQxy * nConstH)  )
+							nQxy++
+							nQCont1++			
+							l_Bofh := .f. 
+							l_Eofh := .f. 
+						End If 
+					Else 					
+						If (nAcumP <= (nQxy * nConstH)  )
+							nQxy--
+							nQCont1--				
+							l_Eofh := .f. 
+							l_Bofh := .f. 
+						End If 
+
+					End If 
+
 				End If 
 					
 			End If 
 
-			DoEvents()								
+			//SysWait(0.04)
+
+			//DoEvents()								
 			If (GetAsyncKeyState(VK_LBUTTON)) == 0					
 				lDrag_Mode := .f. 
 			End If 				
@@ -2425,7 +2473,8 @@ REturn
 
 Function SetBrwDrgM(lOn1 , nColIni )
 	lDrag_Mode := lOn1
-	nDragColi  := nColIni
+	nColDragY  := nColIni
+	//nDragColi  := nColIni
 Return
 
 

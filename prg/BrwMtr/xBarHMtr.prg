@@ -146,6 +146,8 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
     //msginfo(  Str(GetProperty(  cBrowserName , 'Width'  )+22) )
 
 
+
+
     DEFINE WINDOW &cJanSombra ;
         AT nLinha1 - 3 , nColuna - 3;
         CHILD ;
@@ -302,6 +304,8 @@ Function yUpdatBha1( nPos1 )
     nScroxy += nPos1     
     nColDrag += nPos1 
 
+    
+
 
     DoEvents()    
     BT_ClientAreaInvalidateAll(cBarraName)  
@@ -339,15 +343,6 @@ Static Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
 
 
     If (nAcende1 > 0) .And. ( Alltrim(cObjSelected) = 'BarraH')
-/*
-        If nAcende1 = 2
-            yBmpDireita2  := BT_BitMapLoadFile('DIREITA1')
-        Else 
-            yBmpEsquerda2 := BT_BitMapLoadFile('ESQUERDA1')
-        End If 
-        */
-
-
         lDesligado := .t. 
     Else 
            
@@ -355,13 +350,6 @@ Static Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
     End If 
 
     If (!lEnabledy)
-
-        
-        //BT_BitmapRelease (yEsquerda)
-        //BT_BitmapRelease (yDireita)
-
-        //yBmpEsquerdad := BT_BitMapLoadFile('ESQUERDAD')
-        //yBmpDireitad  := BT_BitMapLoadFile('DIREITAD')
 
     End If 
 
@@ -408,11 +396,7 @@ Static Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
 
     End If     
 
-  //  BT_BitmapRelease (yEsquerda)
-   // BT_BitmapRelease (yDireita)
-
     BT_DeleteDC (BTstruct )
-
 
 Return     
 
@@ -536,17 +520,20 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
             nColAnt := nSaveCol
             lFirst := .f.             
             nZacum := 0
-            SysWait(0.02)
+         //   SysWait(0.02)
+         
 
             GetCursorPos (@nCol, @nRow)
             ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
-            nCol := ar1[2]            
+            nCol := ar1[2]      
+
 
             If (nModeBut = 0)
                 If (nCol >= nScroxy) .And. ( nCol <= (nScroxy+nWidBarra) )                    
 
                     If !lFirst
                         xShowHint( nRow , nCol , 'Click e Arraste Devagar para Navegar entre as Colunas.' )
+                        DoEvents()
                         lFirst := .t. 
                     End If 
                     DoEvents()
@@ -554,6 +541,9 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     lDragMode := .t.
                     nSaveCol := nCol   
                     SetBrwDrgM( .t. , nSaveCol )                                       
+                    DoEvents()
+
+                   // MSGINFO('OK244')
                 End If     
             End If       
             
@@ -565,8 +555,6 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
                 While (nModeBut = 1) .And. (!lTracking26)           
 
-
-
                     If (GetAsyncKeyState(VK_LBUTTON)) == 0					
                         SysWait(0.03)                                   
                         Exit 
@@ -575,14 +563,11 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     xDoScrolV( .f. ,  , .t. )       
                     DoEvents()
 
-                    SysWait(0.05)
-                  //  msginfo('1')       
+                    SysWait(0.05)           
                 
                 Enddo 
                
             End If 
-            
-
 
 
             If (nModeBut = 2) .And. (!lTracking26)                                        
