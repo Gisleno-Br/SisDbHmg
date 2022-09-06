@@ -86,7 +86,7 @@ Static c_BrowName := ''
 
 Static lAndamento := .f.
 
-Static nColDrag := 0
+Static nColDrag1 := 0
 
 Static nOrdCol := 0
 
@@ -247,21 +247,6 @@ Function xh_InitLim()
 	nLimiteAtu := GetProperty( c_BrowName , 'Width')
 Return nLimiteAtu
 
-Static Function SetOrdGrid( nColuna1 , lAsc1 )
-
-
-	nOrdemSel  := nColuna1
-	lAscending := lAsc1
-
-	BT_ClientAreaInvalidateAll(cHeaderJan)
-
-	DoEvents()
-	yDcBarH1eMtr()
-
-	SysWait(0.02)
-
-
-Return
 
 
 
@@ -554,21 +539,6 @@ Static Function xColMEsquerda( nLargura )
 Return nCol
 
 
-Function yColsVisible(nPos1 )
-
-	Local am1 := {}
-	Local n1 := 0
-
-	For n1 := 1 To Len(  aMapsCol )
-
-		If (aMapsCol[n1][3] <= (nPos1+3) )
-			Aadd(aM1 , n1)
-		End If
-	Next
-
-
-
-Return aM1
 
 Function ySelCol( nCol1 )
 
@@ -697,26 +667,21 @@ Function EventHeaMtr()
 
 		If (nMsg == WM_LBUTTONDOWN)
          
-			DoEvents()			
-
-		
+			DoEvents()		
 			nColSele := nColSel1
 
-			DoEvents()
-					
+			DoEvents()					
+			//msginfo('lpp3333 ' + Str(nColSele))
 
 			If (nColSele <= 0) .Or. (nColSele > Len(aMapsCol) )
+				//msginfo('lpp3333')
 				Return
 			End If
 
 			lDragHeader := .t.
 
-			//msginfo(Str(nColSele))
-
-			//SysWait(0.06)
-
 			xCaptBmp(nColSele)
-		//	SetBrwDrgM( .t. , 1 )						
+		
 			UxLib96()
 
 			nColSav1 := aMapsCol[nColSele][2]
@@ -736,8 +701,10 @@ Function EventHeaMtr()
 			nColx5 := nColX
 			//SIZEMODE
 
+
 			If (lSizeMode)
 
+			//	msginfo('Size mode')
 				For i := 1 To 255
 					GetAsyncKeyState(i)
 				Next i
@@ -745,7 +712,7 @@ Function EventHeaMtr()
 				lAndamento := .t.
 
 				nSaveCol1 := nColSel1
-				nUnit := xRetUnit()
+				nUnit 	  := xRetUnit()
 				lOk  := .f.
 
 
@@ -757,39 +724,57 @@ Function EventHeaMtr()
 
 					lAndamento := .t.
 
-
 					GetCursorPos (@nCol, @nRow)
 					ar1 := GetPos_ScreenToClient(   nHWnd1 , nRow, nCol )
 					nColx2 := ar1[2]
 
-					nColDrag := nSaveCol1
-
+					nColDrag1 := nSaveCol1
 
 					If (Abs(nColx2 - nColx) >= nUnit )
 
+						//msginfo(Str(  nColx2 - nColx)   + '  ' + Str(nColx) + '  ' + Str(nColX2) )
+
 						If (nColx2 > nColx)
-							aMapsCol[nSaveCol1][5] += Abs(nColx2 - nColx)
-							aColsTam[nSaveCol1] += Int(Abs(nColx2 - nColx) / nUnit)
+							//msginfo(Str(aMapsCol[nSaveCol1][5]))
+							aMapsCol[nSaveCol1][5] += nUnit
+						//	msginfo(Str(aMapsCol[nSaveCol1][5]))
+							//Abs(nColx2 - nColx)
+							aColsTam[nSaveCol1]    += 1
+							//msginfo(Str(  nColx2 - nColx)   + '  ' + Str(nColx) + '  ' + Str(nColX2) )
+							//Int(Abs(nColx2 - nColx) / nUnit)
 						Else
 							aMapsCol[nSaveCol1][5] -= Abs(nColx2 - nColx)
-							aColsTam[nSaveCol1]    -= Int(Abs(nColx2 - nColx) / nUnit)
+							aColsTam[nSaveCol1]    -= 1
+							//Int(Abs(nColx2 - nColx) / nUnit)
 						End If
+
+						//nColx := nColX2
+
+					//	DoEvents()
 
 						xMapCols( aCabecs , aColsTam , aTipsy )
 
 						BT_ClientAreaInvalidateAll(cHeaderJan)
-						SysWait(0.02)
-
+					//	SysWait(0.02)
 
 						xDcBarHeader()
 						yDcBarH1eMtr()
 
+					//	DoEvents()
+
 						lOk  := .t.
 						nColx := nColx2
 
+						iz:=1
+
+						For iz := 1 To 255
+							GetAsyncKeyState(iz)
+						Next iz
+						SysWait(0.01)
+
 					End If
 
-					SysWait(0.01)
+					
 
 				Enddo
 
@@ -862,7 +847,6 @@ Function EventHeaMtr()
 			GetCursorPos (@nCol, @nRow)
 			ar1 := GetPos_ScreenToClient(   nHWnd1 , nRow, nCol )
 			nColx := ar1[2]
-
 			
 			DoEvents()
 
@@ -1064,7 +1048,7 @@ Function EventHeaMtr()
 			DoEvents()
 
 			If !(GetAsyncKeyState(VK_LBUTTON)) == 0
-			//	Return
+				Return
 			End If
 
 			//SetWindowCursor( nHWnd , IDC_ARROW)
@@ -1083,13 +1067,16 @@ Function EventHeaMtr()
 				Return
 			End If
 
-			If ((nColx2 := xSearchLim(  nColx )) > 0) .And. (!lSizeMode)
-				DoEvents()
-				xDoHint(    , 'Redimensiona a Coluna ' + Hb_AnsiToOem(Alltrim( aMapsCol[nColx2][1])) + '  '  + Str(nColSel1))
-			//	SetWindowCursor( nHWnd  , 'CURSORSIZE' )
+			If ((nColx2 := xSearchLim(  nColx )) > 0) 
 				
-				lSizeMode := .t.
+				If !lSizeMode
+					SetWindowCursor( nHWnd1  , 'CURSORSIZE' )
+					SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , 'Redimensiona a Coluna ' + Hb_AnsiToOem(Alltrim( aMapsCol[nColx2][1])) + '  '  + Str(nColSel1)  )						
+					lSizeMode := .t.
+				End If 
+				
 				Return
+
 			Else
 
 				If  (_isWindowDefined("Win_Msg")) .And. (IsWindowVisible(  GetFormHandle('Win_Msg')    ))
@@ -1097,7 +1084,8 @@ Function EventHeaMtr()
 				End If
 
 				lSizeMode := .f.
-				//SetWindowCursor( nHWnd1 , IDC_ARROW)
+				SetWindowCursor( nHWnd1 , IDC_ARROW)
+				//msginfo('kk22')
 
 			End If
 
@@ -1596,8 +1584,6 @@ Static Function xRetUnit()
 
 	BT_DeleteDC (BTstruct )
 
-
-
 REturn n12
 
 
@@ -1749,7 +1735,8 @@ Static Function xPaintHeader( cJanela , aCabec  , aTamanho , aTps2 )
 	Local nLinha := 5
 	Local nCol21
 	Local nTam1 := 0
-	Local cFontHead := 'Arial'
+	Local cFontHead := 'Arial MS Unicode'
+	//'Arial'
 	//FONTBROWSER
 	Local nfontSize := 9
 	Local nTamx1 := GetTextoTam( 'A'  , cActiveJan )

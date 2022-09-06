@@ -95,36 +95,12 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
     yBmpDireitad  := BT_BitMapLoadFile('DIREITAD')
 
 
-
-
     lEnabledy := lDispo1
     nColTotal := nTotCol   
-//    nQ1       := xH_LQtot(1) 
-    //nQ2       := xH_LQtot(2) 
 
     nTamBarra := 0
-    
-  //  xh_InitLim()
-//
-/*
-    nQBrowCol := xH_xClcDir(  nColTotal  )
-
-    If nQBrowCol > 0
-        nZ1 := Transform( (nQBrowCol / nColTotal) , '999,999.999999')         
-        nP1 :=  Int( (nLargJanela - 20)  * rTrans(  nZ1   ) )
-        nTamBarra := (nLargJanela - 20) - nP1       
-        nPassoy := Int((nLargJanela - 20) / nQBrowCol)        
-        nPassoy := Int( np1 / (nQBrowCol - 1 )) 
-        nQ1 := (nQBrowCol - 1 )
-    Else 
-    */
-
     xH_CalcBar()
 
-
-//    nTotScr2 := xH_RtLimite()
-
-    
     cHead1 := cHeaderN1   
 
         
@@ -149,7 +125,7 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
 
 
     DEFINE WINDOW &cJanSombra ;
-        AT nLinha1 - 3 , nColuna - 3;
+        AT nLinha1 - 3 , nColuna - 3 ;
         CHILD ;
         PANEL ;
         PARENT &cParent ;
@@ -383,12 +359,18 @@ Static Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
     
 
     If (!lDragMode) .And. (lEnabledy) .And. (!lDraHighM)
+
+        
+        
         BT_DrawFillRoundRect (hDC2 , 4 , nScroxy , nWidBarra , 10 , 5 ,5 ,   {178 , 178 ,178}   , {178 , 178 ,178}   , 0)
+        
     Else 
 
-        If lEnabledy
+        If lEnabledy        
             If (lDragMode) .or. (lDraHighM) 
-                BT_DrawFillRoundRect (hDC2 , 4 , nScroxy   , nWidBarra    , 10 , 5 ,5 ,  {12,134,166}   , {166 , 166 , 166}  , 0)
+                If nScroxy >= 5
+                    BT_DrawFillRoundRect (hDC2 , 4 , nScroxy   , nWidBarra    , 10 , 5 ,5 ,  {12,134,166}   , {166 , 166 , 166}  , 0)
+                End If 
             Else 
                 BT_DrawFillRoundRect (hDC2 , 4 , nScroxy , nWidBarra  , 10 , 5 ,5 ,  {12,134,166}   , {166 , 166 , 166}  , 0)
             End If    
@@ -541,9 +523,7 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     lDragMode := .t.
                     nSaveCol := nCol   
                     SetBrwDrgM( .t. , nSaveCol )                                       
-                    DoEvents()
-
-                   // MSGINFO('OK244')
+                    DoEvents()                
                 End If     
             End If       
             
@@ -563,7 +543,9 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     xDoScrolV( .f. ,  , .t. )       
                     DoEvents()
 
-                    SysWait(0.05)           
+                    IncrCont1( .f. )
+
+                    SysWait(0.02)           
                 
                 Enddo 
                
@@ -588,9 +570,10 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     //msginfo('ok2')                    
 
                     xDoScrolV( .t. ,, .t. )                   
+                    IncrCont1( .t. )
                     DoEvents()
 
-                    SysWait(0.05)
+                    SysWait(0.02)
                   
 
                 Enddo 
@@ -751,7 +734,6 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1 )
 
         Else             
 
-
           
             If (lScrollFim)
                 If lAviso1
@@ -768,20 +750,6 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1 )
             If (xGetScrolPos() == 0)
                 nSaldo1 += nColIniBrw 
             End If 
-
-
-             /*
-
-            If ( (nColAtu+1) == (nColtotal - 1))
-                nDiff :=  (xCalcTam() - (xGetScrolPos()+xH_RtLimite()) )                
-                If nSaldo1 > nDiff
-                 //   nSaldo1 -= 50
-                 //   msginfo('lp2')
-                   //nSaldo1 -= nDiff                   
-                End If 
-            End If             
-            */
-       
 
             DoEvents()
             SysWait(0.02)                            
@@ -846,7 +814,7 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1 )
             DoEvents()  
 
             If (xGetScrolPos() == 0)
-                MSGINFO('ok2')
+              //  MSGINFO('ok2')
                     //nSaldo1 += nColIniBrw 
             End If 
 
@@ -888,8 +856,6 @@ Function xDoScrolHroz( lFrente , nValue , lAtuH , lAtBar )
 
     DoEvents()
     yScrollCaM( lFrente , .f. , nValue , lAtuH  )      
-
-    
     
     If lAtBar
         If xGetScrolPos()  != 0
@@ -898,10 +864,8 @@ Function xDoScrolHroz( lFrente , nValue , lAtuH , lAtBar )
         End If  
     End If  
 
-
     yDcBarH1eMtr()
     DoEvents()    
-
  
 Return                     
 

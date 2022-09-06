@@ -144,6 +144,8 @@ Static nColH1 := 0
 
 Static nColEsquerda := 1
 
+Static hFontBrw 
+
 Static nPageNum := 0
 
 Static lAtivo1 := .t.
@@ -281,7 +283,8 @@ Function xRetItem( aMatriz )
 
 	Next
 
-Return (c1)
+Return aMatriz
+//(c1)
 
 
 Function xLibF1( )
@@ -314,6 +317,7 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 	nLimiteCol := nLarg1
 
 
+
 	//msginfo(  Str( nLimiteCol  )  )
 
 	bBmpZ := xBmpToTrans( 'BOLAZAZUL1')
@@ -321,6 +325,9 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 	
 	hBitOk     := BT_BitmapLoadFile ('NGITRANS')
 	hBitExcl   := BT_BitmapLoadFile ('EXCLA1')
+
+
+	hFontBrw := HMG_CreateFont (  GetDc( GetFormHandle('Main') ) ,  FONTBROWSER , FONTBROWSERSIZE, .f., .f., .f., .f. )
 
 
 	aCabec1 := Aclone(aCabecalho)
@@ -1001,7 +1008,7 @@ Function xTecBrowMtr()
 	Local nLarg1 := nLargX
 	Local nLargz1 := nLargx
 	Local nDiff := nLargTotal - nLarg1 + 30
-	Local aMVisible1 := Iif( nColScrool >= nLarg1  , yColsVisible(nColScrool) , {} )
+	//Local aMVisible1 := Iif( nColScrool >= nLarg1  , yColsVisible(nColScrool) , {} )
 	Local nPos2
 	Local nTotal := 0
 	Local lDownMouse := .f.
@@ -1071,36 +1078,27 @@ Function xTecBrowMtr()
 
 	// Arrasto da BarraH
 	If (nMsg == WM_MOUSEMOVE)
-		//.And. (nHWnd == GetProperty(  cBrowserName , "HANDLE" ))
-
-	//	msginfo('ok2 '+ cObjSelected )
-
+		
 		If ((nHasFocus > 0) .or. (!lDrag_Mode)) .And. (lTracking135)
 			DoEvents()
 			yLimpBarV()
 		End If
 
 		If (yRetAcende() > 0) .And. (cObjSelected != 'BarraH')
-			yOffBarra( cBarrah  )
-			//	msginfo('ko33332')
+			yOffBarra( cBarrah  )		
 		End If
 
 		If (cObjSelected = 'BarraH') .And. (yRetAcende() > 0)
-			lDrag_Mode := .f.
-			//msginfo('ok222')
+			lDrag_Mode := .f.			
 		End If 
 
-		//DoEvents()
-
-
+		
 		If  (_isWindowDefined("Win_Msg")) .And. ( isWindowVisible(GetFormHandle("Win_Msg")))
 			xHidehint()
 		End If
 
-		//DoEvents()
+		
 		GetCursorPos (@nCol, @nRow)
-
-
 		nHWnd1 := WindowFromPoint (nCol, nRow)
 
 		cForm1 := ''
@@ -1108,20 +1106,16 @@ Function xTecBrowMtr()
 		GetFormNameByHandle( nHWnd1 , @cForm1 )
 
 
-
 		ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
 		nCol := ar1[2]
 
 		
-
-
 		If (lDrag_Mode)
 
-			If	(Alltrim(cObjSelected) != 'BarraH')			
+			If	(Alltrim(cObjSelected) != 'BarraH')					
+				lDrag_Mode := .f. 
 				Return
 			End If 
-
-			//msginfo(cForm1)
 		
 			For i := 1 To 255
 				GetAsyncKeyState(i)
@@ -1131,74 +1125,77 @@ Function xTecBrowMtr()
 				nColDragy := nCol
 			End If		
 
-
-			nConstH := Xh_RetPasy()	
-			nScr1 := nCol - nColDragy 
-
-
-			If nScr1 != 0
-				If (nCol > nColDragY) 
-					If (nQCont1 >= yRetQPAsso())																
-						l_Eofh := .t. 					
+			nConstH  := Xh_RetPasy()	
+			nPuloy   := Int(nConstH - (0.10 * nConstH))
+			nScr1    := 0			
+				
+			If ( (nCol - nColDragY) >= nPuloy ) 
+				nScr1 := nConstH													
+				//If (nQCont1 >= yRetQPAsso() )																
+				If ( (nQxy  - 1) >=  yRetQPAsso()  )
+					l_Eofh := .t. 			
+				//	msginfo('lp222')												
+				End If 
+			Else 					
+				If ((nColDragy - nCol) >= nPuloy)
+					nScr1 := -nConstH							
+					
+					If (nAcump <= 0)												
+						nScr1 	  := 0
+						//nQCont1   := 1
+						nColDragy := 0						
+						nQxy      := 1
+						l_Bofh 	  := .t. 						
 					End If 
-				Else 					
-					If nCol < nColDragy					
-						If (nAcump <= 0)							
-							nScr1 	  := 0
-							nQCont1   := 1
-							nColDragy := 0						
-							nQxy      := 1
-							l_Bofh := .t. 
-							DoEvents()							
-						End If 
-					End If 
+
 				End If 
 			End If 
-
+			
 
 			If (nScr1 != 0 )
 
-				If ((nScr1 > 0) .And. (!l_Eofh)) .or. ; 
-					((nScr1 < 0) .And. (!l_Bofh))				   
-			
+				If ((nScr1 > 0) .And. (!l_Eofh)) .Or. ; 
+					((nScr1 < 0) .And. (!l_Bofh))				   			
+					
 					yUpdatBha1(nScr1 )
 					nColDragy := nCol
 
-					nAcumP += nScr1					
+					If nScr1 > 0
+						xDoScrolV( .t. , .f. , .t. )       
+                    	DoEvents()                    	
+					Else 
+						xDoScrolV( .f. , .f.  , .t. )       
+						DoEvents()                    	
+					End If 
+
+					SysWait(0.03)           
+					
+					nAcumP += nScr1									
 
 					If nScr1 > 0 	
 						If (nAcumP >= (nQxy * nConstH)  )
-							nQxy++
-							nQCont1++			
+							nQxy++						
 							l_Bofh := .f. 
 							l_Eofh := .f. 
 						End If 
 					Else 					
 						If (nAcumP <= (nQxy * nConstH)  )
-							nQxy--
-							nQCont1--				
-							l_Eofh := .f. 
-							l_Bofh := .f. 
+							If nAcumP > 0
+								nQxy--								
+								l_Eofh := .f. 
+								l_Bofh := .f. 
+							End If 	
 						End If 
-
 					End If 
-
-				End If 
-					
+				End If 					
 			End If 
-
-			//SysWait(0.04)
-
-			//DoEvents()								
+				
 			If (GetAsyncKeyState(VK_LBUTTON)) == 0					
 				lDrag_Mode := .f. 
 			End If 				
 
 
-
 		End If	
-
-
 	End If
 
 
@@ -1669,9 +1666,6 @@ Function xTecBrowMtr()
 	End If
 
 
-
-
-
 	If (nWParam == VK_DOWN) .or. (lDownMouse)
 		xGoDown()
 		lDownMouse := .f.
@@ -1690,6 +1684,26 @@ Function xTecBrowMtr()
 
 
 Return
+
+
+
+Function IncrCont1( lFrente  )
+
+	Local nScr1 := Xh_RetPasy()
+
+	nColDrag := (nQxy * Xh_RetPasy())
+
+	If lFrente
+		nQxy++		
+		nAcumP += nScr1		
+	Else 
+		nQxy--		
+		nAcumP -= nScr1		
+	End If 
+
+	
+
+REturn 
 
 
 
@@ -2031,7 +2045,7 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 	Local nLinDrop := 0
 	Local lEnabled := .t.
 	Local bBmpZ := xBmpToTrans( 'BOLAZAZUL1')
-	Local bBmpa := xBmpToTrans( 'NGITRANS' , SELCOR)
+	Local bBmpa := xBmpToTrans( 'NGITRANS' , SELCOR , 20,20 )
 	Local cCor
 	Local nCor
 	Local nLinB := 0
@@ -2046,26 +2060,34 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 	Local hBitOk     := BT_BitmapLoadFile ('NGITRANS')
 	Local hBitExcl   := BT_BitmapLoadFile ('EXCLA1')
 
-//	msginfo('Fim 1 ')
+	Local nCol := nColIniBrw
 
+	Local nRow := 0
 
-	//Local hBolaAzul   := BT_BitmapLoadFile('tra1.Bmp')
+	
 
-	//BT_BitmapLoadFile ('BOLAZAZUL1')
 
 
 	DEFAULT lBrwEnable := .t.
 
-	nRow := -(nLinScrool)
-	nCol := -(nColScrool)
+	//nRow := -(nLinScrool)
+	//nCol := -(nColScrool)
 
-	//hBitMap2 := BT_BitmapCreateNew (Width  , Height , WHITE )
+	If nColScrool != 0
+		nCol -= nColScrool 
+	End If 
+
+	If nLinScrool != 0
+		nRow -= nLinScrool 
+	End If 
+
+
+
 	hDC2 := BT_CreateDC (cForm ,   BT_HDC_INVALIDCLIENTAREA  , @BTstruct)
 
 
 
-
-	//BT_BitmapRelease ( hBitExcl )
+	//BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width  ,    Height    , WHITE , WHITE  )
 
 	If (nOpselx1 = 0)
 		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width  ,    Height    , WHITE , WHITE  )
@@ -2098,12 +2120,80 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 
 
+
 	For n1 := 1 To Len(aMtrOp)
 
-		cTexto := Hb_Utf8ToStr( aMtrOp[n1][2]) + '*'
-		//+ Replicate(' ',200)
-		nLinb++
+		nQtCol := Len(  aMtrOp[n1][2]  )
 
+		aMz1   := AClone( aMtrOp[n1][2]  )
+
+		nCol := nColIniBrw
+
+
+		If nColScrool != 0
+			nCol -= nColScrool 
+		End If 
+
+		If (nOpselx1 > 0) .And. (aMtrOp[n1][1] == nSelLine )
+			BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 0  ,    Width    ,    nItemBrwHeight     , SELCOR  , SELCOR  )
+			If (nColScrool == 0)
+				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 00  ,  nColIniBrw ,    nItemBrwHeight     , SELCOR  , SELCOR  )
+				BT_DrawBitmap (hDC2  , nLine  + nRow    , 2   , 16  , nItemBrwHeight , BT_SCALE , bBmpa  )				
+			End If
+		Else 
+			If (Mod( n1 , 2 ) = 0)
+				nCorBk := WHITE
+				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width  ,    nItemBrwHeight     , nCorBk  , nCorBk   )
+				lPar := .f.
+			Else
+				nCorBk := CORBROWSE
+				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , nCorBk  , nCorBk   )
+				lPar := .t.
+			End If
+		End If 
+
+
+		For n2 := 1 to Len(aMz1) 
+			nTam1  	 := aTams2[n2]
+			cTexto   := Alltrim(Hb_Utf8ToStr(  aMz1[n2] )) 			
+			nQAcento := QtAcento(Alltrim( cTexto  ) )			
+			nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
+			cTexto := Replicate('A' ,  nTam1 + 1  )
+			n12 := GetTextWidth( hDC2 , cTexto , hFontBrw )
+			nTam := n12
+			cTexto2 := Left(Alltrim(Hb_Utf8ToStr(  aMz1[n2] )) 	, nTam1 )
+			cTexto1 := Padr( Alltrim(  Hb_AnsiToOem( cTexto2 )) ,n12+1) 
+			n22 := nTamx1 + nCol +  (250 * nTam1)
+			nTypeText    := BT_TEXT_TRANSPARENT
+			cCor := FONTCOR			//DoEvents()
+
+			If (nOpselx1 > 0) .And. (aMtrOp[n1][1] == nSelLine )
+
+				nTypeText    := BT_TEXT_BOLD+BT_TEXT_TRANSPARENT
+				nFontCor     := WHITE
+
+				If !lBrwEnable
+					nTypeText    := BT_TEXT_TRANSPARENT
+					nFontCor 	 := BLACK
+				End If
+
+				If lAtivo1
+					BT_DrawText ( hDC2 , nLine + nRow  , nCol+1 ,   cTexto1 , xFont2  , 9 , nFontCor ,  SELCOR   , ;
+						nTypeText ,	nAlingText, nOrientation )
+				End If
+
+			Else 
+				BT_DrawText ( hDC2 , nLine + nRow  , nCol+1  ,  cTexto1 , xFont2, 9 ,  cCor , nCorBk , nTypeText, nAlingText, nOrientation )
+			End If 
+
+			nCol += nTam
+
+		Next 
+
+
+		/*
+		cTexto := Hb_Utf8ToStr( aMtrOp[n1][2]) + '*'		
+		nLinb++
 
 		IF (nLinb > nTamPag)
 			nLinB := 0
@@ -2113,7 +2203,6 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 		nPg := Int(    n1  / nTamPag )+1
 
 		If (l_HitB)
-
 
 			n12 := (Len(cTexto) * nTam1 )
 
@@ -2126,12 +2215,10 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 		End If
 
 		If (nOpselx1 > 0) .And. (aMtrOp[n1][1] == nSelLine )
-			//(nOpselx1 = n1)
+			
 
 			nTypeText    := BT_TEXT_BOLD
 			nFontCor     := WHITE
-
-
 
 			If !lBrwEnable
 				nTypeText    := BT_TEXT_TRANSPARENT
@@ -2147,42 +2234,8 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 			End If
 
 			If (aMtrOp[n1][1] == nSelLine) .And. (nColScrool == 0)
-
-
-
-				//aRGBcolor := SELCOR
-
-
-				//hBitmapx := BT_BitmapCreateNew (nColIniBrw , nItemBrwHeight, aRGBcolor)
-
-				//hDC3 := BT_CreateDC (hBitmapX , BT_HDC_BITMAP, @BTstruct3 )
-
-				//BT_DrawBitmapTransparent (hDC3 , 0, 0, nColIniBrw, nItemBrwHeight, BT_SCALE, hBolaAzul , NIL)
-
 				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 00  ,  nColIniBrw ,    nItemBrwHeight     , SELCOR  , SELCOR  )
-
-				//BT_DrawBitmapTransparent(hDC2  , nLine  + nRow    , 0   , nColIniBrw  , nItemBrwHeight , BT_STRETCH , bBmpZ  , WHITE )
-
-
-
-				BT_DrawBitmap (hDC2  , nLine  + nRow    , 0   , 17  , nItemBrwHeight , BT_SCALE , bBmpa  )
-
-				//BT_DrawBitmapAlphaBlend (hDC2  , nLine  + nRow    , 0   , nColIniBrw  , nItemBrwHeight , 95 , BT_SCALE , bBmpZ  )
-
-				//BT_DrawBitmapAlphaBlend (hDC, nRow ,  nCol  , nil, nil, 120 , BT_COPY  , zBitmap)
-
-				//BT_DrawBitmap(hDC3, nLine  + nRow , 0   , nColIniBrw - 3 , nItemBrwHeight, BT_SCALE, hBitmapx  )
-
-				//Bt_BitmapSaveFile(  bBmpZ , 'tra2221_23.Bmp'  )
-
-
-				//	BT_BitmapRelease (hBitmapx)
-
-				// Release hDC bitmap
-				//BT_DeleteDC (BTstruct3)
-
-
-
+				BT_DrawBitmap (hDC2  , nLine  + nRow    , 0   , 17  , nItemBrwHeight , BT_SCALE , bBmpa  )				
 			End If
 
 		Else
@@ -2190,8 +2243,6 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 			nTypeText    := BT_TEXT_TRANSPARENT
 			n12 := ( (Len(cTexto) + 0)  * nTam1 )
 			n12 := nTamx1 + nCol + nColIniBrw + (250 * nTam1)
-
-
 
 			If (Mod( n1 , 2 ) = 0)
 				nCorBk := WHITE
@@ -2208,43 +2259,26 @@ Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable )
 
 			cCor := FONTCOR
 
-			/*
-			If !aMtrOp[n1][2]
-				cCor := CorDisabled
-				nTypeText    :=  BT_TEXT_BOLD+BT_TEXT_TRANSPARENT				
-			End If
-			*/
-
+			
 
 			BT_DrawText ( hDC2 , nLine + nRow  , nColIniBrw+nCol+1  ,  cTexto , xFont2, 9 ,  cCor , nCorBk , nTypeText, nAlingText, nOrientation )
 
 		End If
 
+		*/
+
+
 
 		nLine += nItemBrwHeight
+
+		DoEvents()
 
 
 	Next
 
 	BT_DeleteDC (BTstruct )
 
-	/*
 
-	BT_BitmapRelease ( hBitOk )
-	BT_BitmapRelease ( hBitExcl )
-
-	BT_BitmapRelease (bBmpZ)
-	BT_BitmapRelease (bBmpa)
-	*/
-
-	//msginfo('Fim 2222')
-
-//
-
-	//BT_BitmapRelease(hBolaAzul)
-
-
-	//BT_BitmapRelease ( hBitMap2 )
 
 
 Return
@@ -2718,7 +2752,7 @@ Static Function xPaintScroll( cJanela )
 		BT_DrawFillRoundRect ( hDC , nRIni ,  4   , Width - 10 , nAltura , 5 ,5 ,   {152 , 152 ,152}   , {152 , 152 ,152}  , 0 )
 	Else
 
-		If (nItemX5 == nMaxItem1 )
+		If (nItemX5 == nMaxItem1 ) .And. ( (nLimteLin - nAltura) >= 4  )
 			BT_DrawFillRoundRect ( hDC , nLimteLin - nAltura ,  4   , Width - 10 , nAltura , 5 ,5 ,   {152 , 152 ,152}   , {152 , 152 ,152}  , 0 )
 		Else
 
@@ -2726,6 +2760,7 @@ Static Function xPaintScroll( cJanela )
 			yPos := nLimteLin - nRIni - nAltura
 			nFator := Int(( nItemX5 * yPos     ) /	nMaxItem1)
 
+			
 			If (Len(aMt1) <= nTamPag)
 				nFator := 0
 			End If
