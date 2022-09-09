@@ -543,6 +543,9 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     xDoScrolV( .f. ,  , .t. )       
                     DoEvents()
 
+                    
+                    SysWait(0.02)         
+
                     IncrCont1( .f. )
 
                     SysWait(0.02)           
@@ -570,6 +573,10 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     //msginfo('ok2')                    
 
                     xDoScrolV( .t. ,, .t. )                   
+
+                    
+                    SysWait(0.02)         
+
                     IncrCont1( .t. )
                     DoEvents()
 
@@ -700,7 +707,7 @@ Return n1
 
 
 
-Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1 )
+Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1  , nColZ1)
 
     Local nSaldo1 := xH_ColResto( xH_RtLimite() )       
     //Local aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)
@@ -722,15 +729,40 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1 )
     If lFrente       
         If !lModo1
 
+            msginfo(Str(xH_RtLimite()))
+
             nSaldo1 := xH_ColResto( xH_RtLimite() )              
-            aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)                            
+            aMInfo  := xH_CalcPulo( nQContador + 1 , nSaldo1)                            
+
+
+
+
+          //  msginfo(Str(nColZ1) )
+
+           // nSaldo1 := xGetInfCw1(   nColZ1   , 5  ) 
+            //nSaldo2 := xH_ColResto( xH_RtLimite() )  
+
+                
+            If (xGetScrolPos() == 0)                
+                nSaldo1 += nColIniBrw 
+            Else 
+               //msginfo('ok2 ' + Str( nSaldo2  ))    
+            End If            
+
+
+            //xDoScrolHroz( .t. , aMInfo[1]  , lAtuHead1 , lAtuBar )       
 
             xRoleTela( .t. ,  Xh_RetPasy() ,  lAtuBar   ,  aMInfo[1] , aMInfo[2] )    
             nTotScr1 += aMInfo[1]            
             
             DoEvents()       
-            nLastMove := aMInfo[1]
+
+             SysWait(0.02)
+            //nLastMove := aMInfo[1]
+          //  nQContador += aMInfo[2]
             xH_IncLim( aMInfo[1] )         
+
+           // msginfo(Str(xH_RtLimite()))
 
         Else             
 
@@ -744,6 +776,8 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1 )
 
             nColAtu := xGetColPos( .t. )                                                                    
             nSaldo1 := xGetInfCw1(   nColAtu   , 5  ) 
+
+          //  msginfo(Str(nColAtu))
             lScrolIni := .f. 
 
                 
@@ -752,7 +786,7 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1 )
             End If 
 
             DoEvents()
-            SysWait(0.02)                            
+          //  SysWait(0.02)                            
 
             xDoScrolHroz( .t. , nSaldo1 , lAtuHead1 , lAtuBar )       
             lScrollFim := ((xGetScrolPos()+xH_RtLimite()) >= (xCalcTam() ) )

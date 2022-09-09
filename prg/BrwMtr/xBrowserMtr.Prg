@@ -959,6 +959,7 @@ Return
 
 
 Static Function DoScrolly( nVert1 )
+
 	nColScrool += nVert1
 	SETVSCROLLVALUE( GetFormHandle( cBrowserName  )  ,  -nVert1    , 2 )
 
@@ -1130,24 +1131,19 @@ Function xTecBrowMtr()
 			nScr1    := 0			
 				
 			If ( (nCol - nColDragY) >= nPuloy ) 
-				nScr1 := nConstH													
-				//If (nQCont1 >= yRetQPAsso() )																
+				nScr1 := nConstH																	
 				If ( (nQxy  - 1) >=  yRetQPAsso()  )
-					l_Eofh := .t. 			
-				//	msginfo('lp222')												
+					l_Eofh := .t. 							
 				End If 
 			Else 					
 				If ((nColDragy - nCol) >= nPuloy)
-					nScr1 := -nConstH							
-					
+					nScr1 := -nConstH	
 					If (nAcump <= 0)												
-						nScr1 	  := 0
-						//nQCont1   := 1
+						nScr1 	  := 0						
 						nColDragy := 0						
 						nQxy      := 1
 						l_Bofh 	  := .t. 						
 					End If 
-
 				End If 
 			End If 
 			
@@ -1482,26 +1478,23 @@ Function xTecBrowMtr()
 		If (nWParam == VK_RIGHT)
 
 			If  lNoHorzScr
-				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))
+				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal.") , .f. )
 				Return
 			End If
 
 
 			//msginfo('lp2')
 
-
 			nColZ2++
 			nPos1 := xGetInfCw1(   nColz2 , 2  )
 			nPos2 := xGetInfCw1(   nColz2 , 3  )
-			If (nPos2 >= nLimiteCol)
 
-				msginfo('ok2')
+			If (nPos2 >= nLimiteCol)			
 
-				nSaldo1 := xH_ColResto( xH_RtLimite() )
-				aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)
-
-			
-
+				nZ1 := xDoScrolV( .t. , .t. , .f.  , .t. , .f. , nColZ2  )				
+				//xDoScrolV( .t. , .t. , .t. )       
+                IncrCont1( .t. )
+                
 
 			Else
 
