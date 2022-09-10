@@ -1098,12 +1098,8 @@ Function xTecBrowMtr()
 			xHidehint()
 		End If
 
-<<<<<<< HEAD
 		//DoEvents()
 	
-=======
-		
->>>>>>> c84ca8b247b9ab0471d01d0d1ee0a3b190612717
 		GetCursorPos (@nCol, @nRow)
 		nHWnd1 := WindowFromPoint (nCol, nRow)
 
@@ -1114,11 +1110,8 @@ Function xTecBrowMtr()
 
 		ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
 		nCol := ar1[2]
-<<<<<<< HEAD
 		
 		
-=======
->>>>>>> c84ca8b247b9ab0471d01d0d1ee0a3b190612717
 
 		
 		If (lDrag_Mode)
@@ -1130,12 +1123,8 @@ Function xTecBrowMtr()
 		
 			For i := 1 To 255
 				GetAsyncKeyState(i)
-<<<<<<< HEAD
 			Next i					
 						
-=======
-			Next i											
->>>>>>> c84ca8b247b9ab0471d01d0d1ee0a3b190612717
 
 			If nColDragy == 0
 				nColDragy := nCol
@@ -1203,17 +1192,10 @@ Function xTecBrowMtr()
 				
 			If (GetAsyncKeyState(VK_LBUTTON)) == 0					
 				lDrag_Mode := .f. 
-<<<<<<< HEAD
 			End If 			
 
 		End If	
 
-=======
-			End If 				
-
-
-		End If	
->>>>>>> c84ca8b247b9ab0471d01d0d1ee0a3b190612717
 	End If
 
 
