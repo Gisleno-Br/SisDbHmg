@@ -131,13 +131,14 @@ FUNCTION Main
 
 
 	Public nSizeFont := 9
+	
 
 
 
 	Public nConst1 := 60
 	Public nConst2 := 0
 
-	Public FONTBROWSER := 'Lucida Sans Typewriter'
+	Public FONTBROWSER := 'Arial'
 	//'Lucida Sans Typewriter'
 
 	Public FONTBROWSERSIZE := 9
