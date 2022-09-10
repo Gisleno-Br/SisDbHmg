@@ -1089,10 +1089,11 @@ Function xTecBrowMtr()
 		End If
 
 		//DoEvents()
-
+	
 		GetCursorPos (@nCol, @nRow)
 		ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
 		nCol := ar1[2]
+		
 		
 
 		If (lDrag_Mode)
@@ -1102,8 +1103,7 @@ Function xTecBrowMtr()
 			For i := 1 To 255
 				GetAsyncKeyState(i)
 			Next i					
-			
-			
+						
 
 			If nColDragy == 0
 				nColDragy := nCol
@@ -1144,12 +1144,9 @@ Function xTecBrowMtr()
 			DoEvents()								
 			If (GetAsyncKeyState(VK_LBUTTON)) == 0					
 				lDrag_Mode := .f. 
-			End If 				
-
-
+			End If 			
 
 		End If	
-
 
 	End If
 
