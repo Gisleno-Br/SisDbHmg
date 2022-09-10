@@ -73,7 +73,7 @@ Static cEspelhoBrw := ''
 Static cBarraVfrm := ''
 Static cBarraVSombra := ''
 Static lLibera1 := .f.
-Static nColLeft := 0
+Static nColLeft := 1
 Static lTracking96 := .f.
 Static nQTotCol := 0
 Static nLast1 := 0
@@ -101,6 +101,7 @@ Static lFundo := .t.
 Static lFlagPaint := .t.
 Static nLimteLin := 0
 Static lColor1 := .f.
+
 Static aMtrColor := {}
 Static nLinScrool := 0
 Static nItemScrool := 0
@@ -1161,10 +1162,10 @@ Function xTecBrowMtr()
 					nColDragy := nCol
 
 					If nScr1 > 0
-						xDoScrolV( .t. , .f. , .t. )       
+						xDoScrolV( .t. , .f. )       
                     	DoEvents()                    	
 					Else 
-						xDoScrolV( .f. , .f.  , .t. )       
+						xDoScrolV( .f. , .f.  )       
 						DoEvents()                    	
 					End If 
 
@@ -1486,23 +1487,46 @@ Function xTecBrowMtr()
 				Return
 			End If
 
+			lScrollFim := ( (xGetScrolPos()+ xH_RtLimite() ) <= xCalcTam()  )
+
+
+			If !lScrollFim
+				Return 
+			End If 
+
 
 			//msginfo('lp2')
 
 			nColZ2++
 			nPos1 := xGetInfCw1(   nColz2 , 2  )
 			nPos2 := xGetInfCw1(   nColz2 , 3  )
+			nSize1 := xGetInfCw1(   nColz2 , 5  )
 
-			If (nPos2 >= nLimiteCol)			
+			
 
-				nZ1 := xDoScrolV( .t. , .t. , .f.  , .t. , .f. , nColZ2  )				
-				//xDoScrolV( .t. , .t. , .t. )       
-                IncrCont1( .t. )
+			If (nPos2 >= nLimiteCol) 
+
+			    While ( (nPos1 - xGetScrolPos()) > 5) .And. ;
+					( (xGetScrolPos()+ xH_RtLimite() ) <= xCalcTam()  )
+						xDoScrolV( .t. , .t.  )       
+						IncrCont1( .t. )
+						DoEvents()
+						SysWait(0.04)
+				Enddo 
+
+				If (xGetScrolPos()+ xH_RtLimite() ) <= xCalcTam()
+					nLimiteCol += nSize1
+				End If 
                 
 
 			Else
 
 			End If
+
+			nColLeft++	
+
+
+			//msginfo(Str(nColLeft))
 
 			lNoHorzScy := .f.
 			ySelCol( nColz2 )

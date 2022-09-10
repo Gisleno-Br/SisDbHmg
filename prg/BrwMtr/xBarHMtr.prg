@@ -540,7 +540,7 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                         Exit 
                     End If  
                     
-                    xDoScrolV( .f. ,  , .t. )       
+                    xDoScrolV( .f. ,  ,  )       
                     DoEvents()
 
                     
@@ -572,7 +572,7 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     End If           
                     //msginfo('ok2')                    
 
-                    xDoScrolV( .t. ,, .t. )                   
+                    xDoScrolV( .t. ,,  )                   
 
                     
                     SysWait(0.02)         
@@ -693,21 +693,9 @@ Function xInitSxy()
 Return 
 
 
-Function xDoScrlMov()
-Local n1 
-
-    DoEvents()
-    SysWait(0.02)
-
-   n1 := xDoScrolV( .t. , .t. , .t.  , .f. , .f.  )	
-
-  SysWait(0.05)
-  
-Return n1
 
 
-
-Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1  , nColZ1)
+Function xDoScrolV( lFrente , lAtuBar ,  lAtuHead1 , lAviso1  , nColZ1)
 
     Local nSaldo1 := xH_ColResto( xH_RtLimite() )       
     //Local aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)
@@ -718,7 +706,7 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1  , nColZ1)
     Local nColAtu := 0
     Local aMInfo := {}
 
-    DEFAULT lModo1 := .f. 
+    //DEFAULT lModo1 := .f. 
     DEFAULT lAtuBar := .t. 
     DEFAULT lAtuHead1 := .t. 
     DEFAULT lAviso1   := .t. 
@@ -727,44 +715,44 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1  , nColZ1)
     
     
     If lFrente       
-        If !lModo1
+        // If !lModo1
 
-            msginfo(Str(xH_RtLimite()))
+        //     //msginfo(Str(xH_RtLimite()))
 
-            nSaldo1 := xH_ColResto( xH_RtLimite() )              
-            aMInfo  := xH_CalcPulo( nQContador + 1 , nSaldo1)                            
-
-
+        //     nSaldo1 := xH_ColResto( xH_RtLimite() )              
+        //     aMInfo  := xH_CalcPulo( nQContador + 1 , nSaldo1)                            
 
 
-          //  msginfo(Str(nColZ1) )
 
-           // nSaldo1 := xGetInfCw1(   nColZ1   , 5  ) 
-            //nSaldo2 := xH_ColResto( xH_RtLimite() )  
+
+        //   //  msginfo(Str(nColZ1) )
+
+        //    // nSaldo1 := xGetInfCw1(   nColZ1   , 5  ) 
+        //     //nSaldo2 := xH_ColResto( xH_RtLimite() )  
 
                 
-            If (xGetScrolPos() == 0)                
-                nSaldo1 += nColIniBrw 
-            Else 
-               //msginfo('ok2 ' + Str( nSaldo2  ))    
-            End If            
+        //     If (xGetScrolPos() == 0)                
+        //         nSaldo1 += nColIniBrw 
+        //     Else 
+        //        //msginfo('ok2 ' + Str( nSaldo2  ))    
+        //     End If            
 
 
-            //xDoScrolHroz( .t. , aMInfo[1]  , lAtuHead1 , lAtuBar )       
+        //     //xDoScrolHroz( .t. , aMInfo[1]  , lAtuHead1 , lAtuBar )       
 
-            xRoleTela( .t. ,  Xh_RetPasy() ,  lAtuBar   ,  aMInfo[1] , aMInfo[2] )    
-            nTotScr1 += aMInfo[1]            
+        //     xRoleTela( .t. ,  Xh_RetPasy() ,  lAtuBar   ,  aMInfo[1] , aMInfo[2] )    
+        //     nTotScr1 += aMInfo[1]            
             
-            DoEvents()       
+        //     DoEvents()       
 
-             SysWait(0.02)
-            //nLastMove := aMInfo[1]
-          //  nQContador += aMInfo[2]
-            xH_IncLim( aMInfo[1] )         
+        //      SysWait(0.02)
+        //     //nLastMove := aMInfo[1]
+        //   //  nQContador += aMInfo[2]
+        //     xH_IncLim( aMInfo[1] )         
 
-           // msginfo(Str(xH_RtLimite()))
+        //    // msginfo(Str(  aMInfo[1]  )  )
 
-        Else             
+        // Else             
 
           
             If (lScrollFim)
@@ -786,44 +774,44 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1  , nColZ1)
             End If 
 
             DoEvents()
-          //  SysWait(0.02)                            
+                                    
 
             xDoScrolHroz( .t. , nSaldo1 , lAtuHead1 , lAtuBar )       
             lScrollFim := ((xGetScrolPos()+xH_RtLimite()) >= (xCalcTam() ) )
 
             SysWait(0.02)
             
-        End If                    
+       // End If                    
     Else 
-        If !lModo1
+        // If !lModo1
 
-            If (nQContador == 0)
-                xDialog( hb_ANSIToOEM("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
-                Return -1
-            End If                     
+        //     If (nQContador == 0)
+        //         xDialog( hb_ANSIToOEM("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
+        //         Return -1
+        //     End If                     
                     
-            nSoma1 := xH_ColVolta(  nTotScr1 )
+        //     nSoma1 := xH_ColVolta(  nTotScr1 )
           
-            nTotScr1 -= nSoma1                          
+        //     nTotScr1 -= nSoma1                          
 
-            DoEvents()                    
-            SysWait(0.04)                               
-            xRoleTela( .f. , -(Xh_RetPasy()) ,  lAtuBar    ,  nSoma1 , 1 )    
+        //     DoEvents()                    
+        //     SysWait(0.04)                               
+        //     xRoleTela( .f. , -(Xh_RetPasy()) ,  lAtuBar    ,  nSoma1 , 1 )    
 
-            xH_IncLim(nSoma1 )         
+        //     xH_IncLim(nSoma1 )         
 
-            If (nQContador == 0)
-                nTotScr1 := 0
-                xInitSxy()            
-            End If                                                                                    
+        //     If (nQContador == 0)
+        //         nTotScr1 := 0
+        //         xInitSxy()            
+        //     End If                                                                                    
 
-            For i := 1 To 255
-                GetAsyncKeyState(i)
-            Next i
+        //     For i := 1 To 255
+        //         GetAsyncKeyState(i)
+        //     Next i
 
-            HMG_CleanLastMouseMessage()                              
+        //     HMG_CleanLastMouseMessage()                              
 
-        Else 
+        // Else 
 
             If (lScrolIni) 
                 If lAviso1
@@ -877,7 +865,7 @@ Function xDoScrolV( lFrente , lAtuBar , lModo1 , lAtuHead1 , lAviso1  , nColZ1)
            // SysWait(0.03)                
 
 
-        End If 
+       // End If 
 
 
     End If

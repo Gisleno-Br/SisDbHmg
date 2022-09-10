@@ -913,7 +913,7 @@ Function EventHeaMtr()
 
 						If !lIni						
 
-							nZ1 := xDoScrolV( .f. , .t. , .t.  , .t. , .f.  )
+							nZ1 := xDoScrolV( .f. , .t. ,  .f.  )
 							
 							If nZ1 != -1									
 								nColx5 := nColx			
@@ -934,7 +934,7 @@ Function EventHeaMtr()
 							 	SysWait(0.01)
 							 	DoEvents()
 							    
-								nZ1 := xDoScrolV( .t. , .t. , .t.  , .t. , .f.  )																				
+								nZ1 := xDoScrolV( .t. , .t. ,  .f.  )																				
 								nz1 := 0
 						
 								If nZ1 != -1									
@@ -1392,6 +1392,7 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
 			End If
 			nAcum += aTamx1[n1]+2
 			nTam12 += nTam
+			//SaveLog(cArqTemp , Str(n1) + '  '  +  aMapsCol[n1][1] + '  ' + Str(aMapsCol[n1][2])  + '   ' + Str(aMapsCol[n1 ][3]) + '   ' + Str(aMapsCol[n1][5]) + XQUEBRA   )
 		Else
 
 			nTam1 := 5
@@ -1420,8 +1421,8 @@ Return nAcum2
 Function xH_RtLimite()
 Return nLimiteAtu
 
-Function xH_IncLim( nValor )
-	nLimiteAtu += nValor
+Function xH_IncLim( nValor )	
+	nLimiteAtu += nValor	
 Return
 
 Function xH_DecLim( nValor )
@@ -1509,7 +1510,7 @@ Function xH_LQtot( nTipo )
 
 REturn Iif(nTipo == 1 , nQPasso  , nQ1 )
 
-Function xH_CalcPulo(nColIni , nSalto)
+Function xH_CalcPulo(nColIni , nColFim , nDiff)
 
 	Local n1 := 0
 	Local nz1 := nColIni
@@ -1517,26 +1518,47 @@ Function xH_CalcPulo(nColIni , nSalto)
 	Local nSoma := 0
 	Local lOk := .f.
 	Local nQColy := 0
+	Local nVezes := 0
+
 
 	If (nColIni == 1)
 		nSoma := nColIniBrw
 	End If
 
 
-	While (!lOk) .And. ( nZ1 <= Len(aMapsCol) )
-		nSoma += aMapsCol[nz1][5]
-		nQColy++
-		If (nSoma >= nSalto)
-			lOk   := .t.
-		Else
+	If (nColFim - nColIni) == 1 
 
-		End If
-		nZ1++
-	Enddo
+		If aMapsCol[nColFim][5]	> aMapsCol[nColIni][5]	
+			nVezes := 1
+		Else 
+			nVezes := 1	
+		End If 
+
+		lOk := .t. 
+
+	Else 
+
+		While (!lOk) .And. ( nZ1 <= Len(aMapsCol) ) .And. (nZ1 <= nColFim)
+			nSoma += aMapsCol[nz1][5]			
+			nVezes++
+			If (nSoma >= aMapsCol[nColFim][5])
+				lOk   := .t.
+			Else
+
+			End If
+			nZ1++
+		Enddo
+
+	End If 
+
+	If !lOk
+		nVezes := nColFim - nColIni
+	End If 
 
 	nPulo := nSoma
 
-Return ({nPulo,nqColy})
+Return nVezes
+//({nPulo,nqColy})
 
 
 

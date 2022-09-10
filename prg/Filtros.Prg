@@ -58,8 +58,10 @@ FUNCTION LoadFitros( cTabela1 )
 		CHILD TITLE 'xProcFiltro'  ;		
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE  ; 
 		ON PAINT Nil ;
-      ON GOTFOCUS yRefresh( 'LstBoxFiltro' )  
+      ON GOTFOCUS Nil 
 	END WINDOW	
+
+   //yRefresh( 'LstBoxFiltro' )  
 
 
    //ON INIT xInitBrw(); 
