@@ -122,15 +122,11 @@ FUNCTION LoadFitros( cTabela1 )
       {10,50,60 , 75 , 60 ,45,75  }  , {'C' , 'C' , 'C' , 'C' , 'C' ,'C' ,'C'} , .f. , .t. , 150 )
 
    yRefresh( 'LstBoxFiltro'  ) 
-   cHeaderName := 'Win_HeadMtr' + Left('LstBoxFiltro',4)
+  // cHeaderName := 'Win_HeadMtr' + Left('LstBoxFiltro',4)
    DoEvents()
    yGoTop()
    DoEvents()
-   //DoMethod( 'fFiltrosCad' , 'Activate')
-
-
-   //msginfo('OVer')
-
+ 
 
    
 RETURN cFiltrox1

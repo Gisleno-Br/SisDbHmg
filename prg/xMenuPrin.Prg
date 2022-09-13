@@ -120,6 +120,7 @@ Function xMenuMain( cParent , nRow1 , nCol1 , aOpPrin , aSubOps , lEnabled11 )
 
 	cParentJan := cParent
 	
+	
 
 	hBitOk    :=  xBmpToTrans( 'OKMARK', aMenuBarCor , 20,20 )    
 	hBitOk2   :=  xBmpToTrans( 'OKMARK', aCorSub1    , 20,20 )    

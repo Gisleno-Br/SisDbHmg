@@ -797,6 +797,11 @@ Function xDialog( cMsg1 , nTipoz  )
 
 	
 	_ShowWindow('Win_Dialog')
+
+	xIndiDlg()
+	DoEvents()
+
+
     xWaitDlg()	
 
 	
@@ -812,17 +817,10 @@ Return (lRetx)
 
 
 Function xIndiDlg()
-
-		//msginfo('ok')
-
-	//SysWait(.2)	
-
+		
 	PostMessage( OBTN_Handle( 'Win_Dialog', 6652   ) , WM_MOUSEMOVE , 0,0)
-	
-
 	PostMessage( OBTN_Handle( 'Win_Dialog', 6652   ) , WM_MOUSELEAVE , 0,0)
-
-	//SysWait(.2)
+	
 
 Return 
 
@@ -909,6 +907,20 @@ Function xFindEvent(  cEvent , nHandle1 )
 Return (nIndex1)
 
 
+Function xFechaWin( cName1 )
+
+	Local nHandle1  := If(   _isWindowDefined(cName1) , GetFormNameByHandle( cName1 ) , 0)
+
+	If nHandle1 > 0
+		SendMessage( nHandle1 , WM_SYSCOMMAND, SC_CLOSE , 0 )
+		DoEvents()		
+		SendMessage( nHandle1 , WM_SYSCOMMAND, WM_DESTROY , 0 )	
+		DoEvents()
+	End If 
+
+Return 
+
+
 Function xCloseMsg()
 
   
@@ -921,9 +933,9 @@ Function xCloseMsg()
 	If nHandle2 > 0
 		
 		SendMessage( nHandle2, WM_SYSCOMMAND, SC_CLOSE , 0 )
-		DO EVENTS
+		DoEvents()		
 		SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )	
-		DO EVENTS
+		DoEvents()
 
 		//msginfo('2')
 
@@ -985,12 +997,11 @@ Function xFechaDlg()
 
 	If nHandle1 > 0
 		nSeconds := 1
-		DO EVENTS
+		DoEvents()
 		SendMessage( nHandle1, WM_SYSCOMMAND, SC_CLOSE , 0 )
-		DO EVENTS
-		DO EVENTS
+		DoEvents()
 		SendMessage( nHandle1, WM_SYSCOMMAND, WM_DESTROY , 0 )
-		DO EVENTS	
+		DoEvents()
 	End If 
 	
 
@@ -1011,12 +1022,12 @@ Function xFechaDlg()
 	If nHandle3 > 0		
 
 		
-		DO EVENTS
+		DoEvents()
 		SendMessage( nHandle3, WM_SYSCOMMAND, SC_CLOSE , 0 )
-		DO EVENTS
-		DO EVENTS
+		DoEvents()
+		DoEvents()
 		SendMessage( nHandle3, WM_SYSCOMMAND, WM_DESTROY , 0 )
-		DO EVENTS
+		DoEvents()
 
 
 
@@ -1024,39 +1035,25 @@ Function xFechaDlg()
 	
 
 	If nHandle4 > 0		
-
-	
-	//	DO EVENTS
 		SendMessage( nHandle4, WM_SYSCOMMAND, SC_CLOSE , 0 )
-		DoEvents()
-	//	DO EVENTS
+		DoEvents()	
 		SendMessage( nHandle4, WM_SYSCOMMAND, WM_DESTROY , 0 )
-		//DO EVENTS
-
 	End If 
 
 
 	
-	If nHandle5 > 0		
+	If nHandle5 > 0			
 
-	
-	//	DO EVENTS
 		SendMessage( nHandle5, WM_SYSCOMMAND, SC_CLOSE , 0 )
-		DoEvents()
-	//	DO EVENTS
+		DoEvents()	
 		SendMessage( nHandle5, WM_SYSCOMMAND, WM_DESTROY , 0 )
-		//DO EVENTS
-
+		
 	End If 
 
 
 	DoEvents()
 
-	//msginfo('lp11')
-
-
-
-
+	
 
 Return 
 
@@ -1276,23 +1273,21 @@ Return
 
 
 
-Function xSombraZ( cParent , nTop1 , nLeft1  , nWidth , nHeight1   )
+Function xSombraZ( cParent , nTop1 , nLeft1  , nWidth , nHeight1 , cNSombra1 , cNSombra2  , cNSombra3  )
 
 	Local nHeight  := nHeight1	
 	Local nTop := nTop1 
-
-	Local nLeft := nLeft1+1
-	
-	Local zBitMap0 
-	Local cNSombra1 := 'Sw__1'
-	Local cNSombra2 := 'Sw__2'
-	Local cNSombra3 := 'Sw__3'
+	Local nLeft := nLeft1+1	
+	Local zBitMap0 	
 	Local zBitMap5
 	Local zBitMap6
-
 	Local aR1 := GetPos_ScreenToClient( GetFormHandle(cParent) , nTop , nLeft   )
 	Local aR2 := GetPos_ScreenToClient( GetFormHandle(cParent) , nTop + nHeight1 , nLeft+nWidth   )
 
+
+	DEFAULT cNSombra1 := 'Sw__1' 
+	DEFAULT cNSombra2 := 'Sw__2'
+	DEFAULT cNSombra3 := 'Sw__3'
 
 
 	nTop := nTop + 2
@@ -1327,23 +1322,28 @@ Function xSombraZ( cParent , nTop1 , nLeft1  , nWidth , nHeight1   )
 
 	HMG_ChangeWindowStyle(  GetProperty(  cNSombra1 , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
 	HMG_ChangeWindowStyle(  GetProperty(  cNSombra2 , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
-	HMG_ChangeWindowStyle(  GetProperty(  cNSombra3 , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )
-	
+	HMG_ChangeWindowStyle(  GetProperty(  cNSombra3 , 'HANDLE' ), Nil , WS_EX_STATICEDGE     ,  .t. , .T. )	
 
-	//BT_ClientAreaInvalidateAll(   cNSombra1 )
+
 	_ShowWindow( cNSombra1 )
-
-	
-//	BT_ClientAreaInvalidateAll(   cNSombra2 )
 	_ShowWindow( cNSombra2 )	
-
-	//DoEvents()
-	
-	//BT_ClientAreaInvalidateAll(   cNSombra3 )
 	_ShowWindow( cNSombra3 )	
 
 	DoEvents()
 
+Return 
+
+
+Function xFSombra(  cNSombra1 , cNSombra2  , cNSombra3  ) 
+
+	xFechaWin( cNSombra1 )
+	xFechaWin( cNSombra1 )
+	xFechaWin( cNSombra1 )
+
+
 REturn 
+
+
+
 
 

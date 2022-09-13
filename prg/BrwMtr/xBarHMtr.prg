@@ -63,6 +63,8 @@ Static yBmpEsquerda
 Static yBmpDireitad
 Static yBmpEsquerdad 
 
+Static lTrackingH := .t. 
+
 Static yBmpDireita2  
 Static yBmpEsquerda2 
 
@@ -112,7 +114,7 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
         WIDTH  GetProperty(  cBrowserName , 'Width'  )+22   HEIGHT 20 ;
         TITLE 'xScroxRoleol1' + Left(cBrowserName,4)  	;
         NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR WHITE  ; 
-        ON PAINT xPaintBarraH( ThisWindow.Name , nAcende , nColDrag ) 
+        ON PAINT xPaintBarraH( ThisWindow.Name , nAcende  ) 
     END WINDOW  
 
     nMaxBarh := GetProperty(  cBrowserName , 'Width'  ) 
@@ -271,17 +273,13 @@ REturn
 
 
 Function xRetBarH()
-
 REturn nScroxy    
 
 
 Function yUpdatBha1( nPos1 )
 
     nScroxy += nPos1     
-    nColDrag += nPos1 
-
-    
-
+    //nColDrag += nPos1 
 
     DoEvents()    
     BT_ClientAreaInvalidateAll(cBarraName)  
@@ -289,30 +287,17 @@ Function yUpdatBha1( nPos1 )
     DoEvents()  
     yDcBarH1()  
 
-
-
 Return 
 
 
-Static Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
+Static Function xPaintBarraH( cJanela , nAcende1  )
 
     //BT_DRAWEDGE
-
-
     Local BTstruct
     LOCAL Width  := BT_ClientAreaWidth  (cJanela)
     LOCAL Height := BT_ClientAreaHeight (cJanela)
     Local nWidBarra := nTamBarra 
-    //- 20
-
-
-//    Local yEsquerda := BT_BitMapLoadFile('ESQUERDA')
-    //Local yDireita  := BT_BitMapLoadFile('DIREITA')
-
     Local hDC2 := BT_CreateDC (cJanela ,   BT_HDC_INVALIDCLIENTAREA  , @BTstruct)
-
-    DEFAULT nCol1 := 0
-
 
 
     lDesligado := .f. 
@@ -329,8 +314,7 @@ Static Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
 
     End If 
 
-    BT_DrawGradientFillHorizontal ( hDC2 ,  0   , 0  , Width  ,    Height     ,  {230,230,230}  , {230,230,230}   )
-    
+    BT_DrawGradientFillHorizontal ( hDC2 ,  0   , 0  , Width  ,    Height     ,  {230,230,230}  , {230,230,230}   )    
 
      If (!lEnabledy)
         BT_DrawBitmap (hDC2  , 0  , 0  	, 18  , 18  ,                  BT_COPY,  yBmpEsquerdad )
@@ -351,19 +335,11 @@ Static Function xPaintBarraH( cJanela , nAcende1  , nCol1 )
             BT_DrawBitmap (hDC2  , 0  , 0  	, 18  , 18  ,                  BT_COPY,  yBmpEsquerda )            
             BT_DrawBitmap (hDC2  , 0  , Width - 22  	, 18  , 18  ,      BT_COPY,  yBmpDireita  )
         End If 
-
-
     End If 
-
-    
     
 
     If (!lDragMode) .And. (lEnabledy) .And. (!lDraHighM)
-
-        
-        
-        BT_DrawFillRoundRect (hDC2 , 4 , nScroxy , nWidBarra , 10 , 5 ,5 ,   {178 , 178 ,178}   , {178 , 178 ,178}   , 0)
-        
+        BT_DrawFillRoundRect (hDC2 , 4 , nScroxy , nWidBarra , 10 , 5 ,5 ,   {178 , 178 ,178}   , {178 , 178 ,178}   , 0)        
     Else 
 
         If lEnabledy        
@@ -540,20 +516,15 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                         Exit 
                     End If  
                     
-                    xDoScrolV( .f. ,  ,  )       
+                    nY2 := xDoScrolV( .f. ,  ,  )       
                     DoEvents()
+                    SysWait(0.04)         
 
-                    
-                    SysWait(0.02)         
+                    IncrCont1( .f.  , nY2)
 
-                    IncrCont1( .f. )
-
-                    SysWait(0.02)           
-                
                 Enddo 
                
             End If 
-
 
             If (nModeBut = 2) .And. (!lTracking26)                                        
                     
@@ -569,27 +540,25 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     If (GetAsyncKeyState(VK_LBUTTON)) == 0					
                         SysWait(0.03)                                                    
                         Exit 
-                    End If           
-                    //msginfo('ok2')                    
+                    End If                      
 
-                    xDoScrolV( .t. ,,  )                   
+                    nY2 := xDoScrolV( .t. ,,  )                   
+                    SysWait(0.04)         
 
-                    
-                    SysWait(0.02)         
-
-                    IncrCont1( .t. )
+                    IncrCont1( .t. , nY2  )
                     DoEvents()
 
-                    SysWait(0.02)
-                  
-
+           
                 Enddo 
                  
             End If 
 
+            PostMessage( GetProperty(  cBarraSombra , "HANDLE" ) , WM_MOUSEMOVE , 0,0)
+            DoEvents()
+
+
 
         End If 
-
       
         //MOUSEMOVE BARRAH
         If (nMsg == WM_MOUSEMOVE) 
@@ -625,7 +594,9 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
                     nModeBut := 0                
                     SetWindowCursor( nHWnd , IDC_ARROW )                      
+
                     
+                                        
                     If nAcende > 0
                         nAcende := 0
                         BT_ClientAreaInvalidateAll(cBarraName)
@@ -643,8 +614,8 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                         yDcBarH1()
                     End If 
 
-                    If (nCol >= (Width - 18))                           
-                        yLimpBarV()	                        
+                    If (nCol >= (Width - 18))                                                
+                        yLimpBarV( '7')	                        
                         DoEvents() 
                         nAcende := 2                                             
                         BT_ClientAreaInvalidateAll(cBarraName)                        
@@ -654,6 +625,7 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                         DoEvents()                        
                         yDcBarH1()                          
                     End If 
+
 
                 End If 
 
@@ -714,161 +686,80 @@ Function xDoScrolV( lFrente , lAtuBar ,  lAtuHead1 , lAviso1  , nColZ1)
     //SysWait(0.03)
     
     
-    If lFrente       
-        // If !lModo1
+    If lFrente                
+        If (lScrollFim)
+            If lAviso1
+                xDialog( Hb_AnsiToOem("Não há Mais Tela para Rolar a Direita.")  )
+            End If 
+            Return -1
+        End If                       
 
-        //     //msginfo(Str(xH_RtLimite()))
-
-        //     nSaldo1 := xH_ColResto( xH_RtLimite() )              
-        //     aMInfo  := xH_CalcPulo( nQContador + 1 , nSaldo1)                            
-
-
-
-
-        //   //  msginfo(Str(nColZ1) )
-
-        //    // nSaldo1 := xGetInfCw1(   nColZ1   , 5  ) 
-        //     //nSaldo2 := xH_ColResto( xH_RtLimite() )  
-
-                
-        //     If (xGetScrolPos() == 0)                
-        //         nSaldo1 += nColIniBrw 
-        //     Else 
-        //        //msginfo('ok2 ' + Str( nSaldo2  ))    
-        //     End If            
-
-
-        //     //xDoScrolHroz( .t. , aMInfo[1]  , lAtuHead1 , lAtuBar )       
-
-        //     xRoleTela( .t. ,  Xh_RetPasy() ,  lAtuBar   ,  aMInfo[1] , aMInfo[2] )    
-        //     nTotScr1 += aMInfo[1]            
-            
-        //     DoEvents()       
-
-        //      SysWait(0.02)
-        //     //nLastMove := aMInfo[1]
-        //   //  nQContador += aMInfo[2]
-        //     xH_IncLim( aMInfo[1] )         
-
-        //    // msginfo(Str(  aMInfo[1]  )  )
-
-        // Else             
-
-          
-            If (lScrollFim)
-                If lAviso1
-                    xDialog( Hb_AnsiToOem("Não há Mais Tela para Rolar a Direita.")  )
-                End If 
-                Return -1
-            End If                       
-
-            nColAtu := xGetColPos( .t. )                                                                    
-            nSaldo1 := xGetInfCw1(   nColAtu   , 5  ) 
+        nColAtu := xGetColPos( .t. )                                                                    
+        nSaldo1 := xGetInfCw1(   nColAtu   , 5  ) 
 
           //  msginfo(Str(nColAtu))
-            lScrolIni := .f. 
+        lScrolIni := .f. 
 
                 
-            If (xGetScrolPos() == 0)
-                nSaldo1 += nColIniBrw 
-            End If 
+        If (xGetScrolPos() == 0)
+            nSaldo1 += nColIniBrw 
+        End If 
 
-            DoEvents()
+        DoEvents()
                                     
 
-            xDoScrolHroz( .t. , nSaldo1 , lAtuHead1 , lAtuBar )       
-            lScrollFim := ((xGetScrolPos()+xH_RtLimite()) >= (xCalcTam() ) )
+        xDoScrolHroz( .t. , nSaldo1 , lAtuHead1 , lAtuBar )       
+        lScrollFim := ((xGetScrolPos()+xH_RtLimite()) >= (xCalcTam() ) )
 
-            SysWait(0.02)
+        SysWait(0.02)
             
        // End If                    
     Else 
-        // If !lModo1
+        
 
-        //     If (nQContador == 0)
-        //         xDialog( hb_ANSIToOEM("Coluna mais a Esquerda Atingida.Não É possivel Retroceder."))
-        //         Return -1
-        //     End If                     
-                    
-        //     nSoma1 := xH_ColVolta(  nTotScr1 )
-          
-        //     nTotScr1 -= nSoma1                          
+        If (lScrolIni) 
+            If lAviso1
+                xDialog( hb_ANSIToOEM("Não ha mais ESpaço para Rolar a Esquerda."))
+            End If 
+            Return -1
+        End If 
 
-        //     DoEvents()                    
-        //     SysWait(0.04)                               
-        //     xRoleTela( .f. , -(Xh_RetPasy()) ,  lAtuBar    ,  nSoma1 , 1 )    
 
-        //     xH_IncLim(nSoma1 )         
+        nColAtu := xGetColPos( .f. )   
+        nSaldo1 := (xGetScrolPos() - xGetInfCw1(   nColAtu   , 2  )) + 5        
 
-        //     If (nQContador == 0)
-        //         nTotScr1 := 0
-        //         xInitSxy()            
-        //     End If                                                                                    
+        aMInfo := {}
+        Aadd(aMInfo , nSaldo1)
+        Aadd(aMInfo , 1)
 
-        //     For i := 1 To 255
-        //         GetAsyncKeyState(i)
-        //     Next i
+        DoEvents()
+        SysWait(0.03)                
 
-        //     HMG_CleanLastMouseMessage()                              
+        xDoScrolHroz( .f. , nSaldo1 , lAtuHead1 , lAtuBar )
+        lScrollFim := .f. 
+        DoEvents()  
 
-        // Else 
+                  
+        lScrolIni := (nColAtu == 1)
 
-            If (lScrolIni) 
-                If lAviso1
-                    xDialog( hb_ANSIToOEM("Não ha mais ESpaço para Rolar a Esquerda."))
-                End If 
-                Return -1
+        If lScrolIni
+
+            n1 := xGetScrolPos()
+            If (n1 != 0)
+                //  xDoScrolHroz( .f. ,  n1 , lAtuHead1 , lAtuBar )
             End If 
 
-
-            nColAtu := xGetColPos( .f. )   
-            nSaldo1 := (xGetScrolPos() - xGetInfCw1(   nColAtu   , 2  )) + 5        
-
-            aMInfo := {}
-            Aadd(aMInfo , nSaldo1)
-            Aadd(aMInfo , 1)
+            xDoScrolHroz( .f. , n1 , lAtuHead1 , lAtuBar )
 
             DoEvents()
-            SysWait(0.03)                
 
-            xDoScrolHroz( .f. , nSaldo1 , lAtuHead1 , lAtuBar )
-            lScrollFim := .f. 
-            DoEvents()  
-
-            If (xGetScrolPos() == 0)
-              //  MSGINFO('ok2')
-                    //nSaldo1 += nColIniBrw 
-            End If 
-
-          
-            lScrolIni := (nColAtu == 1)
-
-             If lScrolIni
-                n1 := xGetScrolPos()
-
-                         
-
-                If (n1 != 0)
-                  //  xDoScrolHroz( .f. ,  n1 , lAtuHead1 , lAtuBar )
-                End If 
-
-                xDoScrolHroz( .f. , n1 , lAtuHead1 , lAtuBar )
-
-                DoEvents()
-
-                xInitSxy()
-                xInitScroll()
-
+            xInitSxy()
+            xInitScroll()
                
-            End If             
-
-           // SysWait(0.03)                
-
-
-       // End If 
-
+        End If             
 
     End If
+
 
 
 Return nSaldo1
@@ -888,9 +779,11 @@ Function xDoScrolHroz( lFrente , nValue , lAtuH , lAtBar )
 
     yDcBarH1eMtr()
     DoEvents()    
- 
+
+    
 Return                     
 
+/*
 Function xRoleTela( lFrente , nQp1  , lUpdBar1  , nConter , nQSkip )
 
     DEFAULT lUpdBar1 := .t. 
@@ -927,7 +820,7 @@ Function xRoleTela( lFrente , nQp1  , lUpdBar1  , nConter , nQSkip )
 Return 
 
 
-
+*/
 
 
 
@@ -945,6 +838,7 @@ Function yCheckObj()
 
             yApagueH( cHead1 )
             DoEvents()
+            
 
         End If             
 

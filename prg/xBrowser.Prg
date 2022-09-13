@@ -1425,13 +1425,17 @@ Function xTeclasBrow()
 	End If 
 
 
+	If nHWnd != GetFormHandle( cEspelhoBrw )
+		Return 
+
+	End If 
+
+   
 	If HMG_GetLastMouseMessage (@nHWnd) == WM_MOUSEWHEEL
 
 	  HMG_CleanLastMouseMessage()
-	  Do Events
-	  Do Events
-
-	  //MSGINFO('ok2')
+	  DoEvents()
+	  DoEvents()
 
 
       If HIWORD( nWParam ) == 120
@@ -1440,9 +1444,12 @@ Function xTeclasBrow()
 	  	lDownMouse := .t. 
       End If 		
 
+	  msginfo('g1')
+
 
 
 	End If 
+	
 
 /*
 	If (nHWnd != GetFormHandle(cActiveJan))		
