@@ -1017,9 +1017,6 @@ Static Function xSelItemY(nWParam , nHWnd1 , nTecla )
 
 	If (nWParam != 90)
 		nItemx2 := xOpSelPosy( cSubMenuName, 0 , Len(aOpz11) , 0 )
-		// xOpSelPosy( cSubMenuName, 0 , Len(aOpz11) , 0 )
-
-		//msginfo(Str( nItemx2    ))
 		
 	
 		If (nItemx2 > 0) .And. (nItemx2 <= Len(aOpz11))
@@ -1148,7 +1145,7 @@ Static Function xSelItemY(nWParam , nHWnd1 , nTecla )
 				lEntrouSub := .f.
 				nItemY2 := xOpSelPos( cJan1 , 0 , Len(aOpz11) , 0 )
 				
-				xHideHint()					
+				xHideHint()								
 				BT_DELAY_EXECUTION_WITH_DOEVENTS(70)		
 
 				nItemY1 := xOpSelPos( cJan1 , 0 , Len(aOpz11) , 0 )
@@ -1179,7 +1176,7 @@ Static Function xSelItemY(nWParam , nHWnd1 , nTecla )
 	
 	If (nItemx2 > 0) .And.  (nItemx2 <= Len(  aOpz11 )) .And. ( !Empty( Alltrim(  aOpz11[nItemx2][2]  )   )) .AND. (nWParam != 90)
 		cTp1 :=	  Alltrim( 	 aOpz11[nItemx2][2]  )
-		xShowHintM( cTp1    )
+		xShowHintM(  cTp1    )
 	Else
 		
 		DoEvents()
@@ -1211,6 +1208,7 @@ Function xShowHintM( cMensagem    , cFormName  , nLinha1 , nColuna1)
 
 	If Empty(Alltrim(cFormName))
 		GetFormNameByHandle( WindowFromPoint(  nCol , nRow1 ) , @cFormName  )
+		
 	End If 
 
 	If Empty(Alltrim(cFormName))
@@ -1234,23 +1232,24 @@ Function xShowHintM( cMensagem    , cFormName  , nLinha1 , nColuna1)
 	End If 
 
 
-	//DoEvents()
 
     If !_isWindowDefined("Win_Msg")
-
-		CrieJanTip( nRowy  , nColy ,  Alltrim(Str(nRowY)) + '  ' +   Alltrim(cMensagem)      ,, 0.5 )
-	//	msginfo('Criou!')
-	Else
-		//msginfo(Str(nColY))
+		CrieJanTip( nRowy  , nColy ,  Alltrim(Str(nRowY)) + '  ' +   Alltrim(cMensagem)      ,, 0.5 )	
+	Else	
 		DoEvents()
 		xDispHint( Alltrim(Str(nColy)) + '  ' + cMensagem , nRowy - 1   , nColY )
+
+		//msginfo(Str(  nRowy ))
 		
 		DoFindWin('xHint')
-		//_ShowWindow('Win_msg')
-		//DoEvents()
+
+		//BringTop('xHint')
+		DoEvents()
 	End If
 
 	xDispUpTam(cMensagem )	
+
+	BringTop('xHint')
 
 
 REturn 

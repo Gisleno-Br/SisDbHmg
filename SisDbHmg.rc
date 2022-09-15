@@ -74,6 +74,9 @@
 
     SETAB1D    PNG img\Seta45_Baixo_Disable.Png 
     SETAC1D    PNG img\Seta45_cima_Disable.Png 
+
+
+    EXCLAMACAOBIG    PNG img\ExclamacaoBig.Png 
     
 
 

@@ -144,7 +144,7 @@ REturn
 */
 
 
-
+/*
 Function xShowHint( nRow1 , nCol1 , cMsg )
 
 
@@ -160,6 +160,7 @@ Function xShowHint( nRow1 , nCol1 , cMsg )
 
 REturn     
 
+*/
 
 
 /*

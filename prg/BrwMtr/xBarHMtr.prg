@@ -12,15 +12,16 @@
 
 //#DEFINE FONTBROWSER 'Courier New'
 
-Static cBarraName := ''
+
+Static cBarraName2:= ''
 Static cBarraSombra := ''
 Static nLarTotalx := 0
 Static nAcende := 0
-Static nColDrag := 18
+
 Static lTracking26 := .f. 
 Static lTracking37 := .f. 
-Static lDispo1 := .t. 
-Static nColBarra := 18
+//Static lDispo1 := .t. 
+//Static nColBarra := 18
 Static nModeBut := 0
 Static nSaveCol := 0
 Static lDragMode := .f. 
@@ -28,46 +29,91 @@ Static nLargJan := 0
 Static nScroxy := 19
 Static lEnabledy := .t. 
 Static cBrwName := ''
-Static nTotScr1 := 0
-Static nTotScr2 := 0
+//Static nTotScr1 := 0
+//Static nTotScr2 := 0
 Static lScrollFim := .f. 
 Static lScrolIni  := .f. 
-
 Static nTamBarra := 0
-Static nLargCalc := 0
+//Static nLargCalc := 0
 Static nColtotal := 0
-Static lDesligado := .f. 
+//Static lDesligado := .f. 
 Static cHead1 := ''
-Static nAcumZ1 := 0
-Static nEtapas := 0 
-Static nMaxBarh := 0
+//Static nAcumZ1 := 0
+//Static nEtapas := 0 
+//Static nMaxBarh := 0
 Static nQ1 := 0
-Static nQ2 := 0
-Static nQContador := 0
-Static nQContador2 := 1
+//Static nQ2 := 0
+//Static nQContador := 0
+//Static nQContador2 := 1
+
 Static lDraHighM := .f. 
-Static lChaveY := .f. 
-Static nPAssoy := 0
-Static aMtrVolta := {}
+//Static lChaveY := .f. 
+Static nPassoy := 0
+//Static aMtrVolta := {}
 Static lTracking44 := .f. 
-Static nLastInfo1 := 0
-
-Static nLastMove := 0
-
-Static nAcumy := 0
-
+//Static nLastInfo1 := 0
+//Static nLastMove := 0
+//Static nAcumy := 0
 Static yBmpDireita  
 Static yBmpEsquerda 
-
-
 Static yBmpDireitad
 Static yBmpEsquerdad 
-
-Static lTrackingH := .t. 
-
+//Static lTrackingH := .t. 
+//Static lTracking85 := .f. 
+//Static lFirst1 := .f. 
 Static yBmpDireita2  
 Static yBmpEsquerda2 
-
+/*
+private cBarraName := ''
+private cBarraSombra := ''
+private nLarTotalx := 0
+private nAcende := 0
+private nColDrag := 18
+private lTracking26 := .f. 
+private lTracking37 := .f. 
+private lDispo1 := .t. 
+private nColBarra := 18
+private nModeBut := 0
+private nSaveCol := 0
+private lDragMode := .f. 
+private nLargJan := 0
+private nScroxy := 19
+private lEnabledy := .t. 
+private cBrwName := ''
+private nTotScr1 := 0
+private nTotScr2 := 0
+private lScrollFim := .f. 
+private lScrolIni  := .f. 
+private nTamBarra := 0
+private nLargCalc := 0
+private nColtotal := 0
+private lDesligado := .f. 
+private cHead1 := ''
+private nAcumZ1 := 0
+private nEtapas := 0 
+private nMaxBarh := 0
+private nQ1 := 0
+private nQ2 := 0
+private nQContador := 0
+private nQContador2 := 1
+private lDraHighM := .f. 
+private lChaveY := .f. 
+private nPAssoy := 0
+private aMtrVolta := {}
+private lTracking44 := .f. 
+private nLastInfo1 := 0
+private nLastMove := 0
+private nAcumy := 0
+private yBmpDireita  
+private yBmpEsquerda 
+private yBmpDireitad
+private yBmpEsquerdad 
+private lTrackingH := .t. 
+private lTracking85 := .f. 
+private lFirst1 := .f. 
+private yBmpDireita2  
+private yBmpEsquerda2 
+*/
 
 
 
@@ -79,11 +125,11 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
     Private cJanSombra := 'Win_SombraBhMtr' + Left(cParent,4)
     cBarraSombra := cJanSombra
     nLarTotalx   := nLarguraTot2
-    cBarraName   := cJanName
+    cBarraName2   := cJanName
     cBrwName     := cBrowser
     nLargJan     := nLargJanela
 
-    nLargCalc := xCalcTam()
+    //nLargCalc := xCalcTam()
 
     yBmpDireita2  := BT_BitMapLoadFile('DIREITA1')    
     yBmpEsquerda2 := BT_BitMapLoadFile('ESQUERDA1')
@@ -117,7 +163,6 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
         ON PAINT xPaintBarraH( ThisWindow.Name , nAcende  ) 
     END WINDOW  
 
-    nMaxBarh := GetProperty(  cBrowserName , 'Width'  ) 
     //+ 12
     
 
@@ -147,7 +192,12 @@ Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLargJanel
 
 
     xh_InitLim()
-    yZeraConter()
+    //yZeraConter()
+
+    If !_isWindowDefined('yFormSplah')
+        WinYeLLow( GetProperty(cParent , 'Row') + GetProperty(  cBrowserName , 'Height'  )+65 ,  ;
+        GetProperty(cParent , 'Col') + 25  , 'Click e Arraste Devagar para ' + XQUEBRA + ' Navegar entre as Colunas.'  )                               
+    End If 
 
 
     
@@ -171,12 +221,6 @@ Return cJanName
 Function xQbrwCol()
 Return xH_xClcDir(  nColTotal  )
 
-
-Function xRetIsFim()
-Return lScrollFim
-
-Function xRetIsIni()
-Return lScrollIni
 
 
 
@@ -204,8 +248,10 @@ Function xH_CalcBar( lAtuBarra )
     Local nQB1 := xH_xClcDir(  nColTotal   )
     Local nTamAnt := nTamBarra
     Local nI1
+    //Local nQ1 
 
     DEFAULT lAtuBarra := .f. 
+
 
 
     xh_InitLim()
@@ -216,8 +262,8 @@ Function xH_CalcBar( lAtuBarra )
         nTamBarra := (nLargJan - 15) - nP1               
         nPassoy := Int( np1 / (nQB1 - 1 )) 
         nQ1 := (nQB1 - 1 )             
-        If _IsWindowDefined(cBarraName)         
-            BT_ClientAreaInvalidateAll(cBarraName)  
+        If _IsWindowDefined(cBarraName2)         
+            BT_ClientAreaInvalidateAll(cBarraName2)  
             yDcBarH1()
             DoEvents() 
         End If     
@@ -232,44 +278,6 @@ Return nQB1
 Function yRetQPAsso()
 Return nQ1 + 1
 
-Function yBarRange()
-Return ( (nQ1 + 1)  * nTamBarra)
-
-Function yRetBarSize()
-Return nTamBarra
-
-
-
-Function yGoBarR()
-
-    nScroxy  := (GetProperty( cBarraName  , 'Width') ) - nTamBarra - 5
-    nColDrag := (GetProperty( cBarraName  , 'Width') ) - nTamBarra - 5
-
-    
-    BT_ClientAreaInvalidateAll(cBarraName)  
-    yDcBarH1()
-    
-    DoEvents()
-    DoEvents()
-
-
-Return     
-
-Function yGoBarl()
-
-    nScroxy  := 21
-    nColDrag := 21
-    
-    BT_ClientAreaInvalidateAll(cBarraName)  
-    yDcBarH1()
-
-    DoEvents()
-    DoEvents()    
-
-REturn     
-
-
-
 
 
 Function xRetBarH()
@@ -279,10 +287,9 @@ REturn nScroxy
 Function yUpdatBha1( nPos1 )
 
     nScroxy += nPos1     
-    //nColDrag += nPos1 
-
+   
     DoEvents()    
-    BT_ClientAreaInvalidateAll(cBarraName)  
+    BT_ClientAreaInvalidateAll(cBarraName2)  
 
     DoEvents()  
     yDcBarH1()  
@@ -300,15 +307,6 @@ Static Function xPaintBarraH( cJanela , nAcende1  )
     Local hDC2 := BT_CreateDC (cJanela ,   BT_HDC_INVALIDCLIENTAREA  , @BTstruct)
 
 
-    lDesligado := .f. 
-
-
-    If (nAcende1 > 0) .And. ( Alltrim(cObjSelected) = 'BarraH')
-        lDesligado := .t. 
-    Else 
-           
-
-    End If 
 
     If (!lEnabledy)
 
@@ -361,39 +359,25 @@ Return
 
 Function yGetBarNome(nTipo)
 
-Return Iif(nTipo = 1, cBarraName, cBarraSombra)
+Return Iif(nTipo = 1, cBarraName2, cBarraSombra)
 
 
-Function yZeraConter()
-    nQContador := 0
-REturn 
+//Function yZeraConter()
+    //nQContador := 0
+// REturn 
 
-Function yIncConter( lFrente , nNumber1 )
+// Function yIncConter( lFrente , nNumber1 )
 
-    DEFAULT nNumber1 := 1
+//     DEFAULT nNumber1 := 1
 
-    If lFrente     
-        nQContador += nNumber1     
-    Else 
-        nQContador -= nNumber1
-    End If 
+//     If lFrente     
+//         nQContador += nNumber1     
+//     Else 
+//         nQContador -= nNumber1
+//     End If 
 
-REturn     
+// REturn     
 
-Function yRetContador()
-REturn nQContador
-
-
-Function xPotBut1(  nBut )
-
-   nModeBut := nBut 
-   lTracking26 := .f. 
-   SendMessage( GetProperty(  cBarraSombra , "HANDLE" ) , WM_LBUTTONDOWN ,0,0 )
-
-   DoEvents()
-
-
-Return 
 
 Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
@@ -405,7 +389,7 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
     Local nColx  := 0
 
-    LOCAL Width  := BT_ClientAreaWidth  (cBarraName)
+    LOCAL Width  := BT_ClientAreaWidth (cBarraName2)
 
     Local nWidBarra := nTamBarra
     Local nLimite := nLarTotalx - nWidBarra   
@@ -487,19 +471,13 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
 
             If (nModeBut = 0)
-                If (nCol >= nScroxy) .And. ( nCol <= (nScroxy+nWidBarra) )                    
-
-                    If !lFirst
-                        xShowHint( nRow , nCol , 'Click e Arraste Devagar para Navegar entre as Colunas.' )
-                        DoEvents()
-                        lFirst := .t. 
-                    End If 
-                    DoEvents()
+                If (nCol >= nScroxy) .And. ( nCol <= (nScroxy+nWidBarra) )                                   
+                    
                     nModeBut := 999
                     lDragMode := .t.
                     nSaveCol := nCol   
                     SetBrwDrgM( .t. , nSaveCol )                                       
-                    DoEvents()                
+                    
                 End If     
             End If       
             
@@ -562,10 +540,13 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
       
         //MOUSEMOVE BARRAH
         If (nMsg == WM_MOUSEMOVE) 
+
             GetCursorPos (@nCol, @nRow)
+            nCol2 := nCol 
             ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
             nCol := ar1[2]
-            lTracking26 := .f.       
+            lTracking26 := .f.                   
+
             
             cObjSelected := 'BarraH'
 
@@ -579,7 +560,7 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                         DoEvents()						                                  
                     End If                 
 
-                    yOffBarra( cBarraName  )                              
+                    yOffBarra( cBarraName2  )                              
                     lTracking37 := .f. 
                     lTracking44 := .t. 
 
@@ -588,28 +569,25 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 
             Else                         
             
-                If (!lTracking37)					
+                If (!lTracking37)                    
 
                     lTracking44 := .f. 
-
                     nModeBut := 0                
-                    SetWindowCursor( nHWnd , IDC_ARROW )                      
-
-                    
+                    SetWindowCursor( nHWnd , IDC_ARROW )           
                                         
                     If nAcende > 0
                         nAcende := 0
-                        BT_ClientAreaInvalidateAll(cBarraName)
+                        BT_ClientAreaInvalidateAll(cBarraName2)
                         DoEvents() 
                         yDcBarH1()
                     End If 
 
                     If (nCol < 21)                        
                         nAcende := 1                        
-                        BT_ClientAreaInvalidateAll(cBarraName)
+                        BT_ClientAreaInvalidateAll(cBarraName2)
                         nModeBut := 1
                         lTracking26 := .f. 
-                        lTracking37 := .t. 
+                        lTracking37 := .t.                         
                         DoEvents() 
                         yDcBarH1()
                     End If 
@@ -618,42 +596,44 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                         yLimpBarV( '7')	                        
                         DoEvents() 
                         nAcende := 2                                             
-                        BT_ClientAreaInvalidateAll(cBarraName)                        
+                        BT_ClientAreaInvalidateAll(cBarraName2)                        
                         nModeBut := 2            
                         lTracking26 := .f. 
                         lTracking37 := .t.  
                         DoEvents()                        
                         yDcBarH1()                          
                     End If 
-
-
                 End If 
-
             End If     
 
             
 
-            If (nModeBut = 0)
-
+            If (nModeBut = 0) //.And. (!lTracking85)
                 lDraHighM := .f.
-
+                
                 If (nCol >= nScroxy) .And. ( nCol <= (nScroxy+nWidBarra) )                                        
                     If ar1[1] <= 20
-                        lDraHighM := .t.                        
+                        lDraHighM := .t.                    
                     End If     
                 Else 
                     lDragMode := .f.
                     lFirst    := .f. 
                 End If                       
                 nAcende := 0
-                BT_ClientAreaInvalidateAll(cBarraName)
+                BT_ClientAreaInvalidateAll(cBarraName2)
 
                 DoEvents() 
                 yDcBarH1()
                 lTracking26 := .f.
                 lTracking37 := .f. 
+            Else 
 
-            End If             
+               
+
+
+            End If          
+
+
         End If 			
     End If 
 
@@ -669,7 +649,7 @@ Return
 
 Function xDoScrolV( lFrente , lAtuBar ,  lAtuHead1 , lAviso1  , nColZ1)
 
-    Local nSaldo1 := xH_ColResto( xH_RtLimite() )       
+ //   Local nSaldo1 := xH_ColResto( xH_RtLimite() )       
     //Local aMInfo := xH_CalcPulo( nQContador + 1 , nSaldo1)
     Local nW1 := GetProperty(  cBrwName , 'Width'  ) - 21
     Local np1
@@ -830,9 +810,9 @@ Function yCheckObj()
     If (!Empty(Alltrim(cObjSelected)) ) .And. (cObjSelected != "Browser")
 
 
-        If _isWindowDefined(cBarraName)  
+        If _isWindowDefined(cBarraName2)  
             If !lDragMode		
-                yOffBarra(   cBarraName )
+                yOffBarra(   cBarraName2 )
             End If     
             SysWait(0.02)		
 
@@ -880,20 +860,18 @@ Function yEnable1Bh(  lEnabled1 )
     lEnabledy := lEnabled1
 
     If !lEnabled1
-        yOffBarra( cBarraName )
+        yOffBarra( cBarraName2 )
     End If 
 
     DoEvents() 
 
 REturn 
 
-Function yGetScrXy( lFlag )
-Return Iif( !lFlag , nScroxy , nScroxy+nTamBarra)    
 
 Function yDcBarH1()
 
-    Local Width1  := BT_ClientAreaWidth  (cBarraName)
-    Local Height1 := BT_ClientAreaHeight (cBarraName)
+    Local Width1  := BT_ClientAreaWidth  (cBarraName2)
+    Local Height1 := BT_ClientAreaHeight (cBarraName2)
 
     LOCAL hDC1, BTstruct1
     LOCAL hDC2, BTstruct2
@@ -907,7 +885,7 @@ Function yDcBarH1()
     Local Width2  := BT_ClientAreaWidth  (cBarraSombra)
     Local Height2 := BT_ClientAreaHeight (cBarraSombra)
 
-    hDC1 = BT_CreateDC (cBarraName, BT_HDC_ALLCLIENTAREA, @BTstruct1)
+    hDC1 = BT_CreateDC (cBarraName2, BT_HDC_ALLCLIENTAREA, @BTstruct1)
     hDC2 = BT_CreateDC (cBarraSombra, BT_HDC_ALLCLIENTAREA, @BTstruct2)
 
 

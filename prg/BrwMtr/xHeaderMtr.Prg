@@ -53,79 +53,39 @@
 Static nColHeader    := 0
 Static cHeaderJan    := ''
 Static cHeaderSombra := ''
-
 Static aMapsCol := {}
-
 Static aColsTam := {}
 Static aTipsy   := {}
-
 Static aCabecs   := {}
-
-
 Static nColSel1 := 0
 Static nColAntx := 0
-
+Static lDispHint1 := .f. 
 Static lMove1 := .f.
-
-Static lEnabledy := .t.
-
 Static lTrack39 := .f.
-
 Static lSizeMode := .f.
 Static lDragHeader := .f. 
-
-Static cTable := ''
-
-Static lTracking546 := .f.
-Static nTotz2 := 0
-
 Static lEnabled2 := .t.
 Static lDisphint := .f.
-
 Static c_BrowName := ''
-
 Static lAndamento := .f.
-
 Static nColDrag1 := 0
-
 Static nOrdCol := 0
-
 Static s1 := ''
 Static s2 := ''
-
 Static nOrdemSel := 0
 Static lAscending := .f.
-
-
 Static nColSele := 1
-
-//Static lDragHeader := .f.
 Static nSteps    := 5
 Static nColx5    := 0
-
-
 Static nColMove := 0
 Static nColY1   := 0
 Static nIncr1   := 0
-
 Static nColSav1 := 0
 Static nColTam1 := 0
 Static nColTarget := 0
-
 Static cTituloCol := ''
-Static nQConter := 1
-
 Static hBit201 := Nil
-
-Static nQDrag1 := 0
-
-Static nPageScrolH := 1
-
 Static nLimiteAtu := 0
-
-Static lAtuDic  := .t.
-Static lScrool5 := .t.
-
 Static hBitOk 
 Static hBitOrd1 
 Static hBitOrd2 
@@ -145,7 +105,9 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 	//GetWindowRect (nHWnd, aPos)
 
 	DEFAULT lAtivo := .t.
-	lAtuDic := lDic1
+
+	
+	
 
 	lEnabled2 := lAtivo
 
@@ -162,7 +124,7 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 
 	c_BrowName := cBrwName1
 
-	cTable := cTabela
+	
 	nLimiteAtu := nLarg1 + 1
 
 
@@ -241,9 +203,8 @@ Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 , nLargT
 
 	SET WINDOW &cHName TRANSPARENT TO Iif(!lEnabled2 , 167 , 0)
 
-	nTotz2 := xMapCols( aCabecs , aColsTam , aTipsy )
 
-	If !CheckRet( nTotz2)
+	If !CheckRet( xMapCols( aCabecs , aColsTam , aTipsy ) )
 		MsgInfo('Algo Deu Errado nas Colunas , Favor Reconfigurar ou Reduzir Tamanhos.')
 		lOk := .f.
 	End If
@@ -305,22 +266,6 @@ Return
 
 
 
-Function yLimpMode()
-
-	lSizeMode := .f.
-	//lDragHeader := .f.
-	lDragHeader := .f. 
-	lDraHighM := .f.
-	nColSel1 := 0
-	nColAntx := 0
-
-	lAndamento := .f.
-
-	lTrack39 := .f.
-
-	//msginfo('L Mode')
-
-Return
 
 Static Function xOrdene( nCol1 , lAsc1 )
 
@@ -329,11 +274,8 @@ Static Function xOrdene( nCol1 , lAsc1 )
 	Local nPos1
 	Local nTam1
 	Local aM4 := {}
-
-
-
 	Local nTipo
-	Local nTamPg := xRetTamPg()
+	//Local nTamPg := xRetTamPg()
 	Local nPagNum := 1
 	Local nCont5 := 0
 
@@ -346,27 +288,17 @@ Static Function xOrdene( nCol1 , lAsc1 )
 	nTam1 := aM1[6]
 	nTipo := Alltrim(aM1[4])
 
-	SetWindowCursor( GetFormHandle(cHeaderJan)  , 'CURSOR1'  )
-
-	DoEvents()
-
-
-
 	xAtuDados(   nCol1 , lAsc1 , aColsTam  )
-
-	DoEvents()
-
-	xCursorWait(.f.)
-
-
 	BT_ClientAreaInvalidateAll(   cHeaderJan )
-	SysWait(0.02)
-
+	DoEvents()
+	
 
 	xDcBarHeader()
 	yDcBarH1eMtr()
 
-	yGoTop()
+	yGoTop()	
+	DoEvents()
+
 
 
 Return
@@ -374,48 +306,18 @@ Return
 
 Static Function xFormDt(cData , n1 , n2 )
 	Local cD1 := Alltrim(Left(  Alltrim(  Substr(cData , n1 , n2  )     ) , 10  ) )
-
-
 Return Right(cD1,4) + Substr(Cd1,4,2) + Left(cD1,2)
 
 
-Function xRetAscan(nd1)
-	Local nI1 := Ascan(aMapsCol , { |a| ((a[3] >= nD1) .And. (a[2] <= nD1))  })
-	Local n := 1
-
-    While .t.
-
-		  If (aMapsCol[n][3] >= nD1) .And. (aMapsCol[n][2] <= nD1)			  
-			  Exit
-		  End If 
-		  n++
-		  If n > Len(aMapsCol)
-			 Exit 	
-		  End if 
-
-
-	Enddo
-
-	 
-REturn n
 
 
 
 Static Function xAtuDados(   nIndice1 , lAscedente , aTams  , lTrocaCol )
 
 
-	/*
-    Local aCampos := GetCamposDic( cTabela, 'S' , .t. , .t. )
-	Local aCabec  := GetCamposDic( cTabela, 'S', .F. , .f. )	
-	Local aTips   := GetCamposInf( cTabela, 'TIPO' )
-    */
-
-
 	Local aMz1
 	Local aZZ1    := yRetArray()
 	Local cTexto  := ''
-
-	//  Local aM4     := {}
 	Local aZ1     := {}
 	Local nQAcento := 0
 	Local nTam
@@ -477,15 +379,13 @@ Static Function xAtuDados(   nIndice1 , lAscedente , aTams  , lTrocaCol )
 		DoEvents()
 		yDctoDc()
 
-		SysWait(0.04)
+		//SysWait(0.04)
 
 	End If
 
 REturn
 
 
-Function xGetColSw1()
-Return nColSele
 
 
 Function xGetColQw1()
@@ -515,36 +415,6 @@ Function xGetInfCw1(   nColuna , nIndice  )
 Return aMapsCol[ nColuna  ][nIndice]
 
 
-Static Function xColMEsquerda( nLargura )
-
-	Local nCol := 1
-	Local nWidth
-	Local nPos1
-	Local nPos2
-	Local lScrool1
-	Local nQt1 := xGetColQw1()
-
-	While .t.
-
-
-		nWidth := xGetColW1(  nCol    )
-		nPos1 := xGetInfCw1(   nCol , 2  )
-		nPos2 := xGetInfCw1(   nCol , 3  )
-
-		lScrool1 := (nPos2 >= nLargura)
-
-		If (lScrool1) .or. (nCol = nQt1 )
-			Exit
-		End If
-
-		nCol++
-
-	Enddo
-
-
-
-
-Return nCol
 
 
 Function xGetColsVis( nLimite1 )
@@ -642,25 +512,14 @@ Function EventHeaMtr()
 	Local nSaveCol1 := 0
 	Local nQTotEt := 0
 
-	//CalcEtapas()
-	//-(nColHeader)
-
-	//msginfo(Str(  nQTotEt     ))
 
 	If !_IsWindowDefined(cHeaderJan)
 		Return
 	End If
 
-	/*
-          IF GetNotifyCode ( nLParam ) == -3
-              msginfo('lp33')
-              
-      
-          ENDIF
-          */  
 
 	If nHWnd1 == GetProperty(  cHeaderSombra   , "HANDLE" )
-		   //msginfo('12')
+
 	End If
 
 
@@ -670,7 +529,7 @@ Function EventHeaMtr()
 
 			nHw1 := CursorOn1( cHeaderSombra  )	
 			
-			UxLib96()
+		//	UxLib96()
 			lAscending    := !lAscending
 			nOrdemSel     := nColSel1
 
@@ -681,10 +540,17 @@ Function EventHeaMtr()
 			If (nOrdemSel > 0) .And. (nOrdemSel <= Len(aCabecs))
 				If nOrdemSel <= Len(aMapsCol)
 					xOrdene( nOrdemSel , lAscending )
+
+					BT_ClientAreaInvalidateAll(c_BrowName)
+					DoEvents()
+
+					yDcToDc()
+					DoEvents()
+					
 				End If
 			End If
 
-			SysWait(0.04)
+			//SysWait(0.04)
 
 			DoEvents()
 			CursorOff1( nHw1   , cHeaderSombra  )		
@@ -709,7 +575,7 @@ Function EventHeaMtr()
 
 			xCaptBmp(nColSele)
 		
-			UxLib96()
+			//UxLib96()
 
 			nColSav1 := aMapsCol[nColSele][2]
 			nColTam1 := aMapsCol[nColSele][5]
@@ -805,6 +671,13 @@ Function EventHeaMtr()
 
 				lSizeMode := .f.
 				lAndamento := .f.
+				lDispHint1 := .f. 
+				lDispHint := .f. 
+				SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , '')
+
+				
+				xHidehint()
+				DoEvents()
 
 			Else
 
@@ -819,6 +692,9 @@ Function EventHeaMtr()
 		If (nMsg == WM_LBUTTONUP)
 
 			lSizeMode := .f.
+			lDispHint1 := .f. 
+			lDispHint := .f. 
+			SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , '')
 			lDragHeader := .f.
 			lAndamento := .f.
 
@@ -826,6 +702,10 @@ Function EventHeaMtr()
 
 			nColSav1 := 0
 			nColx5 := 0
+
+			
+			xHidehint()
+			DoEvents()
 			//msginfo('3332')
 
 
@@ -843,28 +723,23 @@ Function EventHeaMtr()
 			s1 := ''
 			s2 := ''
 
-			DoEvents()
-
+			CloseYeLLow()
+		
 			cObjSelected := 'HeaderMtr'
 
-			//msginfo('r1')
-
-
+			
 			GetCursorPos (@nCol, @nRow)
 			ar1 := GetPos_ScreenToClient(   nHWnd1 , nRow, nCol )
 			nColx := ar1[2]
 			
 			DoEvents()
 
-
-			If (!lDisphint)
-				DoEvents()
-				SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , Hb_AnsiToOem('Click e Arraste a Coluna para Mudar de Posição.')   )
-				xDoHint( , Hb_AnsiToOem('Click e Arraste a Coluna para Mudar de Posição.') )
-				SysWait(0.01)
-				DoEvents()
-				lDisphint := .t.
-			End If
+			 If (!lDisphint)			
+			 	SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , Hb_AnsiToOem('Click e Arraste a Colunas para Mudar de Posição.')   )	
+			 	DoEvents()
+				SetWindowCursor( nHWnd1 , IDC_ARROW)
+			 	lDisphint := .t.								
+			 End If
 
 			nColx5 := 0
 			i:=1
@@ -922,7 +797,7 @@ Function EventHeaMtr()
 					DoEvents()					
 					nTarget := xBusqTar(  (nColx - nDiff1)  , lFrente1 )														
 
-					If ( (  nColx - xGetScrolPos()  )   < 10) .And. (nColSele > 0) //.And. (nQConter > 1)
+					If ( (  nColx - xGetScrolPos()  )   < 10) .And. (nColSele > 0) 
 
 						If !lIni						
 
@@ -976,6 +851,7 @@ Function EventHeaMtr()
 
 							If (nTarget > 0) .And. ( nTarget <= (Len(aMapsCol) - 1) )
 								nColTarget := nTarget
+								xHidehint()
 								BT_ClientAreaInvalidateAll(   cHeaderJan )
 								xDcBarHeader()							
 								DoEvents()
@@ -1020,8 +896,7 @@ Function EventHeaMtr()
 			lDragHeader := .f. 
 			SetBrwDrgM( .f. , nColx5 )							
 
-			//msginfo('ok2')
-
+			
 			If  (lMove1) .And. (nColSele > 0) 
 
 				//msginfo(Str(nColTarget))
@@ -1062,11 +937,18 @@ Function EventHeaMtr()
 
 			If Len(aCords) = 0
 				lSizeMode := .F.
+				lDispHint1 := .f. 
+				lDispHint := .f. 
+				//SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , '')
 				lDragHeader := .F.
 				lAndamento := .f.
 				lTrack39 := .f.
 				xApagueH( cHeaderJan )
 				xDcBarHeader()
+				DoEvents()
+
+				
+				xHidehint()
 				DoEvents()
 				//msginfo('Zero')
 				Return
@@ -1074,11 +956,17 @@ Function EventHeaMtr()
 
 			If ((nColx2 := xSearchLim(  nColx )) > 0) 
 				
-				If !lSizeMode
-					SetWindowCursor( nHWnd1  , 'CURSORSIZE' )
-					SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , 'Redimensiona a Coluna ' + Hb_AnsiToOem(Alltrim( aMapsCol[nColx2][1])) + '  '  + Str(nColSel1)  )						
-					lSizeMode := .t.
-				End If 
+				 If !lSizeMode
+				 	lSizeMode := .t.
+				 Else 
+				 	If !lDispHint1
+				 		SetWindowCursor( nHWnd1  , 'CURSORSIZE' )
+						DoEvents()
+				 		SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , 'Redimensiona a Coluna ' + Hb_AnsiToOem(Alltrim( aMapsCol[nColx2][1])) + '  '  + Str(nColSel1)  )									 
+						lDispHint1 := .t. 
+					//	msginfo('lp22')
+					End If 				
+				 End If 
 				
 				Return
 
@@ -1089,8 +977,15 @@ Function EventHeaMtr()
 				End If
 
 				lSizeMode := .f.
+				lDispHint1 := .f. 
 				SetWindowCursor( nHWnd1 , IDC_ARROW)
-				//msginfo('kk22')
+				If ('Redimensiona a Coluna' $  Alltrim(GetProperty( cHeaderSombra  , 'Label2' , 'ToolTip')))
+					SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , '')
+					lDispHint := .f. 					
+				End If 
+								
+				xHidehint()
+				DoEvents()
 
 			End If
 
@@ -1117,7 +1012,7 @@ Function EventHeaMtr()
 					
 					SysWait(0.02)
 					nColSel1 := aCords[1][2]
-					UxLib96()
+				//	UxLib96()
 
 
 					nColAntx := aCords[1][2]
@@ -1280,10 +1175,6 @@ Static function xMoveWin( nColuna , NColIni   )
 Return
 
 
-Function yRelColSel()
-REturn nColSel1
-
-
 Function yApagueH( cJanela1 )
 
 	Local n1
@@ -1299,7 +1190,7 @@ Function yApagueH( cJanela1 )
 	If (nColSel1 > 0)
 
 		lTrack39 := .f.
-		lTracking546 := .f.
+		
 		n1 := aMapsCol[  nColSel1  ][2]
 		n3 := aMapsCol[  nColSel1  ][5]
 		nColSel1  := 0
@@ -1341,27 +1232,6 @@ Static Function xRetTotal(   nCol1   )
 	Next
 
 Return n2
-
-Function xRetTam( nTam )
-	//Local nTam := 0
-	Local hDC
-	Local hFont
-	Local BTstruct
-	Local cTexto
-	Local n12
-	Local cFontHead := FONTBROWSER
-	//FONTBROWSER
-
-	hDC = BT_CreateDC ( cHeaderJan  ,  BT_HDC_INVALIDCLIENTAREA, @BTstruct )
-	hFont := HMG_CreateFont (  hDC , cFontHead, FONTBROWSERSIZE, .f., .f., .f., .f. )
-
-	cTexto := Replicate('A' ,  nTam + 1 )
-	n12 := GetTextWidth( hDC , cTexto , hfont )
-
-	BT_DeleteDC (BTstruct )
-
-
-Return n12
 
 
 
@@ -1434,13 +1304,6 @@ Return nAcum2
 Function xH_RtLimite()
 Return nLimiteAtu
 
-Function xH_IncLim( nValor )	
-	nLimiteAtu += nValor	
-Return
-
-Function xH_DecLim( nValor )
-	nLimiteAtu -= nValor
-Return
 
 
 Function xH_xClcDir( nTotCol1 )
@@ -1479,142 +1342,26 @@ Function xH_xClcDir( nTotCol1 )
 Return (nCol1)
 
 
-Function xH_LQtot( nTipo )
-
-	Local nRet := 0
-	Local n1 := 1
-	Local n2 := 0
-	Local nQ1 := 0
-	Local nSom1 := 0
-	Local nSAldo1
-	Local aMInfo := {}
-	Local nQPasso := 0
-	Local lOk := .f.
-	Local nLim1 := nTotz2 - xH_RtLimite()
-	Local nLimz := aMapsCol[  Len(aMapsCol) ]
-	Local nTotz1 := 0
-	Local nY1 := xH_RtLimite()
-
-	Local nTotz4 := xH_RtLimite()
-
-	DEFAULT nTipo := 1
-
-	While !lOk
-
-		nSaldo1 := xH_ColResto( xH_RtLimite() )
-		aMInfo  := xH_CalcPulo( nQ1 + 1 , nSaldo1)
-		nTotz1 += aMInfo[1]
-		nTotz4 += aMInfo[1]
-
-		yIncConter( .t. , aMInfo[2] )
-		xH_IncLim( aMInfo[1] )
-		nQPasso++
-
-		nQ1 += aMInfo[2]
-
-		If ((xGetInfCw1(  yRetContador() , 2  ) + nY1) > xCalcTam())
-			lOk := .t.
-			Exit
-		End If
-	Enddo
-
-
-	nRet := nQ1
-
-REturn Iif(nTipo == 1 , nQPasso  , nQ1 )
-
-Function xH_CalcPulo(nColIni , nColFim , nDiff)
-
-	Local n1 := 0
-	Local nz1 := nColIni
-	Local nPulo := 0
-	Local nSoma := 0
-	Local lOk := .f.
-	Local nQColy := 0
-	Local nVezes := 0
-
-
-	If (nColIni == 1)
-		nSoma := nColIniBrw
-	End If
-
-
-	If (nColFim - nColIni) == 1 
-
-		If aMapsCol[nColFim][5]	> aMapsCol[nColIni][5]	
-			nVezes := 1
-		Else 
-			nVezes := 1	
-		End If 
-
-		lOk := .t. 
-
-	Else 
-
-		While (!lOk) .And. ( nZ1 <= Len(aMapsCol) ) .And. (nZ1 <= nColFim)
-			nSoma += aMapsCol[nz1][5]			
-			nVezes++
-			If (nSoma >= aMapsCol[nColFim][5])
-				lOk   := .t.
-			Else
-
-			End If
-			nZ1++
-		Enddo
-
-	End If 
-
-	If !lOk
-		nVezes := nColFim - nColIni
-	End If 
-
-	nPulo := nSoma
-
-Return nVezes
-//({nPulo,nqColy})
-
-
-
-Function xH_ColResto( nLimite )
-
-
-
-	Local nCol1 := 0
-	Local nResto := 0
-	Local nIndice := Ascan(aMapsCol , { |a|  a[3] > nLimite  }  )
-	Local nSoma := 0
-	Local n1 := 1
-
-	If (nIndice > 0)
-		nResto := aMapsCol[nIndice][3] - nLimite
-	End if
-
-Return nResto
 
 
 
 
-Function xH_ColVolta( nLimite1  )
+// Function xH_ColResto( nLimite )
 
-	Local nCol1 := 0
-	Local nResto := 0
-	Local nIndice := Ascan(aMapsCol , { |a|  (a[2] <= nLimite1) .And. (a[3] >= nLimite1)  }  )
 
-	If (nIndice > 1)
-		nResto := nLimite1 - aMapsCol[nIndice][2]
-	Else
-		nResto := aMapsCol[1][5]+nColIniBrw
-	End if
 
-Return nResto
+// 	Local nCol1 := 0
+// 	Local nResto := 0
+// 	Local nIndice := Ascan(aMapsCol , { |a|  a[3] > nLimite  }  )
+// 	Local nSoma := 0
+// 	Local n1 := 1
 
-Function Xh_LimCol( nLimite )
+// 	If (nIndice > 0)
+// 		nResto := aMapsCol[nIndice][3] - nLimite
+// 	End if
 
-	Local nCol1 := 0
-	Local nResto := 0
-	Local nIndice := Ascan(aMapsCol , { |a|  a[3] > nLimite  }  )
+// Return nResto
 
-Return nIndice
 
 
 
@@ -1706,13 +1453,19 @@ REturn (lDragHeader)
 Function yDragOff()
 
 	lSizeMode := .f.
-	//lDragHeader := .f.
+	lDispHint1 := .f. 	
+	lDispHint := .f. 
 	lAndamento := .f.
-
-	nColTarget := 0
-
-	//nColSav1 := 0
+	nColTarget := 0	
 	nColx5 := 0
+
+
+	SetProperty(  cHeaderSombra , 'Label2' , 'ToolTip' , '')
+
+
+	
+	xHidehint()
+	DoEvents()
 
 	BT_ClientAreaInvalidateAll(  cHeaderJan)
 
@@ -1769,7 +1522,7 @@ Static Function xCaptBmp(nCol1)
 	nColx :=  (aMapsCol[nCol1][2] - 0) //13
 	hBit201 := BT_BitmapCaptureWindow ( cHeaderJan , 0 , nColx , nTam1 - 1  , Height )
 
-    Bt_BitMapSaveFile(  hBit201 , 'hBity221.Bmp'    )
+   // Bt_BitMapSaveFile(  hBit201 , 'hBity221.Bmp'    )
 
 Return
 

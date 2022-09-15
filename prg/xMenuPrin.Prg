@@ -29,6 +29,11 @@
 
 #define XMAXITEM 15
 
+
+//#define FONTCOR   {102,102,102}
+//#define CORBROWSE {241,241,241}
+#define SELCOR    {28,157,189}
+
 Static nRowSub := 0
 
 Static lVez1 := .f.
@@ -859,8 +864,6 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 						ny2:=nRowSub+(nMainSel * nItemSubHeight)
 						aRt := GetPos_ScreenToClient( GetFormHandle(  'Main'  ),  nY2   , nColSub1 )						
 
-						//msginfo(Str( aRt[1]  ))
-						//msginfo(Str(aRt[2] + GetProperty( 'Win_MenuPrincipal', 'Width') + 50))
 						xShowHintM( Alltrim(cTp1) ,  'Win_MenuPrincipal' , aRt[1] , aRt[2] + GetProperty( 'Win_MenuPrincipal', 'Width')+50 ) 
 					Else
 						xHideHint()	

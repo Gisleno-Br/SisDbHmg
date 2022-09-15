@@ -1,6 +1,7 @@
 // 25-09
 
 #include <hmg.ch>
+#include <minigui.ch>
 
 REQUEST HB_LANG_PT
 REQUEST HB_CODEPAGE_PT850
@@ -59,6 +60,66 @@ FUNCTION LoadFitros( cTabela1 )
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE  ; 
 		ON PAINT Nil ;
       ON GOTFOCUS Nil 
+
+      DEFINE button MoveControl1
+         Row 220
+         Col 15
+         width 120
+         backcolor rgb(34,34,34)
+		 height 30
+         caption "Insere Registros"
+       action InsereRg()
+       END button
+
+
+       DEFINE button MoveControl3
+         Row 245
+         Col 15
+         width 120
+         backcolor rgb(34,34,34)
+		 height 30
+         caption "Pegar Item"
+       action PegarItem()
+       END button
+
+       
+       DEFINE button MoveControl4
+         Row 220
+         Col 215
+         width 120
+         backcolor rgb(34,34,34)
+		   height 30
+         caption "Editar Item"
+         action EditarItem()
+       END button
+
+              
+       DEFINE button MoveControl5
+         Row 220
+         Col 335
+         width 120
+         backcolor rgb(34,34,34)
+		   height 30
+         caption "Editar Item"
+         action ExcluirItem()
+       END button
+
+
+       
+              
+       DEFINE button MoveControl52
+         Row 245
+         Col 335
+         width 120
+         backcolor rgb(34,34,34)
+		   height 30
+         caption "Enable/Disable"
+         action EnableBrw()
+       END button
+
+
+
+
 	END WINDOW	
 
    //yRefresh( 'LstBoxFiltro' )  
@@ -106,7 +167,7 @@ FUNCTION LoadFitros( cTabela1 )
    
    aMtrFiltr := {}
 
-   For n1 := 1 to 500
+   For n1 := 1 to 7
          Aadd( aMtrFiltr , { StrZero(n1,3) ,  ' Filtro  ' + Strzero(n1,5) , '1adasdsadas'  , '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
              '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '} )
 
@@ -117,6 +178,8 @@ FUNCTION LoadFitros( cTabela1 )
    nC := GetProperTy('fFiltrosCad' , 'Col')
 
    xSombraZ( cSalvaJan , nR , nC  , GetProperTy('fFiltrosCad','Width') , GetProperTy('fFiltrosCad','Height')      )
+
+   Private aMtrFiltr := {}
    
    l_Ok := xBrowserMtr( 30 ,  aMtrFiltr , 'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' ,  'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' ,  'Campo 4'} , ;
       {10,50,60 , 75 , 60 ,45,75  }  , {'C' , 'C' , 'C' , 'C' , 'C' ,'C' ,'C'} , .f. , .t. , 150 )
@@ -124,12 +187,69 @@ FUNCTION LoadFitros( cTabela1 )
    yRefresh( 'LstBoxFiltro'  ) 
   // cHeaderName := 'Win_HeadMtr' + Left('LstBoxFiltro',4)
    DoEvents()
-   yGoTop()
+  // yGoTop()
    DoEvents()
  
 
    
 RETURN cFiltrox1
+
+
+Function PegarItem()
+   Local nIt := yRetIndex()
+   msginfo(Str( nIt ))
+Return 
+
+
+Function EnableBrw()
+
+  yEnabledBrw( .f. )
+
+Return 
+
+Function EditarItem()
+
+  Local nIt := yRetIndex()
+  Local aM1 := {}
+
+   Aadd( aM1   , { StrZero(n1,3) ,  ' Filtro Modicado ' + Strzero(n1,5) , 'ZZZZZZZZ'  , '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
+             '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '} )
+
+   
+   yRefresh( 'LstBoxFiltro'  ,  , aM1  , nIt ) 
+
+
+Return 
+
+
+Function ExcluirItem()
+
+   
+  Local nIt := yRetIndex()
+
+  
+   yRefresh( 'LstBoxFiltro'  ,  ,  , , nIt ) 
+
+Return 
+
+
+Function InsereRg()
+
+  
+   Local aM1 := {}
+
+   msginfo('lpp222')
+
+   For n1 := 1 to 7
+         Aadd( aM1   , { StrZero(n1,3) ,  ' Filtro  ' + Strzero(n1,5) , '1adasdsadas'  , '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
+             '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '} )
+
+   Next   
+
+   yRefresh( 'LstBoxFiltro'  , aM1 ) 
+
+
+REturn 
 
 
 Function xDoInit()

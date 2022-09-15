@@ -7,6 +7,8 @@
 
 #define FONTCOR {0,106,133}
 
+#define SELCOR    {28,157,189}
+
 
 
 #define QUEBRA Chr(13)+Chr(10)
@@ -230,9 +232,9 @@ Function CrieJanTip( nTop , nLeft ,   cMsg,ERROR,nSeconds , cParent )
 
 
 
-
+	//CHILD PANEL PARENT &cParent 
 	DEFINE WINDOW Win_Msg AT nTop, nLeft WIDTH nWidth HEIGHT nHeight TITLE 'xHint'  ;
-		NOMAXIMIZE NOMINIMIZE NOSIZE CHILD PANEL PARENT &cParent NOSYSMENU NOCAPTION BACKCOLOR Nil ; 
+		NOMAXIMIZE NOMINIMIZE CHILD PANEL PARENT &cParent  NOSIZE NOSYSMENU NOCAPTION BACKCOLOR Nil ; 
 		ON PAINT xPaintHint(  ThisWindow.Name   )
 
 		DEFINE LABEL Label_1
@@ -307,9 +309,9 @@ Function xFecheAnimate( hWnd)
 	
 	Local nSeconds := 0.8
 
-	AnimateWindow(hWnd, (nSeconds*300), AW_VER_NEGATIVE)
-	hb_IdleSleep(nSeconds)
-	AnimateWindow(hWnd, (nSeconds*1500), (AW_BLEND + AW_HIDE))
+	//AnimateWindow(hWnd, (nSeconds*1300), AW_VER_NEGATIVE)
+	//hb_IdleSleep(nSeconds)
+	AnimateWindow(hWnd, (nSeconds*2500), (AW_BLEND + AW_HIDE))
 	SendMessage( hWnd, WM_SYSCOMMAND, SC_CLOSE, 0 )
 
 
@@ -507,7 +509,8 @@ Function CloseYeLLow()
 
 
 	If _isWindowDefined('yFormSplash')		
-		xCloseDlg( GetFormHandle(  'yFormSplash'   )    )
+		//xCloseDlg( GetFormHandle(  'yFormSplash'   )    )
+		xFecheAnimate( GetFormHandle(  'yFormSplash'   ))
 		DoEvents()
 	End If 
 
@@ -547,11 +550,11 @@ Function WinYeLLow(nRow , nCol , cMsg1 )
 		 If nLines <= 4          
          	@ 0, 5 IMAGE Image_1 PICTURE 'JANAMARELA2'          
          	@ 7 ,  75 LABEL Label_1 VALUE "Aviso" TRANSPARENT FONT 'Arial' SIZE 10 FONTCOLOR BLACK BOLD
-         	@ 25, 35 LABEL Label_2 VALUE cMsg1 TRANSPARENT  FONT "Arial" SIZE 8 FONTCOLOR BLACK HEIGHT 650 WIDTH 200
+         	@ 25, 30 LABEL Label_2 VALUE cMsg1 TRANSPARENT  FONT "Arial" SIZE 8 FONTCOLOR BLACK HEIGHT 650 WIDTH 200
 		Else 
 			@ 0, 5 IMAGE Image_1 PICTURE 'JANAMARELA1'          
          	@20,  75 LABEL Label_1 VALUE "Aviso" TRANSPARENT FONT 'Arial' SIZE 10 FONTCOLOR BLACK BOLD
-         	@45, 35 LABEL Label_2 VALUE cMsg1 TRANSPARENT  FONT "Arial" SIZE 8 FONTCOLOR BLACK HEIGHT 650 WIDTH 200
+         	@45, 30 LABEL Label_2 VALUE cMsg1 TRANSPARENT  FONT "Arial" SIZE 8 FONTCOLOR BLACK HEIGHT 650 WIDTH 200
 		End If 
 		 
          
@@ -562,4 +565,143 @@ Function WinYeLLow(nRow , nCol , cMsg1 )
 	DoEvents()
 
 Return 
+
+Function xWaitY( cForm )
+
+	Local i
+	Local ar1
+	Local nRow1,nCol1
+	//Local nHWnd := GetFormHandle('Win_Dialog')
+	Local nHWnd1
+
+
+	For i := 1 To 255
+		GetAsyncKeyState(i)
+	Next i
+
+	//xIndiDlg()
+
+	DoEvents()
+	DoEvents()
+
+	//aMx := yEfect(  cActiveJan , .t.  )
+
+
+	Do While .Not. lExit
+
+		DoEvents()
+
+		For i := 1 To 255
+			If (GetAsyncKeyState(VK_RETURN) != 0)
+				lExit := .T.
+				Exit
+			EndIf
+		Next i
+
+		BringTop(cForm)
+		SysWait(0.01)
+		//_ShowWindow('Win_Dialog')
+
+	Enddo
+
+	//msginfo('Exit')
+
+Return .t.
+
+
+
+Function xBmpToTrans(cImage , nColor , nW1 , nH1 )
+
+	Local aRGBcolor   := SELCOR
+	Local hBitmapx    := BT_BitmapCreateNew (nW1 , nH1, nColor)
+	Local BTstruct3
+	Local hBolaAzul   := BT_BitmapLoadFile(cImage)
+	Local hDC3 		  := BT_CreateDC (hBitmapX , BT_HDC_BITMAP, @BTstruct3 )
+
+	BT_DrawBitmapTransparent (hDC3 , 0, 0, nW1, nH1, BT_COPY, hBolaAzul , Nil )
+	BT_DeleteDC (BTstruct3 )
+
+
+Return hBitmapx
+
+Function CursorOn1(  cExtra1 )
+		
+		Local nRow1 , nCol1 
+		Local nHWnd 
+
+		GetCursorPos (@nCol1, @nRow1)
+		nHWnd := WindowFromPoint (nCol1, nRow1)
+	
+		
+		SetWindowCursor( nHWnd  , 'CURSOR1'  )		
+		SetWindowCursor( GetFormHandle( cBrowDbActive )  , 'CURSOR1'  )
+		SetWindowCursor( GetFormHandle( cActiveMdi ) , 'CURSOR1' )
+
+		If !Empty(Alltrim(  cExtra1 ))
+			SetWindowCursor( GetFormHandle( cExtra1 ) , 'CURSOR1' )
+		End If 
+
+		SetWindowCursor( GetFormHandle( cActiveJan ) , 'CURSOR1' )
+
+
+Return nHWnd
+
+Function CursorOff1( nhW1 , cExtra1   )			
+		
+		SetWindowCursor( nhW1  , IDC_ARROW  )		
+		SetWindowCursor( GetFormHandle( cBrowDbActive )  , IDC_ARROW )
+		SetWindowCursor( GetFormHandle( cActiveMdi ) , IDC_ARROW)
+		If !Empty(Alltrim(  cExtra1 ))
+			SetWindowCursor( GetFormHandle( cExtra1 ) , IDC_ARROW )
+		End If 
+		SetWindowCursor( GetFormHandle( cActiveJan ) , IDC_ARROW )
+
+
+Return 
+
+ Function xShowHint( nRow1 , nCol1 , cMsg )
+
+
+    If !_isWindowDefined("Win_Msg")
+        CrieJanTip( nRow1 - 20  , nCol1 - 250   ,   Alltrim(cMsg)      ,, 0.5 )
+    Else
+        xDispHint( Alltrim(cMsg)  , nRow1 - 20 ,  nCol1 - 250  )
+    End If
+
+    xDispUpTam(cMsg)
+
+    BringTop('xHint')
+
+REturn     
+
+Function DraVertL( hDc1 , nCol , nHeight1 , lSingle )
+
+	Local aCorBorda := {153,153,153}
+
+	DEFAULT lSingle := .f. 
+
+	BT_DrawLine ( hDc1, 0 , nCol   , nHeight1 , nCol    ,   aCorBorda ,   1 )
+
+	If !lSingle
+		BT_DrawLine ( hDc1, 0 , nCol+1 , nHeight1,  nCol+1  ,   aCorBorda , 1 )
+	End If 
+
+Return
+
+
+
+Function DraVertH( hDc1 , nRow , nWidth , lSingle )
+	
+	Local aCorBorda := {153,153,153}
+
+	DEFAULT lSingle := .f. 
+
+	BT_DrawLine ( hDc1, nRow ,  0   ,  nRow    ,  nWidth     ,   aCorBorda , 1 )
+
+	If !lSingle
+		BT_DrawLine ( hDc1, nRow+1 ,0   ,  nRow+ 1 ,  nWidth + 1 ,  aCorBorda , 1 )
+	End If 
+	
+
+Return
 
