@@ -518,7 +518,7 @@ Function CloseYeLLow()
 Return  
 
 
-Function WinYeLLow(nRow , nCol , cMsg1 )
+Function WinYeLLow(nRow , nCol , cMsg1 , cParent  )
 
     Local nLines := MlCount(   cMsg1    )    
 	Local nWidth := 205
@@ -526,26 +526,31 @@ Function WinYeLLow(nRow , nCol , cMsg1 )
 
 	If nLines <= 4          
 		nWidth := 209
+		//209
 	End If 
 	
 
 
- 	DEFINE WINDOW yFormSplash;
-         AT nRow,nCol ;  
-         WIDTH nWidth ;
-         HEIGHT 175 ; 
-         BACKCOLOR WHITE ; 
-         NOSYSMENU;
-         NOSIZE;
-         NOMINIMIZE;
-         NOMAXIMIZE; 
-         NOCAPTION;
-         TOPMOST;
-         CHILD
-         
+ 	DEFINE WINDOW yFormSplash;		 
+        AT nRow,nCol ;  
+        WIDTH nWidth ;
+        HEIGHT 165 ; 
+        BACKCOLOR WHITE ; 
+        NOSYSMENU;
+        NOSIZE;
+        NOMINIMIZE;
+        NOMAXIMIZE; 
+        NOCAPTION    ;				
+		TOPMOST        
+			 
+		 
+		 
+		 // TOPMOST;         
+
          SET WINDOW yFormSplash TRANSPARENT TO COLOR WHITE
          
          ON KEY ESCAPE ACTION yFormSplash.Release
+
 
 		 If nLines <= 4          
          	@ 0, 5 IMAGE Image_1 PICTURE 'JANAMARELA2'          
@@ -560,9 +565,14 @@ Function WinYeLLow(nRow , nCol , cMsg1 )
          
    END WINDOW
 
+   //HMG_ChangeWindowStyle(  GetProperty(  'yFormSplash' , 'HANDLE' ) , WS_BORDER, NIL, .T. )
 
 	_ShowWindow(  'yFormSplash'  )
+	//DoMethod( 'yFormSplash' , 'Activate')
+
+
 	DoEvents()
+	
 
 Return 
 

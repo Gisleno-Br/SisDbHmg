@@ -1,0 +1,39 @@
+Admin 16/09/2022 15:22:11   Admin 16/09/2022 15:22:11   Admin 16/09/2022 15:19:55   Admin 16/09/2022 15:19:55   Admin 16/09/2022 15:18:04   Admin 16/09/2022 15:18:04   Admin 16/09/2022 15:14:26   Admin 16/09/2022 15:14:26   Admin 16/09/2022 15:08:27   Admin 16/09/2022 15:08:27   Admin 16/09/2022 15:03:20   Admin 16/09/2022 15:03:20   Admin 16/09/2022 15:01:25   Admin 16/09/2022 15:01:25   Admin 16/09/2022 15:01:06   Admin 16/09/2022 15:01:06   Admin 16/09/2022 15:00:46   Admin 16/09/2022 15:00:46   Admin 16/09/2022 14:51:38   Admin 16/09/2022 14:51:37   select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from clientes
+ select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from Clientes
+
+ select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from clientes
+
+ select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from Clientes
+
+ select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from clientes
+
+ select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from Clientes
+
+ select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from clientes
+
+ select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from Clientes
+
+ select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from clientes
+
+ select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from Clientes
+
+ select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from clientes
+
+ select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from Clientes
+
+ select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from clientes
+
+ select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from Clientes
+
+ select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from clientes
+
+ select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from Clientes
+
+ select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from clientes
+
+ select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from Clientes
+
+ select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from clientes
+
+ select ifNull(codigo ,' ') As codigo,ifNull(cidade ,' ') As cidade,ifNull(nome ,' ') As nome,ifNull(cpf ,' ') As cpf,ifNull(endereco ,' ') As endereco,ifNull(bairro ,' ') As bairro,ifNull(status ,' ') As status,ifNull(ie ,' ') As ie,ifNull(email ,' ') As email,lPad(Date_Format(datanasc, '%d/%m/%Y'),10,' ')  As datanasc ,ifNull(qtpeds ,0 ) As qtpeds  from Clientes
+

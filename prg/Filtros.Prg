@@ -60,7 +60,7 @@ FUNCTION LoadFitros( cTabela1 )
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE  ; 
 		ON PAINT Nil ;
       ON GOTFOCUS Nil 
-
+/*
       DEFINE button MoveControl1
          Row 220
          Col 15
@@ -117,7 +117,7 @@ FUNCTION LoadFitros( cTabela1 )
          action EnableBrw()
        END button
 
-
+*/
 
 
 	END WINDOW	
@@ -167,7 +167,7 @@ FUNCTION LoadFitros( cTabela1 )
    
    aMtrFiltr := {}
 
-   For n1 := 1 to 7
+   For n1 := 1 to 5
          Aadd( aMtrFiltr , { StrZero(n1,3) ,  ' Filtro  ' + Strzero(n1,5) , '1adasdsadas'  , '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
              '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '} )
 
@@ -179,7 +179,7 @@ FUNCTION LoadFitros( cTabela1 )
 
    xSombraZ( cSalvaJan , nR , nC  , GetProperTy('fFiltrosCad','Width') , GetProperTy('fFiltrosCad','Height')      )
 
-   Private aMtrFiltr := {}
+  // aMtrFiltr := {}
    
    l_Ok := xBrowserMtr( 30 ,  aMtrFiltr , 'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' ,  'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' ,  'Campo 4'} , ;
       {10,50,60 , 75 , 60 ,45,75  }  , {'C' , 'C' , 'C' , 'C' , 'C' ,'C' ,'C'} , .f. , .t. , 150 )
@@ -188,8 +188,7 @@ FUNCTION LoadFitros( cTabela1 )
   // cHeaderName := 'Win_HeadMtr' + Left('LstBoxFiltro',4)
    DoEvents()
   // yGoTop()
-   DoEvents()
- 
+   DoEvents() 
 
    
 RETURN cFiltrox1
@@ -238,9 +237,9 @@ Function InsereRg()
   
    Local aM1 := {}
 
-   msginfo('lpp222')
+   //msginfo('lpp222')
 
-   For n1 := 1 to 7
+   For n1 := 1 to 5
          Aadd( aM1   , { StrZero(n1,3) ,  ' Filtro  ' + Strzero(n1,5) , '1adasdsadas'  , '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
              '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '} )
 

@@ -2652,7 +2652,10 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 	IF nHWnd == GetProperty(  cActiveJan   , "HANDLE" )				
 		If nMsg == WM_MOUSEMOVE
 
+			
+
 			xLimpBarV()			
+
 
 			GetCursorPos (@nCol1, @nRow1)
 			ar1 := GetPos_ScreenToClient(   nHWnd , nRow1, nCol1 )
@@ -2980,7 +2983,7 @@ Function EventBrowser( nHWnd, nMsg, nWParam, nLParam )
 
 		If nMsg == WM_MOUSEMOVE
 
-		//	msginfo('d2')
+			//msginfo('d2')
 
 			If (lHasHeader)
 				xApagueH( cHeaderName )
