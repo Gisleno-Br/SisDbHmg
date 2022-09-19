@@ -1043,8 +1043,6 @@ Function xTecBrowMtr()
 
 		DoEvents()
 
-		//msginfo('lp11')
-
 		yOffBarra( cBarrah  )
 		DoEvents()
 
@@ -1233,11 +1231,9 @@ Function xTecBrowMtr()
 	If (nMsg == WM_MOUSEMOVE) .And. (nHWnd == GetProperty(  cBarraVSombra , "HANDLE" ))
 	//	msginfo('z1')
 		cObjSelected := 'BarraV'
-		DoEvents()
+		//DoEvents()
 
 	End If 
-
-
 	
 
 	If (nMsg == WM_MOUSEMOVE) .And. (nHWnd == GetProperty(  cBarraVSombra , "HANDLE" )) .And. ;
@@ -1246,44 +1242,62 @@ Function xTecBrowMtr()
 	   	GetCursorPos (@nCol, @nRow)
 		ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
 
-		DoEvents()
+		//DoEvents()
+
 
 		If (ar1[2] > 21) .or. (ar1[2] < 0)
 			xOffBarVert( nHWnd )			
 			Return
 		End If
 
-
 		nRow1 := ar1[1]
-		nId2 := xModeBrw(nRow1)
-	//	msginfo('ok222')
+		nId2 := xModeBrw(nRow1)	
 		nModeBr2 := yDoHint(   nId2  ,  , .t.  )
 
 		//DoEvents()
 		
 
 		If (nId2 = 0)
-			yLimpBarV( '2')
+			yLimpBarV( '2')		
 			Return
+		Else 
+		 
 		End If
+
+
+
+		cObjSelected := 'BarraV'
 
 		lTrackingL1 := ( nModeBrw = nModeBr2)
 
-		
-		lTracking1714  := TrackMouseEvent(nHWnd)
-		DoEvents()
+		If lTrackingL1
+			BT_ClientAreaInvalidateAll( cBarraVfrm )
+		//	DoEvents()
+			yDcToDEspe()
+			DoEvents()
+			//SysWait(0.03)
+		End If 
 
+		//DoEvents()
+
+		
 	End If 
+
 
 
 	//MOUSEMOVE DA BARRAV
 	If (nMsg == WM_MOUSEMOVE) .And. (nHWnd == GetProperty(  cBarraVSombra , "HANDLE" )) .And. ;
 	   (  cObjSelected == 'BarraV') .And. (!lTrackingL1 )
 
-	    lTrackingL1 := .t. 
+	    
 		lTracking75 := .f.
-//
-		//DoEvents()
+
+		//BT_DELAY_EXECUTION_WITH_DOEVENTS(30)
+
+		//SysWait(0.06)
+
+		//msginfo('f1')
+	
 
 		If (lHasHeader)
 			SysWait(0.03)
@@ -1297,8 +1311,9 @@ Function xTecBrowMtr()
 		GetCursorPos (@nCol, @nRow)
 		ar1 := GetPos_ScreenToClient(   nHWnd , nRow, nCol )
 
-		If (ar1[2] > 21) .or. (ar1[2] < 0)
+		If (ar1[2] > 21) .or. (ar1[2] < 0)			
 			xOffBarVert( nHWnd )
+			lTrackingL1 := .t. 
 			Return
 		End If
 
@@ -1306,12 +1321,14 @@ Function xTecBrowMtr()
 		nId := xModeBrw(nRow1)
 
 		If (nId = 0)
-			yLimpBarV( '3')			
+			yLimpBarV( '3')						
+			lTrackingL1 := .t. 
 			Return
 		End If
 
 		If (nRow1 >= 61) .And. (nRow1 <= (GetProperty(cBarraVfrm,'Height') - 61) ) .And. (nId = 0)
 			xOffBarVert( nHWnd )
+			lTrackingL1 := .t. 
 			Return
 		End If
 
@@ -1323,7 +1340,9 @@ Function xTecBrowMtr()
 			End If
 		End If
 
-		If (nId > 0) .And. (!lTracking75)
+
+		If (nId > 0) 
+			//.And. (!lTracking75)
 			yOffBarra( cBarrah  )
 			nModeBrw := yDoHint(   nId  ,  , .f.  )
 			nHasFocus := nId
@@ -1334,8 +1353,11 @@ Function xTecBrowMtr()
 			lTracking75  := .t.
 
 			SysWait(0.04)
+			//msginfo('11')
 
 		End If
+
+		lTrackingL1 := .t. 
 
 		
 		lTracking1714  := TrackMouseEvent(nHWnd)
@@ -1429,6 +1451,8 @@ Function xTecBrowMtr()
 			DoEvents()
 			nSaveX5 := nItemX5
 			nItem :=  xGetPos(cEspelhoBrw)
+
+			nModeBrw := 0
 		
 			GetCursorPos (@nCol, @nRow)
 			ar1 := GetPos_ScreenToClient(   nHWnd , , nCol )
@@ -1796,13 +1820,16 @@ Static Function IncrCont1( lFrente  , nWalk1 )
 
 	If lFrente
 		nQxy++		
+		l_Bofh := .f. 
 		nAcumP += nScr1		
 		nLimiteCol += nWalk1
 	Else 
 		nQxy--		
+		l_Eofh := .f. 
 		nAcumP -= nScr1		
 		nLimiteCol -= nWalk1
 	End If
+
 
 Return 
 
@@ -1812,31 +1839,30 @@ Static Function xModeBrw(nRowL)
 	Local nL
 	Local nId := 0
 
-
 	If (nRowl >= nLimteLin)
 		nL := GetProperty(cBarraVfrm,'Height') - 20
 		If (nRowL > (nL + 1))
 			If (Len(aMt1) > nTamPag)
 				nId := 858
 			Else
-				nModeBrw := 0
+				nModeBrw := 0				
 			End If
 		Else
-
 			If (nRowL <= (nLimteLin + 20   ))
 				nId := 860
 			Else
 				If (Len(aMt1) > nTamPag)
 					nId := 859
 				Else
-					nModeBrw := 0
+					nModeBrw := 0					
 				End If
 			End If
-
 		End If
 	Else
 		If nRowL <= 20
 			nId := 855
+			DoEvents()
+			//msginfo('p2')
 		Else
 			If (Len(aMt1) > nTamPag)
 				If (nRowL >= 41) .And. (nRowL <= 61)
@@ -1847,11 +1873,12 @@ Static Function xModeBrw(nRowL)
 					End If
 				End If
 			Else
-				nModeBrw := 0
+				nModeBrw := 0				
 			End	If
 		End If
 	End If
 
+	DoEvents()
 
 
 Return nId
@@ -2481,7 +2508,8 @@ Function EventBrowMtr( nHWnd, nMsg, nWParam, nLParam )
 		
 			cObjSelected := 'BrowserMtr'			
 			
-			
+			//msginfo('f1')
+			nModeBrw := 0
 
 
 			If (lHasHeader) .And. (!isDrgMode())
@@ -2590,6 +2618,7 @@ Static Function yDoHint(   nIdBut , cMsg , lNoHint   )
 
 
 	//DoEvents()
+	/*
 
 	If !lNoHint
 
@@ -2608,6 +2637,7 @@ Static Function yDoHint(   nIdBut , cMsg , lNoHint   )
 		DoEvents()
 
 	End If
+	*/
 
 
 REturn nModeBrw
@@ -2704,9 +2734,9 @@ Static Function xOffBarVert( nWh1 )
 	yDcToDEspe()
 	
 
-	If  _isWindowDefined("Win_Msg")
-		xHidehint()
-	End If
+	//If  _isWindowDefined("Win_Msg")
+	//	xHidehint()
+	//End If
 
 Return
 
@@ -4172,6 +4202,8 @@ Function EventHeaMtr()
 		
 			cObjSelected := 'HeaderMtr'
 
+			nModeBrw := 0
+
 			
 			GetCursorPos (@nCol, @nRow)
 			ar1 := GetPos_ScreenToClient(   nHWnd1 , nRow, nCol )
@@ -5202,8 +5234,8 @@ Static Function xBarHMtr( cParent , cBrowserName , nLinha1  , nLarguraTot2 , nLa
     //yZeraConter()
 
     If !_isWindowDefined('yFormSplah')
-        WinYeLLow( GetProperty(cParent , 'Row') + GetProperty(  cBrowserName , 'Height'  )+65 ,  ;
-        GetProperty(cParent , 'Col') + 25  , 'Click e Arraste Devagar para ' + XQUEBRA + ' Navegar entre as Colunas.'  , cActiveJan )                               
+      //  WinYeLLow( GetProperty(cParent , 'Row') + GetProperty(  cBrowserName , 'Height'  )+65 ,  ;
+       // GetProperty(cParent , 'Col') + 25  , 'Click e Arraste Devagar para ' + XQUEBRA + ' Navegar entre as Colunas.'  , cActiveJan )                               
 
 
 	//	WinYeLLow( GetProperty(  cBrowserName , 'Height'  )+5  , 25 , 'Click e Arraste Devagar para ' + XQUEBRA + ' Navegar entre as Colunas.'  , cBrowserName )                               
@@ -5523,11 +5555,12 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
 			//	DoEvents()
 			End If 	
 
-			//msginfo('z1')
+			
 
             
             cObjSelected := 'BarraH'
 			CloseYeLLow()
+			nModeBrw := 0
 
             If (nCol > 18) .And. (nCol < (Width - 20))                           
                 If (!lTracking44)
@@ -5565,6 +5598,7 @@ Function EventBarMtr( nHWnd, nMsg, nWParam, nLParam )
                     End If 
 
                     If (nCol >= (Width - 18))                                                
+					//	msginfo('op2')
                         yLimpBarV( '7')	                        
                         DoEvents() 
                         nAcende := 2                                             
