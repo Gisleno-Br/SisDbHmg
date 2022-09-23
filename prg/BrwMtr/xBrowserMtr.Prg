@@ -1422,7 +1422,7 @@ Function xTecBrowMtr()
 				For i := 1 To 255
 					GetAsyncKeyState(i)
 				Next i
-				SysWait(0.02)
+				SysWait(0.05)
 				xGoUp(.t.)
 				If (GetAsyncKeyState(VK_LBUTTON)) == 0
 					lTracking45 := .t.
@@ -1434,7 +1434,7 @@ Function xTecBrowMtr()
 					GetAsyncKeyState(i)
 				Next i
 				xGoDown(.t. )
-				SysWait(0.02)
+				SysWait(0.05)
 				If (GetAsyncKeyState(VK_LBUTTON)) == 0
 					lTracking45 := .t.
 				End If
@@ -1449,7 +1449,7 @@ Function xTecBrowMtr()
 
 				//SysWait(0.02)
 				xGoPgDn( .t. )
-				SysWait(0.02)
+				SysWait(0.05)
 				If (GetAsyncKeyState(VK_LBUTTON)) == 0
 					lTracking45 := .t.
 				End If
@@ -1465,7 +1465,7 @@ Function xTecBrowMtr()
 
 				xGoPgUp( .t. )
 
-				SysWait(0.02)
+				SysWait(0.05)
 				If (GetAsyncKeyState(VK_LBUTTON)) == 0
 					lTracking45 := .t.
 				End If
