@@ -380,6 +380,12 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 
 
 	
+	//Local hBitOk     := BT_BitmapLoadFile ('NGITRANS')
+	//Local hBitExcl   := xBmpToTrans('EXCLAMACAOBIG' , {250,242,176}  , 64 , 64 )
+	
+
+
+	
 	yBmp1 := BT_BitMapLoadFile('SCRUP1')
 	yBmp2 := BT_BitMapLoadFile('SCRUP2')
 	yBmp3 := BT_BitMapLoadFile('SCRUP3')
@@ -408,7 +414,8 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 
 	aMt1      := Aclone(aDatas1)
 	nMaxItem1 := Len(aDatas1)
-	nItemBrwHeight := nItemSubHeight - 5
+	nItemBrwHeight := nItemSubHeight
+	// - 5
 	nItemScrool := 0
 	nLargTotal := nTamWidth
 	lNoHorzScr := .f.
@@ -448,11 +455,17 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 		WIDTH nLarg1+5 HEIGHT nAltura1 + 2 VIRTUAL HEIGHT Iif(  Len(aMt1) > nTamPag ,(Len(aMt1) * nItemBrwHeight) , Nil) VIRTUAL WIDTH Iif( nLargTotal+1 > nLarg1 ,  nLargTotal+1 , Nil)  ;
 		TITLE 'xEspelho' + Left(cParent,4)  	;
 		NOSIZE NOSYSMENU NOCAPTION  BACKCOLOR Nil ;
-		ON MOUSEMOVE ( yCheckObj() , cObjSelected := 'aMtrBrowser' , CloseYeLLow() , DoEvents())
+		ON MOUSEMOVE ( yCheckObj() , cObjSelected := 'aMtrBrowser' )
 	END WINDOW
 
 
 	nMaxBarh := GetProperty(  cBrowserName , 'Width'  )
+
+
+	
+   nindex230 := 133
+   //CREATE EVENT PROCNAME EditBox_DBLCLICK() STOREINDEX nIndex230
+ //  EventProcessAllHookMessage ( nIndex230  , .T. ) 
 
 
 	lAtivo1 := ((nLargTotal+1) > nLarg1)
@@ -611,6 +624,13 @@ Static Function ySetTam( aTamanhos )
 REturn
 
 
+Function EditBox_DBLCLICK()
+	  #define WM_LBUTTONDBLCLK 515
+      IF EventMSG() == WM_LBUTTONDBLCLK
+         MsgInfo ('Dbl')
+	  End If 
+
+Return 
 
 Static Function xCalcTam()
 
@@ -1017,6 +1037,8 @@ Function xTecBrowMtr()
 	End If 
 
 
+	//If nLParam
+
 
 
 	If HMG_GetLastMouseMessage (@nHWnd) == WM_MOUSEWHEEL	
@@ -1030,6 +1052,10 @@ Function xTecBrowMtr()
 			End If
 		End If 
 	End If
+
+	If HMG_GetLastMouseMessage (@nHWnd) != 512
+		//msginfo( Str(   nWParam  ) )
+	End If 
 
 
 
@@ -1058,6 +1084,8 @@ Function xTecBrowMtr()
 				lTracking45 := .t.
 				SysWait(0.01)
 			End If
+
+
 		End If
 
 	End If
@@ -1070,6 +1098,9 @@ Function xTecBrowMtr()
 	End If 
 
 
+		If (nMsg == WM_LBUTTONDBLCLK)
+			msginfo('ok22 -33333-')
+		End If 
 
 
 	// Arrasto da BarraH
@@ -1465,7 +1496,7 @@ Function xTecBrowMtr()
 				ySelCol( aMCol[1][2] )	
 			End If 
 			DoEvents()
-			SysWait(0.02)
+			SysWait(0.01)
 
 			//msginfo('lp22')
 
@@ -1638,7 +1669,9 @@ Function xTecBrowMtr()
 
 		End If
 
-
+		If (nMsg == WM_LBUTTONDBLCLK)
+			//msginfo('ok22 --')
+		End If 
 		
 		If (nWParam == 13)
 			//msginfo('ok22')
@@ -2161,11 +2194,12 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
 	Local nIndice := 0
 	Local nPg := 0
 	Local hBitmap
+	Local nPulo1
 
 
-	Local hBitOk     := BT_BitmapLoadFile ('NGITRANS')
-	Local hBitExcl   := xBmpToTrans('EXCLAMACAOBIG' , {250,242,176}  , 64 , 64 )
-	//BT_BitmapLoadFile ('EXCLAMACAOBIG')
+	//Local hBitOk     := BT_BitmapLoadFile ('NGITRANS')
+	//Local hBitExcl   := xBmpToTrans('EXCLAMACAOBIG' , {250,242,176}  , 64 , 64 )
+	
 
 	Local nCol := nColIniBrw
 
@@ -2196,7 +2230,7 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
 	//BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width  ,    Height    , WHITE , WHITE  )
 
 	//If (nOpselx1 = 0)
-		BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width  ,    Height    , WHITE , WHITE  )
+	BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width  ,    Height    , WHITE , WHITE  )
 	//End If
 
 	If nClear1 > 0
@@ -2239,6 +2273,12 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
 			nCol -= nColScrool 
 		End If 
 
+		nPulo1 := 0
+
+		If nItemBrwHeight > 15
+			nPulo1 := 1
+		End If 
+
 		If (nOpselx1 > 0) .And. (aMtrOp[n1][1] == nSelLine ) .And. (lBrwEnable)
 			If lDeleted 
 				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 0  ,    Width    ,    nItemBrwHeight     , SELCOR  , SELCOR  )
@@ -2248,7 +2288,7 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
 
 			If (nColScrool == 0)
 				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 00  ,  nColIniBrw ,    nItemBrwHeight      , SELCOR  , SELCOR  )
-				BT_DrawBitmap (hDC2  , nLine  + nRow    , 2   , 16  , nItemBrwHeight , BT_SCALE , bBmpa  )				
+				BT_DrawBitmap (hDC2  , nLine  + nRow + nPulo1   , 2   , 16  , nItemBrwHeight , BT_SCALE , bBmpa  )				
 			End If
 
 		Else 
@@ -2303,7 +2343,7 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
                     	nFontCor := WHITE
 					End If 
 
-					BT_DrawText ( hDC2 , nLine + nRow  , nCol+1 ,   cTexto1 , xFont2  , 9 , nFontCor ,  SELCOR   , ;
+					BT_DrawText ( hDC2 , nLine + nRow + nPulo1  , nCol+1 ,   cTexto1 , xFont2  , 9 , nFontCor ,  SELCOR   , ;
 						nTypeText ,	nAlingText, nOrientation )
 				End If
 
@@ -2313,103 +2353,19 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
                     cCor := WHITE
 				End If 
 
-				BT_DrawText ( hDC2 , nLine + nRow  , nCol+1  ,  cTexto1 , xFont2, 9 ,  cCor , nCorBk , nTypeText, nAlingText, nOrientation )
+				BT_DrawText ( hDC2 , nLine + nRow + nPulo1  , nCol+1  ,  cTexto1 , xFont2, 9 ,  cCor , nCorBk , nTypeText, nAlingText, nOrientation )
 			End If 
 
 			nCol += nTam
 
 		Next 
 
-
-		/*
-		cTexto := Hb_Utf8ToStr( aMtrOp[n1][2]) + '*'		
-		nLinb++
-
-		IF (nLinb > nTamPag)
-			nLinB := 0
-		End If
-
-
-		nPg := Int(    n1  / nTamPag )+1
-
-		If (l_HitB)
-
-			n12 := (Len(cTexto) * nTam1 )
-
-			If !lPaint
-				BT_DrawGradientFillHorizontal ( hDC2 ,  nLine + nRow   , 0  , n12   ,    (nTamPag+2) * nItemBrwHeight     ,  WHITE  , {193,255,224}   )
-			End If
-
-			lPaint := .t.
-
-		End If
-
-		If (nOpselx1 > 0) .And. (aMtrOp[n1][1] == nSelLine )
-			
-
-			nTypeText    := BT_TEXT_BOLD
-			nFontCor     := WHITE
-
-			If !lBrwEnable
-				nTypeText    := BT_TEXT_TRANSPARENT
-				nFontCor 	 := BLACK
-			End If
-
-
-			If lAtivo1
-				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 0  ,    Width    ,    nItemBrwHeight     , SELCOR  , SELCOR  )
-
-				BT_DrawText ( hDC2 , nLine + nRow  , nColIniBrw+nCol+1 ,   cTexto , xFont2  , 9 , nFontCor ,  SELCOR   , ;
-					nTypeText ,	nAlingText, nOrientation )
-			End If
-
-			If (aMtrOp[n1][1] == nSelLine) .And. (nColScrool == 0)
-				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 00  ,  nColIniBrw ,    nItemBrwHeight     , SELCOR  , SELCOR  )
-				BT_DrawBitmap (hDC2  , nLine  + nRow    , 0   , 17  , nItemBrwHeight , BT_SCALE , bBmpa  )				
-			End If
-
-		Else
-
-			nTypeText    := BT_TEXT_TRANSPARENT
-			n12 := ( (Len(cTexto) + 0)  * nTam1 )
-			n12 := nTamx1 + nCol + nColIniBrw + (250 * nTam1)
-
-			If (Mod( n1 , 2 ) = 0)
-				nCorBk := WHITE
-				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , n12 ,    nItemBrwHeight     , nCorBk  , nCorBk   )
-				lPar := .f.
-			Else
-				nCorBk := CORBROWSE
-				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , n12 ,    nItemBrwHeight     , nCorBk  , nCorBk   )
-				lPar := .t.
-			End If
-
-
-			//BT_DrawBitmapTransparent (hDC2  , nLine  + nRow    , 0   , 16  , nItemBrwHeight , BT_SCALE , hBitOk , Nil)
-
-			cCor := FONTCOR
-
-			
-
-			BT_DrawText ( hDC2 , nLine + nRow  , nColIniBrw+nCol+1  ,  cTexto , xFont2, 9 ,  cCor , nCorBk , nTypeText, nAlingText, nOrientation )
-
-		End If
-
-		*/
-
-
-
 		nLine += nItemBrwHeight
-
 		DoEvents()
-
 
 	Next
 
 	BT_DeleteDC (BTstruct )
-
-
-
 
 Return
 
@@ -2489,10 +2445,16 @@ Function EventBrowMtr( nHWnd, nMsg, nWParam, nLParam )
 
 
 		End If 
+
+		
+			
+		//	IF HiWord( nWParam ) == 2
+			//	msginfo('f2')
+
+		//	End If 
 		
 
 	End If 
-
 
 
 
@@ -2503,6 +2465,7 @@ Function EventBrowMtr( nHWnd, nMsg, nWParam, nLParam )
 			nitemx5   := 0
 			BT_ClientAreaInvalidateAll(cBrowserName)
 		End If
+
 
 		If nMsg == WM_MOUSEMOVE
 		
@@ -3674,6 +3637,8 @@ Static Function xHeaderMtr( cHName , aCabecalho , aTams , cParent1 , cBrwName1 ,
 	CREATE EVENT PROCNAME EventHeaMtr() HWND GetControlHandle(  'Label2' ,  cHeaderSombra ) STOREINDEX nIndex22
 	EventProcessAllHookMessage(nIndex22 , .t.)
 
+
+
 	nIndex22 := 34322
 
 
@@ -4068,6 +4033,13 @@ Function EventHeaMtr()
 
 			nColx5 := nColX
 			//SIZEMODE
+
+			
+			ySelCol( nColSel1 )				
+			DoEvents()
+			SysWait(0.01)
+
+			//msginfo(Str(  nColSel1   ))
 
 
 			If (lSizeMode)
