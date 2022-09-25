@@ -327,6 +327,7 @@ FUNCTION Main
 	Private nTamSubMenuConsulta := 300
 
 
+	
 	Private nMaxItem1 := 0
 
 
