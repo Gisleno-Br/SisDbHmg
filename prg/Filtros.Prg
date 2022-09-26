@@ -168,10 +168,16 @@ FUNCTION LoadFitros( cTabela1 )
    aMtrFiltr := {}
 
    For n1 := 1 to 500
-         Aadd( aMtrFiltr , { StrZero(n1,3) ,  ' Filtro  ' + Strzero(n1,5) , '1adasdsadas'  , '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
-             '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '} )
+         Aadd( aMtrFiltr , { StrZero(n1,3) ,  'image=CHKOK'   ,      '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
+             '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '  , .t. } )
 
    Next   
+
+   Private nQItem := 1
+
+  
+
+   //Aadd( aM1 ,  Eval(  { ||   ( aMtrFilr[2][1] ,  aMtrFilr[2][3]      })
 
 
    nR := GetProperTy('fFiltrosCad' , 'Row')
@@ -181,8 +187,8 @@ FUNCTION LoadFitros( cTabela1 )
 
   // aMtrFiltr := {}
    
-   l_Ok := xBrowserMtr( 30 ,  aMtrFiltr , 'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' ,  'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' ,  'Campo 4'} , ;
-      {10,50,60 , 75 , 60 ,45,75  }  , {'C' , 'C' , 'C' , 'C' , 'C' ,'C' ,'C'} , .f. , .t. , 200 )
+   l_Ok := xBrowserMtr( 30 ,  aMtrFiltr ,    { ||   { aMtrFiltr[nQItem][1] ,  aMtrFiltr[nQItem][3]  }    }  ,  'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' } , ;
+      {10,15,60 , 75 , 60 ,45,75  }  , { 'C' , 'C' , 'C' , 'C' , 'C' ,'C' ,'C'} , .f. , .t. , 200 , .t. , .f. )
 
    yRefresh( 'LstBoxFiltro'  ) 
   // cHeaderName := 'Win_HeadMtr' + Left('LstBoxFiltro',4)

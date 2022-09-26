@@ -322,6 +322,7 @@ FUNCTION Main
 
 
 	Public nItemSubHeight := 20
+
 	Public nColIniBrw := 17
 
 	Private nTamSubMenuConsulta := 300

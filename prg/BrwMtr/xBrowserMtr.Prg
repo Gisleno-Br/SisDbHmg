@@ -92,6 +92,8 @@ Static hBitOk
 Static hBitOrd1 
 Static hBitOrd2 
 
+Static lCheckBox := .f. 
+
 
 
 //Variaveis do Browser 
@@ -340,12 +342,13 @@ Static Function xRetItem( aMatriz )
 
 	Next
 
+
 Return aMatriz
 //(c1)
 
 
 
-Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol  , aCabecalho , aTamanhos , aTipos , lDicionario , lEnabled1 , nAltura1 )
+Function xBrowserMtr( nRowIni ,  aDatas1 ,  bBlockMtr ,   cParent   , nLarg1  , cBrwName , nCol  , aCabecalho , aTamanhos , aTipos , lDicionario , lEnabled1 , nAltura1 , lokCheck , lOkEdit )
 
 
 	Local nTamWidth := yRetLargura(  aTamanhos  )
@@ -359,6 +362,11 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 	DEFAULT aCabecalho := {}
 	DEFAULT lDicionario := .t.
 	DEFAULT lEnabled1   := .t.
+
+
+	DEFAULT lokCheck := .f. 
+	
+	lCheckBox := lokCheck
 
 	nItemBrwHeight := nItemSubHeight 
 	//- 5
@@ -375,8 +383,11 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 	//msginfo(  Str( nLimiteCol  )  )
 
 	bBmpZ := xBmpToTrans( 'BOLAZAZUL1')
-	bBmpa := xBmpToTrans( 'NGITRANS' , SELCOR)
+	//bBmpa := xBmpToTrans( 'NGITRANS' , SELCOR)
 	
+
+	bBmpa := xBmpToTrans( 'NGITRANS' , SELCOR , 20,20 )
+
 	hBitOk     := BT_BitmapLoadFile ('NGITRANS')
 	hBitExcl   := BT_BitmapLoadFile ('EXCLA1')
 
@@ -423,9 +434,16 @@ Function xBrowserMtr( nRowIni ,  aDatas1 , cParent   , nLarg1  , cBrwName , nCol
 	lNoHorzScr := .f.
 
 
+	aM1 := {}
+   //Aadd( aM1 ,  Eval(  { ||   {aMtrFiltr[nQ1][1] ,  aMtrFiltr[nQ1][3]}      }) )
+   //Aadd( aM1 ,  Eval(  { ||   {aMtrFiltr[2][1] ,  aMtrFiltr[2][3]}      }) )
+
+   For nZ1 := 1 To 10
+      Aadd( aM1 ,  Eval(  bBlockMtr ) )
+      nQItem++
+   Next 
+
 	EncheMVis( nTamPag  , .f.  )
-
-
 
 	cBrowserName  := cBrwName
 	//'Win_Browser'
@@ -2384,8 +2402,8 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
 	Local nLineSeta := nTamSubMenuConsulta
 	Local nLinDrop := 0
 	Local lEnabled := .t.
-	Local bBmpZ := xBmpToTrans( 'BOLAZAZUL1')
-	Local bBmpa := xBmpToTrans( 'NGITRANS' , SELCOR , 20,20 )
+	//Local bBmpZ := xBmpToTrans( 'BOLAZAZUL1')
+//	Local bBmpa := xBmpToTrans( 'NGITRANS' , SELCOR , 20,20 )
 	Local cCor
 	Local nCor
 	Local nLinB := 0
@@ -2397,6 +2415,8 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
 	Local nPg := 0
 	Local hBitmap
 	Local nPulo1
+
+	Local bBmpy 
 
 
 	//Local hBitOk     := BT_BitmapLoadFile ('NGITRANS')
@@ -2463,7 +2483,7 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
 
 
 	For n1 := 1 To Len(aMtrOp)
-
+		
 		nQtCol := Len(  aMtrOp[n1][2]  )
 		aMz1   := AClone( aMtrOp[n1][2]  )
 
@@ -2481,6 +2501,11 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
 			nPulo1 := 1
 		End If 
 
+		If nItemBrwHeight > 20
+			nPulo1 := 2
+		End If 
+
+
 		If (nOpselx1 > 0) .And. (aMtrOp[n1][1] == nSelLine ) .And. (lBrwEnable)
 			If lDeleted 
 				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 0  ,    Width    ,    nItemBrwHeight     , SELCOR  , SELCOR  )
@@ -2490,7 +2515,7 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
 
 			If (nColScrool == 0)
 				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 00  ,  nColIniBrw ,    nItemBrwHeight      , SELCOR  , SELCOR  )
-				BT_DrawBitmap (hDC2  , nLine  + nRow + nPulo1   , 2   , 16  , nItemBrwHeight , BT_SCALE , bBmpa  )				
+				BT_DrawBitmap (hDC2  , nLine  + nRow + nPulo1   , 2   , 16  , nItemBrwHeight , BT_STRETCH , bBmpa  )						
 			End If
 
 		Else 
@@ -2513,21 +2538,64 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
 				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow    , 00  , Width ,    nItemBrwHeight     , nCorBk  , nCorBk   )
 				lPar := .t.
 			End If
+
 		End If 
 
-		For n2 := 1 to Len(aMz1) 
+		For n2 := 1 to Len(aMz1) - 1		    			
+
+			cimg1 := ''
+
 			nTam1  	 := aTams2[n2]
 			cTexto   := Alltrim(Hb_Utf8ToStr(  aMz1[n2] )) 			
 			nQAcento := QtAcento(Alltrim( cTexto  ) )			
 			nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
-			cTexto := Replicate('A' ,  nTam1 + 1  )
-			n12 := GetTextWidth( hDC2 , cTexto , hFontBrw )
+			//cTexto := Replicate('A' ,  nTam1 + 1  )
+			n12 := GetTextWidth( hDC2 , Replicate('A' ,  nTam1 + 1  ) , hFontBrw )
 			nTam := n12
 			cTexto2 := Left(Alltrim(Hb_Utf8ToStr(  aMz1[n2] )) 	, nTam1 )
 			cTexto1 := Padr( Alltrim(  Hb_AnsiToOem( cTexto2 )) ,n12+1) 
 			n22 := nTamx1 + nCol +  (250 * nTam1)
 			nTypeText    := BT_TEXT_TRANSPARENT
 			cCor := FONTCOR			//DoEvents()
+
+
+			If (Left(cTexto,5) = 'image')
+				cImg1 := Right(cTexto,Len(cTexto) - 6)
+				//msginfo('ok2')
+			End If 
+
+
+/*
+			If (ValType(  aMz1[n2] ) != 'L')
+				nTam1  	 := aTams2[n2]
+				cTexto   := Alltrim(Hb_Utf8ToStr(  aMz1[n2] )) 			
+
+				If (Left(cTexto,5) = 'image')
+					cImg1 := Right(cTexto,Len(cTexto) - 6)
+				Else 
+					nQAcento := QtAcento(Alltrim( cTexto  ) )			
+					nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
+					cTexto := Replicate('A' ,  nTam1 + 1  )
+					n12 := GetTextWidth( hDC2 , cTexto , hFontBrw )
+					nTam := n12
+					cTexto2 := Left(Alltrim(Hb_Utf8ToStr(  aMz1[n2] )) 	, nTam1 )
+					cTexto1 := Padr( Alltrim(  Hb_AnsiToOem( cTexto2 )) ,n12+1) 
+					n22 := nTamx1 + nCol +  (250 * nTam1)
+					nTypeText    := BT_TEXT_TRANSPARENT
+					cCor := FONTCOR			//DoEvents()
+				End If 
+
+			Else 
+				cImg1 := Iif(   aMz1[n2] , "CHKOK"  , "CHKNO"    )    
+				nTam := 17              			   
+			End If 	
+			*/
+
+			
+
+			If !Empty( Alltrim(cImg1))
+				cTexto1 := cImg1
+			End If 
 
 			If (nOpselx1 > 0) .And. (aMtrOp[n1][1] == nSelLine ) .And. (lBrwEnable)
 
@@ -2545,8 +2613,15 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
                     	nFontCor := WHITE
 					End If 
 
-					BT_DrawText ( hDC2 , nLine + nRow + nPulo1  , nCol+1 ,   cTexto1 , xFont2  , 9 , nFontCor ,  SELCOR   , ;
+					If Empty(Alltrim(cImg1))
+						BT_DrawText ( hDC2 , nLine + nRow + nPulo1  , nCol+1 ,   cTexto1 , xFont2  , 9 , nFontCor ,  SELCOR   , ;
 						nTypeText ,	nAlingText, nOrientation )
+					Else 
+						bBmpy := xBmpToTrans( cImg1, SELCOR , 15,15 )
+						BT_DrawBitmap (hDC2  , nLine  + nRow + nPulo1   , nCol+1    , 15  , 15 , BT_SCALE , bBmpy  )				
+						BT_BitmapRelease(bBmpy)
+					End If
+
 				End If
 
 			Else 
@@ -2555,7 +2630,14 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
                     cCor := WHITE
 				End If 
 
-				BT_DrawText ( hDC2 , nLine + nRow + nPulo1  , nCol+1  ,  cTexto1 , xFont2, 9 ,  cCor , nCorBk , nTypeText, nAlingText, nOrientation )
+				If Empty(Alltrim(cImg1))
+					BT_DrawText ( hDC2 , nLine + nRow + nPulo1  , nCol+1  ,  cTexto1 , xFont2, 9 ,  cCor , nCorBk , nTypeText, nAlingText, nOrientation )
+				Else 
+					bBmpy := xBmpToTrans( cImg1, nCorBk , 15,15 )
+					BT_DrawBitmap (hDC2  , nLine  + nRow + nPulo1   , nCol+1    , 15  , 15 , BT_SCALE , bBmpy  )				
+					BT_BitmapRelease(bBmpy)
+				End If 
+
 			End If 
 
 			nCol += nTam
@@ -4918,9 +5000,9 @@ Static Function xMapCols( aCabs , aTamx1 , aTipos1  )
 
 	aMapsCol := {}
 
-	For n1 := 1 To Len(aCabs) + 1		
+	For n1 := 1 To Len(aCabs) + 1 		
 
-		If (n1 < (Len(aCabs) + 1))
+		If (n1 < (Len(aCabs) + 1 ))
 			nTam1  := aTamx1[n1]
 			nQAcento := QtAcento(Alltrim(aCabs[n1]) )
 			nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
