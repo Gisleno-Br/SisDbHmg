@@ -12,7 +12,7 @@ DECLARE WINDOW fFiltro
 DECLARE WINDOW WinSombra3
 
 
-
+Static aMtrFiltr := {}
 
 
 FUNCTION LoadFitros( cTabela1 )
@@ -42,7 +42,7 @@ FUNCTION LoadFitros( cTabela1 )
 
    PRIVATE cFiltrox1 := ''
 
-   Private aMtFiltr := {}
+   
 
    Private lNextOp := .f. 
 
@@ -55,14 +55,15 @@ FUNCTION LoadFitros( cTabela1 )
    
 	DEFINE WINDOW fFiltrosCad ;
 		AT 0,0  ;				
-		WIDTH 850 HEIGHT 350 ;      
+		WIDTH 850 HEIGHT 550 ;      
 		CHILD TITLE 'xProcFiltro'  ;		
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE  ; 
 		ON PAINT Nil ;
       ON GOTFOCUS Nil 
-/*
+      /*
+
       DEFINE button MoveControl1
-         Row 220
+         Row 320
          Col 15
          width 120
          backcolor rgb(34,34,34)
@@ -73,7 +74,7 @@ FUNCTION LoadFitros( cTabela1 )
 
 
        DEFINE button MoveControl3
-         Row 245
+         Row 345
          Col 15
          width 120
          backcolor rgb(34,34,34)
@@ -84,7 +85,7 @@ FUNCTION LoadFitros( cTabela1 )
 
        
        DEFINE button MoveControl4
-         Row 220
+         Row 320
          Col 215
          width 120
          backcolor rgb(34,34,34)
@@ -95,7 +96,7 @@ FUNCTION LoadFitros( cTabela1 )
 
               
        DEFINE button MoveControl5
-         Row 220
+         Row 320
          Col 335
          width 120
          backcolor rgb(34,34,34)
@@ -108,7 +109,7 @@ FUNCTION LoadFitros( cTabela1 )
        
               
        DEFINE button MoveControl52
-         Row 245
+         Row 345
          Col 335
          width 120
          backcolor rgb(34,34,34)
@@ -117,7 +118,9 @@ FUNCTION LoadFitros( cTabela1 )
          action EnableBrw()
        END button
 
-*/
+       */
+
+
 
 
 	END WINDOW	
@@ -151,7 +154,7 @@ FUNCTION LoadFitros( cTabela1 )
    
    
    RemoveHandler( "EventBrowser" )
-   xInitFiltr()
+  // xInitFiltr()
 
 
    
@@ -167,9 +170,9 @@ FUNCTION LoadFitros( cTabela1 )
    
    aMtrFiltr := {}
 
-   For n1 := 1 to 500
-         Aadd( aMtrFiltr , { StrZero(n1,3) ,  'image=CHKOK'   ,      '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
-             '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '  , .t. } )
+   For n1 := 1 to 5
+         Aadd( aMtrFiltr , {  .t.  ,  'ZE JOSE '   ,      '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
+             '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '  , .t. , .t. , 0   } )
 
    Next   
 
@@ -186,18 +189,59 @@ FUNCTION LoadFitros( cTabela1 )
    xSombraZ( cSalvaJan , nR , nC  , GetProperTy('fFiltrosCad','Width') , GetProperTy('fFiltrosCad','Height')      )
 
   // aMtrFiltr := {}
-   
-   l_Ok := xBrowserMtr( 30 ,  aMtrFiltr ,    { ||   { aMtrFiltr[nQItem][1] ,  aMtrFiltr[nQItem][3]  }    }  ,  'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' } , ;
-      {10,15,60 , 75 , 60 ,45,75  }  , { 'C' , 'C' , 'C' , 'C' , 'C' ,'C' ,'C'} , .f. , .t. , 200 , .t. , .f. )
 
-   yRefresh( 'LstBoxFiltro'  ) 
-  // cHeaderName := 'Win_HeadMtr' + Left('LstBoxFiltro',4)
-   DoEvents()
-  // yGoTop()
+  aCampos := { ||   { Iif(aMtrFiltr[nQItem][1]  , 'image=CHKOK'  ,  'image=CHKNO'   )   ,  aMtrFiltr[nQItem][2] + ' ' + StrZero(nQItem,5) ,  aMtrFiltr[nQItem][3] , ;
+    aMtrFiltr[nQItem][4]  , aMtrFiltr[nQItem][5] , aMtrFiltr[nQItem][6]   }    } 
+   
+   l_Ok := xBrowserMtr( 30 ,  aMtrFiltr ,    aCampos ,  'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' } , ;
+      {6,60 , 75 , 60 ,45,75  }  , { 'C' , 'C' , 'C' , 'C' , 'C' ,'C' } , .f. , .t. , 200 ,  { | cParent , nRow1 , nCol1 , ainFCol | yEditMtr( cParent , nRow1 , nCol1 , ainfCol )} )
+
+   yRefresh( 'LstBoxFiltro'  )   
+   DoEvents()  
    DoEvents() 
+
 
    
 RETURN cFiltrox1
+
+
+Function yEditMtr( cFrmParent , nLinha , nColuna , aInf_Col1  )
+
+   //msginfo(Str(   nColuna  ))
+
+   Local nIt := yRetIndex()
+
+   If (nColuna == 1)
+       aMtrFiltr[nIt][1] := !aMtrFiltr[nIt][1]       
+      yRefresh( 'LstBoxFiltro'  ,  ,  nIt ) 
+   End If 
+
+    If (nColuna == 4)
+
+       DEFINE button MoveControl5
+         Parent &cFrmParent
+         Row ((nLinha - 1) * nItemSubHeight)+1
+         Col aInf_Col1[2]
+         width aInf_Col1[5]
+         backcolor rgb(34,34,34)
+		   height  nItemSubHeight
+         caption "Editar Item"
+         action ExcluirItem()         
+       END button
+
+       BringToTop(  GetControlHandle(  'MoveControl5' , cFrmParent )   )
+
+       SetFocus(    GetControlHandle(  'MoveControl5' , cFrmParent )     )
+
+       DoEvents()
+
+       msginfo('Criado')
+
+        
+
+    End If 
+
+Return 
 
 
 Function PegarItem()
@@ -208,7 +252,11 @@ Return
 
 Function EnableBrw()
 
-  yEnabledBrw( .f. )
+   If yBrwEnabled()
+      yEnabledBrw( .f. )     
+   Else 
+      yEnabledBrw( .t. )     
+   End If 
 
 Return 
 
@@ -217,23 +265,24 @@ Function EditarItem()
   Local nIt := yRetIndex()
   Local aM1 := {}
 
-   Aadd( aM1   , { StrZero(n1,3) ,  ' Filtro Modicado ' + Strzero(n1,5) , 'ZZZZZZZZ'  , '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
-             '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '} )
+   //Aadd( aM1   , { StrZero(n1,3) ,  ' Filtro Modicado ' + Strzero(n1,5) , 'ZZZZZZZZ'  , '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
+     //        '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '} )
+
+   aMtrFiltr[nIt][2] := ' Filtro Modicado ' + Strzero(n1,5) 
+   aMtrFiltr[nIt][1] := ' ZZZZ '
+
 
    
-   yRefresh( 'LstBoxFiltro'  ,  , aM1  , nIt ) 
+   yRefresh( 'LstBoxFiltro'  ,  ,  nIt ) 
 
 
 Return 
 
 
 Function ExcluirItem()
-
    
-  Local nIt := yRetIndex()
-
-  
-   yRefresh( 'LstBoxFiltro'  ,  ,  , , nIt ) 
+  Local nIt := yRetIndex()  
+   yRefresh( 'LstBoxFiltro'  ,  ,   , nIt ) 
 
 Return 
 
@@ -242,16 +291,10 @@ Function InsereRg()
 
   
    Local aM1 := {}
-
-   //msginfo('lpp222')
-
-   For n1 := 1 to 5
-         Aadd( aM1   , { StrZero(n1,3) ,  ' Filtro  ' + Strzero(n1,5) , '1adasdsadas'  , '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
+    Aadd( aMtrFiltr   , { 'Novo' ,  ' Filtro Nuevo' , '1adasdsadas'  , '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
              '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '} )
 
-   Next   
-
-   yRefresh( 'LstBoxFiltro'  , aM1 ) 
+   yRefresh( 'LstBoxFiltro'  , .t.  ) 
 
 
 REturn 

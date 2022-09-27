@@ -67,6 +67,7 @@ Static lTrack39 := .f.
 Static lSizeMode := .f.
 Static lDragHeader := .f. 
 Static lEnabled2 := .t.
+Static bBlock1   := { || .f. }
 Static lDisphint := .f.
 Static c_BrowName := ''
 Static lAndamento := .f.
@@ -92,7 +93,11 @@ Static hBitOk
 Static hBitOrd1 
 Static hBitOrd2 
 
+Static bBlkEdit
+
 Static lCheckBox := .f. 
+
+Static aDataOrig := {}
 
 
 
@@ -348,12 +353,14 @@ Return aMatriz
 
 
 
-Function xBrowserMtr( nRowIni ,  aDatas1 ,  bBlockMtr ,   cParent   , nLarg1  , cBrwName , nCol  , aCabecalho , aTamanhos , aTipos , lDicionario , lEnabled1 , nAltura1 , lokCheck , lOkEdit )
+
+Function xBrowserMtr( nRowIni ,  aDatas1 ,  bBlockMtr ,   cParent   , nLarg1  , cBrwName , nCol  , aCabecalho , aTamanhos , aTipos , lDicionario , lEnabled1 , nAltura1 ,   bFuncEdit  ,lokCheck , lOkEdit )
 
 
 	Local nTamWidth := yRetLargura(  aTamanhos  )
 	Local nTam1 := GetTextoTam( ' '  , cParent )
 	Local nIndex22
+	Local aM1  := {}
 	Private aOpx1 := 0
 	DEFAULT nLarg1  := GetDeskTopWidth() - 40
 	DEFAULT nCol := 10
@@ -362,6 +369,11 @@ Function xBrowserMtr( nRowIni ,  aDatas1 ,  bBlockMtr ,   cParent   , nLarg1  , 
 	DEFAULT aCabecalho := {}
 	DEFAULT lDicionario := .t.
 	DEFAULT lEnabled1   := .t.
+
+	DEFAULT bFuncEdit := Nil 
+
+
+	bBlkEdit := bFuncEdit
 
 
 	DEFAULT lokCheck := .f. 
@@ -379,24 +391,11 @@ Function xBrowserMtr( nRowIni ,  aDatas1 ,  bBlockMtr ,   cParent   , nLarg1  , 
 	nLimiteCol := nLarg1
 
 
-
-	//msginfo(  Str( nLimiteCol  )  )
-
 	bBmpZ := xBmpToTrans( 'BOLAZAZUL1')
-	//bBmpa := xBmpToTrans( 'NGITRANS' , SELCOR)
-	
-
 	bBmpa := xBmpToTrans( 'NGITRANS' , SELCOR , 20,20 )
 
 	hBitOk     := BT_BitmapLoadFile ('NGITRANS')
 	hBitExcl   := BT_BitmapLoadFile ('EXCLA1')
-
-
-	
-	//Local hBitOk     := BT_BitmapLoadFile ('NGITRANS')
-	//Local hBitExcl   := xBmpToTrans('EXCLAMACAOBIG' , {250,242,176}  , 64 , 64 )
-	
-
 
 	
 	yBmp1 := BT_BitMapLoadFile('SCRUP1')
@@ -408,6 +407,9 @@ Function xBrowserMtr( nRowIni ,  aDatas1 ,  bBlockMtr ,   cParent   , nLarg1  , 
 
 
 	hFontBrw := HMG_CreateFont (  GetDc( GetFormHandle('Main') ) ,  FONTBROWSER , FONTBROWSERSIZE, .f., .f., .f., .f. )
+
+
+	aDataOrig := aDatas1
 
 
 	aCabec1 := Aclone(aCabecalho)
@@ -433,15 +435,18 @@ Function xBrowserMtr( nRowIni ,  aDatas1 ,  bBlockMtr ,   cParent   , nLarg1  , 
 	nLargTotal := nTamWidth
 	lNoHorzScr := .f.
 
+	bBlock1 := bBlockMtr
+
 
 	aM1 := {}
-   //Aadd( aM1 ,  Eval(  { ||   {aMtrFiltr[nQ1][1] ,  aMtrFiltr[nQ1][3]}      }) )
-   //Aadd( aM1 ,  Eval(  { ||   {aMtrFiltr[2][1] ,  aMtrFiltr[2][3]}      }) )
 
-   For nZ1 := 1 To 10
+   For nZ1 := 1 To Len(aDatas1)
       Aadd( aM1 ,  Eval(  bBlockMtr ) )
       nQItem++
    Next 
+
+   aMt1 := Aclone(aM1)
+
 
 	EncheMVis( nTamPag  , .f.  )
 
@@ -752,12 +757,11 @@ Function LabelBrwEvnt()
 		BrwSelItem()
 	End If 
 
-
 	
     IF EventMSG() == WM_LBUTTONDBLCLK
-         MsgInfo ('Dbl')
-
-
+		If (bBlkEdit != Nil)			//nColSele
+			Eval(   bBlkEdit , cEspelhoBrw , nIndex1 , nColSele , aMapsCol[nColSele]  )			
+		End If 
 	End If 
 
 Return 
@@ -1879,12 +1883,11 @@ Function xTecBrowMtr()
 
 		End If
 
-		If (nMsg == WM_LBUTTONDBLCLK)
-			//msginfo('ok22 --')
-		End If 
-		
 		If (nWParam == 13)
-			msginfo('ok22 Enter')
+			//msginfo('ok22 Enter')
+			If (bBlkEdit != Nil)
+				Eval(   bBlkEdit , cEspelhoBrw , nIndex1 , nColSele  , aMapsCol[nColSele] )
+			End If 
 		End If 
 
 
@@ -1936,7 +1939,7 @@ Function xTecBrowMtr()
 			End If
 
 			
-			ySelCol( nColz2 )	
+			ySelCol( nColz2 )				
 			DoEvents()
 			SysWait(0.02)
 
@@ -2446,29 +2449,18 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
 
 
 	hDC2 := BT_CreateDC (cForm ,   BT_HDC_INVALIDCLIENTAREA  , @BTstruct)
-
-
-
-	//BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width  ,    Height    , WHITE , WHITE  )
-
-	//If (nOpselx1 = 0)
 	BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width  ,    Height    , WHITE , WHITE  )
-	//End If
+	
 
 	If nClear1 > 0
-
 		If (Mod( nClear1, 2 ) = 0)
 			nCor := WHITE
 		Else
 			nCor := CORBROWSE
 		End If
-		//BT_DrawGradientFillVertical ( hDC2 ,   (nClear1  * nItemBrwHeight)    , 0  , Width  ,    nHeightBmp     ,  nCor  , nCor   )
-
 	End If
 
 	nIndice := -9999
-
-
 
 	If (Len(aMtrOp) == 0)
 		BT_DrawGradientFillHorizontal ( hDC2 ,  0   , 0  , Width  ,    Height     ,  {250,242,176}  , WHITE   )
@@ -2513,9 +2505,9 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
 				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 0  ,    Width    ,    nItemBrwHeight     ,  GRAY , GRAY  )
 			End If 
 
-			If (nColScrool == 0)
+			If (nColScrool == 0) .And. (lEnabled) .And. (lDeleted)
 				BT_DrawGradientFillVertical ( hDC2 ,  nLine + nRow   , 00  ,  nColIniBrw ,    nItemBrwHeight      , SELCOR  , SELCOR  )
-				BT_DrawBitmap (hDC2  , nLine  + nRow + nPulo1   , 2   , 16  , nItemBrwHeight , BT_STRETCH , bBmpa  )						
+				BT_DrawBitmap (hDC2  , nLine  + nRow + nPulo1   , 2   , 16  , nItemBrwHeight - 2 , BT_STRETCH , bBmpa  )						
 			End If
 
 		Else 
@@ -2541,15 +2533,14 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
 
 		End If 
 
-		For n2 := 1 to Len(aMz1) - 1		    			
+		For n2 := 1 to Len(aMz1) 
 
 			cimg1 := ''
 
 			nTam1  	 := aTams2[n2]
 			cTexto   := Alltrim(Hb_Utf8ToStr(  aMz1[n2] )) 			
 			nQAcento := QtAcento(Alltrim( cTexto  ) )			
-			nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
-			//cTexto := Replicate('A' ,  nTam1 + 1  )
+			nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1			
 			n12 := GetTextWidth( hDC2 , Replicate('A' ,  nTam1 + 1  ) , hFontBrw )
 			nTam := n12
 			cTexto2 := Left(Alltrim(Hb_Utf8ToStr(  aMz1[n2] )) 	, nTam1 )
@@ -2559,39 +2550,14 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
 			cCor := FONTCOR			//DoEvents()
 
 
-			If (Left(cTexto,5) = 'image')
-				cImg1 := Right(cTexto,Len(cTexto) - 6)
-				//msginfo('ok2')
+			If (Left(cTexto,5) = 'image') .And. (lDeleted)
+				cImg1 := Right(cTexto,Len(cTexto) - 6)				
 			End If 
 
+			If (Left(cTexto,5) = 'image') .And. (!lDeleted)
+				cTexto1 := ''
+			End If 
 
-/*
-			If (ValType(  aMz1[n2] ) != 'L')
-				nTam1  	 := aTams2[n2]
-				cTexto   := Alltrim(Hb_Utf8ToStr(  aMz1[n2] )) 			
-
-				If (Left(cTexto,5) = 'image')
-					cImg1 := Right(cTexto,Len(cTexto) - 6)
-				Else 
-					nQAcento := QtAcento(Alltrim( cTexto  ) )			
-					nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1
-					cTexto := Replicate('A' ,  nTam1 + 1  )
-					n12 := GetTextWidth( hDC2 , cTexto , hFontBrw )
-					nTam := n12
-					cTexto2 := Left(Alltrim(Hb_Utf8ToStr(  aMz1[n2] )) 	, nTam1 )
-					cTexto1 := Padr( Alltrim(  Hb_AnsiToOem( cTexto2 )) ,n12+1) 
-					n22 := nTamx1 + nCol +  (250 * nTam1)
-					nTypeText    := BT_TEXT_TRANSPARENT
-					cCor := FONTCOR			//DoEvents()
-				End If 
-
-			Else 
-				cImg1 := Iif(   aMz1[n2] , "CHKOK"  , "CHKNO"    )    
-				nTam := 17              			   
-			End If 	
-			*/
-
-			
 
 			If !Empty( Alltrim(cImg1))
 				cTexto1 := cImg1
@@ -3369,15 +3335,10 @@ Return .t.
 Static Function xGoBottom()
 
 
+
 	Local nPos1 := (Len(aMt1) * nItemBrwHeight) - (nTamPAg * nItemBrwHeight)
 
-
-
-	//DoEvents()
-
-
 	nIndex1     := Len(aMt1)
-
 	nItemX5     := Len(aMt1)
 	nClearIt2   := nItemX5
 	nClear1     := nItemX5
@@ -3407,15 +3368,8 @@ Static Function xGoBottom()
 	yDcToDc()
 	yDcToDEspe()
 	nIndex1 := Len(aMt1)
-
-
 	nClearIt2 := nTamPag
-
-
-	//SysWait(0.01)
 	l_HitB := .t.
-
-
 
 Return
 
@@ -3460,6 +3414,9 @@ Return
 // Return
 
 
+Function yBrwEnabled()
+Return lAtivo1 
+
 
 Function yEnabledBrw( lEnabled )
 
@@ -3486,20 +3443,50 @@ Function yEnabledBrw( lEnabled )
 
 		SET WINDOW &cBarraName2 TRANSPARENT TO 225
 
-		BT_ClientAreaInvalidateAll(cBarraVfrm)
-		yDcBarH1eMtr()
-
-		BT_ClientAreaInvalidateAll(cBarraName2)
-		DoEvents() 
-		yDcBarH1()				
+			
 
 	Else 
 
 
+		SET WINDOW &cBrowserName TRANSPARENT TO 0
+		yRefresh( c_BrowName )
+		DoEvents()
 
+		lEnabled2 := .t. 				
+		lEnabledy := .t. 
+
+		SET WINDOW &cHeaderJan TRANSPARENT TO 0
+		DoEvents()					
+		BT_ClientAreaInvalidateAll(cHeaderJan)
+		xDcBarHeader()
+		DoEvents()				
+
+		DoEvents() 
+		yDcBarH1()							
+		SET WINDOW &cBarraVfrm TRANSPARENT TO 0
+
+		SET WINDOW &cBarraName2 TRANSPARENT TO 0
+
+		
 	End If 
 
+
+
+	BT_ClientAreaInvalidateAll(cBarraVfrm)
+	yDcBarH1eMtr()
+
+	BT_ClientAreaInvalidateAll(cBarraName2)
+	DoEvents() 
+	yDcBarH1()			
+
 	
+
+	If lAtivo1
+		yGoTop()
+	End If 
+
+	SysWait(0.04)
+	DoEvents()
 
 	
 
@@ -3510,13 +3497,21 @@ Function yEnabledBrw( lEnabled )
 Return 
 
 
-Function yRefresh( cBrName , aMtNew ,  aMatu , nItem  , nItemDel )
+//Function yRefresh( cBrName , aMtNew ,  aMatu , nItem  , nItemDel )
+
+Function yRefresh( cBrName , lNovo1 , nItemEdit  , nItemDel )
 
 	Local nHw1 
 	Local n1 
 	Local lEmpty := (Len(aMt1) == 0)
+	Local aMz1 := {}	
 
-	DEFAULT aMtNew := Nil 
+	//DEFAULT aMtNew := Nil 
+	DEFAULT lNovo1 := .f.
+
+	DEFAULT nItemEdit := 0
+	DEFAULT nItemDel  := 0
+
 
 
 	If (_isWindowDefined(cBrName)) .And. (!isWindowVisible(  GetFormHandle(cBrName)   ))		
@@ -3581,16 +3576,15 @@ Function yRefresh( cBrName , aMtNew ,  aMatu , nItem  , nItemDel )
 			SysWait(0.05)
 
 
-			If (aMtNew != Nil) .And. (Len(aMtNew) > 0)
+			//If (aMtNew != Nil) .And. (Len(aMtNew) > 0)
 
-                For n1 := 1 To Len(aMtNew)
-                    Aadd(aMt1 , aMtNew[n1] )
-				Next 
+			If lNovo1        
 
-
+				nQItem := Len(  aDataOrig )				
+				Aadd(aMt1 , Eval(  bBlock1 ) )
 				nMaxItem1 := Len(aMt1)
-				nColZ2 := 1
 
+				nColZ2 := 1
 				l_Hitt := .f. 
 			
 				//Horizontal B
@@ -3635,9 +3629,11 @@ Function yRefresh( cBrName , aMtNew ,  aMatu , nItem  , nItemDel )
 				
 			Else 
 
-			    If (aMatu != Nil) .And. (   Len(aMatu) == 1  ) .And. (nItem > 0)
-					aMt1[ nItem ]        := aMatu[1]
-					aMDisplay[ nItem][2] := aMatu[1]
+			    
+				If (nItemEdit > 0)					
+					nQItem := nItemEdit 
+					aMt1[ nItemEdit ]        := Eval(  bBlock1 )                            //aDataOrig[nItemEdit]					
+					aMDisplay[ nItemEdit][2] := Eval(  bBlock1 )                              //aDataOrig[nItemEdit]
 					xRefBrow()
 				Else 
 					If (nItemDel != Nil ) .And. ( nItemDel > 0)
@@ -4172,6 +4168,7 @@ Static Function ySelCol( nCol1 )
 	BT_ClientAreaInvalidateAll(cHeaderJan)
 
 	DoEvents()
+
 	
 	xDcBarHeader()
 	yDcBarH1eMtr()
