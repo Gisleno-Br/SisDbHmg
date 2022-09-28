@@ -171,7 +171,7 @@ FUNCTION LoadFitros( cTabela1 )
    aMtrFiltr := {}
 
    For n1 := 1 to 5
-         Aadd( aMtrFiltr , {  .t.  ,  'ZE JOSE '   ,      '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
+         Aadd( aMtrFiltr , {  .f.  ,  'ZE JOSE '   ,      '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
              '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '  , .t. , .t. , 0   } )
 
    Next   
@@ -194,7 +194,9 @@ FUNCTION LoadFitros( cTabela1 )
     aMtrFiltr[nQItem][4]  , aMtrFiltr[nQItem][5] , aMtrFiltr[nQItem][6]   }    } 
    
    l_Ok := xBrowserMtr( 30 ,  aMtrFiltr ,    aCampos ,  'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' } , ;
-      {6,60 , 75 , 60 ,45,75  }  , { 'C' , 'C' , 'C' , 'C' , 'C' ,'C' } , .f. , .t. , 200 ,  { | cParent , nRow1 , nCol1 , ainFCol | yEditMtr( cParent , nRow1 , nCol1 , ainfCol )} )
+      {6,60 , 75 , 60 ,45,75  }  , { 'C' , 'C' , 'C' , 'C' , 'C' ,'C' } , .f. , .t. , 200 , ;
+       { | cParent , nRow1 , nCol1 , ainFCol , nScrolly| yEditMtr( cParent , nRow1 , nCol1 , ainfCol , nScrolly )} , ;
+       { || yDelMtr()}   )
 
    yRefresh( 'LstBoxFiltro'  )   
    DoEvents()  
@@ -204,12 +206,27 @@ FUNCTION LoadFitros( cTabela1 )
    
 RETURN cFiltrox1
 
-
-Function yEditMtr( cFrmParent , nLinha , nColuna , aInf_Col1  )
-
-   //msginfo(Str(   nColuna  ))
+Function yDelMtr()
 
    Local nIt := yRetIndex()
+   Local lOk1 := !aMtrFiltr[nIt][1]
+
+   aMtrFiltr[nIt][1] := !aMtrFiltr[nIt][1]
+
+Return lOk1
+
+
+Function yEditMtr( cFrmParent , nLinha , nColuna , aInf_Col1 , nScrollz )
+
+   
+   Local nColObj := aInf_Col1[ 2]
+   Local lScr1 := .f. 
+
+   Local nIt := yRetIndex()
+
+   If (nScrollz > 0) .And. (nScrollz < aInf_Col1[ 2] )
+      nColObj := (aInf_Col1[2] - nScrollz) - 1
+   End If 
 
    If (nColuna == 1)
        aMtrFiltr[nIt][1] := !aMtrFiltr[nIt][1]       
@@ -220,9 +237,9 @@ Function yEditMtr( cFrmParent , nLinha , nColuna , aInf_Col1  )
 
        DEFINE button MoveControl5
          Parent &cFrmParent
-         Row ((nLinha - 1) * nItemSubHeight)+1
-         Col aInf_Col1[2]
-         width aInf_Col1[5]
+         Row ((nLinha - 1) * nItemSubHeight)
+         Col nColObj 
+         width aInf_Col1[5]+2
          backcolor rgb(34,34,34)
 		   height  nItemSubHeight
          caption "Editar Item"
@@ -235,7 +252,7 @@ Function yEditMtr( cFrmParent , nLinha , nColuna , aInf_Col1  )
 
        DoEvents()
 
-       msginfo('Criado')
+       //msginfo('Criado')
 
         
 

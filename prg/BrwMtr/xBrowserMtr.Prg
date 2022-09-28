@@ -206,6 +206,8 @@ Static bBmpa
 //Static hBitOk  
 Static hBitExcl 
 
+Static bBlkDel := Nil 
+
 
 
 
@@ -354,7 +356,8 @@ Return aMatriz
 
 
 
-Function xBrowserMtr( nRowIni ,  aDatas1 ,  bBlockMtr ,   cParent   , nLarg1  , cBrwName , nCol  , aCabecalho , aTamanhos , aTipos , lDicionario , lEnabled1 , nAltura1 ,   bFuncEdit  ,lokCheck , lOkEdit )
+Function xBrowserMtr( nRowIni ,  aDatas1 ,  bBlockMtr ,   cParent   , nLarg1  , cBrwName , nCol  , aCabecalho , aTamanhos , aTipos , lDicionario , lEnabled1 , nAltura1 ,   bFuncEdit  , ;
+     bFunDel  )
 
 
 	Local nTamWidth := yRetLargura(  aTamanhos  )
@@ -375,15 +378,8 @@ Function xBrowserMtr( nRowIni ,  aDatas1 ,  bBlockMtr ,   cParent   , nLarg1  , 
 
 	bBlkEdit := bFuncEdit
 
-
-	DEFAULT lokCheck := .f. 
-	
-	lCheckBox := lokCheck
-
+	bBlkDel  := bFunDel
 	nItemBrwHeight := nItemSubHeight 
-	//- 5
-
-
 	nTamPag := Int(  nAltura1 / nItemBrwHeight   )
 
 
@@ -513,6 +509,9 @@ Function xBrowserMtr( nRowIni ,  aDatas1 ,  bBlockMtr ,   cParent   , nLarg1  , 
 		END LABEL
 
 	END WINDOW
+
+	nIndk1 := 4852
+	CREATE EVENT PROCNAME ProcOnKey() STOREINDEX nIndk1
 
 
 	
@@ -688,6 +687,218 @@ REturn
 
 
 
+//CREATE EVENT PROCNAME ProcOnKey()
+
+
+Function ProcOnKey()
+
+	Local lCtrl := .f. 
+
+	Local nHWnd := EventHwnd() 
+	
+
+
+	If EventMSG() == WM_KEYDOWN
+
+		If (EventWPARAM() == VK_RIGHT)
+			lScrollFim := ( (xGetScrolPos()+ xH_RtLimite() ) <= xCalcTam()  )			
+			If  !lScrollFim
+				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal.")  )
+				Return
+			End If			
+		    If !(Alltrim(Str( nColz2)) $ xGetColsVis( nLimiteCol ) )
+				 yGoColumn()	
+			End If 
+			nColZ2++
+			nPos1  := xGetInfCw1(   nColz2 , 2  )
+			nPos2  := xGetInfCw1(   nColz2 , 3  )
+			nSize1 := xGetInfCw1(   nColz2 , 5  )			
+
+			If (nPos2 >= nLimiteCol) 
+			    While ( (nPos1 - xGetScrolPos()) > 5) .And. ;
+					( (xGetScrolPos()+ xH_RtLimite() ) <= xCalcTam()  )
+						nY1 := xDoScrolV( .t. , .t. , , ,2  )       
+						IncrCont1( .t. )
+						DoEvents()				
+
+						If nY1 > 0
+							nLimiteCol += nY1
+						End If 
+				Enddo 
+			Else
+
+			End If			
+			
+			ySelCol( nColz2 )
+			DoEvents()
+			SysWait(0.01)
+		End If
+
+
+		If (EventWPARAM() == VK_LEFT)
+			If nColz2 == 0
+				Return
+			End If 
+			If  (xGetScrolPos() <= 0)
+				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))
+				Return			
+			End If
+
+			lScrollFim := (xGetScrolPos() > 0)			
+			If !(Alltrim(Str( nColz2)) $ xGetColsVis( nLimiteCol ) )			
+				 yGoColumn()	
+			End If 
+
+			nColZ2--
+			nPos1  := xGetInfCw1(   nColz2 , 2  )
+			nPos2  := xGetInfCw1(   nColz2 , 3  )
+			nSize1 := xGetInfCw1(   nColz2 , 5  )
+						
+			If (nPos1 <= xGetScrolPos() ) 
+			    While ( ( xGetScrolPos() - nPos1  ) >= 3 ) .And. ;
+					( xGetScrolPos() > 0)
+						nY1 := xDoScrolV( .f. , .t.  )       
+						IncrCont1( .f. )
+						DoEvents()				
+						If nY1 > 0
+							nLimiteCol -= nY1
+						End If 
+				Enddo                 
+			Else
+
+			End If
+			
+			ySelCol( nColz2 )				
+			DoEvents()
+			SysWait(0.02)
+
+		End If 
+
+
+		While (GetAsyncKeyState(34)) != 0
+
+			xGoPgDn()
+			DoEvents()
+
+			For i := 1 To 255
+				GetAsyncKeyState(i)
+			Next i
+
+			SysWait(0.06)
+
+		Enddo
+
+
+		While (GetAsyncKeyState(33)) != 0
+
+			xGoPgUp()
+			DoEvents()
+
+			For i := 1 To 255
+				GetAsyncKeyState(i)
+			Next i
+
+			SysWait(0.06)
+
+		Enddo
+
+
+
+		lCtrl := (GetKeyState ( VK_CONTROL ) < 0) .or. (lControlOk)
+
+		IF (lCtrl)
+
+			IF (EventWPARAM() == VK_HOME)
+				xGoTop()
+				cTp1 := "Inicio do Navegador Atingido..."
+				If !_isWindowDefined("Win_Msg")
+					nHan1 := CrieJanTip(  GetProperty( cBrowserName   , 'Row') - 10  , GetProperty(cBrowserName , 'Col') + 150   ,   Alltrim(cTp1)      ,, 0.5 )
+				Else
+					xDispHint( cTp1 , GetProperty( cBrowserName , 'Row') - 10 ,  GetProperty( cBrowserName , 'Col') + 150  )
+				End If
+				DoEvents()
+				xDispUpTam(  cTp1 )
+				xFecheAnimate(  GetFormHandle('Win_Msg') )
+				l_HitB := .f.
+				BT_ClientAreaInvalidateAll (cBarraVfrm)
+				yDcToDc()
+				yDcToDEspe()
+				SysWait(0.03)
+			End If
+
+			IF (EventWPARAM() == VK_END)
+
+				xGoBottom()
+				//DoEvents()
+				
+				cTp1 := "Final do Navegador Atingido..."
+				If !_isWindowDefined("Win_Msg")
+					nHan1 := CrieJanTip(  GetProperty(cBrowserName , 'Row') - 10  , GetProperty(cBrowserName, 'Col') + 150   ,   Alltrim(cTp1)      ,, 0.5 )
+				Else
+					xDispHint( cTp1 , GetProperty(cBrowserName , 'Row') - 10 ,  GetProperty(cBrowserName, 'Col') + 150  )
+				End If
+
+				//DoEvents()
+				xDispUpTam(  cTp1 )
+				xFecheAnimate(  GetFormHandle('Win_Msg') )
+				BT_ClientAreaInvalidateAll (cBarraVfrm)
+				yDcToDc()
+				yDcToDEspe()
+				xCursorWait( .f. )
+
+				DoEvents()				
+				SysWait(0.03)
+
+			End If
+
+		End If
+
+
+	
+		If (EventWPARAM() == 13)			
+			If (bBlkEdit != Nil)			
+				Eval(   bBlkEdit , cEspelhoBrw , nIndex1 , nColSele  , aMapsCol[nColSele] )
+			End If 
+		End If 
+		
+		If (EventWPARAM() == VK_UP) .or. (lUpMouse)
+			lUpMouse := .f.
+			xGoUp()
+			HMG_CleanLastVirtualKeyUp()		
+			DoEvents()
+			lDownMouse := .f.
+			lUpMouse := .f.
+		End If
+
+		
+
+		If (EventWPARAM() == VK_DOWN) .or. (lDownMouse)	
+			xGoDown()
+			lDownMouse := .f.	
+			DoEvents()
+			lDownMouse := .f.
+			lUpMouse := .f.			
+		End If
+
+
+		If (EventWPARAM() == 46)			
+			If (bBlkDel != Nil) //.And. (   nHWnd == GetControlHandle('LabelBrw' , cEspelhoBrw)  )			
+				If Eval(bBlkDel)			    					 
+					aMDisplay[ nIndex1][4] := .f. 
+				Else 
+				   aMDisplay[ nIndex1][4]  := .t. 				  
+				End If 			
+				xRefBrow()					
+			End If 
+		End If 
+
+	End If 
+
+
+REturn 
+
+
+
 
 Function LabelBrwEvnt()
 	#define WM_LBUTTONDBLCLK 515
@@ -701,41 +912,15 @@ Function LabelBrwEvnt()
 
 		cObjSelected := 'BrowserMtr'									
 		nModeBrw := 0
-
 			
 		If (lHasHeader) .And. (!isDrgMode())
 			DoEvents()
 			yOffBarra( cBarrah  )
 			yDcBarH1eMtr()
+			DoEvents()		
 			DoEvents()
-				//yDragOff()
-			DoEvents()
-			DoEvents()
-		//	MSGINFO('g1')
+			DoEvents()		
 		End If
-			
-
-			// If (nHasFocus > 0)
-			// 	lTracking75 := .f.
-			// 	lTracking135 := .f.
-			// 	//	nHasFocus := 0
-			// 	SetWindowCursor( nHWnd , IDC_ARROW )
-			// 	xRefreshBut()
-			// 	DoEvents()
-			// 	yDcToDEspe()
-			// 	DoEvents()
-
-			// 	If  _isWindowDefined("Win_Msg")
-			// 		xHidehint()
-			// 	End If
-			// 	DoEvents()
-
-			// 	DoEvents()
-			// 	yOffBarra( cBarrah  )
-			// 	MSGINFO('g2')
-
-			// Else
-			// End If
 
 	End If 
 
@@ -746,11 +931,28 @@ Function LabelBrwEvnt()
 	//End If 
 
 
-	If EventMSG() == WM_KEYDOWN
-	//	msginfo('Key1')
+	// If EventMSG() == WM_KEYDOWN
+	// //	msginfo('Key1')
 
+	// 	If (EventWPARAM() == 46)
+	// 		cFormName := ''
+	// 		cControl := ''
+	// 		//GetFormNameByHandle ( nHWnd, @cFormName )
+	// 		GetControlNameByHandle(nHWnd, @cControl, @cFormName)
 
-	End If 
+	// 		//msginfo('Del  ' + sTR(nHWnd) + '   ' + cFormName + '   ' + cControl)
+	// 		If (bBlkDel != Nil) //.And. (   nHWnd == GetControlHandle('LabelBrw' , cEspelhoBrw)  )
+	// 			msginfo('Del  ' + sTR(nHWnd) + '   ' + cFormName + '   ' + cControl)
+	// 			If Eval(bBlkDel)			    					 
+	// 				aMDisplay[ nIndex1][4] := .f. 
+	// 			Else 
+	// 			   aMDisplay[ nIndex1][4]  := .t. 				  
+	// 			End If 			
+	// 			xRefBrow()					
+	// 		End If 
+	// 	End If 
+
+	// End If 
 
 
 	If EventMSG() == WM_LBUTTONDOWN
@@ -760,7 +962,7 @@ Function LabelBrwEvnt()
 	
     IF EventMSG() == WM_LBUTTONDBLCLK
 		If (bBlkEdit != Nil)			//nColSele
-			Eval(   bBlkEdit , cEspelhoBrw , nIndex1 , nColSele , aMapsCol[nColSele]  )			
+			Eval(   bBlkEdit , cEspelhoBrw , nIndex1 , nColSele , aMapsCol[nColSele] , nColScrool  )			
 		End If 
 	End If 
 
@@ -1272,11 +1474,9 @@ Function xTecBrowMtr()
 	If HMG_GetLastMouseMessage (@nHWnd) == WM_MOUSEWHEEL	
 		If (nHWnd == GetFormHandle(cEspelhoBrw))			
 			If HIWORD( nWParam ) == 120
-				lDownMouse := .f.
-				lUpMouse := .t.
+				xGoUp()			
 			Else
-				lUpMouse := .f.
-				lDownMouse := .t.
+				xGoDown()			
 			End If
 		End If 
 	End If
@@ -1333,24 +1533,6 @@ Function xTecBrowMtr()
 
 	// Arrasto da BarraH
 	If (nMsg == WM_MOUSEMOVE)
-
-	//	msginfo('lp2')
-
-		
-		//If (nHWnd = GetProperty( cEspelhoBrw , "HANDLE" ))	
-	//	If (nHWnd == GetControlHandle(  'LabelBrw' ,  cEspelhoBrw ))
-			//If (nHasFocus > 0)
-				// nHasFocus := 0
-				// DoEvents()
-				// BT_ClientAreaInvalidateAll (cBarraVfrm)
-				// yDcToDc()
-				// DoEvents()
-				// yDcToDEspe()				
-				//yZeraBarV()
-			//	Return 			
-			//End If 
-			
-		//End If 		
 	
 
 		If (yRetAcende() > 0) .And. (cObjSelected != 'BarraH')
@@ -1806,202 +1988,164 @@ Function xTecBrowMtr()
 
 	If nMsg == WM_KEYDOWN
 
-		For i := 1 To 255
-			GetAsyncKeyState(i)
-		Next i
+		//For i := 1 To 255
+		//	GetAsyncKeyState(i)
+		//Next i
 
 
-		While (GetAsyncKeyState(34)) != 0
+		// While (GetAsyncKeyState(34)) != 0
 
-			xGoPgDn()
-			DoEvents()
+		// 	xGoPgDn()
+		// 	DoEvents()
 
-			For i := 1 To 255
-				GetAsyncKeyState(i)
-			Next i
+		// 	For i := 1 To 255
+		// 		GetAsyncKeyState(i)
+		// 	Next i
 
-			SysWait(0.06)
+		// 	SysWait(0.06)
 
-		Enddo
-
-
-		While (GetAsyncKeyState(33)) != 0
-
-			xGoPgUp()
-			DoEvents()
-
-			For i := 1 To 255
-				GetAsyncKeyState(i)
-			Next i
-
-			SysWait(0.06)
-
-		Enddo
+		// Enddo
 
 
+		// While (GetAsyncKeyState(33)) != 0
 
-		If (nWParam == VK_RIGHT)
+		// 	xGoPgUp()
+		// 	DoEvents()
 
-			lScrollFim := ( (xGetScrolPos()+ xH_RtLimite() ) <= xCalcTam()  )
+		// 	For i := 1 To 255
+		// 		GetAsyncKeyState(i)
+		// 	Next i
+
+		// 	SysWait(0.06)
+
+		// Enddo
+
+
+
+		// If (nWParam == VK_RIGHT)
+		// 	lScrollFim := ( (xGetScrolPos()+ xH_RtLimite() ) <= xCalcTam()  )			
+		// 	If  !lScrollFim
+		// 		xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal.")  )
+		// 		Return
+		// 	End If			
+		//     If !(Alltrim(Str( nColz2)) $ xGetColsVis( nLimiteCol ) )
+		// 		 yGoColumn()	
+		// 	End If 
+		// 	nColZ2++
+		// 	nPos1  := xGetInfCw1(   nColz2 , 2  )
+		// 	nPos2  := xGetInfCw1(   nColz2 , 3  )
+		// 	nSize1 := xGetInfCw1(   nColz2 , 5  )			
+
+		// 	If (nPos2 >= nLimiteCol) 
+		// 	    While ( (nPos1 - xGetScrolPos()) > 5) .And. ;
+		// 			( (xGetScrolPos()+ xH_RtLimite() ) <= xCalcTam()  )
+		// 				nY1 := xDoScrolV( .t. , .t. , , ,2  )       
+		// 				IncrCont1( .t. )
+		// 				DoEvents()				
+
+		// 				If nY1 > 0
+		// 					nLimiteCol += nY1
+		// 				End If 
+		// 		Enddo 
+		// 	Else
+
+		// 	End If			
 			
-			If  !lScrollFim
-				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal.")  )
-				Return
-			End If
-			
-		    If !(Alltrim(Str( nColz2)) $ xGetColsVis( nLimiteCol ) )
-				 yGoColumn()	
-			End If 
-
-			nColZ2++
-			nPos1  := xGetInfCw1(   nColz2 , 2  )
-			nPos2  := xGetInfCw1(   nColz2 , 3  )
-			nSize1 := xGetInfCw1(   nColz2 , 5  )
-
-			
-
-			If (nPos2 >= nLimiteCol) 
-			    While ( (nPos1 - xGetScrolPos()) > 5) .And. ;
-					( (xGetScrolPos()+ xH_RtLimite() ) <= xCalcTam()  )
-						nY1 := xDoScrolV( .t. , .t. , , ,2  )       
-						IncrCont1( .t. )
-						DoEvents()				
-
-						If nY1 > 0
-							nLimiteCol += nY1
-						End If 
-				Enddo 
-			Else
-
-			End If			
-			
-			ySelCol( nColz2 )
-			DoEvents()
-			SysWait(0.01)
-
-			//msginfo(Str(  xGetScrolPos() )  + '    ' + Str( xH_RtLimite() )  + '   ' + Str( xCalcTam())     )
-
-		End If
-
-		If (nWParam == 13)
-			//msginfo('ok22 Enter')
-			If (bBlkEdit != Nil)
-				Eval(   bBlkEdit , cEspelhoBrw , nIndex1 , nColSele  , aMapsCol[nColSele] )
-			End If 
-		End If 
+		// 	ySelCol( nColz2 )
+		// 	DoEvents()
+		// 	SysWait(0.01)
+		// End If
 
 
-		If (nWParam == VK_LEFT)
+		// If (nWParam == VK_LEFT)
+		// 	If nColz2 == 0
+		// 		Return
+		// 	End If 
+		// 	If  (xGetScrolPos() <= 0)
+		// 		xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))
+		// 		Return			
+		// 	End If
 
-			If nColz2 == 0
-				Return
-			End If 
+		// 	lScrollFim := (xGetScrolPos() > 0)			
+		// 	If !(Alltrim(Str( nColz2)) $ xGetColsVis( nLimiteCol ) )			
+		// 		 yGoColumn()	
+		// 	End If 
 
-
-			If  (xGetScrolPos() <= 0)
-				xDialog( Hb_AnsiToOem("Não Há Scrool Horizontal."))
-				Return
-			End If
-
-
-			lScrollFim := (xGetScrolPos() > 0)			
-
-			If !(Alltrim(Str( nColz2)) $ xGetColsVis( nLimiteCol ) )
-			//	msginfo('lp2 ' + Str(nColZ2))
-				 yGoColumn()	
-			End If 
-
-			//msginfo('lp2')
-
-			//msginfo(Str(  nColZ2 ))
-
-			nColZ2--
-			nPos1  := xGetInfCw1(   nColz2 , 2  )
-			nPos2  := xGetInfCw1(   nColz2 , 3  )
-			nSize1 := xGetInfCw1(   nColz2 , 5  )
-
+		// 	nColZ2--
+		// 	nPos1  := xGetInfCw1(   nColz2 , 2  )
+		// 	nPos2  := xGetInfCw1(   nColz2 , 3  )
+		// 	nSize1 := xGetInfCw1(   nColz2 , 5  )
 						
-			If (nPos1 <= xGetScrolPos() ) 
+		// 	If (nPos1 <= xGetScrolPos() ) 
+		// 	    While ( ( xGetScrolPos() - nPos1  ) >= 3 ) .And. ;
+		// 			( xGetScrolPos() > 0)
+		// 				nY1 := xDoScrolV( .f. , .t.  )       
+		// 				IncrCont1( .f. )
+		// 				DoEvents()				
+		// 				If nY1 > 0
+		// 					nLimiteCol -= nY1
+		// 				End If 
+		// 		Enddo                 
+		// 	Else
 
-			    While ( ( xGetScrolPos() - nPos1  ) >= 3 ) .And. ;
-					( xGetScrolPos() > 0)
-						nY1 := xDoScrolV( .f. , .t.  )       
-						IncrCont1( .f. )
-						DoEvents()				
-						If nY1 > 0
-							nLimiteCol -= nY1
-						End If 
-				Enddo 
-                
-
-			Else
-
-			End If
-
+		// 	End If
 			
-			ySelCol( nColz2 )				
-			DoEvents()
-			SysWait(0.02)
+		// 	ySelCol( nColz2 )				
+		// 	DoEvents()
+		// 	SysWait(0.02)
 
-
-		End If 
+		// End If 
        
 	     
 
-		lCtrl := (GetKeyState ( VK_CONTROL ) < 0) .or. (lControlOk)
+		// lCtrl := (GetKeyState ( VK_CONTROL ) < 0) .or. (lControlOk)
 
-		IF (lCtrl)
+		// IF (lCtrl)
 
-			IF (nWParam == VK_HOME)
-				xGoTop()
-				cTp1 := "Inicio do Navegador Atingido..."
-				If !_isWindowDefined("Win_Msg")
-					nHan1 := CrieJanTip(  GetProperty( cBrowserName   , 'Row') - 10  , GetProperty(cBrowserName , 'Col') + 150   ,   Alltrim(cTp1)      ,, 0.5 )
-				Else
-					xDispHint( cTp1 , GetProperty( cBrowserName , 'Row') - 10 ,  GetProperty( cBrowserName , 'Col') + 150  )
-				End If
+		// 	IF (nWParam == VK_HOME)
+		// 		xGoTop()
+		// 		cTp1 := "Inicio do Navegador Atingido..."
+		// 		If !_isWindowDefined("Win_Msg")
+		// 			nHan1 := CrieJanTip(  GetProperty( cBrowserName   , 'Row') - 10  , GetProperty(cBrowserName , 'Col') + 150   ,   Alltrim(cTp1)      ,, 0.5 )
+		// 		Else
+		// 			xDispHint( cTp1 , GetProperty( cBrowserName , 'Row') - 10 ,  GetProperty( cBrowserName , 'Col') + 150  )
+		// 		End If
+		// 		DoEvents()
+		// 		xDispUpTam(  cTp1 )
+		// 		xFecheAnimate(  GetFormHandle('Win_Msg') )
+		// 		l_HitB := .f.
+		// 		BT_ClientAreaInvalidateAll (cBarraVfrm)
+		// 		yDcToDc()
+		// 		yDcToDEspe()
+		// 		SysWait(0.03)
+		// 	End If
 
-				DoEvents()
-				xDispUpTam(  cTp1 )
-				xFecheAnimate(  GetFormHandle('Win_Msg') )
-				l_HitB := .f.
-				BT_ClientAreaInvalidateAll (cBarraVfrm)
-				yDcToDc()
-				yDcToDEspe()
+		// 	IF (nWParam == VK_END)
 
-				SysWait(0.03)
-
-
-			End If
-
-			IF (nWParam == VK_END)
-
-				xGoBottom()
-				//DoEvents()
+		// 		xGoBottom()
+		// 		//DoEvents()
 				
-				cTp1 := "Final do Navegador Atingido..."
-				If !_isWindowDefined("Win_Msg")
-					nHan1 := CrieJanTip(  GetProperty(cBrowserName , 'Row') - 10  , GetProperty(cBrowserName, 'Col') + 150   ,   Alltrim(cTp1)      ,, 0.5 )
-				Else
-					xDispHint( cTp1 , GetProperty(cBrowserName , 'Row') - 10 ,  GetProperty(cBrowserName, 'Col') + 150  )
-				End If
+		// 		cTp1 := "Final do Navegador Atingido..."
+		// 		If !_isWindowDefined("Win_Msg")
+		// 			nHan1 := CrieJanTip(  GetProperty(cBrowserName , 'Row') - 10  , GetProperty(cBrowserName, 'Col') + 150   ,   Alltrim(cTp1)      ,, 0.5 )
+		// 		Else
+		// 			xDispHint( cTp1 , GetProperty(cBrowserName , 'Row') - 10 ,  GetProperty(cBrowserName, 'Col') + 150  )
+		// 		End If
 
-				//DoEvents()
-				xDispUpTam(  cTp1 )
-				xFecheAnimate(  GetFormHandle('Win_Msg') )
-				BT_ClientAreaInvalidateAll (cBarraVfrm)
-				yDcToDc()
-				yDcToDEspe()
-				xCursorWait( .f. )
+		// 		//DoEvents()
+		// 		xDispUpTam(  cTp1 )
+		// 		xFecheAnimate(  GetFormHandle('Win_Msg') )
+		// 		BT_ClientAreaInvalidateAll (cBarraVfrm)
+		// 		yDcToDc()
+		// 		yDcToDEspe()
+		// 		xCursorWait( .f. )
 
-				DoEvents()
+		// 		DoEvents()				
+		// 		SysWait(0.03)
 
-				
-				SysWait(0.03)
+		// 	End If
 
-			End If
-
-		End If
+		// End If
 
 		
 
@@ -2009,32 +2153,35 @@ Function xTecBrowMtr()
 	End If
 
 
-	If (nWParam == VK_DOWN) .or. (lDownMouse)
-		xGoDown()
-		lDownMouse := .f.
-		HMG_CleanLastVirtualKeyDown()
-		PostMessage(  nHWnd , WM_KEYUP , 0,0 )
-		DoEvents()
+	// If (nWParam == VK_DOWN) .or. (lDownMouse)
+	// 	msginfo('Down')
+	// 	xGoDown()
+	// 	lDownMouse := .f.
+	// 	//HMG_CleanLastVirtualKeyDown()
+	// //	PostMessage(  nHWnd , WM_KEYUP , 0,0 )
+	// 	DoEvents()
 
-		lDownMouse := .f.
-		lUpMouse := .f.
+	// 	lDownMouse := .f.
+	// 	lUpMouse := .f.
 
+	// 	SysWait(0.15)
 
-	
-	End If
-
-	If (nWParam == VK_UP) .or. (lUpMouse)
-		lUpMouse := .f.
-		xGoUp()
-		HMG_CleanLastVirtualKeyUp()
-		PostMessage(  nHWnd , WM_KEYDOWN , 0,0 )
-		DoEvents()
-
-		lDownMouse := .f.
-		lUpMouse := .f.
 
 	
-	End If
+	// End If
+
+	// If (nWParam == VK_UP) .or. (lUpMouse)
+	// 	lUpMouse := .f.
+	// 	xGoUp()
+	// 	HMG_CleanLastVirtualKeyUp()
+	// 	//PostMessage(  nHWnd , WM_KEYDOWN , 0,0 )
+	// 	DoEvents()
+
+	// 	lDownMouse := .f.
+	// 	lUpMouse := .f.
+
+	
+	// End If
 
 
 Return
@@ -3636,10 +3783,10 @@ Function yRefresh( cBrName , lNovo1 , nItemEdit  , nItemDel )
 					aMDisplay[ nItemEdit][2] := Eval(  bBlock1 )                              //aDataOrig[nItemEdit]
 					xRefBrow()
 				Else 
-					If (nItemDel != Nil ) .And. ( nItemDel > 0)
-						aMDisplay[ nItemDel][4] := !aMDisplay[ nItemDel][4]
-						xRefBrow()				
-					End If 
+				//	If (nItemDel != Nil ) .And. ( nItemDel > 0)
+					//	aMDisplay[ nItemDel][4] := !aMDisplay[ nItemDel][4]
+						//xRefBrow()				
+					//End If 
 				End If 	
 
 			End If 	
