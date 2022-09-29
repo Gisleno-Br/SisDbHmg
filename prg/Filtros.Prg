@@ -60,7 +60,7 @@ FUNCTION LoadFitros( cTabela1 )
 		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE  ; 
 		ON PAINT Nil ;
       ON GOTFOCUS Nil 
-      /*
+
 
       DEFINE button MoveControl1
          Row 320
@@ -101,7 +101,7 @@ FUNCTION LoadFitros( cTabela1 )
          width 120
          backcolor rgb(34,34,34)
 		   height 30
-         caption "Editar Item"
+         caption "Excluir Item"
          action ExcluirItem()
        END button
 
@@ -118,14 +118,13 @@ FUNCTION LoadFitros( cTabela1 )
          action EnableBrw()
        END button
 
-       */
-
+       
 
 
 
 	END WINDOW	
 
-   //yRefresh( 'LstBoxFiltro' )  
+   yRefresh( 'LstBoxFiltro' )  
 
 
    //ON INIT xInitBrw(); 
@@ -170,8 +169,8 @@ FUNCTION LoadFitros( cTabela1 )
    
    aMtrFiltr := {}
 
-   For n1 := 1 to 5
-         Aadd( aMtrFiltr , {  .f.  ,  'ZE JOSE '   ,      '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
+   For n1 := 1 to 500
+         Aadd( aMtrFiltr , {  .t.  ,  'ZE JOSE '   ,      '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
              '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '  , .t. , .t. , 0   } )
 
    Next   
@@ -190,10 +189,10 @@ FUNCTION LoadFitros( cTabela1 )
 
   // aMtrFiltr := {}
 
-  aCampos := { ||   { Iif(aMtrFiltr[nQItem][1]  , 'image=CHKOK'  ,  'image=CHKNO'   )   ,  aMtrFiltr[nQItem][2] + ' ' + StrZero(nQItem,5) ,  aMtrFiltr[nQItem][3] , ;
+  Private aBlk1 := { ||   { Iif(aMtrFiltr[nQItem][1]  , 'image=CHKOK'  ,  'image=CHKNO'   )   ,  aMtrFiltr[nQItem][2] + ' ' + StrZero(nQItem,5) ,  aMtrFiltr[nQItem][3] , ;
     aMtrFiltr[nQItem][4]  , aMtrFiltr[nQItem][5] , aMtrFiltr[nQItem][6]   }    } 
    
-   l_Ok := xBrowserMtr( 30 ,  aMtrFiltr ,    aCampos ,  'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' } , ;
+   l_Ok := xBrowserMtr( 30 ,  aMtrFiltr ,    aBlk1 ,  'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' } , ;
       {6,60 , 75 , 60 ,45,75  }  , { 'C' , 'C' , 'C' , 'C' , 'C' ,'C' } , .f. , .t. , 200 , ;
        { | cParent , nRow1 , nCol1 , ainFCol , nScrolly| yEditMtr( cParent , nRow1 , nCol1 , ainfCol , nScrolly )} , ;
        { || yDelMtr()}   )
@@ -247,9 +246,7 @@ Function yEditMtr( cFrmParent , nLinha , nColuna , aInf_Col1 , nScrollz )
        END button
 
        BringToTop(  GetControlHandle(  'MoveControl5' , cFrmParent )   )
-
-       SetFocus(    GetControlHandle(  'MoveControl5' , cFrmParent )     )
-
+       SetFocus(    GetControlHandle(  'MoveControl5' , cFrmParent )   )
        DoEvents()
 
        //msginfo('Criado')
@@ -288,7 +285,7 @@ Function EditarItem()
    aMtrFiltr[nIt][2] := ' Filtro Modicado ' + Strzero(n1,5) 
    aMtrFiltr[nIt][1] := ' ZZZZ '
 
-
+   //yRefItem( nIt )
    
    yRefresh( 'LstBoxFiltro'  ,  ,  nIt ) 
 
