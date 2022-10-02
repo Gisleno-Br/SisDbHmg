@@ -67,7 +67,7 @@ Static lTrack39 := .f.
 Static lSizeMode := .f.
 Static lDragHeader := .f. 
 Static lEnabled2 := .t.
-Static bBlock1   //:= { ||  }
+Static bBlock1   := Nil 
 Static lDisphint := .f.
 Static c_BrowName := ''
 Static lAndamento := .f.
@@ -300,15 +300,18 @@ Return
 
 
 
-Static Function xRetItem( aMatriz )
+Static Function xRetItem( aMatriz , nindice  )
 
 	Local c1 := ''
 	Local cV1 := ''
 	Local n1 := 0
 	Local nTam := 0
 	Local lNum := .f.
+	Local aMz1 := {}
 
- 
+	
+
+    /*
 
 	For n1 := 1 To Len( aCabec1 )
 
@@ -349,6 +352,8 @@ Static Function xRetItem( aMatriz )
 
 	Next
 
+	*/
+
 
 Return aMatriz
 //(c1)
@@ -372,6 +377,7 @@ Function xBrowserMtr( nRowIni ,  aDatas1 ,  bBlockMtr ,   cParent   , nLarg1  , 
 	DEFAULT aCabecalho := {}
 	DEFAULT lDicionario := .t.
 	DEFAULT lEnabled1   := .t.
+
 
 	DEFAULT bFuncEdit := Nil 
 
@@ -440,7 +446,6 @@ Function xBrowserMtr( nRowIni ,  aDatas1 ,  bBlockMtr ,   cParent   , nLarg1  , 
    Next 
 
    aMt1 := Aclone(aM1)
-
 
 	EncheMVis( nTamPag  , .f.  )
 
@@ -855,8 +860,6 @@ Function ProcOnKey()
 			End If
 
 		End If
-
-
 	
 		If (EventWPARAM() == 13)			
 			If (bBlkEdit != Nil)			
@@ -1311,6 +1314,7 @@ Static Function BrwSelItem()
 	Local nRow , nCol 
 	Local nInd1 
 	Local nHWnd := GetControlHandle(  'LabelBrw' ,  cEspelhoBrw )
+
 
 	DoEvents()
 	nSaveX5 := nItemX5
@@ -2308,6 +2312,7 @@ Static Function xGoUp( lMsg  )
 
 		If (lHitt)
 
+
 			nInd1 := Ascan(aMDisplay , { |a|  a[1] == nIndex1 })
 
 			If nInd1 == 0
@@ -2321,7 +2326,7 @@ Static Function xGoUp( lMsg  )
 				BT_ClientAreaInvalidateAll(cBrowserName)
 			
 			Else
-				aMDisplay[nInd1][ 4 ] := aDataOrig[ nIndex1  ][1] 
+			//	aMDisplay[nInd1][ 4 ] := aDataOrig[ nIndex1  ][1] 
 				ScrolUp1(.t.)
 			End If
 
@@ -2403,7 +2408,7 @@ Static Function xGoDown( lMsg )
 				nItem7 := Len(aMDisplay) + 1
 				Aadd(aMDisplay , { nIndex1 ,   xRetItem(   aMt1[nIndex1]    )  , nItem7  , aDataOrig[ nIndex1  ][1]  }  )
 			Else 
-			    aMDisplay[nInd1][ 4 ] := aDataOrig[ nIndex1  ][1] 
+			   // aMDisplay[nInd1][ 4 ] := aDataOrig[ nIndex1  ][1] 
 			End If
 
 			nLinhaBarra := nTamPag	
@@ -2492,13 +2497,14 @@ Static Function xRecords( n1 , lFrente  )
 		For z := n1 To ((n1+nTamPag) - 1)
 			If (z <= Len(aMt1) )
 				n2++
-				Aadd(aMDisplay ,  {  Z ,  xRetItem(   aMt1[Z]    )   , n2 , aDataOrig[Z][1]    }  )
+				Aadd(aMDisplay ,  {  Z ,  xRetItem(   aMt1[Z]  , z   )   , n2 , aDataOrig[Z][1]    }  )
+				//Aadd(aMDisplay ,  {  Z ,  aDataOrig[z]   , n2 , aDataOrig[Z][1]    }  )
 			End If
 		Next
 	Else
 		For z := ((n1+nTamPag) - 1) To n1
 			If (z <= Len(aMt1) )
-				Aadd(aMDisplay , { Z ,  xRetItem(   aMt1[Z]    )  , , aDataOrig[Z][1]  }  )
+				Aadd(aMDisplay , { Z ,  xRetItem(   aMt1[Z]  , z   ) , , aDataOrig[Z][1]  }  )
 			End If
 		Next
 	End If
@@ -2619,6 +2625,7 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
 
 		nCol := nColIniBrw
 
+
 		If nColScrool != 0
 			nCol -= nColScrool 
 		End If 
@@ -2670,21 +2677,45 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
 
 		End If 
 
+
 		For n2 := 1 to Len(aMz1) 
 
 			cimg1 := ''
 
+
 			nTam1  	 := aTams2[n2]
-			cTexto   := Alltrim(Hb_Utf8ToStr(  aMz1[n2] )) 			
-			nQAcento := QtAcento(Alltrim( cTexto  ) )			
-			nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1			
-			n12 := GetTextWidth( hDC2 , Replicate('A' ,  nTam1 + 1  ) , hFontBrw )
-			nTam := n12
-			cTexto2 := Left(Alltrim(Hb_Utf8ToStr(  aMz1[n2] )) 	, nTam1 )
-			cTexto1 := Padr( Alltrim(  Hb_AnsiToOem( cTexto2 )) ,n12+1) 
-			n22 := nTamx1 + nCol +  (250 * nTam1)
-			nTypeText    := BT_TEXT_TRANSPARENT
-			cCor := FONTCOR			//DoEvents()
+
+			cTexto  := ''
+			cTexto1 := ''
+
+			If ( ValType(aMz1[n2]) == 'C')
+				cTexto   := Alltrim(Hb_Utf8ToStr(  aMz1[n2] )) 			
+				nQAcento := QtAcento(Alltrim( cTexto  ) )			
+				nTam := If( (nQAcento =  0)   , nTam1 , nTam1 + nQAcento ) //* nTamX1			
+				n12 := GetTextWidth( hDC2 , Replicate('A' ,  nTam1 + 1  ) , hFontBrw )
+				nTam := n12
+				cTexto2 := Left(Alltrim(Hb_Utf8ToStr(  aMz1[n2] )) 	, nTam1 )
+				cTexto1 := Padr( Alltrim(  Hb_AnsiToOem( cTexto2 )) ,n12+1) 
+				n22 := nTamx1 + nCol +  (250 * nTam1)
+				nTypeText    := BT_TEXT_TRANSPARENT
+				cCor := FONTCOR			//DoEvents()
+			End If
+
+
+			If ( ValType(aMz1[n2]) == 'I')
+
+			End If 
+
+			If ( ValType(aMz1[n2]) == 'D')
+
+			End If 
+
+			If ( ValType(aMz1[n2]) == 'N')
+
+			End If 
+
+
+
 
 
 			If (Left(cTexto,5) = 'image') .And. (lDeleted)
@@ -2694,7 +2725,6 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
 			If (Left(cTexto,5) = 'image') .And. (!lDeleted)
 				cTexto1 := ''
 			End If 
-
 
 			If !Empty( Alltrim(cImg1))
 				cTexto1 := cImg1
@@ -3647,6 +3677,7 @@ Function yRefresh( cBrName , lNovo1 , nItemEdit  , nItemDel )
 	Local lEmpty := (Len(aMt1) == 0)
 	Local aMz1 := {}	
 
+
 	//DEFAULT aMtNew := Nil 
 	DEFAULT lNovo1 := .f.
 
@@ -3768,25 +3799,27 @@ Function yRefresh( cBrName , lNovo1 , nItemEdit  , nItemDel )
 
 				ySelCol( 1 )					
 				
-			Else 						    
+			Else 
+
 				If (nItemEdit > 0)					
 
 				//	aM1z := {} 
 					nQItem := nItemEdit 
-
 					DoEvents()
-
 				//	Aadd(aM1z , Eval(  bBlock1 ) )					
 					aDataOrig[ nItemEdit ] := Eval(  bBlock1 )                            //aDataOrig[nItemEdit]										
 
 				//	aDataOrig[ nItemEdit ] := Eval(  bBlock1 )                            //aDataOrig[nItemEdit]										
 					//aMDisplay[ nLinhaBarra][2] := Eval(  bBlock1 )                              //aDataOrig[nItemEdit]
 
+
+             
 					If nIndex1 <= Len(aMDisplay)
-						aMDisplay[ nIndex1][2]  		:= Eval(  bBlock1 ) 				  
+						aMDisplay[ nIndex1][2]  		:= aDataOrig[ nQItem  ]  //Eval(  bBlock1 ) 				  
 					Else 
-						aMDisplay[ nLinhaBarra][2]  	:= Eval(  bBlock1 )
+						aMDisplay[ nLinhaBarra][2]  	:= aDataOrig[ nQItem  ] 
 					End If 
+			
 
 					xRefBrow()			
 
@@ -6283,6 +6316,7 @@ Static Function yDcBarH1()
     BT_ClientAreaInvalidateAll (cBarraSombra)
 
 Return 
+
 
 
 

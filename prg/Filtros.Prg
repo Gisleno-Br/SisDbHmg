@@ -134,7 +134,7 @@ FUNCTION LoadFitros( cTabela1 )
    _ShowWindow(  'fFiltrosCad' )
    DoEvents()
 
-   aMtrFiltr := xLoadFiltros( cTabela1  )
+  // aMtrFiltr := xLoadFiltros( cTabela1  )
 
    If !CheckRet(aMtrFiltr)
       Return 
@@ -167,7 +167,7 @@ FUNCTION LoadFitros( cTabela1 )
    cActiveJan := 'fFiltrosCad'   
 
    
-   aMtrFiltr := {}
+   Private aMtrFiltr := {}
 
    For n1 := 1 to 500
          Aadd( aMtrFiltr , {  .t.  ,  'ZE JOSE '   ,      '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
@@ -181,7 +181,7 @@ FUNCTION LoadFitros( cTabela1 )
 
    //Aadd( aM1 ,  Eval(  { ||   ( aMtrFilr[2][1] ,  aMtrFilr[2][3]      })
 
-
+   
    nR := GetProperTy('fFiltrosCad' , 'Row')
    nC := GetProperTy('fFiltrosCad' , 'Col')
 
@@ -190,12 +190,14 @@ FUNCTION LoadFitros( cTabela1 )
   // aMtrFiltr := {}
 
   Private aBlk1 := { ||   { Iif(aMtrFiltr[nQItem][1]  , 'image=CHKOK'  ,  'image=CHKNO'   )   ,  aMtrFiltr[nQItem][2] + ' ' + StrZero(nQItem,5) ,  aMtrFiltr[nQItem][3] , ;
-    aMtrFiltr[nQItem][4]  , aMtrFiltr[nQItem][5] , aMtrFiltr[nQItem][6]   }    } 
+    aMtrFiltr[nQItem][4]  , aMtrFiltr[nQItem][5] , aMtrFiltr[nQItem][5]   }    } 
    
-   l_Ok := xBrowserMtr( 30 ,  aMtrFiltr ,    aBlk1 ,  'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' } , ;
-      {6,60 , 75 , 60 ,45,75  }  , { 'C' , 'C' , 'C' , 'C' , 'C' ,'C' } , .f. , .t. , 200 , ;
+   l_Ok := xBrowserMtr( 30 ,  aMtrFiltr ,   aBlk1 , ;
+    'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' } , ;
+      {6,60 , 75 , 60 ,45,75  }  , { 'L' , 'C' , 'C' , 'C' , 'C' ,  'L' , 'L' , 'N' } , .f. , .t. , 200 , ;
        { | cParent , nRow1 , nCol1 , ainFCol , nScrolly| yEditMtr( cParent , nRow1 , nCol1 , ainfCol , nScrolly )} , ;
        { || yDelMtr()}   )
+
 
    yRefresh( 'LstBoxFiltro'  )   
    DoEvents()  
@@ -205,12 +207,14 @@ FUNCTION LoadFitros( cTabela1 )
    
 RETURN cFiltrox1
 
+
+// Delete Item 
 Function yDelMtr()
 
    Local nIt := yRetIndex()
-   Local lOk1 := !aMtrFiltr[nIt][1]
+   Local lOk1 := !aMtrFiltr[nIt][6]
 
-   aMtrFiltr[nIt][1] := !aMtrFiltr[nIt][1]
+   aMtrFiltr[nIt][6] := !aMtrFiltr[nIt][6]
 
 Return lOk1
 
@@ -227,8 +231,10 @@ Function yEditMtr( cFrmParent , nLinha , nColuna , aInf_Col1 , nScrollz )
       nColObj := (aInf_Col1[2] - nScrollz) - 1
    End If 
 
+
    If (nColuna == 1)
        aMtrFiltr[nIt][1] := !aMtrFiltr[nIt][1]       
+       // Mark Check Item 
       yRefresh( 'LstBoxFiltro'  ,  ,  nIt ) 
    End If 
 
@@ -274,6 +280,7 @@ Function EnableBrw()
 
 Return 
 
+
 Function EditarItem()
 
   Local nIt := yRetIndex()
@@ -283,9 +290,10 @@ Function EditarItem()
      //        '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '} )
 
    aMtrFiltr[nIt][2] := ' Filtro Modicado ' + Strzero(n1,5) 
-   aMtrFiltr[nIt][1] := ' ZZZZ '
+   //aMtrFiltr[nIt][1] := ' ZZZZ '
 
    //yRefItem( nIt )
+
    
    yRefresh( 'LstBoxFiltro'  ,  ,  nIt ) 
 
