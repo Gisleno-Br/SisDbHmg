@@ -323,8 +323,7 @@ Function InputWindowEx( cTitle , aLabels , aValues , aFormats ,;
       endif
 
       EventProcessAllHookMessage(nIndexInputWindow   := EventCreate (  { ||   EvInputDlg( )} , _InputWindow.Handle  ) , .t.)
-
-
+      
       ACTIVATE WINDOW _InputWindow
 
       If nIndexInputWindow > 0

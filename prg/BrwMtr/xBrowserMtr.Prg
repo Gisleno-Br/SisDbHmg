@@ -147,6 +147,7 @@ Static yBmp3
 Static zBmp1 
 Static zBmp2 
 Static zBmp3 
+Static zBmpDel 
 Static lFirst := .f. 
 Static nQEtp := 0
 Static nLargx := 0
@@ -407,12 +408,14 @@ Function xBrowserMtr( nRowIni ,  aDatas1 ,  bBlockMtr ,   cParent   , nLarg1  , 
 	zBmp2 := BT_BitMapLoadFile('SCRDOWN2')
 	zBmp3 := BT_BitMapLoadFile('SCRDOWN3')
 
+	zBmpDel := BT_BitMapLoadFile('DELETED1')
+
+
 
 	hFontBrw := HMG_CreateFont (  GetDc( GetFormHandle('Main') ) ,  FONTBROWSER , FONTBROWSERSIZE, .f., .f., .f., .f. )
 
 
 	aDataOrig := aDatas1
-
 
 	aCabec1 := Aclone(aCabecalho)
 	aTams2  := Aclone(aTamanhos)
@@ -441,8 +444,8 @@ Function xBrowserMtr( nRowIni ,  aDatas1 ,  bBlockMtr ,   cParent   , nLarg1  , 
 	aM1 := {}
 
    For nZ1 := 1 To Len(aDatas1)
-      Aadd( aM1 ,  Eval(  bBlockMtr ) )
-      nQItem++
+      Aadd( aM1 ,  Eval(  bBlockMtr , nZ1 ) )
+    //  nQItem++
    Next 
 
    aMt1 := Aclone(aM1)
@@ -863,7 +866,8 @@ Function ProcOnKey()
 	
 		If (EventWPARAM() == 13)			
 			If (bBlkEdit != Nil)			
-				Eval(   bBlkEdit , cEspelhoBrw , nIndex1 , nColSele  , aMapsCol[nColSele] )
+				//Eval(   bBlkEdit , cEspelhoBrw , nIndex1 , nColSele  , aMapsCol[nColSele] , nColScrool , nLinScrool  )
+				Eval(   bBlkEdit , cEspelhoBrw , nLinhaBarra , nColSele , aMapsCol[nColSele] , nColScrool   )			
 			End If 
 		End If 
 		
@@ -890,8 +894,7 @@ Function ProcOnKey()
 			If (bBlkDel != Nil)  //.And. (   nHWnd == GetControlHandle('LabelBrw' , cEspelhoBrw)  )			
 				
 				If Eval(bBlkDel)			    					 
-					aDataOrig[  nIndex1][1]     := .t.
-				//	aMDisplay[ nLinhaBarra][4]  := .t. 
+					aDataOrig[  nIndex1][1]     := .t.				
 					If nIndex1 <= Len(aMDisplay)
 						aMDisplay[ nIndex1][4]  		:= .t. 				  
 					Else 
@@ -904,15 +907,13 @@ Function ProcOnKey()
 						aMDisplay[ nIndex1][4]  		:= .f. 				  
 					Else 
 						aMDisplay[ nLinhaBarra][4]  	:= .f. 				  
-					End If 
-				//	msginfo(Str(nLinhaBarra) + '  ' + Str( nIndex1 ))
+					End If 				
 				End If 			
 				xRefBrow()					
 			End If 
 		End If 
 
 	End If 
-
 
 REturn 
 
@@ -941,17 +942,18 @@ Function LabelBrwEvnt()
 			DoEvents()		
 		End If
 
-	End If 
+
+	End If 	
 	
+
 
 	If EventMSG() == WM_LBUTTONDOWN
 		BrwSelItem()
 	End If 
-
 	
     IF EventMSG() == WM_LBUTTONDBLCLK
 		If (bBlkEdit != Nil)			//nColSele
-			Eval(   bBlkEdit , cEspelhoBrw , nIndex1 , nColSele , aMapsCol[nColSele] , nColScrool  )			
+			Eval(   bBlkEdit , cEspelhoBrw , nLinhaBarra , nColSele , aMapsCol[nColSele] , nColScrool   )			
 		End If 
 	End If 
 
@@ -2653,6 +2655,12 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
 				BT_DrawBitmap (hDC2  , nLine  + nRow + nPulo1   , 2   , 16  , nItemBrwHeight - 2 , BT_STRETCH , bBmpa  )						
 			End If
 
+			If (nColScrool == 0) .And. (lEnabled) .And. (!lDeleted)
+				bBmpy := xBmpToTrans( 'DELETED1', nCorBk , 15,15 )
+				BT_DrawBitmap (hDC2  , nLine  + nRow + nPulo1   , 00    , 15  , 15 , BT_SCALE , bBmpy  )				
+				BT_BitmapRelease(bBmpy)
+			End If
+
 		Else 
 			If (Mod( n1 , 2 ) = 0)
 				nCorBk := WHITE
@@ -2675,15 +2683,19 @@ Static Function xPaintBrwMtr( cForm , aMtrOp ,  nOpselx1 , nClear1 , lBrwEnable 
 				lPar := .t.
 			End If
 
-		End If 
+			If !lDeleted 
+				bBmpy := xBmpToTrans( 'DELETED1', nCorBk , 15,15 )
+				BT_DrawBitmap (hDC2  , nLine  + nRow + nPulo1   , 00    , 15  , 15 , BT_SCALE , bBmpy  )				
+				BT_BitmapRelease(bBmpy)
+			End If 		
 
+		End If 
 
 		For n2 := 1 to Len(aMz1) 
 
 			cimg1 := ''
-
-
 			nTam1  	 := aTams2[n2]
+
 
 			cTexto  := ''
 			cTexto1 := ''
@@ -3664,31 +3676,21 @@ Function yEnabledBrw( lEnabled )
 Return 
 
 
-//Function yRefresh( cBrName , aMtNew ,  aMatu , nItem  , nItemDel )
 
-//Function yRefItem( nItem1 )
-//		yRefresh( cBrowserName , , nItem1  )
-//Return 
-
-Function yRefresh( cBrName , lNovo1 , nItemEdit  , nItemDel )
+Function yRefresh( cBrName , lNovo1 , nItemEdit  )
 
 	Local nHw1 
 	Local n1 
 	Local lEmpty := (Len(aMt1) == 0)
 	Local aMz1 := {}	
 
-
-	//DEFAULT aMtNew := Nil 
+	
 	DEFAULT lNovo1 := .f.
-
 	DEFAULT nItemEdit := 0
-	DEFAULT nItemDel  := 0
-
 
 
 	If (_isWindowDefined(cBrName)) .And. (!isWindowVisible(  GetFormHandle(cBrName)   ))		
 		  
-   		//nHw1 := CursorOn1( cBrName  )          		
 		 
 		DoEvents()
 		_ShowWindow(cBrName)
@@ -3747,13 +3749,10 @@ Function yRefresh( cBrName , lNovo1 , nItemEdit  , nItemDel )
 			DoEvents()
 			SysWait(0.05)
 
-
-			//If (aMtNew != Nil) .And. (Len(aMtNew) > 0)
-
 			If lNovo1        
 
 				nQItem := Len(  aDataOrig )				
-				Aadd(aMt1 , Eval(  bBlock1 ) )
+				Aadd(aMt1 , Eval(  bBlock1 , nQItem  ) )
 				nMaxItem1 := Len(aMt1)
 
 				nColZ2 := 1
@@ -3801,28 +3800,15 @@ Function yRefresh( cBrName , lNovo1 , nItemEdit  , nItemDel )
 				
 			Else 
 
-				If (nItemEdit > 0)					
-
-				//	aM1z := {} 
-					nQItem := nItemEdit 
-					DoEvents()
-				//	Aadd(aM1z , Eval(  bBlock1 ) )					
-					aDataOrig[ nItemEdit ] := Eval(  bBlock1 )                            //aDataOrig[nItemEdit]										
-
-				//	aDataOrig[ nItemEdit ] := Eval(  bBlock1 )                            //aDataOrig[nItemEdit]										
-					//aMDisplay[ nLinhaBarra][2] := Eval(  bBlock1 )                              //aDataOrig[nItemEdit]
-
-
-             
+				If (nItemEdit > 0)										
+					DoEvents()				
+					//aDataOrig[ nItemEdit ] := Eval(  bBlock1 )                            //aDataOrig[nItemEdit]																			             
 					If nIndex1 <= Len(aMDisplay)
-						aMDisplay[ nIndex1][2]  		:= aDataOrig[ nQItem  ]  //Eval(  bBlock1 ) 				  
+						aMDisplay[ nIndex1][2]  		:= Eval(  bBlock1 ,   nItemEdit )						
 					Else 
-						aMDisplay[ nLinhaBarra][2]  	:= aDataOrig[ nQItem  ] 
-					End If 
-			
-
+						aMDisplay[ nLinhaBarra][2]  	:= Eval(  bBlock1 ,   nItemEdit )						
+					End If 		
 					xRefBrow()			
-
 				End If 	
 			End If 	
 

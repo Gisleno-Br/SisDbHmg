@@ -104,8 +104,6 @@ FUNCTION LoadFitros( cTabela1 )
          caption "Excluir Item"
          action ExcluirItem()
        END button
-
-
        
               
        DEFINE button MoveControl52
@@ -117,9 +115,6 @@ FUNCTION LoadFitros( cTabela1 )
          caption "Enable/Disable"
          action EnableBrw()
        END button
-
-       
-
 
 
 	END WINDOW	
@@ -176,26 +171,20 @@ FUNCTION LoadFitros( cTabela1 )
    Next   
 
    Private nQItem := 1
-
   
-
-   //Aadd( aM1 ,  Eval(  { ||   ( aMtrFilr[2][1] ,  aMtrFilr[2][3]      })
-
-   
    nR := GetProperTy('fFiltrosCad' , 'Row')
    nC := GetProperTy('fFiltrosCad' , 'Col')
 
    xSombraZ( cSalvaJan , nR , nC  , GetProperTy('fFiltrosCad','Width') , GetProperTy('fFiltrosCad','Height')      )
 
-  // aMtrFiltr := {}
-
-  Private aBlk1 := { ||   { Iif(aMtrFiltr[nQItem][1]  , 'image=CHKOK'  ,  'image=CHKNO'   )   ,  aMtrFiltr[nQItem][2] + ' ' + StrZero(nQItem,5) ,  aMtrFiltr[nQItem][3] , ;
-    aMtrFiltr[nQItem][4]  , aMtrFiltr[nQItem][5] , aMtrFiltr[nQItem][5]   }    } 
+   Private aBlk1 := { |a|   { Iif(aMtrFiltr[a][1]  , 'image=CHKOK'  ,  'image=CHKNO'   )   ,  aMtrFiltr[a][2] + ' ' + StrZero(a,5) ,  aMtrFiltr[a][3] , ;
+    aMtrFiltr[a][4]  , aMtrFiltr[a][5] , aMtrFiltr[a][5]   }    } 
+  
    
    l_Ok := xBrowserMtr( 30 ,  aMtrFiltr ,   aBlk1 , ;
     'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' } , ;
       {6,60 , 75 , 60 ,45,75  }  , { 'L' , 'C' , 'C' , 'C' , 'C' ,  'L' , 'L' , 'N' } , .f. , .t. , 200 , ;
-       { | cParent , nRow1 , nCol1 , ainFCol , nScrolly| yEditMtr( cParent , nRow1 , nCol1 , ainfCol , nScrolly )} , ;
+       { | cParent , nRow1 , nCol1 , ainFCol , nScrolly | yEditMtr( cParent , nRow1 , nCol1 , ainfCol , nScrolly  )} , ;
        { || yDelMtr()}   )
 
 
@@ -212,14 +201,25 @@ RETURN cFiltrox1
 Function yDelMtr()
 
    Local nIt := yRetIndex()
-   Local lOk1 := !aMtrFiltr[nIt][6]
+   Local lOk1 := !aMtrFiltr[nIt][7]
 
-   aMtrFiltr[nIt][6] := !aMtrFiltr[nIt][6]
+
+   aMtrFiltr[nIt][7] := !aMtrFiltr[nIt][7]
 
 Return lOk1
 
 
-Function yEditMtr( cFrmParent , nLinha , nColuna , aInf_Col1 , nScrollz )
+
+Static Function InitIinput()
+
+	HMG_ChangeWindowStyle(  GetFormHandle('_InputWindow')  , WS_EX_DLGMODALFRAME, NIL, .T., .T. )
+	SendMessage( GetFormHandle('_InputWindow')  , WM_PAINT , 0 , 0 )
+
+REturn
+
+
+
+Function yEditMtr( cFrmParent , nLinhaScr1 , nColuna , aInf_Col1 , nScrollz )
 
    
    Local nColObj := aInf_Col1[ 2]
@@ -231,34 +231,72 @@ Function yEditMtr( cFrmParent , nLinha , nColuna , aInf_Col1 , nScrollz )
       nColObj := (aInf_Col1[2] - nScrollz) - 1
    End If 
 
-
    If (nColuna == 1)
        aMtrFiltr[nIt][1] := !aMtrFiltr[nIt][1]       
        // Mark Check Item 
-      yRefresh( 'LstBoxFiltro'  ,  ,  nIt ) 
+
+      yRefresh( 'LstBoxFiltro'  ,  ,  nIt   ) 
    End If 
 
-    If (nColuna == 4)
 
-       DEFINE button MoveControl5
+
+    If (nColuna == 4)     
+
+      cVar1 := aMtrFiltr[nIt][4]  
+
+      EdtControl := Nil
+
+          DEFINE WINDOW _InputWindow ;
+            AT 500, 500 ;
+            WIDTH aInf_Col1[5]+2  ;            
+            HEIGHT nItemSubHeight+1 ;
+            TITLE '' ;
+            NOMINIMIZE NOMAXIMIZE NOSIZE NOSYSMENU NOCAPTION ;
+             ON INIT InitIinput()             
+         END WINDOW
+
+
+            // BringToTop(  GetFormHandle('_InputWindow')   )
+            // SetFocus(    GetFormHandle('_InputWindow')    )
+
+
+
+         
+         ACTIVATE WINDOW _InputWindow
+
+         DoEvents()
+
+          //ON INIT InitIinput() ;
+          //ON PAINT Proc_Paint("Parametros Consulta")
+
+/*
+      Define textbox EdtControl
+         row ((nLinhaScr1 - 1) * nItemSubHeight)
          Parent &cFrmParent
-         Row ((nLinha - 1) * nItemSubHeight)
-         Col nColObj 
-         width aInf_Col1[5]+2
-         backcolor rgb(34,34,34)
-		   height  nItemSubHeight
-         caption "Editar Item"
-         action ExcluirItem()         
-       END button
+         col nColObj
+         value cVar1
+         height 20
+         maxlength 35
+         width aInf_Col1[5]+2         
+      End textbox
+      */
 
-       BringToTop(  GetControlHandle(  'MoveControl5' , cFrmParent )   )
-       SetFocus(    GetControlHandle(  'MoveControl5' , cFrmParent )   )
-       DoEvents()
+      
 
-       //msginfo('Criado')
+            //@ ((nLinhaScr1 - 1) * nItemSubHeight), nColObj TEXTBOX EdtControl OF &cFrmParent ;
+            //VALUE cVar1 WIDTH aInf_Col1[5]+2 HEIGHT nItemSubHeight ;
+            //FONT 'Arial' SIZE 10 ;
+            //MAXLENGTH 60
 
-        
 
+
+            //BringToTop(  GetControlHandle(  'EdtControl' , cFrmParent )   )
+            //SetFocus(    GetControlHandle(  'EdtControl' , cFrmParent )   )
+
+
+       //DoEvents()
+
+       
     End If 
 
 Return 
@@ -286,14 +324,9 @@ Function EditarItem()
   Local nIt := yRetIndex()
   Local aM1 := {}
 
-   //Aadd( aM1   , { StrZero(n1,3) ,  ' Filtro Modicado ' + Strzero(n1,5) , 'ZZZZZZZZ'  , '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
-     //        '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '} )
-
+   
    aMtrFiltr[nIt][2] := ' Filtro Modicado ' + Strzero(n1,5) 
-   //aMtrFiltr[nIt][1] := ' ZZZZ '
-
-   //yRefItem( nIt )
-
+   
    
    yRefresh( 'LstBoxFiltro'  ,  ,  nIt ) 
 

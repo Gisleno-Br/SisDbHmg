@@ -87,6 +87,8 @@
     CHKOK    PNG img\lbOk.Png
     CHKNO    PNG img\lbNo.Png
 
+    DELETED1 PNG img\cancelpng.Png
+
     
 
     BACK1       ARRAY   {229,237,242}
