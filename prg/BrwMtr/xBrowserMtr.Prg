@@ -708,6 +708,10 @@ Function ProcOnKey()
 	Local nHWnd := EventHwnd() 
 	
 
+	If EventMsg() == WM_CHAR
+		msginfo('l2p Char ' + Str(EventWPARAM()) )
+
+	End If 
 
 	If EventMSG() == WM_KEYDOWN
 
@@ -865,9 +869,10 @@ Function ProcOnKey()
 		End If
 	
 		If (EventWPARAM() == 13)			
-			If (bBlkEdit != Nil)			
-				//Eval(   bBlkEdit , cEspelhoBrw , nIndex1 , nColSele  , aMapsCol[nColSele] , nColScrool , nLinScrool  )
-				Eval(   bBlkEdit , cEspelhoBrw , nLinhaBarra , nColSele , aMapsCol[nColSele] , nColScrool   )			
+			If !_isWindowDefined('_InputWindow')	
+				If (bBlkEdit != Nil)							
+					Eval(   bBlkEdit , cEspelhoBrw , nLinhaBarra , nColSele , aMapsCol[nColSele] , nColScrool   )			
+				End If 
 			End If 
 		End If 
 		

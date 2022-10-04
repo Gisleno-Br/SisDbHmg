@@ -61,7 +61,7 @@ FUNCTION LoadFitros( cTabela1 )
 		ON PAINT Nil ;
       ON GOTFOCUS Nil 
 
-
+/*
       DEFINE button MoveControl1
          Row 320
          Col 15
@@ -115,6 +115,8 @@ FUNCTION LoadFitros( cTabela1 )
          caption "Enable/Disable"
          action EnableBrw()
        END button
+
+       */
 
 
 	END WINDOW	
@@ -238,63 +240,55 @@ Function yEditMtr( cFrmParent , nLinhaScr1 , nColuna , aInf_Col1 , nScrollz )
       yRefresh( 'LstBoxFiltro'  ,  ,  nIt   ) 
    End If 
 
-
-
-    If (nColuna == 4)     
+   If (nColuna == 4)     
 
       cVar1 := aMtrFiltr[nIt][4]  
 
-      EdtControl := Nil
+      cForm1 := ''
 
-          DEFINE WINDOW _InputWindow ;
-            AT 500, 500 ;
+      hWnd1 := GetParent( GetFormHandle( cFrmParent  ) )
+
+      GetFormNameByHandle( hWnd1 , @cForm1 )
+
+     // msginfo(cForm1)
+
+      EdtControl := Nil
+      aR1 := GetPos_ClienttoScreen(   GetFormHandle(cFrmParent)  , ((nLinhaScr1 - 1) * nItemSubHeight) , nColObj )
+
+      //aR1 := GetPos_ClienttoScreen(   GetFormHandle(cForm1)  , 0 , 0 )
+
+      nR1 := GetProperTy( cForm1 , 'Row'  ) 
+
+
+         DEFINE WINDOW _InputWindow ;
+            AT  Ar1[1]  - 1 ,Ar1[2]  ;
             WIDTH aInf_Col1[5]+2  ;            
             HEIGHT nItemSubHeight+1 ;
-            TITLE '' ;
+            TITLE '' ;                    
             NOMINIMIZE NOMAXIMIZE NOSIZE NOSYSMENU NOCAPTION ;
-             ON INIT InitIinput()             
+           ON INIT InitIinput()             
+             
+            @ 0,1 TEXTBOX TEXT_1 ;
+               WIDTH aInf_Col1[5] ;
+               VALUE cVar1 ; 
+               HEIGHT nItemSubHeight ;
+               MAXLENGTH 60 ;
+               UPPERCASE  ;
+               ON ENTER msginfo('g111')
+
          END WINDOW
 
+         ON KEY ESCAPE OF _InputWindow ACTION ThisWindow.Release
 
-            // BringToTop(  GetFormHandle('_InputWindow')   )
-            // SetFocus(    GetFormHandle('_InputWindow')    )
+         //ON KEY F5 OF _InputWindow ACTION msginfo('f1111')
 
-
-
+         
          
          ACTIVATE WINDOW _InputWindow
 
          DoEvents()
 
-          //ON INIT InitIinput() ;
-          //ON PAINT Proc_Paint("Parametros Consulta")
-
-/*
-      Define textbox EdtControl
-         row ((nLinhaScr1 - 1) * nItemSubHeight)
-         Parent &cFrmParent
-         col nColObj
-         value cVar1
-         height 20
-         maxlength 35
-         width aInf_Col1[5]+2         
-      End textbox
-      */
-
-      
-
-            //@ ((nLinhaScr1 - 1) * nItemSubHeight), nColObj TEXTBOX EdtControl OF &cFrmParent ;
-            //VALUE cVar1 WIDTH aInf_Col1[5]+2 HEIGHT nItemSubHeight ;
-            //FONT 'Arial' SIZE 10 ;
-            //MAXLENGTH 60
-
-
-
-            //BringToTop(  GetControlHandle(  'EdtControl' , cFrmParent )   )
-            //SetFocus(    GetControlHandle(  'EdtControl' , cFrmParent )   )
-
-
-       //DoEvents()
+    
 
        
     End If 
