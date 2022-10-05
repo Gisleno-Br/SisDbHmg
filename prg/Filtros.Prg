@@ -61,6 +61,9 @@ FUNCTION LoadFitros( cTabela1 )
 		ON PAINT Nil ;
       ON GOTFOCUS Nil 
 
+
+
+
 /*
       DEFINE button MoveControl1
          Row 320
@@ -121,6 +124,10 @@ FUNCTION LoadFitros( cTabela1 )
 
 	END WINDOW	
 
+   
+   ON KEY F2 OF fFiltrosCad ACTION Msginfo('F1')
+   //ON KEY ESCAPE OF _InputWindow ACTION ThisWindow.Release
+
    yRefresh( 'LstBoxFiltro' )  
 
 
@@ -167,7 +174,7 @@ FUNCTION LoadFitros( cTabela1 )
    Private aMtrFiltr := {}
 
    For n1 := 1 to 500
-         Aadd( aMtrFiltr , {  .t.  ,  'ZE JOSE '   ,      '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
+         Aadd( aMtrFiltr , {  .t.  ,  'ZE JOSE '   ,      '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",45) , ;
              '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '  , .t. , .t. , 0   } )
 
    Next   
@@ -217,6 +224,15 @@ Static Function InitIinput()
 	HMG_ChangeWindowStyle(  GetFormHandle('_InputWindow')  , WS_EX_DLGMODALFRAME, NIL, .T., .T. )
 	SendMessage( GetFormHandle('_InputWindow')  , WM_PAINT , 0 , 0 )
 
+   
+
+   SetFocus( GetControlHandle(  'Text_1' , '_InputWindow'  )  )
+
+
+   SendMessage( GetControlHandle(  'Text_1' , '_InputWindow'  ) , 177 , 0, -1 )
+   DoEvents()
+
+
 REturn
 
 
@@ -242,26 +258,16 @@ Function yEditMtr( cFrmParent , nLinhaScr1 , nColuna , aInf_Col1 , nScrollz )
 
    If (nColuna == 4)     
 
-      cVar1 := aMtrFiltr[nIt][4]  
-
+      cVar1 := Alltrim(aMtrFiltr[nIt][4]  )
       cForm1 := ''
 
-      hWnd1 := GetParent( GetFormHandle( cFrmParent  ) )
-
-      GetFormNameByHandle( hWnd1 , @cForm1 )
-
-     // msginfo(cForm1)
 
       EdtControl := Nil
       aR1 := GetPos_ClienttoScreen(   GetFormHandle(cFrmParent)  , ((nLinhaScr1 - 1) * nItemSubHeight) , nColObj )
 
-      //aR1 := GetPos_ClienttoScreen(   GetFormHandle(cForm1)  , 0 , 0 )
 
-      nR1 := GetProperTy( cForm1 , 'Row'  ) 
-
-
-         DEFINE WINDOW _InputWindow ;
-            AT  Ar1[1]  - 1 ,Ar1[2]  ;
+      DEFINE WINDOW _InputWindow ;
+            AT  Ar1[1]  - 1 ,Ar1[2] - 1  ;
             WIDTH aInf_Col1[5]+2  ;            
             HEIGHT nItemSubHeight+1 ;
             TITLE '' ;                    
@@ -273,19 +279,20 @@ Function yEditMtr( cFrmParent , nLinhaScr1 , nColuna , aInf_Col1 , nScrollz )
                VALUE cVar1 ; 
                HEIGHT nItemSubHeight ;
                MAXLENGTH 60 ;
-               UPPERCASE  ;
+               UPPERCASE  ;               
                ON ENTER msginfo('g111')
 
-         END WINDOW
+      END WINDOW
 
          ON KEY ESCAPE OF _InputWindow ACTION ThisWindow.Release
 
-         //ON KEY F5 OF _InputWindow ACTION msginfo('f1111')
-
+       
          
          
          ACTIVATE WINDOW _InputWindow
 
+         
+         //_InputWindow.TEXT_1.CaretPos := 0
          DoEvents()
 
     

@@ -706,6 +706,13 @@ Function ProcOnKey()
 	Local lCtrl := .f. 
 
 	Local nHWnd := EventHwnd() 
+
+
+	//Edit Mode
+
+	If _isWindowDefined('_InputWindow')
+		Return 
+	End If 
 	
 
 	If EventMsg() == WM_CHAR
