@@ -301,6 +301,7 @@ Return
 
 
 
+
 Static Function xRetItem( aMatriz , nindice  )
 
 	Local c1 := ''
@@ -443,12 +444,11 @@ Function xBrowserMtr( nRowIni ,  aDatas1 ,  bBlockMtr ,   cParent   , nLarg1  , 
 
 	aM1 := {}
 
-   For nZ1 := 1 To Len(aDatas1)
-      Aadd( aM1 ,  Eval(  bBlockMtr , nZ1 ) )
-    //  nQItem++
-   Next 
+    For nZ1 := 1 To Len(aDatas1)
+       Aadd( aM1 ,  Eval(  bBlockMtr , nZ1 ) )    
+    Next 
 
-   aMt1 := Aclone(aM1)
+    aMt1 := Aclone(aM1)
 
 	EncheMVis( nTamPag  , .f.  )
 
@@ -906,14 +906,15 @@ Function ProcOnKey()
 			If (bBlkDel != Nil)  //.And. (   nHWnd == GetControlHandle('LabelBrw' , cEspelhoBrw)  )			
 				
 				If Eval(bBlkDel)			    					 
-					aDataOrig[  nIndex1][1]     := .t.				
+					//msginfo('1')
+					//aDataOrig[  nIndex1][1]     := .t.				
 					If nIndex1 <= Len(aMDisplay)
 						aMDisplay[ nIndex1][4]  		:= .t. 				  
 					Else 
 						aMDisplay[ nLinhaBarra][4]  	:= .t. 				  
 					End If 
 				Else 
-					aDataOrig[  nIndex1][1]     := .f.
+				//	aDataOrig[  nIndex1][1]     := .f.
 
 					If nIndex1 <= Len(aMDisplay)
 						aMDisplay[ nIndex1][4]  		:= .f. 				  
@@ -1873,109 +1874,7 @@ Function xTecBrowMtr()
 
 		End If
 
-		//If (nHWnd == GetProperty( cEspelhoBrw , "HANDLE" ))
-		/*
-		If (nHWnd == GetControlHandle(  'LabelBrw' ,  cEspelhoBrw ))
-
-			DoEvents()
-			nSaveX5 := nItemX5
-			nItem :=  xGetPos(cEspelhoBrw)
-
-			nModeBrw := 0
 		
-			GetCursorPos (@nCol, @nRow)
-			ar1 := GetPos_ScreenToClient(   nHWnd , , nCol )
-
-			aMCol := xSearchPos(ar1[2])
-
-			//msginfo(Str(  aMCol[1][2]  ))
-
-			If Len(aMCol) > 0 
-				ySelCol( aMCol[1][2] )	
-			End If 
-			DoEvents()
-			SysWait(0.01)
-
-			//msginfo('lp22')
-
-
-			If (nItem > Len(aMt1))
-				//msginfo('Here2')
-				Return
-			End If
-
-			If yApagueH( cHeaderName )
-
-			End If
-
-
-			nRow1 := -(nLinScrool)
-
-
-			If nClearIt2 > 0
-				xLimpSub(cBrowserName ,  @nClearIt2 ,  nItemx5 , 0 ,   nItemBrwHeight , GetProperty(  cBrowserName,'Width')  , -(nLinScrool) )
-			End If
-
-
-			nItemx5 := 	nItem
-			nClearIt2 := nItemx5
-
-			nInd1 := Ascan(  aMVisible , { |a|  a[2] == nItemX5   }   )
-
-			lNoscr := .f.
-			If nind1 > 0
-				nLinhaBarra := aMVisible[   nInd1  ][1]
-				nIndex1 := 	aMVisible[   nInd1  ][2]
-			Else
-
-				nLinhaBarra := nItem
-
-				If nItemX5 <= Len(aMVisible)
-					nItem := aMVisible[nItemX5][2]
-				End If
-
-				nItemX5 := nItem
-
-			End If
-
-			If (nItemx5 > 0)
-				BT_ClientAreaInvalidateRect(cBrowserName ,  nRow1  +  ( ( nLinhaBarra - 1 ) * nItemBrwHeight)  , 0 , GetProperty( cBrowserName,'Width')  ,  nItemBrwHeight   , .t. )
-
-			End If
-
-			nSelLine := nItem
-			nIndex1 := nItemX5
-
-			//SysWait(0.01)
-
-
-			nClearIt2 := nIndex1
-
-			lHitb := (nLinhaBarra = nTamPag)
-			lHitt := (nLinhaBarra = 1)
-
-			l_Hitt := (nIndex1 = 1)
-
-
-
-			l_HitB := ( nIndex1 = Len(aMt1))
-
-
-			BT_ClientAreaInvalidateAll (cBarraVfrm)
-
-			BT_ClientAreaInvalidateAll(cBrowserName)
-			DoEvents()
-
-			yDcToDc()
-			yDcToDEspe()
-			nItemX5 := nSaveX5
-			DoEvents()
-
-			//msginfo('lp21')
-
-		End If
-
-		*/
 
 	End If
 
@@ -2506,19 +2405,20 @@ Static Function xRecords( n1 , lFrente  )
 
 	DEFAULT lFrente := .t.
 
+	
 
 	If (lFrente)
 		For z := n1 To ((n1+nTamPag) - 1)
 			If (z <= Len(aMt1) )
 				n2++
-				Aadd(aMDisplay ,  {  Z ,  xRetItem(   aMt1[Z]  , z   )   , n2 , aDataOrig[Z][1]    }  )
+				Aadd(aMDisplay ,  {  Z ,     aMt1[Z]    , n2 , aDataOrig[Z][1]    }  )
 				//Aadd(aMDisplay ,  {  Z ,  aDataOrig[z]   , n2 , aDataOrig[Z][1]    }  )
 			End If
 		Next
 	Else
 		For z := ((n1+nTamPag) - 1) To n1
 			If (z <= Len(aMt1) )
-				Aadd(aMDisplay , { Z ,  xRetItem(   aMt1[Z]  , z   ) , , aDataOrig[Z][1]  }  )
+				Aadd(aMDisplay , { Z ,     aMt1[Z]   , , aDataOrig[Z][1]  }  )
 			End If
 		Next
 	End If

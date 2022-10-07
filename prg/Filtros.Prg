@@ -62,6 +62,21 @@ FUNCTION LoadFitros( cTabela1 )
       ON GOTFOCUS Nil 
 
 
+      /*
+       
+       DEFINE button MoveControl4
+         Row 320
+         Col 215
+         width 120
+         backcolor rgb(34,34,34)
+		   height 30
+         caption "Editar Item"
+         action EditarItem( 'tESTE tESTE')
+       END button
+
+ */
+
+
 
 
 /*
@@ -252,7 +267,6 @@ Function yEditMtr( cFrmParent , nLinhaScr1 , nColuna , aInf_Col1 , nScrollz )
    If (nColuna == 1)
        aMtrFiltr[nIt][1] := !aMtrFiltr[nIt][1]       
        // Mark Check Item 
-
       yRefresh( 'LstBoxFiltro'  ,  ,  nIt   ) 
    End If 
 
@@ -275,24 +289,19 @@ Function yEditMtr( cFrmParent , nLinhaScr1 , nColuna , aInf_Col1 , nScrollz )
            ON INIT InitIinput()             
              
             @ 0,1 TEXTBOX TEXT_1 ;
-               WIDTH aInf_Col1[5] ;
-               VALUE cVar1 ; 
-               HEIGHT nItemSubHeight ;
-               MAXLENGTH 60 ;
-               UPPERCASE  ;               
-               ON ENTER msginfo('g111')
+            WIDTH aInf_Col1[5] ;
+            VALUE cVar1 ; 
+            HEIGHT nItemSubHeight ;
+            MAXLENGTH 60 ;
+            UPPERCASE  ;               
+            ON ENTER ( DoEvents() , EditarItem( This.Value) , DoEvents() , ThisWindow.Release )
+
+
 
       END WINDOW
-
-         ON KEY ESCAPE OF _InputWindow ACTION ThisWindow.Release
-
+      ON KEY ESCAPE OF _InputWindow ACTION ThisWindow.Release      
+      ACTIVATE WINDOW _InputWindow         
        
-         
-         
-         ACTIVATE WINDOW _InputWindow
-
-         
-         //_InputWindow.TEXT_1.CaretPos := 0
          DoEvents()
 
     
@@ -320,16 +329,16 @@ Function EnableBrw()
 Return 
 
 
-Function EditarItem()
+Function EditarItem(cValor)
 
-  Local nIt := yRetIndex()
-  Local aM1 := {}
+   Local nIt := yRetIndex()
+   Local aM1 := {}
 
    
-   aMtrFiltr[nIt][2] := ' Filtro Modicado ' + Strzero(n1,5) 
-   
-   
+   aMtrFiltr[nIt][4] := cValor
    yRefresh( 'LstBoxFiltro'  ,  ,  nIt ) 
+
+   DoEvents()
 
 
 Return 
