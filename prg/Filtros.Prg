@@ -61,6 +61,20 @@ FUNCTION LoadFitros( cTabela1 )
 		ON PAINT Nil ;
       ON GOTFOCUS Nil 
 
+/*
+      DEFINE button MoveControl1
+         Row 320
+         Col 15
+         width 120
+         backcolor rgb(34,34,34)
+		 height 30
+         caption "Insere Registros"
+       action InsereRg()
+       END button
+
+       */
+
+
 
       /*
        
@@ -188,7 +202,7 @@ FUNCTION LoadFitros( cTabela1 )
    
    Private aMtrFiltr := {}
 
-   For n1 := 1 to 500
+   For n1 := 1 to 5
          Aadd( aMtrFiltr , {  .t.  ,  'ZE JOSE '   ,      '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",45) , ;
              '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '  , .t. , .t. , 0   } )
 
@@ -201,7 +215,7 @@ FUNCTION LoadFitros( cTabela1 )
 
    xSombraZ( cSalvaJan , nR , nC  , GetProperTy('fFiltrosCad','Width') , GetProperTy('fFiltrosCad','Height')      )
 
-   Private aBlk1 := { |a|   { Iif(aMtrFiltr[a][1]  , 'image=CHKOK'  ,  'image=CHKNO'   )   ,  aMtrFiltr[a][2] + ' ' + StrZero(a,5) ,  aMtrFiltr[a][3] , ;
+   Private aBlk1 := { |a|   { Iif(aMtrFiltr[a][1]  , 'image=CHKOK'  ,  'image=CHKNO'   )   ,  aMtrFiltr[a][2]  + '   ' + StrZero(a,5) ,  aMtrFiltr[a][3] , ;
     aMtrFiltr[a][4]  , aMtrFiltr[a][5] , aMtrFiltr[a][5]   }    } 
   
    
@@ -209,7 +223,7 @@ FUNCTION LoadFitros( cTabela1 )
     'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' } , ;
       {6,60 , 75 , 60 ,45,75  }  , { 'L' , 'C' , 'C' , 'C' , 'C' ,  'L' , 'L' , 'N' } , .f. , .t. , 200 , ;
        { | cParent , nRow1 , nCol1 , ainFCol , nScrolly | yEditMtr( cParent , nRow1 , nCol1 , ainfCol , nScrolly  )} , ;
-       { || yDelMtr()}   )
+       { || yDelMtr()}   , 7  )
 
 
    yRefresh( 'LstBoxFiltro'  )   
@@ -227,8 +241,8 @@ Function yDelMtr()
    Local nIt := yRetIndex()
    Local lOk1 := !aMtrFiltr[nIt][7]
 
-
    aMtrFiltr[nIt][7] := !aMtrFiltr[nIt][7]
+
 
 Return lOk1
 
@@ -267,6 +281,7 @@ Function yEditMtr( cFrmParent , nLinhaScr1 , nColuna , aInf_Col1 , nScrollz )
    If (nColuna == 1)
        aMtrFiltr[nIt][1] := !aMtrFiltr[nIt][1]       
        // Mark Check Item 
+
       yRefresh( 'LstBoxFiltro'  ,  ,  nIt   ) 
    End If 
 
@@ -355,9 +370,15 @@ Return
 Function InsereRg()
 
   
+   
    Local aM1 := {}
-    Aadd( aMtrFiltr   , { 'Novo' ,  ' Filtro Nuevo' , '1adasdsadas'  , '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
-             '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '} )
+    //Aadd( aMtrFiltr   , { 'Novo' ,  ' Filtro Nuevo' , '1adasdsadas'  , '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
+      //       '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '} )
+
+    Aadd( aMtrFiltr , {  .t.  ,  ''   ,      '' , '' , ;
+      ' ' ,    ''  , .t. , .t. , 0   } )
+
+
 
    yRefresh( 'LstBoxFiltro'  , .t.  ) 
 
