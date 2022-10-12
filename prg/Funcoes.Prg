@@ -351,7 +351,7 @@ FUNCTION GetSql( cTabela, lWhere )
 		cSql1 += " from " + cTabela
 	END IF
 
-	SaveLog('Logs\sqlfunc_GetSql_' + Dtos(date()) + '.txt',cSql1)
+	//SaveLog('Logs\sqlfunc_GetSql_' + Dtos(date()) + '.txt',cSql1)
 
 	//msginfo( cSql)
 
@@ -380,7 +380,7 @@ FUNCTION GetIndexes( cTabela )
 
 	// hb_MemoWrit("Con1.txt", cSql )
 
-	SaveLog(  'Sqlp01.txt' , cSql )
+	//SaveLog(  'Sqlp01.txt' , cSql )
 
 	oServer := GetConexao()
 	oQuery  := oServer:Query( cSql )
