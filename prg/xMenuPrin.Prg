@@ -35,7 +35,6 @@
 #define SELCOR    {28,157,189}
 
 Static nRowSub := 0
-
 Static lVez1 := .f.
 Static nIndexEventY := 0
 Static aOpcoes  := {}
@@ -43,62 +42,35 @@ Static nMainSel := 0
 Static nClearSel  := 0
 Static cOpMainSel  := ''
 Static nItemDrop1 := 0
-
 Static nHeightDrop := 0
 Static lSetasDown := .f.
 Static l_Httb := .f.
 Static l_Http := .t.
-
 Static lModeTecla := .f.
-
 Static aOpx1 := {}
 Static nItemx1 := 0
-
 Static lSubOpen := .f.
 Static nItemClr := 0
 Static cOpSely := ''
-
 Static nIdMenu1 := 0
-
-//aOpcoes , nMainSel , nClearSel , cOpMainSel , nItemDrop1 , nHeightDrop , lSetasDown , .f. , l_Httb , l_Http
-
+Static lExec1 := .f. 
 Static lTracking142 := .f.
-
-
 Static nScrLin := 0
-
 Static lTracking54 := .f.
-
 Static lTracking412 := .t.
-
 Static nColSub1 := 0
-
 Static nPos9 := 0
 Static cParentJan := ''
-
 Static nSetaSel := 0
-
 Static nItemMenuAnt := 0
-
-
-
 Static nIt5 := 0
-
-
 Static nLinhaAtual := 0
-
 Static lHttb := .f.
 Static lHttp := .t.
-
 Static lEnabled2 := .t.
-
 Static nHeightMen := 520
-
 Static nLinhaDrop := 0
-
 Static lSubMenu := .f.
-
-
 Static hBitOk   
 Static hBitOk2   
 Static hBitSeta 
@@ -153,11 +125,11 @@ Function xMenuMain( cParent , nRow1 , nCol1 , aOpPrin , aSubOps , lEnabled11 )
 
 
 	DEFINE WINDOW Win_MPrincipalSombra AT nRow1, nCol1 WIDTH nColTamMenu HEIGHT nHeightMen TITLE 'MenPrincipalSpmbra' ;
-		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION  CHILD PANEL PARENT &cParent BACKCOLOR Nil VIRTUAL HEIGHT nHeightMen+1
+		NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION  CHILD PANEL PARENT &cParent BACKCOLOR Nil VIRTUAL HEIGHT nHeightMen+1 		
 	END WINDOW
 
 
-
+	
 
 	If Ascan( _HMG_SYSDATA [ 60 ]  ,   ALLTRIM ( HMG_UPPER ( "EventPrin1"  ) )  ) = 0
 		InstallEventHandler( "EventPrin1" )
@@ -165,10 +137,8 @@ Function xMenuMain( cParent , nRow1 , nCol1 , aOpPrin , aSubOps , lEnabled11 )
 	End If
 
 
-
 	SET WINDOW Win_MenuPrincipal TRANSPARENT TO Iif(!lEnabled2 , 167 , 0)
 	_ShowWindow("Win_MPrincipalSombra")
-
 
 	ShowScrollBar( GetFormHandle( 'Win_MenuPrincipal' ), 0, .F. )
 	ShowScrollBar( GetFormHandle( 'Win_MenuPrincipal' ), 1, .F. )
@@ -189,8 +159,9 @@ Function xMenuMain( cParent , nRow1 , nCol1 , aOpPrin , aSubOps , lEnabled11 )
 Return
 
 
-Function xCrieJanSub(nLinha , nColuna )
 
+
+Function xCrieJanSub(nLinha , nColuna )
 
 
 	DEFINE WINDOW JanMenuSub AT nLinha  , nColuna  WIDTH nColTamMenu - 5 HEIGHT 500 TITLE 'Tsub1' ;   //aCorSub1 //Win_MenuPrincipal
@@ -330,10 +301,8 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 
 	//// Menu Principal
 
-
+	
 	If (_isWindowDefined('JanMenuSubSombra')) .And. (nHWnd == GetProperty(  'JanMenuSubSombra' , "HANDLE" ))
-
-
 
 		If ( nMsg == WM_MOUSELEAVE )
 			//.And. (   lTracking142  )
@@ -352,6 +321,7 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 
 		If (nMsg == WM_LBUTTONDOWN)
 
+		
 			If (nItemx1 <= Len(aOpX1))
 
 				If !aOpx1[nItemx1][3]
@@ -378,6 +348,8 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 		End If
 
 	End If
+
+
 
 
 
@@ -468,6 +440,9 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 
 			DoEvents()
 			GetCursorPos (@nCol1, @nRow1)			
+
+			//	msginfo('lp22')
+
 
 			nLinDrop   := (nItemDrop1 * nItemSubHeight)			
 			nLinhaDrop := nLinDrop
@@ -566,10 +541,6 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 			End If			
 
 		End If
-
-
-
-
 
 
 		If ( nMsg == WM_MOUSEMOVE ) .And. (lTracking412) 
@@ -996,9 +967,6 @@ Return
 Function xDropIt(  nItemMenu )
 
 	Local nRow1 := 0
-
-
-
 	If nClearSel	 > 0
 		xLimpSub(  'Win_MenuPrincipal'  , @nClearSel ,  nMainSel ,  nHeightDrop )
 	End If
@@ -1176,67 +1144,7 @@ Function xDelMain()
 	
 REturn
 
-Function RetPointW()
 
-	Local nCol1 , nRow1
-	Local hWnd
-
-	GetCursorPos (@nCol1, @nRow1)	
-	hWnd := WindowFromPoint ( nCol1, nRow1)
-
-
-REturn hWnd
-
-
-Function xCloseMPrin()
-
-	Local nI1 := 0
-
-	Local nHandle1  := DoFindWin("MenPrincipal1")
-	Local nHandle2  := DoFindWin("Tsub")
-
-
-	If (nHandle1 > 0)
-
-
-
-		SendMessage( nHandle1, WM_SYSCOMMAND, SC_CLOSE , 0 )
-
-		DoEvents()
-		DoEvents()
-
-		SendMessage( nHandle1, WM_SYSCOMMAND, WM_DESTROY , 0 )
-
-
-		If (nHandle2 > 0)
-
-			SendMessage( nHandle2, WM_SYSCOMMAND, SC_CLOSE , 0 )
-			DoEvents()
-			DoEvents()
-			SendMessage( nHandle2, WM_SYSCOMMAND, WM_DESTROY , 0 )
-			DoEvents()
-
-
-		End If
-
-
-		If !RemoveHandler( "EventMenu1"  )
-			msginfo("Erro ao remover Handle Event.")
-		End If
-
-
-		If !EventRemove(nIndexEventY)
-			msginfo("Erro ao remover Handle Event 22 .")
-		End If
-
-
-
-	End If
-
-	//msginfo('ok2')
-
-
-Return
 
 Function xCalcHeight( cMenuDesc , nTopx1 )
 
@@ -1297,15 +1205,6 @@ Function xDropDown(  cJanelaSub  , cMenuDesc  , nTopx1 , cParent1 )
 	nScrLin     := 0
 
 	DoEvents()
-	/*
-	GetCursorPos(@nCol1 , @nRow1)		
-	nY2 := nRowSub + (nIndice   * nItemSubHeight)
-	aRt := GetPos_ScreentoClient( GetFormHandle(  'Main'  ),  nY2   , 0 )
-    nLinRow := aRt[1]
-	nCol2 := 0
-	nRow2 := 0	
-	*/
-
 
 	ny2:=nRowSub+(nindice * nItemSubHeight)
 	aRt := GetPos_ScreenToClient( GetFormHandle(  'Main'  ),  nY2   , nColSub1 )
@@ -1512,34 +1411,33 @@ Function xTeclasMenu()
 	LOCAL  nHWnd   := EventHWND()
 	LOCAL  nMsg    := EventMSG()
 	LOCAL  nWParam := EventWPARAM()
+	LOCAL  nLParam := EventLPARAM()
 	Local nContItens := 0
 	Local nQt        := 0
 	Local nRow       := 0
 	Local nindice
 	Local nRow2
 	Local nCol2
-	Local cTp1       := ''
-
-	//xFechaMen
-
+	Local cTp1       := ''	
+	Local cForm1 := ''
 	Local nMaxItem := Int(nTamSubMenuConsulta / nItemSubHeight)
 
-
-	If (cActiveJan != "Main")
-		//	MSGINFO(cActivejan )
+	If (cActiveJan != "Main")		
 		Return
 	End If
 
 
 	If nMsg == WM_KEYDOWN
 
-		If (nWParam == VK_LEFT)
+		
+		GetFormNameByHandle(   nHWnd , @cForm1     )
+	//	msginfo(cForm1)
 
+		If (nWParam == VK_LEFT)
 			If (nIdMenu1 = 999)
 				nIdMenu1 := nItemx1
 				xFechaMen()
 			End If
-
 		End If
 
 
@@ -1852,19 +1750,19 @@ Function xTeclasMenu()
 		End If
 
 
-
 		IF nWParam == VK_TAB
 
 			lModeTecla := !lModeTecla			
-
 			If (lModeTecla)
 
 				lTracking412 := .f.
 				nMainSel := 1			
 				nIdMenu1 := 0
 				nPos9 := 1
-				SendMessage( GetProperty(   'Win_MPrincipalSombra' , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )		
-				
+
+				lExec1 := .f. 
+
+				SendMessage( GetProperty(   'Win_MPrincipalSombra' , "HANDLE" ) , WM_MOUSEMOVE ,    90 ,0 )						
 				
 			Else			
 				xClearSel()
@@ -1873,6 +1771,8 @@ Function xTeclasMenu()
 			DoEvents()
 
 		End If
+	Else 
+
 	End If
 
 
@@ -1892,28 +1792,6 @@ Static Function yAtu_Setas()
 
 Return 
 
-Function xHintsetaD()
-
-	Local cTp1 := ''
-	Local nRow2 := 0
-	Local lOk := .f.
-
-	If (nIdMenu1 == nItemx1)
-
-		cTp1 := "Seta para a Direita Abre Mais Opções"
-		nRow2 := GetProperty( 'JanMenuSub'  , 'Row') + ( (nItemx1 - 1) * nItemSubHeight) - 18
-
-		If !_isWindowDefined("Win_Msg")
-			CrieJanTip( nRow2  , GetProperty(  'JanMenuSub', 'Width') - 25 ,   Alltrim(cTp1)      ,, 0.5 )
-		Else
-			xDispHint( cTp1 , nRow2  , GetProperty( 'JanMenuSub', 'Col') + GetProperty( 'JanMenuSub', 'Width') + 10   )
-		End If
-		xDispUpTam(cTp1 )
-		lOk := .t.
-
-	End If
-
-Return lOk
 
 
 Function yDCMenu1()
