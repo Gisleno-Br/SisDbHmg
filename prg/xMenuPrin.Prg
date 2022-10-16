@@ -310,6 +310,7 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 			
 			nItemClr := 0
 			BT_ClientAreaInvalidateAll( nHWnd  )
+			
 			//SetWindowCursor( nHWnd , IDC_ARROW )
 
 			
@@ -337,6 +338,7 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 
 			End If
 
+			
 		End If
 
 
@@ -348,9 +350,7 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 		End If
 
 	End If
-
-
-
+   
 
 
 
@@ -365,12 +365,12 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 			DoEvents()
 
 			//msginfo('g1')
+		
 
-			
+			If  (Abs(nLinhaDrop) > 0) .And. (nRow1 >= Abs(nLinhaDrop)) .and. (Abs( nRow1 - Abs(nLinhaDrop)) >= 15) // .And. ;
+					//(nRow1 <= ( Abs(nLinhaDrop)+GetProperty('JanMenuSubSombra' , 'Height') + nitemSubHeight + 15  ))
 
-			If  (nLinhaDrop > 0) .And. (nRow1 >= nLinhaDrop) .and. (Abs( nRow1 - nLinhaDrop) >= 15) .And. ;
-					(nRow1 <= (nLinhaDrop+GetProperty('JanMenuSubSombra' , 'Height') + nitemSubHeight + 15  ))
-			
+							
 				If !lSubMenu
 					ExitMenu1()
 				Else
@@ -385,9 +385,10 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 					DoEvents()
 				End If
 
-			Else
+				nIt5 := 0
 
-			//	msginfo('ok22')
+			Else
+				
 				
 				If _isWindowDefined(  'JanMenuSub'   )
 					xLimpSetas( .t. )
@@ -406,6 +407,8 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 					End If
 				Else
 
+				
+
 					nMainSel := 0
 					nClearSel := 0
 
@@ -423,7 +426,8 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 					
 
 					lTracking412 := .f.
-					
+
+										
 					DoEvents()
 					Return
 				End If		
@@ -545,8 +549,10 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 
 		If ( nMsg == WM_MOUSEMOVE ) .And. (lTracking412) 
 		 
-			GetCursorPos (@nCol1, @nRow1)
+				GetCursorPos (@nCol1, @nRow1)
 			lSuby := .f.
+
+			//msginfo('F22')
 
 			lCondicao := .f. 
 
@@ -560,6 +566,7 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 			If nItemDrop1 == 0
 				lCondicao := .f. 
 			Else 
+
 				
 				nRowY := Ar1[1]
 				lCondicao := (nLinDrop > 0) .And. (nRowY >= nLinDrop) .and. (Abs( nRowY - nLinDrop) >= 0) .And. ;
@@ -582,13 +589,10 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 					End If 
 
 					nSetaSel := 0
+					//msginfo('F21')
 					xDelMain()
 
-
-
-
-
-					
+				
 					lTracking412  := (nPos9 == nIt5)
 					lSuby := .t.					
 			
@@ -646,6 +650,8 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 			DoEvents()
 
 		End If
+
+
 
 
 
@@ -1205,6 +1211,7 @@ Function xDropDown(  cJanelaSub  , cMenuDesc  , nTopx1 , cParent1 )
 	nScrLin     := 0
 
 	DoEvents()
+
 
 	ny2:=nRowSub+(nindice * nItemSubHeight)
 	aRt := GetPos_ScreenToClient( GetFormHandle(  'Main'  ),  nY2   , nColSub1 )
