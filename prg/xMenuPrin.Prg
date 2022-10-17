@@ -674,7 +674,6 @@ Function EventPrin1( nHWnd, nMsg, nWParam, nLParam )
 				lSubMenu := .t.	
 
 			Else
-
 				//nMainSel := nItemx1
 				nMaInSel := nPos9
 				yP1 := nItemx1			
