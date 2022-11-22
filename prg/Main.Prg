@@ -700,11 +700,6 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 	Local nRow2 :=0
 	Local nCol2 := 0
 
-
-
-
-
-
 	//Local nLhn := GetProperty( 'fSplitSubMenu' , 'Height')
 
 	*// Eventos Sub menu.
