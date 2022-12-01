@@ -5683,8 +5683,7 @@ HB_FUNC( CURSORWE )
 								}
 						else
 							{
-							BitBlt( hDC, wCol, wRow, bitmap.bmWidth, bitmap.bmHeight, hDCmem, 0, 0, dwRaster );								
-							//StretchBlt( hDC, wCol, wRow, wWidth, wHeight, hDCmem, 0, 0, bitmap.bmWidth, bitmap.bmHeight, dwRaster );
+							BitBlt( hDC, wCol, wRow, bitmap.bmWidth, bitmap.bmHeight, hDCmem, 0, 0, dwRaster );														
 								}
 
 							DeleteDC( hDCmem );
