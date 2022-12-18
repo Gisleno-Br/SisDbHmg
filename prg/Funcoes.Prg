@@ -15,6 +15,9 @@ Declare window Main
 
 
 
+
+
+
 Function GetCampoOrdem( cTabela , cCampo)
 
 	LOCAL oServ   := GetConexao()
@@ -65,7 +68,7 @@ Function SetCampoOrdem(cTabela , cCampo , nOrdem1 )
 	oQuery := oServer:Query( cSql)
 
 	IF oQuery:NetErr()
-		yAviso( '(SetOrder) Erro ao Executar Atualização -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  ,, .f.  )
+		yAviso( '(SetOrder) Erro ao Executar Atualizaï¿½ï¿½o -> ' + Chr( 13 ) + Chr( 10 ) + oQuery:Error()  ,, .f.  )
 		Return .f.
 	END IF
 
@@ -157,7 +160,7 @@ Function TroqOrdens(cTabela1 , nOrd1 , nOrd2  , cCampoName )
 	oQuery := oServer:Query( cSql1)
 
 	IF oQuery:NetErr()		
-		xDialog( Hb_AnsiToOem('(CampoTam1) Erro ao Executar Atualização -> ' + Chr( 10 ) + Chr( 13 ) + oQuery:Error() ), .f.  )
+		xDialog( Hb_AnsiToOem('(CampoTam1) Erro ao Executar Atualizaï¿½ï¿½o -> ' + Chr( 10 ) + Chr( 13 ) + oQuery:Error() ), .f.  )
 		RETURN .f.
 	END IF
 	
@@ -166,7 +169,7 @@ Function TroqOrdens(cTabela1 , nOrd1 , nOrd2  , cCampoName )
 	oQuery := oServer:Query( cSql2)
 
 	IF oQuery:NetErr()		
-		xDialog( Hb_AnsiToOem('(CampoTam2) Erro ao Executar Atualização -> ' + Chr( 10 ) + Chr( 13 ) + oQuery:Error() ), .f.  )
+		xDialog( Hb_AnsiToOem('(CampoTam2) Erro ao Executar Atualizaï¿½ï¿½o -> ' + Chr( 10 ) + Chr( 13 ) + oQuery:Error() ), .f.  )
 		RETURN .f.
 	END IF
 
@@ -210,7 +213,7 @@ Function SetCampoTam(cTabela , cCampo , nOrdem1 )
 	oQuery := oServer:Query( cSql)
 
 	IF oQuery:NetErr()		
-		xDialog( Hb_AnsiToOem('(CampoTam) Erro ao Executar Atualização -> ' + Chr( 10 ) + Chr( 13 ) + oQuery:Error() ), .f.  )
+		xDialog( Hb_AnsiToOem('(CampoTam) Erro ao Executar Atualizaï¿½ï¿½o -> ' + Chr( 10 ) + Chr( 13 ) + oQuery:Error() ), .f.  )
 		RETURN .f.
 	END IF
 
@@ -293,7 +296,7 @@ FUNCTION GetCamposDic( cTabela, cBrowse, lCmpTab , lOem )
 	oServ := Nil
 
 	If Len( aCampos ) == 0
-		yAviso( 'Dicionario de dados não Localizado para Tabela ' +  cTabela + QUEBRA + 'Contacte Suporte.' , .f. )
+		yAviso( 'Dicionario de dados nï¿½o Localizado para Tabela ' +  cTabela + QUEBRA + 'Contacte Suporte.' , .f. )
 	End If
 
 RETURN aCampos
@@ -486,7 +489,7 @@ FUNCTION xInit()
 
 
 	IF !File( Alltrim(cInifile) )
-		MsgInfo( 'Arquivo DataBase.ini não Localizado , Impossivel Continuar.' )
+		MsgInfo( 'Arquivo DataBase.ini nï¿½o Localizado , Impossivel Continuar.' )
 		//fPrincipal.Release()
 	END IF
 
@@ -802,7 +805,7 @@ FUNCTION GetCamposInf( cTabela, cInf  ,cCampo )
 	oServ := Nil
 
 	IF Len( aTam ) == 0
-		yAviso( 'Dicionario de Dados não Localizado para Tabela ' +  cTabela  + '(' + cInf + ')'   + QUEBRA + 'Contacte Suporte.' ,, .f.  )
+		yAviso( 'Dicionario de Dados nï¿½o Localizado para Tabela ' +  cTabela  + '(' + cInf + ')'   + QUEBRA + 'Contacte Suporte.' ,, .f.  )
 	END IF
 
 RETURN aTam
