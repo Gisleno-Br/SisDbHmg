@@ -122,7 +122,7 @@ FUNCTION Main
 
 
 
-	
+
 
 	Public nColTamMenu := 165
 
@@ -131,7 +131,7 @@ FUNCTION Main
 
 
 	Public nSizeFont := 9
-	
+
 
 
 
@@ -159,7 +159,7 @@ FUNCTION Main
 
 	Public CURSORHAND := "img\Hand_Cursor.cur"
 
-	
+
 
 	Private aCords := {}
 
@@ -207,7 +207,7 @@ FUNCTION Main
 	Public nBkColorF1 :=  0xFFFFFF
 	Public nBkColorF2 :=  Rgb( 192, 192, 192 )
 
-	Public lDebug := .f. 
+	Public lDebug := .f.
 
 
 
@@ -232,19 +232,19 @@ FUNCTION Main
 
 	Public bColorGrid := {|| iif( ( LastRec() > 0 ) .AND. ( RecNo() / 2 == Int(RecNo() / 2 ) ), { 235,243,242 }, {211,231,230} ) }
 
-	
+
 	Public aBtnG1 := ;
 		{ { Rgb(255,255,255) , Rgb( 178 , 178 , 178 ) , Rgb( 58 , 174 , 203 ) , Rgb( 58 , 174 , 203 ), nGradDirE }, { Rgb( 178 , 178 , 178 ) , nFrColorD, Rgb( 178 , 178 , 178 ), nBkColorD2, nGradDirD }, { RGB(255,255,255) , nFrColorF, Rgb( 54 , 100 , 109 )  , Rgb( 54 , 100 , 109 )  , 		 					nGradDirF } }
-	
+
 	Public aBtnG2 := ;
 		{ { Rgb(255,255,255) , {54,100,109} , Rgb( 44 , 169 , 139 ) , Rgb( 20 , 158 , 192 ), nGradDirE }, { {255,255,255}  , nFrColorD, nBkColorD1, nBkColorD2, nGradDirD }, { RGB(255,255,255) , Rgb( 54 , 100 , 109 ) , Rgb( 54 , 100 , 109 ) ,  Rgb( 54 , 100 , 109 )  , 		 					nGradDirF } }
 
 
-	
+
 	Public aBtnSel := ;
 		{ { nTxColorF, nFrColorF, nBkColorF1, nBkColorF2, nGradDirF }, { nTxColorD, nFrColorD, nBkColorD1, nBkColorD2, nGradDirD }, { nTxColorF, nFrColorF, nBkColorF1, nBkColorF2, 						nGradDirF } }
-	
-		
+
+
 
 	Public lVScrool := .f.
 
@@ -256,8 +256,8 @@ FUNCTION Main
 	Public lUnderline := .F.
 	Public lStrikeOut := .F.
 
-	
-	
+
+
 
 
 	PRIVATE lOnToolTipCustomDraw := .T.
@@ -328,7 +328,7 @@ FUNCTION Main
 	Private nTamSubMenuConsulta := 300
 
 
-	
+
 	Private nMaxItem1 := 0
 
 
@@ -358,7 +358,7 @@ FUNCTION Main
 	PUBLIC cBairroEmp    := ''
 	PUBLIC cCidadeEmp    := ''
 
-	
+
 
 	PUBLIC qTotReg       := 150
 
@@ -469,7 +469,7 @@ FUNCTION Main
 
 
 
-	
+
 
 	Private hBitmap25 := 0
 
@@ -485,7 +485,7 @@ FUNCTION Main
 	//Private nColScrool := 0
 
 
-	
+
 
 	Private lScrool := .t.
 
@@ -497,11 +497,11 @@ FUNCTION Main
 	Public aBtnSl := ;
 		{ { TxColorF, FrColorF, BkColorF1, BkColorF2, GradDirF }, { TxColorD, FrColorD, BkColorD1, BkColorD2, GradDirD }, { TxColorF, FrColorF, BkColorF1, BkColorF2,	GradDirF } }
 
-	
+
 
 	Public aBtnColor := ;
 		{ { nTxColorE, nFrColorE, nBkColorE1, nBkColorE2, nGradDirE }, { nTxColorD, nFrColorD, nBkColorD1, nBkColorD2, nGradDirD }, { nTxColorF, nFrColorF, nBkColorF1, nBkColorF2, 		 					nGradDirF } }
-	
+
 
 	Public nDesktopHeight := GetDesktopHeight()
 
@@ -592,9 +592,9 @@ FUNCTION Main
 	Private nOpSel := 0
 
 	cText := "Usuario Logado As " + QUEBRA + ;
-	"17:00 do dia 12/12/20022 as " + QUEBRA + ;
-	"15:00 User: Gisleno.Junior" + 	QUEBRA +  "PC:4234334 Na Casa Guido"  + QUEBRA + ;
-	"Linha 0001 " + QUEBRA + "Linha 00002 "
+		"17:00 do dia 12/12/20022 as " + QUEBRA + ;
+		"15:00 User: Gisleno.Junior" + 	QUEBRA +  "PC:4234334 Na Casa Guido"  + QUEBRA + ;
+		"Linha 0001 " + QUEBRA + "Linha 00002 "
 
 
 	Private aItens := { {"1-Clientes", Hb_AnsiToOem("Permiti Cadastrar Cliente e Fazer Manutenção")  , .t.  , {  ||xCliente()  }      } , ;
@@ -608,7 +608,7 @@ FUNCTION Main
 		{"2-Pedidos","Vendas" , .t.  , Nil } , {"2-Orçamento","Orçamento" , .t. , Nil }  , {"3-Listagem Clientes","Lista" , .f. , Nil  } ,    {"4-Configurações","" , .f. , Nil  } }
 
 
-	
+
 
 	Load Window Main
 
@@ -637,7 +637,7 @@ FUNCTION Main
 	//xTesMenu(  'MenuY1', 50 , 450 , {} , 0 )
 
 	//msginfo('ok2')
-	
+
 	DoEvents()
 	_ShowWindow('Main')
 
@@ -663,7 +663,7 @@ Function xCliente()
 	Else
 
 		If Len(aButTop) > 0
-		//	ReleaseTeto()
+			//	ReleaseTeto()
 		End If
 
 
@@ -712,18 +712,18 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 		If (nMsg == 71)
 
 			If cActiveJan = 'Main'
-				If _IsWindowDefined('Win_MenuPrincipal')					
+				If _IsWindowDefined('Win_MenuPrincipal')
 					xRefreshMain()
-				End If 
-			End If 
+				End If
+			End If
 
 
-			If _IsWindowDefined( 'MenuY1' )				
-				xShowPop()			
-			End If 
-			
+			If _IsWindowDefined( 'MenuY1' )
+				xShowPop()
+			End If
+
 			If (_IsWindowDefined( cActiveJan)) .And. (cActiveJan != "Main")
-				xShowBrw(  cTabela  )			
+				xShowBrw(  cTabela  )
 			End If
 
 			//msginfo('lp22')
@@ -734,9 +734,9 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 
 		If (nMsg == 5)
-		  //  msginfo('l22')
+			//  msginfo('l22')
 
-		End If 
+		End If
 
 
 
@@ -744,7 +744,7 @@ Function EventHndMain( nHWnd, nMsg, nWParam, nLParam )
 
 	End If
 
-	
+
 
 
 
@@ -791,7 +791,6 @@ FUNCTION EnableButton(cForm, nID, lShow)
 	ENDIF
 
 RETURN NIL
-
 
 
 
@@ -858,7 +857,7 @@ Return nInd
 
 
 
-	
+
 
 
 
@@ -877,7 +876,7 @@ Function D1Black(cJan,zBitMap)
 
 	LOCAL BTstruct
 
-	If lAtivaBlack	
+	If lAtivaBlack
 
 
 		hDC    = BT_CreateDC ( cJan  , BT_HDC_INVALIDCLIENTAREA, @BTstruct)
@@ -917,8 +916,8 @@ Function xTesMenu(  cNName , nRow , nCol , aMatriz , nItemSel )
 
 	Local aZop1 := {}
 	Local cName1 := cNName
-	 //'M_' + StrZero( Int( hb_Random( Val( StrTran( Time(), ":" ) ) ) ), 4 ) + 'Z1'
-	 
+	//'M_' + StrZero( Int( hb_Random( Val( StrTran( Time(), ":" ) ) ) ), 4 ) + 'Z1'
+
 
 
 
@@ -961,48 +960,48 @@ Return
 
 Function xSubTeste( nRow1 , nCol1 )
 
-  	Local aZop1 := {}
-  	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { |a| msginfo( Str(a) )     }    }  )
-  	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { |a| msginfo( Str(a) )     }    }  )
-  	Aadd(aZop1 , { "  Novo Arquivo12   " , "Novo Arquivo..." , .t. , { |a| msginfo( Str(a) )      }    }  )
+	Local aZop1 := {}
+	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { |a| msginfo( Str(a) )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo6   " , "Novo Arquivo..." , .t. , { |a| msginfo( Str(a) )     }    }  )
+	Aadd(aZop1 , { "  Novo Arquivo12   " , "Novo Arquivo..." , .t. , { |a| msginfo( Str(a) )      }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo13   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo14   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo15   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo16   " , "Novo Arquivo..." , .t. , { |a| msginfo('k22 '  +  '   ' + Str(a) )      }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo17   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
 	Aadd(aZop1 , { "  Novo Arquivo18   " , "Novo Arquivo..." , .t. , { || msginfo('k22' )     }    }  )
-	
 
-	xMenuSubOp( 'MenuY2' , 'Main' , aZop1 , nRow1 , nCol1 , .t. , .t.   ) 
 
-	 //xSetMenu1()
+	xMenuSubOp( 'MenuY2' , 'Main' , aZop1 , nRow1 , nCol1 , .t. , .t.   )
+
+	//xSetMenu1()
 
 	//msginfo('ok22')
 
-Return 
+Return
 
 
 Function xDoIt()
 
-   msginfo('ok2')
+	msginfo('ok2')
 
-   i := 1
-
-
-   xFechaMen()
-
-   //EventSTOP ( 5 , .T.) a
-
-   DoEvents()
-
-   //_SetActivationFocus(1)
+	i := 1
 
 
+	xFechaMen()
 
-   DoEvents()
+	//EventSTOP ( 5 , .T.) a
+
+	DoEvents()
+
+	//_SetActivationFocus(1)
 
 
-REturn 
+
+	DoEvents()
+
+
+REturn
 
 
 
@@ -1046,7 +1045,7 @@ END IMAGE
 
 SetProperty(cJanela1,Sclavel01,"Enabled",.F.)
 
-RETURN 
+RETURN
 
 
 
@@ -1062,7 +1061,7 @@ Function SaveLog(cArqLog,cTexto)
 
 	If File(cArqLog)
 		cText := hb_memoRead(cArqLog)+' '+cTexto + QUEBRA
-	End If 
+	End If
 
 
 	hb_memowrit(cArqLog ,cUserName + ' ' + Dtoc(date()) + ' ' + Time() + '   ' +  cText + QUEBRA )
@@ -1095,7 +1094,7 @@ Return
 		}
 
 
-	
+
 
 
 /*
@@ -1162,9 +1161,9 @@ Return
 
 
 	HWND hwnd;
-	SCROLLINFO si;
+		SCROLLINFO si;
 
-	
+
 
 	static int yPos;        // current vertical scrolling position
 
@@ -1176,7 +1175,7 @@ Return
 		yChar = hb_parni(2);
 
 	RECT rect3;
-	
+
 
 	GetClientRect(hwnd, &rect3);
 
@@ -1342,7 +1341,7 @@ Return
 
 
 */
-							#pragma ENDDUMP
+		#pragma ENDDUMP
 
 
 
