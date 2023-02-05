@@ -29,6 +29,10 @@ Function GetCampoOrdem( cTabela , cCampo)
 	LOCAL oQuery
 	Local oRow
 
+
+
+	//Local i := (((((1+2)))
+
 	LOCAL cSql  := "Select ordem from dicionario where tabela = '" + AllTrim( cTabela ) + "' and camposistema = '" + cCampo + "'"
 
 	oQuery := oServ:Query( cSql )
@@ -54,7 +58,7 @@ Function SetCampoOrdem(cTabela , cCampo , nOrdem1 )
 
 	Local lOk := .t.
 
-	LOCAL i := 1
+//	LOCAL i := 1+3)))
 
 	LOCAL oQuery
 	Local oRow
@@ -82,13 +86,13 @@ Return lOk
 
 
 Function EventSTOPAll (lStop)
-LOCAL n1 := 0
+	LOCAL n1 := 0
 
-   For n1 := 1 To Len(_HMG_EventData)
+	For n1 := 1 To Len(_HMG_EventData)
 		_HMG_EventData [n1] [4]  := lStop 
-   Next 
+	Next 
 
-   /*
+	/*
 
    IF ValType (lStop) == "L"
       _HMG_EventData [nIndex] [4] := lStop
@@ -314,7 +318,7 @@ FUNCTION GetSql( cTabela, lWhere )
 	//Local aTam    := GetCamposInf( cTabela, 'TAM' )
 	LOCAL ni
 	LOCAL nQReg := GetReg( cTabela )
-//   LOCAL cSql := 'select @row_number:=@row_number+1 AS row_number,'
+	//   LOCAL cSql := 'select @row_number:=@row_number+1 AS row_number,'
 
 	LOCAL cSql1 := 'select '
 
@@ -392,7 +396,7 @@ FUNCTION GetIndexes( cTabela )
 
 		oGet := oQuery:GetRow( n1 )
 
-//		msginfo(   oGet:FieldGet( 2 ) )
+		//		msginfo(   oGet:FieldGet( 2 ) )
 		If !Empty(Alltrim( oGet:FieldGet( 2 )   ))
 			AAdd( aM1, Hb_UTF8ToStr(oGet:FieldGet( 2 )) )
 		End If 
@@ -497,11 +501,11 @@ FUNCTION xInit()
 
 	Begin ini file cInifile
 
-		Get cIp Section "db" ENTRY "Ip"
-		Get cBanc1 Section "Db" ENTRY "Banco"
+	Get cIp Section "db" ENTRY "Ip"
+	Get cBanc1 Section "Db" ENTRY "Banco"
 
-		Get cUser1 Section "Db" ENTRY "User"
-		Get cSen1 Section "Db" ENTRY "Senha"
+	Get cUser1 Section "Db" ENTRY "User"
+	Get cSen1 Section "Db" ENTRY "Senha"
 
 	End ini
 
@@ -572,15 +576,15 @@ REturn
 
 Procedure ProcPaintx(wJan)
 
-LOCAL Width  := BT_ClientAreaWidth  ( wJan )
-LOCAL Height := BT_ClientAreaHeight ( wJan )
-LOCAL BTstruct
+	LOCAL Width  := BT_ClientAreaWidth  ( wJan )
+	LOCAL Height := BT_ClientAreaHeight ( wJan )
+	LOCAL BTstruct
 
-Local hDC := BT_CreateDC ( wJan , BT_HDC_INVALIDCLIENTAREA, @BTstruct )
+	Local hDC := BT_CreateDC ( wJan , BT_HDC_INVALIDCLIENTAREA, @BTstruct )
 
-BT_DrawGradientFillVertical ( hDC,   0,       0,  Width,  Height, { 9, 111, 137 }, { 7, 101, 125 })
+	BT_DrawGradientFillVertical ( hDC,   0,       0,  Width,  Height, { 9, 111, 137 }, { 7, 101, 125 })
 
-BT_DeleteDC ( BTstruct )
+	BT_DeleteDC ( BTstruct )
 
 Return
 
@@ -588,8 +592,8 @@ Return
 
 Function Proc_ON_PAINT(wJanela)
 
-//LOCAL Width  := BT_ClientAreaWidth  ( ThisWindow.name )
-//LOCAL Height := BT_ClientAreaHeight ( ThisWindow.name )
+	//LOCAL Width  := BT_ClientAreaWidth  ( ThisWindow.name )
+	//LOCAL Height := BT_ClientAreaHeight ( ThisWindow.name )
 
 	LOCAL Width  := BT_ClientAreaWidth  ( wJanela )
 	LOCAL Height := BT_ClientAreaHeight ( wJanela )
@@ -641,51 +645,51 @@ Function Proc_ON_PAINT(wJanela)
 
 
 	DO CASE
-	CASE cont = 1
-		BT_DrawGradientFillHorizontal ( hDC, 0,       0, Width / 2, Height, { 213, 226, 234 }, WHITE  )
-		BT_DrawGradientFillHorizontal ( hDC, 0, Width / 2, Width / 2, Height, WHITE, { 213, 226, 234 }  )
+		CASE cont = 1
+			BT_DrawGradientFillHorizontal ( hDC, 0,       0, Width / 2, Height, { 213, 226, 234 }, WHITE  )
+			BT_DrawGradientFillHorizontal ( hDC, 0, Width / 2, Width / 2, Height, WHITE, { 213, 226, 234 }  )
 
 
 
-	CASE cont = 2
-		// { 213, 226, 234 }
-		BT_DrawGradientFillVertical ( hDC, 0,       0, Width, Height, { 213, 226, 234 }, WHITE  )
+		CASE cont = 2
+			// { 213, 226, 234 }
+			BT_DrawGradientFillVertical ( hDC, 0,       0, Width, Height, { 213, 226, 234 }, WHITE  )
 
 
-	CASE cont = 3
-		BT_DrawGradientFillVertical ( hDC,        0,   0, Width, Height / 2, RED,   GREEN )
-		BT_DrawGradientFillVertical ( hDC, Height / 2,   0, Width, Height / 2, GREEN, BLUE )
+		CASE cont = 3
+			BT_DrawGradientFillVertical ( hDC,        0,   0, Width, Height / 2, RED,   GREEN )
+			BT_DrawGradientFillVertical ( hDC, Height / 2,   0, Width, Height / 2, GREEN, BLUE )
 
-	CASE cont = 4
-		BT_DrawGradientFillHorizontal ( hDC, 0,       0, Width / 2, Height, GREEN, BLUE )
-		BT_DrawGradientFillHorizontal ( hDC, 0, Width / 2, Width / 2, Height, BLUE,  RED )
+		CASE cont = 4
+			BT_DrawGradientFillHorizontal ( hDC, 0,       0, Width / 2, Height, GREEN, BLUE )
+			BT_DrawGradientFillHorizontal ( hDC, 0, Width / 2, Width / 2, Height, BLUE,  RED )
 
-	CASE cont = 5
+		CASE cont = 5
 
-		//BT_DrawGradientFillVertical   ( hDC,   0,       0,  Width,  Height, { 9, 111, 137 },  { 7, 101, 125 } )
+			//BT_DrawGradientFillVertical   ( hDC,   0,       0,  Width,  Height, { 9, 111, 137 },  { 7, 101, 125 } )
 
-		BT_DrawGradientFillVertical   ( hDC,   0,       0,  Width,  Height, { 9, 111, 137 },  BLACK )
+			BT_DrawGradientFillVertical   ( hDC,   0,       0,  Width,  Height, { 9, 111, 137 },  BLACK )
 
-	CASE cont = 6
-		BT_DrawGradientFillHorizontal ( hDC,   0,       0,  Width,  Height, { 100, 0, 123 }, BLACK )
+		CASE cont = 6
+			BT_DrawGradientFillHorizontal ( hDC,   0,       0,  Width,  Height, { 100, 0, 123 }, BLACK )
 
-	CASE cont = 12
+		CASE cont = 12
 
-		// fSplit5
-		BT_DrawGradientFillVertical ( hDC,   0,       0,  Width,  Height, {7,101,125} , {4,57,70} )
-		BT_DrawText ( hDC, 05 , 10   ,  "Empresa XYZ....." , "Arial", 9, WHITE,  BLACK, BT_TEXT_TRANSPARENT , nAlingText, nOrientation )
+			// fSplit5
+			BT_DrawGradientFillVertical ( hDC,   0,       0,  Width,  Height, {7,101,125} , {4,57,70} )
+			BT_DrawText ( hDC, 05 , 10   ,  "Empresa XYZ....." , "Arial", 9, WHITE,  BLACK, BT_TEXT_TRANSPARENT , nAlingText, nOrientation )
 
-		//{3,39,48} )
+			//{3,39,48} )
 
-	CASE cont = 13
+		CASE cont = 13
 
 		
-		If (alltrim(wJanela) != alltrim(cLblSelected))
-			BT_DrawGradientFillVertical ( hDC,   0,       0,  Width,  Height, { 9, 111, 137 }, {9,111,137} )
-		Else
-			BT_DrawGradientFillVertical ( hDC,   0,       0,  Width,  Height, { 9, 111, 137 }, { 7, 101, 125 })
+			If (alltrim(wJanela) != alltrim(cLblSelected))
+				BT_DrawGradientFillVertical ( hDC,   0,       0,  Width,  Height, { 9, 111, 137 }, {9,111,137} )
+			Else
+				BT_DrawGradientFillVertical ( hDC,   0,       0,  Width,  Height, { 9, 111, 137 }, { 7, 101, 125 })
 
-		End If
+			End If
 
 
 
@@ -696,8 +700,8 @@ Function Proc_ON_PAINT(wJanela)
 	If wJanela = 'fSplit10'
 
 		hBitmap_aux := BT_BitmapLoadFile ("OK24")  // load from resource
-        BT_DrawBitmapTransparent (hDC, 7, 10 , 24, 24  , BT_STRETCH , hBitmap_aux, { 7 , 101,125 })
-     	BT_BitmapRelease (hBitmap_aux)
+		BT_DrawBitmapTransparent (hDC, 7, 10 , 24, 24  , BT_STRETCH , hBitmap_aux, { 7 , 101,125 })
+		BT_BitmapRelease (hBitmap_aux)
 
 	End If 
 
@@ -710,8 +714,8 @@ Function Proc_ON_PAINT(wJanela)
 
 		hBitmap_aux2 := BT_BitmapLoadFile ("HOME1")  // load from resource
 		aBk2 := BT_DrawGetPixel (hDC, 2, 32)
-        BT_DrawBitmapTransparent (hDC, 1, 2 , 32, 32   , BT_SCALE , hBitmap_aux2, { 7 , 101,125 } )
-     	BT_BitmapRelease (hBitmap_aux2)
+		BT_DrawBitmapTransparent (hDC, 1, 2 , 32, 32   , BT_SCALE , hBitmap_aux2, { 7 , 101,125 } )
+		BT_BitmapRelease (hBitmap_aux2)
 
 	End If 
 
@@ -1076,7 +1080,7 @@ Function Grayness_effect_start(  cJanela  )
 	lDrawMain := .f.
 
 	If Alltrim(cJanela) == 'Main'
-	    DoMethod("fSplit6","Hide")
+		DoMethod("fSplit6","Hide")
 		DoMethod("fSplit2","Hide")
 		DoMethod("fSplit3","Hide")
 		DoMethod("fSplit4","Hide")
@@ -1092,13 +1096,13 @@ Function Grayness_effect_start(  cJanela  )
 
 	If (_isWindowDefined( cActiveJan )  ) .And. ( Alltrim(cActiveJan) != "Main")
 		DoMethod(cActiveJan , "Hide" )
-	//SysWait(.1)
+		//SysWait(.1)
 		HideMain()
 	End If
 
 
 
-//sysWait(.1)
+	//sysWait(.1)
 	BT_ClientAreaInvalidateAll ('Main')
 
 
@@ -1154,38 +1158,38 @@ Function Grayness_effect_end(cJanela1)
 
 
 	If (Alltrim(cActiveJan) == "Main")
-	DoMethod("fSplit6","Show")
-DoMethod("fSplit2","Show")
-DoMethod("fSplit10","Show")
-DoMethod("fSplit3","Show")
-DoMethod("fSplit4","Show")
-DoMethod("fSplit5","Show")
-Else
+		DoMethod("fSplit6","Show")
+		DoMethod("fSplit2","Show")
+		DoMethod("fSplit10","Show")
+		DoMethod("fSplit3","Show")
+		DoMethod("fSplit4","Show")
+		DoMethod("fSplit5","Show")
+	Else
 
 
 
-DoMethod("fSplit6","Show")
-DoMethod("fSplit10","Show")
-DoMethod("fSplit3","Show")
-DoMethod("fSplit4","Show")
-DoMethod("fSplit5","Show")
+		DoMethod("fSplit6","Show")
+		DoMethod("fSplit10","Show")
+		DoMethod("fSplit3","Show")
+		DoMethod("fSplit4","Show")
+		DoMethod("fSplit5","Show")
 
 
-If _isWindowDefined( cActiveJan )
-DoMethod(cActiveJan , "Show" )
-End If
+		If _isWindowDefined( cActiveJan )
+			DoMethod(cActiveJan , "Show" )
+		End If
 
-// BT_ClientAreaInvalidateAll ('Main')
-BT_ClientAreaInvalidateAll ('fSplit2')
-BT_ClientAreaInvalidateAll ('fSplit5')
-BT_ClientAreaInvalidateAll ('fSplit10')
+		// BT_ClientAreaInvalidateAll ('Main')
+		BT_ClientAreaInvalidateAll ('fSplit2')
+		BT_ClientAreaInvalidateAll ('fSplit5')
+		BT_ClientAreaInvalidateAll ('fSplit10')
 
-End If
+	End If
 
-lAtivaBlack := .f.
+	lAtivaBlack := .f.
 
-// SysWait(.1)
-// BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , Nil , .t. )
+	// SysWait(.1)
+	// BT_SCR_INVALIDATERECT( ListView_GetHeader(GetControlHandle( 'br_grid', cActiveJan )) , Nil , .t. )
 
 
 
@@ -1327,7 +1331,7 @@ Function RefreshAll(cForm)
 Return Nil
 
 
-**********************************************************************
+//*********************************************************************
 Function GetControls( cForm )
 	Local hWnd := GetFormHandle( cForm )
 	Local aControls := {}		//List of controls {ControlType, ControlName}
@@ -1348,7 +1352,7 @@ Function SysWait(nWait)
 	Do While Seconds() - iTime < nWait
 		ntim++
 		DoEvents()
-	//	hb_releaseCPU()
+		//	hb_releaseCPU()
 		//SaveLog( 'Syswait.txt' ,  " SysWait " + Str(nTim) )
 	EndDo
 
@@ -1544,11 +1548,11 @@ Function yEfect(cFormName , lEfect)
 								
 
 			If _IsWindowDefined( "Win_Menu1")
-			    DoMethod( "Win_Menu1" , "Hide"  )
+				DoMethod( "Win_Menu1" , "Hide"  )
 			End If 
 
 			If _IsWindowDefined( "Win_Scroll1")
-			    DoMethod( "Win_Scroll1" , "Hide"  )
+				DoMethod( "Win_Scroll1" , "Hide"  )
 			End If 
 	
 		Else
@@ -1651,11 +1655,11 @@ Function EfectEnd(cFname1 , aMtr1 )
 			DoMethod('Win_MenuPrincipal' , 'Show')
 
 			If _IsWindowDefined( "Win_Menu1")
-			    DoMethod( "Win_Menu1" , "Show"  )
+				DoMethod( "Win_Menu1" , "Show"  )
 			End If 
 
 			If _IsWindowDefined( "Win_Scroll1")
-			    DoMethod( "Win_Scroll1" , "Show"  )
+				DoMethod( "Win_Scroll1" , "Show"  )
 			End If 
 
 		End If 	
@@ -1668,7 +1672,7 @@ Function EfectEnd(cFname1 , aMtr1 )
 
 		If _isWindowDefined( cMenuName)
 			DoMethod(cMenuName , 'Hide')
-        End If 
+		End If 
 
 
 		If _isControlDefined(    'br_grid', cActiveJan   )
@@ -1710,7 +1714,7 @@ Procedure RefreshBrowseLine( cForm, cBrowse, p_cUpDtCol )
 
 Return 
 
-**********************************************************
+//*********************************************************
 Function SetAndDoEvent( cWindow, cControl, cEventName, bNewProc, lDoEvent )
 
 	LOCAL nIndex:=GetControlIndex( cControl, cWindow )
