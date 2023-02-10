@@ -90,7 +90,7 @@ Function xMenuMain( cParent , nRow1 , nCol1 , aOpPrin , aSubOps , lEnabled11 )
 	aOpcoes := Aclone( aOpPrin )
 	aSubOps := {}
 
-	
+		
 	DEFAULT lEnabled11 := .t.
 
 	lEnabled2 := lEnabled11

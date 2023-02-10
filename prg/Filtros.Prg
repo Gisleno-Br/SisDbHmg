@@ -29,6 +29,7 @@ FUNCTION LoadFitros( cTabela1 )
    Local l_Ok := .t. 
 
 
+   
 
    HB_SETCODEPAGE("PT850")
 
@@ -53,15 +54,15 @@ FUNCTION LoadFitros( cTabela1 )
 
    
    
-	DEFINE WINDOW fFiltrosCad ;
-		AT 0,0  ;				
-		WIDTH 850 HEIGHT 550 ;      
-		CHILD TITLE 'xProcFiltro'  ;		
-		NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE  ; 
-		ON PAINT Nil ;
+   DEFINE WINDOW fFiltrosCad ;
+      AT 0,0  ;				
+      WIDTH 850 HEIGHT 550 ;      
+      CHILD TITLE 'xProcFiltro'  ;		
+      NOSIZE NOSYSMENU NOCAPTION BACKCOLOR WHITE  ; 
+      ON PAINT Nil ;
       ON GOTFOCUS Nil 
 
-/*
+   /*
       DEFINE button MoveControl1
          Row 320
          Col 15
@@ -76,7 +77,7 @@ FUNCTION LoadFitros( cTabela1 )
 
 
 
-      /*
+   /*
        
        DEFINE button MoveControl4
          Row 320
@@ -93,7 +94,7 @@ FUNCTION LoadFitros( cTabela1 )
 
 
 
-/*
+   /*
       DEFINE button MoveControl1
          Row 320
          Col 15
@@ -151,7 +152,7 @@ FUNCTION LoadFitros( cTabela1 )
        */
 
 
-	END WINDOW	
+   END WINDOW	
 
    
    ON KEY F2 OF fFiltrosCad ACTION Msginfo('F1')
@@ -167,7 +168,7 @@ FUNCTION LoadFitros( cTabela1 )
    _ShowWindow(  'fFiltrosCad' )
    DoEvents()
 
-  // aMtrFiltr := xLoadFiltros( cTabela1  )
+   // aMtrFiltr := xLoadFiltros( cTabela1  )
 
    If !CheckRet(aMtrFiltr)
       Return 
@@ -186,14 +187,14 @@ FUNCTION LoadFitros( cTabela1 )
    
    
    RemoveHandler( "EventBrowser" )
-  // xInitFiltr()
+   // xInitFiltr()
 
 
    
-	//WinSombra3.Show()
+   //WinSombra3.Show()
    
-	//Bt_ClientAreaInvalidateAll('WinSombra3')	
-	_ShowWindow('fFiltrosCad')
+   //Bt_ClientAreaInvalidateAll('WinSombra3')	
+   _ShowWindow('fFiltrosCad')
 
 
    cSalvaJan  :=  cActiveJan
@@ -203,8 +204,8 @@ FUNCTION LoadFitros( cTabela1 )
    Private aMtrFiltr := {}
 
    For n1 := 1 to 5
-         Aadd( aMtrFiltr , {  .t.  ,  'ZE JOSE '   ,      '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",45) , ;
-             '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '  , .t. , .t. , 0   } )
+      Aadd( aMtrFiltr , {  .t.  ,  'ZE JOSE '   ,      '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",45) , ;
+         '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '  , .t. , .t. , 0   } )
 
    Next   
 
@@ -216,14 +217,14 @@ FUNCTION LoadFitros( cTabela1 )
    xSombraZ( cSalvaJan , nR , nC  , GetProperTy('fFiltrosCad','Width') , GetProperTy('fFiltrosCad','Height')      )
 
    Private aBlk1 := { |a|   { Iif(aMtrFiltr[a][1]  , 'image=CHKOK'  ,  'image=CHKNO'   )   ,  aMtrFiltr[a][2]  + '   ' + StrZero(a,5) ,  aMtrFiltr[a][3] , ;
-    aMtrFiltr[a][4]  , aMtrFiltr[a][5] , aMtrFiltr[a][5]   }    } 
+      aMtrFiltr[a][4]  , aMtrFiltr[a][5] , aMtrFiltr[a][5]   }    } 
   
    
    l_Ok := xBrowserMtr( 30 ,  aMtrFiltr ,   aBlk1 , ;
-    'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' } , ;
+      'fFiltrosCad'   , 820  , 'LstBoxFiltro' , 2  , { 'Codigo' , 'Descrição' , 'Expressão Filtro ' , 'cAMPO 1','Campo 2','Campo 3' } , ;
       {6,60 , 75 , 60 ,45,75  }  , { 'L' , 'C' , 'C' , 'C' , 'C' ,  'L' , 'L' , 'N' } , .f. , .t. , 200 , ;
-       { | cParent , nRow1 , nCol1 , ainFCol , nScrolly | yEditMtr( cParent , nRow1 , nCol1 , ainfCol , nScrolly  )} , ;
-       { || yDelMtr()}   , 7  )
+      { | cParent , nRow1 , nCol1 , ainFCol , nScrolly | yEditMtr( cParent , nRow1 , nCol1 , ainfCol , nScrolly  )} , ;
+      { || yDelMtr()}   , 7  )
 
 
    yRefresh( 'LstBoxFiltro'  )   
@@ -250,8 +251,8 @@ Return lOk1
 
 Static Function InitIinput()
 
-	HMG_ChangeWindowStyle(  GetFormHandle('_InputWindow')  , WS_EX_DLGMODALFRAME, NIL, .T., .T. )
-	SendMessage( GetFormHandle('_InputWindow')  , WM_PAINT , 0 , 0 )
+   HMG_ChangeWindowStyle(  GetFormHandle('_InputWindow')  , WS_EX_DLGMODALFRAME, NIL, .T., .T. )
+   SendMessage( GetFormHandle('_InputWindow')  , WM_PAINT , 0 , 0 )
 
    
 
@@ -279,8 +280,8 @@ Function yEditMtr( cFrmParent , nLinhaScr1 , nColuna , aInf_Col1 , nScrollz )
    End If 
 
    If (nColuna == 1)
-       aMtrFiltr[nIt][1] := !aMtrFiltr[nIt][1]       
-       // Mark Check Item 
+      aMtrFiltr[nIt][1] := !aMtrFiltr[nIt][1]       
+      // Mark Check Item 
 
       yRefresh( 'LstBoxFiltro'  ,  ,  nIt   ) 
    End If 
@@ -296,33 +297,33 @@ Function yEditMtr( cFrmParent , nLinhaScr1 , nColuna , aInf_Col1 , nScrollz )
 
 
       DEFINE WINDOW _InputWindow ;
-            AT  Ar1[1]  - 1 ,Ar1[2] - 1  ;
-            WIDTH aInf_Col1[5]+2  ;            
-            HEIGHT nItemSubHeight+1 ;
-            TITLE '' ;                    
-            NOMINIMIZE NOMAXIMIZE NOSIZE NOSYSMENU NOCAPTION ;
-           ON INIT InitIinput()             
+         AT  Ar1[1]  - 1 ,Ar1[2] - 1  ;
+         WIDTH aInf_Col1[5]+2  ;            
+         HEIGHT nItemSubHeight+1 ;
+         TITLE '' ;                    
+         NOMINIMIZE NOMAXIMIZE NOSIZE NOSYSMENU NOCAPTION ;
+         ON INIT InitIinput()             
              
-            @ 0,1 TEXTBOX TEXT_1 ;
-            WIDTH aInf_Col1[5] ;
-            VALUE cVar1 ; 
-            HEIGHT nItemSubHeight ;
-            MAXLENGTH 60 ;
-            UPPERCASE  ;               
-            ON ENTER ( DoEvents() , EditarItem( This.Value) , DoEvents() , ThisWindow.Release )
+      @ 0,1 TEXTBOX TEXT_1 ;
+         WIDTH aInf_Col1[5] ;
+         VALUE cVar1 ; 
+         HEIGHT nItemSubHeight ;
+         MAXLENGTH 60 ;
+         UPPERCASE  ;               
+         ON ENTER ( DoEvents() , EditarItem( This.Value) , DoEvents() , ThisWindow.Release )
 
 
 
-      END WINDOW
-      ON KEY ESCAPE OF _InputWindow ACTION ThisWindow.Release      
-      ACTIVATE WINDOW _InputWindow         
+   END WINDOW
+   ON KEY ESCAPE OF _InputWindow ACTION ThisWindow.Release      
+   ACTIVATE WINDOW _InputWindow         
        
-         DoEvents()
+   DoEvents()
 
     
 
        
-    End If 
+   End If 
 
 Return 
 
@@ -361,7 +362,7 @@ Return
 
 Function ExcluirItem()
    
-  Local nIt := yRetIndex()  
+   Local nIt := yRetIndex()  
    yRefresh( 'LstBoxFiltro'  ,  ,   , nIt ) 
 
 Return 
@@ -372,10 +373,10 @@ Function InsereRg()
   
    
    Local aM1 := {}
-    //Aadd( aMtrFiltr   , { 'Novo' ,  ' Filtro Nuevo' , '1adasdsadas'  , '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
-      //       '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '} )
+   //Aadd( aMtrFiltr   , { 'Novo' ,  ' Filtro Nuevo' , '1adasdsadas'  , '1|||||||||||||| AAAAAAAAAAA' , '1'+Repl("=",145) , ;
+   //       '1LLPPPPPPPPPPPPPPPPP' ,    'GISLENO GUIMARAES JUNIOR '} )
 
-    Aadd( aMtrFiltr , {  .t.  ,  ''   ,      '' , '' , ;
+   Aadd( aMtrFiltr , {  .t.  ,  ''   ,      '' , '' , ;
       ' ' ,    ''  , .t. , .t. , 0   } )
 
 
@@ -388,15 +389,15 @@ REturn
 
 Function xDoInit()
 
-  Local cHeaderName := 'Win_HeadMtr' + Left('LstBoxFiltro',4)
-  lOCAL NhWnd := GetFormHandle(cHeaderName)
+   Local cHeaderName := 'Win_HeadMtr' + Left('LstBoxFiltro',4)
+   lOCAL NhWnd := GetFormHandle(cHeaderName)
 
   
    IF _IsWindowDefined(cHeaderName)
       //msginfo('lp2')
 
      
-	   HMG_ChangeWindowStyle( NhWnd , NIL,  WS_EX_STATICEDGE , .t., .T. )
+      HMG_ChangeWindowStyle( NhWnd , NIL,  WS_EX_STATICEDGE , .t., .T. )
 
       HMG_ChangeWindowStyle( NhWnd ,  WS_POPUP , Nil , .f., .T. )
 
@@ -419,20 +420,20 @@ Function xInitFiltr()
 
 
    
-	Local nTop  := GetProperTy('fFiltrosCad' , 'Row') 
-	Local nLeft := GetProperTy('fFiltrosCad' , 'Col')
+   Local nTop  := GetProperTy('fFiltrosCad' , 'Row') 
+   Local nLeft := GetProperTy('fFiltrosCad' , 'Col')
    Local zBitMap := BT_BitmapCaptureDesktop ( nTop + 12 , nLeft + 12 , GetProperty('fFiltrosCad' , 'Width') - 7 , GetProperTy('fFiltrosCad' , 'Height') - 7  )
 
 
    
-	DEFINE WINDOW WinSombra3 AT nTop + 12 , nLeft + 12 WIDTH GetProperty('fFiltrosCad' , 'Width') - 8 HEIGHT GetProperty('fFiltrosCad' , 'Height') - 8 TITLE 'Sombra2' ;
+   DEFINE WINDOW WinSombra3 AT nTop + 12 , nLeft + 12 WIDTH GetProperty('fFiltrosCad' , 'Width') - 8 HEIGHT GetProperty('fFiltrosCad' , 'Height') - 8 TITLE 'Sombra2' ;
       NOMAXIMIZE NOMINIMIZE NOSIZE NOSYSMENU NOCAPTION CHILD BACKCOLOR BLACK VIRTUAL HEIGHT Nil ;
       ON PAINT xSombra( ThisWindow.Name , nTop   , nLeft    , zBitMap ) 			
    END WINDOW
 
 
 
-//   _ShowWindow('WinSombra2')
+   //   _ShowWindow('WinSombra2')
 
 
    //sysWait(0.05)
@@ -444,12 +445,12 @@ REturn
 
 Function fFechaF()
 
-  fFiltrosCad.Release()
+   fFiltrosCad.Release()
 
   
    if _IsWindowDefined('fFiltro')
-		DestroyWindow( fFiltro.HANDLE	)
-	End If	   
+      DestroyWindow( fFiltro.HANDLE	)
+   End If	   
 
 
 Return 
@@ -463,8 +464,11 @@ FUNCTION SetFiltOk()
 
 
    If !Empty( am1[ 3 ] )
-       Domethod( 'fFiltrosCad', 'Release' )
+      Domethod( 'fFiltrosCad', 'Release' )
    End If
+
+   
+   
 
 
 
@@ -560,14 +564,14 @@ FUNCTION xLoadFiltros( cTabela1  , lUltimo )
    Local aMtr1 := {}
    Local cArqLog := ''
 
-   	If oServer:NetErr()                       
+   If oServer:NetErr()                       
 
-        cArqLog := xSaveErro(oServer:Error())
-        xDialog( "Error Executing Query !" + QUEBRA + cSqlx1 + " : " + QUEBRA + "Arquivo de Log : " + cArqLog  , .f. )
-        oServer:Destroy()
-        oQuery:Destroy()
+      cArqLog := xSaveErro(oServer:Error())
+      xDialog( "Error Executing Query !" + QUEBRA + cSqlx1 + " : " + QUEBRA + "Arquivo de Log : " + cArqLog  , .f. )
+      oServer:Destroy()
+      oQuery:Destroy()
       
-       Return .f. 
+      Return .f. 
 
    End If 
 
@@ -595,12 +599,12 @@ FUNCTION xLoadFiltros( cTabela1  , lUltimo )
    //fFiltrosCad .LblQtFiltro. Value := AllTrim( Str( oQuery:LastRec()    ) )
 
    //If ( oQuery:LastRec() > 0 )     
-     // Domethod( 'fFiltroscad', 'GridFiltro', 'SetFocus' )
+   // Domethod( 'fFiltroscad', 'GridFiltro', 'SetFocus' )
    //End If
 
 
 
-/*
+   /*
    If (lUltimo)
 
       fFiltroscad.GridFiltro.Value := {oQuery:LastRec() ,1 }     
@@ -636,6 +640,7 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
    LOCAL lBold      := .F.
    LOCAL lItalic    := .F.
    LOCAL lUnderline := .F.
+   Local nZ1 := 2
    LOCAL lStrikeOut := .F.
    LOCAL oSErver
    LOCAL oQuery
@@ -656,8 +661,9 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
    Public lNovoFilt := lNew1
 
    
-	Public aButFilt := {}
+   Public aButFilt := {}
 
+   
    
    
    If !_IsWindowDefined('fFiltro')
@@ -693,9 +699,9 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
    While n1 <= Len( aCabec1 )
 
       If  !Empty( AllTrim( aCabec1[ n1 ] ) )
-          fFiltro .cmbCampo. Additem(  hb_UTF8ToStr(aCabec1[ n1 ] )  )
-          fFiltro .cmbOrdem. Additem(  hb_UTF8ToStr(aCabec1[ n1 ] ) )
-          AAdd( aCampos1,  hb_UTF8ToStr(aCabec1[ n1 ])  )
+         fFiltro .cmbCampo. Additem(  hb_UTF8ToStr(aCabec1[ n1 ] )  )
+         fFiltro .cmbOrdem. Additem(  hb_UTF8ToStr(aCabec1[ n1 ] ) )
+         AAdd( aCampos1,  hb_UTF8ToStr(aCabec1[ n1 ])  )
       End If
 
       n1++
@@ -707,6 +713,8 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
 
       cSqlx1 := "select * from filtros where tabela = '" + cTabela + "' and idFiltros = " + AllTrim( Str( nIdFiltro ) )
       oServer := GetConexao()
+
+      i := ((((((  1 + 2))))
 
       //msginfo( cSqlx1 )
 
@@ -723,7 +731,7 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
          //msginfo(   GetCampo( oRow, 'descricao' ) )
 
          IF !Empty( GetCampo( oRow, 'ordem' ) )
-             fFiltro .cmbOrdem. value := AScan( aCampos1,  AllTrim( GetCampo(oRow, 'ordem' ) ) )
+            fFiltro .cmbOrdem. value := AScan( aCampos1,  AllTrim( GetCampo(oRow, 'ordem' ) ) )
          END IF
 
          lNextOp := .t.
@@ -741,7 +749,7 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
    //cJan := cFiltroDlg
 
 
-    //9598 9599 959 958 9291 9281 9541 9481
+   //9598 9599 959 958 9291 9281 9541 9481
    OBTN_Create( cJan,  9598, "Gravar Filtro", 345, 255,  70,  24,  .T., .T., .T.,  8, aBtnColor, aBtnFont )
    OBTN_Font( cJan, 9598,  { cFontName, nFontSize, lBold, lItalic, lUnderline, lStrikeOut } )
 
@@ -877,28 +885,28 @@ FUNCTION EvFiltButton( nHWnd, nMsg, nWParam, nLParam )
 
    If nMsg == WM_DRAWITEM
 
-		nID := LoWord( nWParam )
+      nID := LoWord( nWParam )
 
-		If nID == IDOK
-			nID := GetDlgCtrlID( GetFocus() )
-		End If 
+      If nID == IDOK
+         nID := GetDlgCtrlID( GetFocus() )
+      End If 
 
-		nI1 := AScan( aButFilt   , {| n| n[ 1 ] == nId } )
+      nI1 := AScan( aButFilt   , {| n| n[ 1 ] == nId } )
 
-		If nI1 > 0
-			OBTN_Draw( nHWnd,  nWParam, nLParam )
-		End If
+      If nI1 > 0
+         OBTN_Draw( nHWnd,  nWParam, nLParam )
+      End If
 
 
-	End If
+   End If
 
-	If nMsg == 273
+   If nMsg == 273
 
-		nID := LoWord( nWParam )
+      nID := LoWord( nWParam )
 
-		If nID == IDOK
-			nID := GetDlgCtrlID( GetFocus() )
-		End If 
+      If nID == IDOK
+         nID := GetDlgCtrlID( GetFocus() )
+      End If 
 
       nI1 := AScan( aButFilt, {| n | n[ 1 ] == nId } )
 
@@ -907,7 +915,7 @@ FUNCTION EvFiltButton( nHWnd, nMsg, nWParam, nLParam )
       End If
 		
 
-	End If
+   End If
 
 Return    
 
@@ -942,35 +950,35 @@ RETURN
 
 Function xValidaFlt()
 
-      Local lOk := .t. 
-      Local n1  := 0 
-      Local n2  := 0 
-      Local n3  := 0 
-      Local cTexto := Alltrim(fFiltro .EdtFiltro. value)
+   Local lOk := .t. 
+   Local n1  := 0 
+   Local n2  := 0 
+   Local n3  := 0 
+   Local cTexto := Alltrim(fFiltro .EdtFiltro. value)
 
-      For n1 := 1 To Len(Alltrim(    cTexto     ))
+   For n1 := 1 To Len(Alltrim(    cTexto     ))
 
-           If Substr(  Alltrim(    cTexto      ) , n1, 1 ) = '('
+      If Substr(  Alltrim(    cTexto      ) , n1, 1 ) = '('
 
-               If Substr(  Alltrim(   cTexto    ) , n1+1, 2 ) = ' )'
-                  lOk := .f.       
-               End If    
+         If Substr(  Alltrim(   cTexto    ) , n1+1, 2 ) = ' )'
+            lOk := .f.       
+         End If    
 
 
-               n2++
-           End If 
+         n2++
+      End If 
 
-           If Substr(  Alltrim(   cTexto      ) , n1, 1 ) = ')'
-               n3++
+      If Substr(  Alltrim(   cTexto      ) , n1, 1 ) = ')'
+         n3++
 
-               If Substr(  Alltrim(   cTexto      ) , n1+1, 2 ) = '( '
-                  lOk := .f.       
-               End If    
+         If Substr(  Alltrim(   cTexto      ) , n1+1, 2 ) = '( '
+            lOk := .f.       
+         End If    
 
-           End If 
+      End If 
 
            
-      Next    
+   Next    
 
 Return ((n3 = n2) .And. (lOk))
 
@@ -1040,7 +1048,7 @@ FUNCTION FiltroAdx()
 
    cOperador := Left( AllTrim( fFiltro .CmbOperador. DisplayValue ), 2 )
 
-    cValor := AllTrim( fFiltro .Valor. Value )
+   cValor := AllTrim( fFiltro .Valor. Value )
 
 
    If (lNextOp)
@@ -1157,8 +1165,8 @@ STATIC FUNCTION SaveFiltro( lNovo, nIdFiltro1 )
    */     
 
    If !xValidaFlt()
-       yAviso( hb_ANSIToOEM("Inconsistencias Detectadas no Filtro com Relação aos Parenteses ( ) .)" ) , .f. )  
-       Return .f. 
+      yAviso( hb_ANSIToOEM("Inconsistencias Detectadas no Filtro com Relação aos Parenteses ( ) .)" ) , .f. )  
+      Return .f. 
    End If    
 
    If Empty(  Alltrim(fFiltro .Titulo. Value)   )
@@ -1187,6 +1195,7 @@ STATIC FUNCTION SaveFiltro( lNovo, nIdFiltro1 )
          oServer := GetConexao()
          oQuery := oServer:Query( cSql )
 
+         
 
          If oQuery:NetErr()
 
@@ -1243,7 +1252,7 @@ FUNCTION gField()
    LOCAL cMask
 
    If ( Empty( Alltrim(cCampo) ) )
-         Return 
+      Return 
    End If
 
    //msginfo(cCampo)
@@ -1333,38 +1342,60 @@ RETURN
 
 FUNCTION GrvFiltro( cTabela, cDescr, cFiltro, cOrdem, lCresc )
 
-	LOCAL nIdFilt := GetReg( "filtros" , "idfiltros")
-	LOCAL oServer := GetConexao()
+   LOCAL nIdFilt := GetReg( "filtros" , "idfiltros")
+   LOCAL oServer := GetConexao()
 
-	LOCAL cSql := "insert into filtros values(" + AllTrim( Str( nIdFilt + 1 ) ) + "," + Chr( 34 ) + cdescr + Chr( 34 ) + "," + Chr( 34 ) + ;
-		cTabela + Chr( 34 ) + "," + Chr( 34 ) + cFiltro + Chr( 34 ) + "," + Chr( 34 ) + "S" + Chr( 34 ) + "," + Chr( 34 ) + cOrdem + Chr( 34 ) + "," + ;
-		Chr( 34 ) + iif( lCresc, " ", "N" ) + Chr( 34 ) + ")"
+   LOCAL cSql := "insert into filtros values(" + AllTrim( Str( nIdFilt + 1 ) ) + "," + Chr( 34 ) + cdescr + Chr( 34 ) + "," + Chr( 34 ) + ;
+      cTabela + Chr( 34 ) + "," + Chr( 34 ) + cFiltro + Chr( 34 ) + "," + Chr( 34 ) + "S" + Chr( 34 ) + "," + Chr( 34 ) + cOrdem + Chr( 34 ) + "," + ;
+      Chr( 34 ) + iif( lCresc, " ", "N" ) + Chr( 34 ) + ")"
 
-	hb_MemoWrit( 'SqlInsert.txt', cSql )
+   hb_MemoWrit( 'SqlInsert.txt', cSql )
 
-	oQuery := oServer:Query(  cSql )
+   oQuery := oServer:Query(  cSql )
 
-	If oServer:NetErr()
-		yAviso( "Error ao Executar Query " + cSql + " : " + oServer:Error()  , .f. )
+   If oServer:NetErr()
+      yAviso( "Error ao Executar Query " + cSql + " : " + oServer:Error()  , .f. )
 
 		
-		oServer:Destroy()
-		oServer := Nil
+      oServer:Destroy()
+      oServer := Nil
 
-		oQuery:Destroy()
-		oQuery := Nil
+      oQuery:Destroy()
+      oQuery := Nil
 
-		RETURN .F.
+      RETURN .F.
 
-	End If 
+   End If 
 
-	oServer:Destroy()
-	oServer := Nil
+   oServer:Destroy()
+   oServer := Nil
 
-	oQuery:Destroy()
-	oQuery := Nil
+   oQuery:Destroy()
+   oQuery := Nil
 
 Return .T.
 
 
+Function x1()
+   Local a1:=0 
 
+   Local a2:=0
+
+
+      
+   Private d1 := 0
+
+   do case
+      case  i = 1
+
+      case i = 2
+
+
+         
+   endcase
+   
+
+      
+
+
+REturn 
