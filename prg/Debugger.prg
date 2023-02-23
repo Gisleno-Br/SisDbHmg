@@ -7,6 +7,7 @@
 #endif
 
 #include <hbdebug.ch>
+
 #include <hbmemvar.ch>
 #include <hboo.ch>
 #include <hbclass.ch>
