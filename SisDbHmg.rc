@@ -51,12 +51,8 @@
 
     ESQUERDA    BITMAP  img\SetEsquerda1.bmp 
     DIREITA     BITMAP  img\SetDireita1.bmp 
-
-
     ESQUERDA1   BITMAP  img\SetaEsquerda_1.bmp 
     DIREITA1    BITMAP  img\SetaDireita_1.bmp 
-
-
     ESQUERDAD   BITMAP  img\SetaEsquerda_d.bmp 
     DIREITAD    BITMAP  img\SetaDireita_d.bmp 
 
