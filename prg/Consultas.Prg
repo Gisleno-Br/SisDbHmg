@@ -471,7 +471,7 @@ FUNCTION NovaConsulta( cTabela, lMovTable )
 
 	Activate Window fCriaConsulta
 
-	//SysWait(.5)
+	//SysWait(.5) 
 
 	RemoveHandler('EventConsu')
 
@@ -2465,6 +2465,8 @@ FUNCTION xInitMov(  nIdc1, nTpVnd9, cTabelax, lMvTable, cJanName )
 			IF AllTrim( GetCampo( orow, 'campo' ) ) == 'Desc'
 				cAsc := "Asc"
 			END IF
+			
+			
 
 		END IF
 
