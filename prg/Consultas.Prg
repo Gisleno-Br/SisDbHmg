@@ -2123,6 +2123,9 @@ FUNCTION Proc_Paint( cTexto, cBitmap  , z1Bitmap , cJanela)
 	End If
 
 
+	
+
+
 	IF (!Empty( cBitMap )) .And. (cActiveJan != 'fDialog')
 		//BT_DrawBitmap ( hDC2, 3, 2, 24, 24, BT_STRETCH, hBitmap5 )
 	Else
@@ -2465,7 +2468,7 @@ FUNCTION xInitMov(  nIdc1, nTpVnd9, cTabelax, lMvTable, cJanName )
 			IF AllTrim( GetCampo( orow, 'campo' ) ) == 'Desc'
 				cAsc := "Asc"
 			END IF
-			
+
 			
 
 		END IF
