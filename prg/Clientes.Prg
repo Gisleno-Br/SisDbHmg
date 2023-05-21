@@ -87,11 +87,17 @@ if ( hb_parl (12) )
 
 #include "hmg.ch"
 
+
+/*
 #define IDC_BTN_1   2001
 #define IDC_BTN_2   2002
 #define IDC_BTN_3   2003
 #define IDC_BTN_4   2004
 #define IDC_BTN_5   2005
+*/
+
+
+
 // #define IDC_BTN_YES 201
 // #define IDC_BTN_NO  1102
 
@@ -528,6 +534,7 @@ FUNCTION ManutDb( aHeader, aCampos, cSql, cAlias, aTam1, cTitulo ,cTabelax , aOp
 	RDDSETDEFAULT( "SQLMIX" )
 
 
+	//nConnection := RDDINFO( RDDI_CONNECT, { "MYSQL", cServer , cUserDb , cPassDb , "sisdb"} )
 	nConnection := RDDINFO( RDDI_CONNECT, { "MYSQL", cServer , cUserDb , cPassDb , "sisdb"} )
 
 

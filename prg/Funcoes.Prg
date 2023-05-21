@@ -493,7 +493,7 @@ FUNCTION xInit()
 
 
 	IF !File( Alltrim(cInifile) )
-		MsgInfo( 'Arquivo DataBase.ini n�o Localizado , Impossivel Continuar.' )
+		MsgInfo( 'Arquivo DataBase.ini não Localizado , Impossivel Continuar.' )
 		//fPrincipal.Release()
 	END IF
 
@@ -1341,22 +1341,6 @@ Function GetControls( cForm )
 
 Return aControls
 
-
-Function SysWait(nWait)
-
-	Local iTime := Seconds()
-	Local ntim := 0
-
-	DEFAULT nWait := .1
-
-	Do While Seconds() - iTime < nWait
-		ntim++
-		DoEvents()
-		//	hb_releaseCPU()
-		//SaveLog( 'Syswait.txt' ,  " SysWait " + Str(nTim) )
-	EndDo
-
-Return
 
 
 FUNCTION ReleaseButton(cForm, nID)

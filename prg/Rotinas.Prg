@@ -285,24 +285,6 @@ BT_DeleteDC (BTstruct )
 
 Return hWnd
 
-Function xPaintHint(  cJanela )
-
-	LOCAL Width  := BT_ClientAreaWidth  (cJanela)
-	LOCAL Height := BT_ClientAreaHeight (cJanela)
-	Local BTstruct2
-
-	Local hDC2 := BT_CreateDC ( cJanela  , BT_HDC_INVALIDCLIENTAREA, @BTstruct2 )
-
-	
-	BT_DrawGradientFillVertical ( hDC2 ,   0 , 0  , Width ,    Height    , {250,242,176} , {250,242,176}  )
-
-
-	BT_DeleteDC (BTstruct2 )
-
-
-
-Return 
-
 
 Function xFecheAnimate( hWnd)
 

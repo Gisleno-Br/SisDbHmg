@@ -3045,21 +3045,6 @@ RETURN ( cTabela )
 
 
 
-Function DoFindWin(cTitle)
-LOCAL nWin := HMG_CallDLL( "User32.dll", DLL_OSAPI, "FindWindow", 0, cTitle)
-/*
-   If !EMPTY(nWin)
-      HMG_CallDLL( "User32.dll", DLL_OSAPI, "SetForegroundWindow", nWin )
-      HMG_CallDLL( "User32.dll", DLL_OSAPI, "BringWindowToTop", nWin )
-      HMG_CallDLL( "User32.dll", DLL_OSAPI, "ShowWindow", nWin, 1 )
-      HMG_CallDLL( "User32.dll", DLL_OSAPI, "UpdateWindow", nWin )	
-   End If 
-   */
-
-
-RETURN nWin 
-
-
 Function BringTop(cTitle)
 LOCAL nWin := HMG_CallDLL( "User32.dll", DLL_OSAPI, "FindWindow", 0, cTitle)
 

@@ -714,7 +714,7 @@ STATIC FUNCTION xNovoFilt( lNew1, nIdFiltro )
       cSqlx1 := "select * from filtros where tabela = '" + cTabela + "' and idFiltros = " + AllTrim( Str( nIdFiltro ) )
       oServer := GetConexao()
 
-      i := ((((((  1 + 2))))
+      //i := ((((((  1 + 2))))
 
       //msginfo( cSqlx1 )
 
