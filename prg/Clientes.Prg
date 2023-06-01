@@ -994,6 +994,7 @@ Function ProcFiltro( cTab1 , lEfect )
 		cTexto := GetProperty('fSplit2' ,cLblSelected , 'Value')
 
 		If !Empty(cFiltros)
+			
 
 
 			nHan1 := aButtons[4][5]
