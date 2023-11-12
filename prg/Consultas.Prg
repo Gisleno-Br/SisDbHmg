@@ -13,6 +13,8 @@
 #define WM_CLOSE      16    //  ok  (MinGW)
 
 
+
+
 STATIC lTracking23 := .F.
 
 
