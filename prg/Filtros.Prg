@@ -34,7 +34,6 @@ FUNCTION LoadFitros( cTabela1 )
    HB_SETCODEPAGE("PT850")
 
 
-
    PRIVATE aHed1 := { 'Id', 'Filtro', Hb_AnsiToOem('Expressão') }
 
 
