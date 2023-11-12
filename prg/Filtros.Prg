@@ -28,8 +28,7 @@ FUNCTION LoadFitros( cTabela1 )
    LOCAL cCab1 :=  ''
    Local l_Ok := .t. 
 
-
-   
+  
 
    HB_SETCODEPAGE("PT850")
 
