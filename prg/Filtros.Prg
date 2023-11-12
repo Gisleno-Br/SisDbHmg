@@ -40,6 +40,8 @@ FUNCTION LoadFitros( cTabela1 )
    PRIVATE aCampos1 := {}
 
    PRIVATE cFiltrox1 := ''
+
+   
   
 
    Private lNextOp := .f. 
