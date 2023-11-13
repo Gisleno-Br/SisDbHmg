@@ -28,11 +28,9 @@ FUNCTION LoadFitros( cTabela1 )
    LOCAL cCab1 :=  ''
    Local l_Ok := .t. 
 
-
-   
+  
 
    HB_SETCODEPAGE("PT850")
-
 
 
    PRIVATE aHed1 := { 'Id', 'Filtro', Hb_AnsiToOem('Expressão') }
@@ -44,8 +42,8 @@ FUNCTION LoadFitros( cTabela1 )
    PRIVATE cFiltrox1 := ''
 
    
-
-   Private lNextOp := .f. 
+   
+     Private lNextOp := .f. 
 
 
    
