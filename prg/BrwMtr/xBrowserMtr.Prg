@@ -634,6 +634,8 @@ Function xBrowserMtr( nRowIni ,  aDatas1 ,  bBlockMtr ,   cParent   , nLarg1  , 
 
 
 
+
+	
 	If (lHasHeader)
 		ShowScrollbar (GetFormHandle(cHeaderName) , 0, .f.)
 		ShowScrollbar (GetFormHandle(cHeaderName) , 1, .f.)
